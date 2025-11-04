@@ -2,6 +2,8 @@
 
 Visit: https://fountain-coach.github.io
 
+Note on mirroring: This text is mirrored on the public website homepage at https://fountain-coach.github.io. Keep this file and the site in sync. Source of truth: this file (`.github/profile/README.md`).
+
 ## FountainAI — Foundational Statement
 
 **FountainAI** is the infrastructural heart of the **Fountain Coach** organization.  
@@ -33,10 +35,25 @@ serves this larger intention: to make the machine capable of *holding space* rat
 Through these principles, FountainAI turns software into a medium for accompaniment —  
 a way for technology to participate in the unfolding of presence itself.
 
+## MIDI 2 — Core Library
+
+The organization stewards a Swift 6 library for building and parsing MIDI 2.0 Universal MIDI Packets (**UMP**). Generated from the normative JSON Schema and OpenAPI definitions, it provides full coverage of the MIDI 2.0 specification: core UMP structures, SysEx7/SysEx8 streaming utilities, MIDI‑CI envelope helpers, and a teaching‑oriented `midi2demo` CLI for experimenting with the spec. The package ships with a Core MIDI adapter (TeatroAppleBridge), examples, and tests.
+
+Highlights
+
+- Complete MIDI 2.0 encoder/decoder coverage
+- SysEx7/SysEx8 helpers and MIDI‑CI envelopes
+- Teaching‑oriented `midi2demo` CLI with man page
+- Core MIDI bridge for sending/receiving UMP
+
+See repository: https://github.com/Fountain-Coach/midi2
+
 ### Featured Repositories
 
 - MIDI 2 — https://github.com/Fountain-Coach/midi2
 - FountainKit — https://github.com/Fountain-Coach/FountainKit
 
 ---
+Maintenance: This README is mirrored on the website landing page. Update here first; then propagate to the site. Last updated: 2025-11-04
+
 © 2025 Fountain Coach
