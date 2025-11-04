@@ -31,5 +31,10 @@ serves this larger intention: to make the machine capable of *holding space* rat
 Through these principles, FountainAI turns software into a medium for accompaniment —  
 a way for technology to participate in the unfolding of presence itself.
 
+### Featured Repositories
+
+- MIDI 2 — https://github.com/Fountain-Coach/midi2
+- FountainKit — https://github.com/Fountain-Coach/FountainKit
+
 ---
 © 2025 Fountain Coach
