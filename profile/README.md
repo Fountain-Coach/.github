@@ -6,6 +6,35 @@
 
 ---
 
+## Interview: Contexter über Fountain Coach und midi2
+
+**F: Was macht Fountain Coach einzigartig?**  
+A: Fountain Coach bietet die weltweit erste vollständige MIDI‑2.0-Implementation – doppelt bereitgestellt: native (Swift) und Web (JavaScript/TypeScript). Die hochauflösende Control-Sprache läuft stabil auf Macs/iPhones und direkt im Browser. Validation, Tests und Compliance sind eingebaut, damit Kreative nicht an Protokolldetails scheitern.  
+Mehr zur Implementation im [midi2 README](https://github.com/Fountain-Coach/midi2#readme).
+
+**F: Worum geht es bei MIDI 2.0 für Nicht-Techniker:innen?**  
+A: Es ist eine hochauflösende Control-Sprache: feinere Dynamik, präziseres Timing, reichere Gesten. Damit lassen sich nicht nur Musik, sondern auch Licht, Projektionen, Theater-Cues, Haptik oder interaktive Web-Erlebnisse synchron steuern.
+
+**F: Was hast du konkret gebaut?**  
+A: Zwei Bibliotheken: Swift für Apple-Plattformen, JavaScript/TypeScript fürs Web. Sie zerlegen komplexe MIDI‑2.0-Pakete, prüfen sie und bieten einfache APIs, um hochauflösende Messages zu senden – ob Noten, Licht-Fades, Bühnen-Cues oder Haptik-Patterns.
+
+**F: Was kann man damit machen?**
+- Shows und Installationen: Licht, Projektion, Audio synchronisieren.
+- Web-Interaktivität: Museen, Education, Games, Theater-Cues im Browser.
+- Haptik/Robotik/Kinetik: Bewegungen oder Vibrationen weich und präzise steuern.
+- Brücken schlagen: Altes MIDI-Gear mit moderner, multisensorischer Steuerung verbinden.
+
+**F: Warum ist das ein Alleinstellungsmerkmal?**  
+A: „First to full MIDI‑2.0“ plus „native + web“ – aus einer Hand. Andere haben Teilstücke; hier gibt es vollständige Spezifikation, Tests, Compliance und Doku in einem Paket. So wird MIDI 2.0 sofort praktisch einsetzbar, ohne Spezialwissen.
+
+**F: Wie starten Nicht-Experten?**  
+A: Quickstarts und Demos: installieren, ein Beispiel ausführen, hören/sehen/fühlen. Die Libraries liefern klare Fehlermeldungen statt kryptischer Codes. Man muss kein Protokollprofi sein, um Ergebnisse zu bekommen.
+
+**F: Was kommt als Nächstes?**  
+A: Mehr Praxisbeispiele jenseits von Musik (Licht, Haptik, interaktives Web-Storytelling), weitere Interop-Polish und Guides für schnelle Prototypen. Ziel: MIDI 2.0 als Standard-Baustein für jede Art von synchroner, hochauflösender Steuerung.
+
+---
+
 ## The Stack
 
 ### Layer 1: Specification — `Fountain-Coach/midi2`
