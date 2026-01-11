@@ -24,6 +24,16 @@ Strict separation of these layers is required to ensure **predictability, audita
 
 ---
 
+## Compliance & Policies
+
+- FCIS Apple Intelligence Compliance Specification (Preflight): [FCIS-AIC-Preflight-RFC](../docs/FCIS-AIC-Preflight-RFC.md)
+- Security policy: [SECURITY](../.github/SECURITY.md)
+- Governance: [GOVERNANCE](../.github/GOVERNANCE.md)
+- Contributing: [CONTRIBUTING](../.github/CONTRIBUTING.md)
+- Code of Conduct: [CODE_OF_CONDUCT](../.github/CODE_OF_CONDUCT.md)
+
+---
+
 ## 1. Terminology and Conventions
 
 The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**, **MAY**, and **OPTIONAL** in this document are to be interpreted as described in RFC 2119.
