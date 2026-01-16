@@ -5,7 +5,7 @@ Thank you for your interest in contributing to the Fountain Coach organization!
 ### Core Principles
 - **Quiet-frame documentation style:** concise, calm, and consistent.
 - **Swift 6 concurrency:** use actors, `Sendable`, and structured concurrency.
-- **PB-VRT integrity:** ensure every change can be visually or semantically diffed.
+- **FCIS-VRT integrity:** ensure every change can be visually or semantically diffed.
 
 ### Workflow
 1. Fork and branch from `main`.
