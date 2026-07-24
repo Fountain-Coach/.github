@@ -5,7 +5,7 @@
 **Category:** Standards Track  
 **Organization:** fountain.coach  
 **Applies to:** All Codex-operated repositories  
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 ---
 
@@ -27,6 +27,7 @@ Strict separation of these layers is required to ensure **predictability, audita
 ## Compliance & Policies
 
 - FCIS Apple Intelligence Compliance Specification (Preflight): [FCIS-AIC-Preflight-RFC](../docs/FCIS-AIC-Preflight-RFC.md)
+- FCIS Accessibility Standard: [FCIS-AX-Standard](../docs/FCIS-AX-Standard.md)
 - FCIS Visual Regression Testing Standard: [FCIS-VRT-Standard](../docs/FCIS-VRT-Standard.md)
 - Security policy: [SECURITY](../.github/SECURITY.md)
 - Governance: [GOVERNANCE](../.github/GOVERNANCE.md)
@@ -234,8 +235,15 @@ FCIS reduces these risks through explicit separation and review.
 
 ## 13. Versioning
 
-- RFC 0001 defines FCIS v1.0.0
-- Backward-incompatible changes require a new RFC
+FCIS uses semantic versioning for the standards suite. RFC 0001 defines the FCIS **architecture** (the four orthogonal layers); the suite version tracks the normative standards adopted on top of it.
+
+- **MINOR** bump: a new additive standards-track document is adopted; the architecture and existing requirements are unchanged.
+- **MAJOR** bump (**new RFC**): any backward-incompatible change to the FCIS architecture — the four-layer contract — requires a new RFC.
+
+### Version history
+
+- **v1.1.0** — Adopts the **FCIS-AX Standard** (accessibility as the machine-readable UI layer; every view, including custom-drawn views, exposes its content to the accessibility tree; agents and verification drive the AX tree, not pixels). Additive; RFC 0001 architecture unchanged.
+- **v1.0.0** — RFC 0001 establishes the FCIS four-layer architecture (`AGENTS.md` / `PLANS.md` / Skills / MCP), alongside the FCIS-AIC-Preflight and FCIS-VRT standards.
 
 ---
 
