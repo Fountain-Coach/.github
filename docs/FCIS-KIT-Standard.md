@@ -1,6 +1,6 @@
 # FCIS-KIT Standard (Owned Kits, Factoring and Release)
 
-**Status:** Proposed
+**Status:** Adopted
 **Category:** Standards Track
 **Applies to:** Fountain Coach org repositories that publish or consume Fountain Coach Swift packages
 **Version:** 1.0
