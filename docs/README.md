@@ -4,5 +4,6 @@
 
 - FCIS Apple Intelligence Compliance Specification (Preflight): [FCIS-AIC-Preflight-RFC](FCIS-AIC-Preflight-RFC.md)
 - FCIS Accessibility Standard: [FCIS-AX-Standard](FCIS-AX-Standard.md)
+- FCIS Owned Kits, Factoring and Release Standard: [FCIS-KIT-Standard](FCIS-KIT-Standard.md)
 - FCIS Visual Regression Testing Standard: [FCIS-VRT-Standard](FCIS-VRT-Standard.md)
 - FCIS-VRT Rename Sweep Schedule: [FCIS-VRT-Rename-Sweep](FCIS-VRT-Rename-Sweep.md)
