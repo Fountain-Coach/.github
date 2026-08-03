@@ -29,6 +29,7 @@ Strict separation of these layers is required to ensure **predictability, audita
 - FCIS Apple Intelligence Compliance Specification (Preflight): [FCIS-AIC-Preflight-RFC](../docs/FCIS-AIC-Preflight-RFC.md)
 - FCIS Visual Regression Testing Standard: [FCIS-VRT-Standard](../docs/FCIS-VRT-Standard.md)
 - Security policy: [SECURITY](../.github/SECURITY.md)
+- Publication and source policy: [FCIS Publication and Source Policy](../docs/FCIS-Publication-and-Source-Policy.md)
 - Governance: [GOVERNANCE](../.github/GOVERNANCE.md)
 - Contributing: [CONTRIBUTING](../.github/CONTRIBUTING.md)
 - Code of Conduct: [CODE_OF_CONDUCT](../.github/CODE_OF_CONDUCT.md)
