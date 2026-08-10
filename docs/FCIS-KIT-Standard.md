@@ -92,6 +92,20 @@ the same commit.
 A consumer **MUST** record the upstream tag or commit a change arrived from, and what it brings, in the
 repository's plan or changelog. "Updated dependencies" is not a record.
 
+### FCIS-KIT-10A: Resolved-Graph Coherence
+A consumer **MUST** verify the dependency graph it actually builds, not only the declarations in its manifest. The
+verification **MUST** report the resolved tag/revision for every owned kit, confirm that the revision is present in
+the declared upstream repository, and identify the executable or artifact under test. A live-drive, visual-regression,
+release, or publication claim **MUST** fail when the artifact contains a deprecated or retired UI surface that the
+consumer source no longer declares, or when the resolved graph cannot be reproduced from the committed manifest and
+lockfile.
+
+SwiftPM caches **MUST NOT** be treated as provenance. A consumer **MUST** resolve/build from the committed package
+identity and run a negative surface check over the resulting artifact before claiming current UI behaviour. When an
+upstream fix exists only on an unreleased commit, the consumer **MUST** either consume a documented temporary
+revision pin under FCIS-KIT-05 or wait for a release; it **MUST NOT** silently combine that cache with a semver
+declaration and call the result current.
+
 ### FCIS-KIT-11: Evidence Lives With the Seam
 A kit change motivated by a consumer's need **MUST** be proved by the kit's own tests. A seam demonstrated only in
 the consumer is untested from the kit's perspective and **MUST NOT** be released as though it were covered.
