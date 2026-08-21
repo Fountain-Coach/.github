@@ -231,6 +231,22 @@ Non-orthogonal instruction systems increase:
 
 FCIS reduces these risks through explicit separation and review.
 
+## 12.1 FCIS-KIT Instrument Store
+
+FCIS-KIT extends the FCIS architecture from repository governance to governed capability distribution. An instrument
+is a bounded capability that presents a typed MIDI2 surface, declares its permissions and execution lane, reports its
+lifecycle, and carries the evidence needed for admission. Reframe remains the host authority; Codex may help build or
+compose an instrument, but it does not decide admission or release.
+
+The current milestone is the governed architecture and capability-plane contract. It is not a claim that a public
+instrument marketplace, every proposed instrument, or every local/remote runtime already exists.
+
+Read the detailed authority: [Chapter 91 — The FCIS-KIT Instrument Store Is the Capability Plane](https://governance.fountain.coach/chapters/91-fcis-kit-instrument-store-is-the-capability-plane/).
+
+The organisation RFC above remains the normative FCIS layer model: `AGENTS.md` defines law, `PLANS.md` defines intent,
+Skills define execution technique, and MCP provides capabilities. Chapter 91 applies that separation to instrument
+construction and admission; it does not create a fifth instruction layer.
+
 ---
 
 ## 13. Versioning
