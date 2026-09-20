@@ -3,7 +3,7 @@
 **Status:** Adopted
 **Category:** Standards Track
 **Applies to:** Fountain Coach org repositories that publish or consume Fountain Coach Swift packages
-**Version:** 1.1.0
+**Version:** 1.2.0
 
 ---
 
@@ -38,9 +38,11 @@ kit should contain, which is a product question.
   dependency on a checkout rather than on a release.
 - **Counterpart Provenance**: the record, in the consumer, of the upstream tag or commit a change arrived from.
 - **Mechanical Constraint**: an FCIS-declared condition represented in an executable contract and enforced by the
-  owning kit or host. It has a typed identity/version, executable predicate, named evaluator, bounded refusal state,
-  and terminal evidence requirement. It is not a prose instruction, prompt convention, screenshot, or inferred
-  boundary.
+  owning kit. It has a typed identity/version, executable predicate, named evaluator, bounded refusal state, and
+  terminal evidence requirement. It is not a prose instruction, prompt convention, screenshot, or inferred boundary.
+- **Kit-Only Execution Authority**: the owning FCIS-KIT is the sole runtime authority for an admitted capability's
+  mechanical constraints, execution, lifecycle, refusal, and terminal evidence. A consumer, CLI, scenario runner, or
+  host adapter may not become an execution authority or fallback.
 
 ---
 
@@ -128,11 +130,27 @@ Every admitted capability **MUST** expose the conditions that gate its execution
 claim as mechanical constraints in its executable contract. Each constraint **MUST** name its typed identity and
 contract version, executable predicate, evaluating authority, bounded refusal state, and terminal evidence requirement.
 
-An agent, scenario runner, instrument, host adapter, or consumer **MUST NOT** create, widen, reinterpret, or bypass a
+An agent, scenario runner, instrument, consumer, or host adapter **MUST NOT** create, widen, reinterpret, or bypass a
 mechanical constraint. When the required constraint is not admitted or cannot be evaluated, the operation **MUST** stop
 as unestablished; it **MUST NOT** acquire a substitute prompt, flag, document, human ceremony, or parallel authority.
-The owning runtime path, not a governance paragraph alone, must enforce the predicate and expose its refusal and
-terminal evidence. FCIS-KIT-14 strengthens the existing FCIS layers; it does not create a fifth instruction layer.
+Under FCIS-KIT-15, the owning kit runtime—not a consumer or host adapter—must enforce the predicate and expose its
+refusal and terminal evidence. FCIS-KIT-14 strengthens the existing FCIS layers; it does not create a fifth
+instruction layer.
+
+### FCIS-KIT-15: Kit-Only Execution Authority
+
+Every admitted capability **MUST** execute and enforce its mechanical constraints inside its owning FCIS-KIT. The kit
+owns the executable operation, authorization/admission predicate, lifecycle, refusal state, Store/SecretStore effect
+boundary, and terminal evidence needed for that capability.
+
+Host applications and CLIs **MAY** parse a machine-facing request, invoke the released kit contract, and render the
+typed result. They **MUST NOT** implement, mediate, widen, reinterpret, authorize, retry, or provide a fallback for
+the capability operation. A host adapter, adapter protocol, direct consumer executor, generic wrapper, or alternate
+transport that can perform the capability operation is forbidden.
+
+If a capability cannot be executed and proven by its owning kit, it is non-compliant and **MUST** stop as
+`unestablished`. Existing adapter implementations are migration debt; they do not establish compliance and **MUST NOT**
+be used as evidence of a kit-only implementation.
 
 The governed instrument-plane application of FCIS-KIT-14 is [Chapter 91 — The FCIS-KIT Instrument Store Is the
 Capability Plane](https://governance.fountain.coach/chapters/91-fcis-kit-instrument-store-is-the-capability-plane/),
