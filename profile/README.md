@@ -239,10 +239,15 @@ is a bounded capability that presents a typed MIDI2 surface, declares its permis
 lifecycle, and carries the evidence needed for admission. Reframe remains the host authority; Codex may help build or
 compose an instrument, but it does not decide admission or release.
 
+The FCIS-KIT standard's [FCIS-KIT-14 mechanical constraint](../docs/FCIS-KIT-Standard.md#fcis-kit-14-mechanical-constraints)
+is the binding form of that boundary: a typed executable predicate, named evaluator, bounded refusal state, and
+terminal evidence requirement. It prevents an agent or runtime path from inventing or bypassing authority by ceremony.
+
 The current milestone is the governed architecture and capability-plane contract. It is not a claim that a public
 instrument marketplace, every proposed instrument, or every local/remote runtime already exists.
 
 Read the detailed authority: [Chapter 91 — The FCIS-KIT Instrument Store Is the Capability Plane](https://governance.fountain.coach/chapters/91-fcis-kit-instrument-store-is-the-capability-plane/).
+Read the repository declaration that materializes this relation: [FCIS_KIT_DECLARATION.md](https://github.com/Fountain-Coach/midi2-gpu-fabric/blob/main/FCIS_KIT_DECLARATION.md).
 
 The organisation RFC above remains the normative FCIS layer model: `AGENTS.md` defines law, `PLANS.md` defines intent,
 Skills define execution technique, and MCP provides capabilities. Chapter 91 applies that separation to instrument

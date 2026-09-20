@@ -3,7 +3,7 @@
 **Status:** Adopted
 **Category:** Standards Track
 **Applies to:** Fountain Coach org repositories that publish or consume Fountain Coach Swift packages
-**Version:** 1.0
+**Version:** 1.1.0
 
 ---
 
@@ -37,6 +37,10 @@ kit should contain, which is a product question.
 - **External Path Dependency**: a package declared by a path that resolves outside the consuming repository — a
   dependency on a checkout rather than on a release.
 - **Counterpart Provenance**: the record, in the consumer, of the upstream tag or commit a change arrived from.
+- **Mechanical Constraint**: an FCIS-declared condition represented in an executable contract and enforced by the
+  owning kit or host. It has a typed identity/version, executable predicate, named evaluator, bounded refusal state,
+  and terminal evidence requirement. It is not a prose instruction, prompt convention, screenshot, or inferred
+  boundary.
 
 ---
 
@@ -118,6 +122,21 @@ Removal is a major version.
 A kit change that reaches a user interface **MUST** satisfy FCIS-AX; one that changes rendered output **MUST**
 satisfy FCIS-VRT; one that touches on-device inference **MUST** satisfy FCIS-AIC-Preflight. Being in a kit is not
 an exemption from the standard that governs the surface.
+
+### FCIS-KIT-14: Mechanical Constraints
+Every admitted capability **MUST** expose the conditions that gate its execution, admission, mutation, or terminal
+claim as mechanical constraints in its executable contract. Each constraint **MUST** name its typed identity and
+contract version, executable predicate, evaluating authority, bounded refusal state, and terminal evidence requirement.
+
+An agent, scenario runner, instrument, host adapter, or consumer **MUST NOT** create, widen, reinterpret, or bypass a
+mechanical constraint. When the required constraint is not admitted or cannot be evaluated, the operation **MUST** stop
+as unestablished; it **MUST NOT** acquire a substitute prompt, flag, document, human ceremony, or parallel authority.
+The owning runtime path, not a governance paragraph alone, must enforce the predicate and expose its refusal and
+terminal evidence. FCIS-KIT-14 strengthens the existing FCIS layers; it does not create a fifth instruction layer.
+
+The governed instrument-plane application of FCIS-KIT-14 is [Chapter 91 — The FCIS-KIT Instrument Store Is the
+Capability Plane](https://governance.fountain.coach/chapters/91-fcis-kit-instrument-store-is-the-capability-plane/),
+and its repository declaration is [FCIS_KIT_DECLARATION.md](https://github.com/Fountain-Coach/midi2-gpu-fabric/blob/main/FCIS_KIT_DECLARATION.md).
 
 ---
 
