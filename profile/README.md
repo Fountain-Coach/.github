@@ -5,7 +5,7 @@
 **Category:** Standards Track  
 **Organization:** fountain.coach  
 **Applies to:** All Codex-operated repositories  
-**Version:** 1.1.0
+**Version:** 1.3.0
 
 ---
 
@@ -264,6 +264,9 @@ FCIS uses semantic versioning for the standards suite. RFC 0001 defines the FCIS
 
 ### Version history
 
+- **v1.3.0** — Adopts **FCIS-KIT-16 History-First Reconstruction**, requiring an evidence-backed reconstruction of
+  the existing authority, proof, failure seam, reuse decision, and bounded acceptance before capability changes.
+  Additive; RFC 0001 architecture unchanged.
 - **v1.1.0** — Adopts the **FCIS-AX Standard** (accessibility as the machine-readable UI layer; every view, including custom-drawn views, exposes its content to the accessibility tree; agents and verification drive the AX tree, not pixels). Additive; RFC 0001 architecture unchanged.
 - **v1.0.0** — RFC 0001 establishes the FCIS four-layer architecture (`AGENTS.md` / `PLANS.md` / Skills / MCP), alongside the FCIS-AIC-Preflight and FCIS-VRT standards.
 

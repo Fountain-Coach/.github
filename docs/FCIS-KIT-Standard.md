@@ -3,7 +3,7 @@
 **Status:** Adopted
 **Category:** Standards Track
 **Applies to:** Fountain Coach org repositories that publish or consume Fountain Coach Swift packages
-**Version:** 1.2.0
+**Version:** 1.3.0
 
 ---
 
@@ -43,6 +43,9 @@ kit should contain, which is a product question.
 - **Kit-Only Execution Authority**: the owning FCIS-KIT is the sole runtime authority for an admitted capability's
   mechanical constraints, execution, lifecycle, refusal, and terminal evidence. A consumer, CLI, scenario runner, or
   host adapter may not become an execution authority or fallback.
+- **History-First Reconstruction**: the bounded evidence record made before changing, replacing, or declaring
+  blocked an existing capability. It distinguishes the current authority and execution path, established historical
+  proof, observed failures, the smallest missing seam, reuse decisions, finite acceptance proof, and claim status.
 
 ---
 
@@ -155,6 +158,31 @@ be used as evidence of a kit-only implementation.
 The governed instrument-plane application of FCIS-KIT-14 is [Chapter 91 — The FCIS-KIT Instrument Store Is the
 Capability Plane](https://governance.fountain.coach/chapters/91-fcis-kit-instrument-store-is-the-capability-plane/),
 and its repository declaration is [FCIS_KIT_DECLARATION.md](https://github.com/Fountain-Coach/midi2-gpu-fabric/blob/main/FCIS_KIT_DECLARATION.md).
+
+### FCIS-KIT-16: History-First Reconstruction
+
+Before implementing, replacing, extracting, deprecating, or declaring an existing capability blocked, the owning
+repository **MUST** reconstruct the current path from its working-tree diff, relevant history, and live boundaries
+where applicable. The reconstruction **MUST** identify:
+
+1. the current authority and execution path;
+2. existing working components and the commits, tests, receipts, or runtime observations that establish them;
+3. what failed, where it failed, and the evidence for that conclusion;
+4. the smallest concrete seam still missing;
+5. the existing adapters, credentials, procedures, and release wiring that will be reused;
+6. the finite observable acceptance proof and stop condition; and
+7. each finding's classification as observed, inferred, or unestablished.
+
+The record **MUST** be created before implementation changes begin and **MUST** remain adjacent to the plan or
+change record. It **MUST NOT** be replaced by a filename search, a remembered procedure, a generated manifest, or a
+new parallel implementation. Missing later evidence is a next acceptance phase, not evidence that an established
+earlier seam should be discarded. If the proposed change is a new instrument with no predecessor, the record MUST
+state that the predecessor search found no reusable seam and identify the authoritative contract and smallest first
+implementation seam.
+
+FCIS-KIT-16 governs the required reconstruction result; the repository's Skills layer owns the detailed commands,
+templates, and verifier for producing it. A reconstruction record does not itself establish implementation,
+admission, release, interoperability, or live acceptance.
 
 ---
 
