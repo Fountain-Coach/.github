@@ -35,6 +35,10 @@ Strict separation of these layers is required to ensure **predictability, audita
 - Contributing: [CONTRIBUTING](../.github/CONTRIBUTING.md)
 - Code of Conduct: [CODE_OF_CONDUCT](../.github/CODE_OF_CONDUCT.md)
 
+### Adopted external interoperability standards
+
+- **OPDS Catalog 2.0 — adopted for digital publication catalog interoperability.** [Fountain Coach adoption and local publication profile](../docs/adopted-external-standards/OPDS-2.0.md) · [upstream specification](https://specs.opds.io/opds-2.0). OPDS is maintained by the upstream community; Fountain Coach owns only its adoption policy and its implementation in Fountain Press. This adoption is alongside, not under, the four FCIS instruction layers. It does not change RFC 0001 or the FCIS suite version.
+
 ---
 
 ## 1. Terminology and Conventions
