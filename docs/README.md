@@ -2,6 +2,8 @@
 
 ## Index
 
+- **Founding conduct standard (mandatory):** [FCIS Goal Fidelity and Non-Invention](FCIS-Non-Invention-and-Goal-Fidelity.md)
+
 - Mandatory Security Architecture Briefing: [FCIS-Security-Architecture-Briefing](FCIS-Security-Architecture-Briefing.md)
 - FCIS Apple Intelligence Compliance Specification (Preflight): [FCIS-AIC-Preflight-RFC](FCIS-AIC-Preflight-RFC.md)
 - FCIS Accessibility Standard: [FCIS-AX-Standard](FCIS-AX-Standard.md)
