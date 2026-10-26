@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "owner": "Fountain-Coach/.github",
-  "status": "desired-state-only",
+  "status": "canonical-git-owned",
   "destinations": [
     "openai-skills-api",
     "chatgpt-account-skills"
@@ -9,27 +9,36 @@
   "skills": [
     {
       "name": "teatro-scenario-composer",
-      "sourceRepository": "Fountain-Coach/teatro.fountain.coach",
-      "sourcePath": ".codex/skills/teatro-scenario-composer",
-      "sourceStatus": "merged-on-main",
-      "distribution": "chatgpt-installed-api-not-verified",
-      "sourceCommit": "b4fbd41673c94f698a59291f630e9393d54faf00"
+      "distribution": "not-content-verified",
+      "canonicalPath": ".codex/skills/teatro-scenario-composer",
+      "contentSHA256": "ee313e4242e06112e48150140ce9f1384605c943c2c34d248e631852d8ae1c0f",
+      "provenance": {
+        "importedFrom": "Fountain-Coach/teatro.fountain.coach",
+        "sourcePath": ".codex/skills/teatro-scenario-composer",
+        "sourceCommit": "b4fbd41673c94f698a59291f630e9393d54faf00"
+      }
     },
     {
       "name": "linotype-estate-template",
-      "sourceRepository": "Fountain-Coach/estate",
-      "sourcePath": ".codex/skills/linotype-estate-template",
-      "sourceStatus": "merged-on-main",
-      "distribution": "chatgpt-installed-api-not-verified",
-      "sourceCommit": "ae763d9652d06c051fc009b434ac4bc9bb476be5"
+      "distribution": "not-content-verified",
+      "canonicalPath": ".codex/skills/linotype-estate-template",
+      "contentSHA256": "cd74f4933dd4442ad493b013b259e7aa1bc78c8c3f0f29652ae79b8687fb2321",
+      "provenance": {
+        "importedFrom": "Fountain-Coach/estate",
+        "sourcePath": ".codex/skills/linotype-estate-template",
+        "sourceCommit": "ae763d9652d06c051fc009b434ac4bc9bb476be5"
+      }
     },
     {
       "name": "fcis-skill-authoring-and-sync",
-      "sourceRepository": "Fountain-Coach/midi2-gpu-fabric",
-      "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",
-      "sourceStatus": "merged-on-main",
-      "distribution": "chatgpt-installed-api-not-verified",
-      "sourceCommit": "63cb1d337461058fd6460561661bd32450f64145"
+      "distribution": "not-content-verified",
+      "canonicalPath": ".codex/skills/fcis-skill-authoring-and-sync",
+      "contentSHA256": "d4ec63e5b693f65d4446a59e2877e2b075bb1e218fbcb327e512c03bb965402d",
+      "provenance": {
+        "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
+        "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",
+        "sourceCommit": "63cb1d337461058fd6460561661bd32450f64145"
+      }
     }
   ]
 }

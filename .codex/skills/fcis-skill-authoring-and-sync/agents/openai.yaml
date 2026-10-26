@@ -1,0 +1,4 @@
+interface:
+  display_name: "FCIS Skill Authoring and Sync"
+  short_description: "Create FCIS skills and sync approved mirrors."
+  default_prompt: "Use this skill to create or update a repo-owned skill under FCIS and synchronize its declared mirrors."
