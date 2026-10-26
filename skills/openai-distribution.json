@@ -33,7 +33,7 @@
       "name": "fcis-skill-authoring-and-sync",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-skill-authoring-and-sync",
-      "contentSHA256": "d4ec63e5b693f65d4446a59e2877e2b075bb1e218fbcb327e512c03bb965402d",
+      "contentSHA256": "05dcd68add2da7d6c4353831425fbdb7b9ade6ff9505dd3b57e692de9cd8a399",
       "provenance": {
         "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
         "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",
