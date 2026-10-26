@@ -11,25 +11,25 @@
       "name": "teatro-scenario-composer",
       "sourceRepository": "Fountain-Coach/teatro.fountain.coach",
       "sourcePath": ".codex/skills/teatro-scenario-composer",
-      "sourceStatus": "review-branch-pr-2",
+      "sourceStatus": "merged-on-main",
       "distribution": "chatgpt-installed-api-not-verified",
-      "sourceCommit": "31a1672a0d04803014b5d713658d83c5cac7d679"
+      "sourceCommit": "b4fbd41673c94f698a59291f630e9393d54faf00"
     },
     {
       "name": "linotype-estate-template",
       "sourceRepository": "Fountain-Coach/estate",
       "sourcePath": ".codex/skills/linotype-estate-template",
-      "sourceStatus": "review-branch-pr-6",
+      "sourceStatus": "merged-on-main",
       "distribution": "chatgpt-installed-api-not-verified",
-      "sourceCommit": "80887b637c58450d58494f914f372a0b5a65a4d3"
+      "sourceCommit": "ae763d9652d06c051fc009b434ac4bc9bb476be5"
     },
     {
       "name": "fcis-skill-authoring-and-sync",
       "sourceRepository": "Fountain-Coach/midi2-gpu-fabric",
       "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",
-      "sourceStatus": "branch-only-unmerged",
+      "sourceStatus": "merged-on-main",
       "distribution": "chatgpt-installed-api-not-verified",
-      "sourceCommit": "42995a7"
+      "sourceCommit": "63cb1d337461058fd6460561661bd32450f64145"
     }
   ]
 }
