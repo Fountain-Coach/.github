@@ -1,8 +1,8 @@
 # Fountain Coach — OpenAI Skills API integration
 
 **Status:** organization-owned interoperability contract; API publication not yet performed.
-**Owner:** `Fountain-Coach/.github` (policy, supported API mapping, catalog contract).
-**Source owners:** the individual Fountain Coach Git repositories containing the canonical `.codex/skills/<name>/` packages.
+**Owner and sole canonical skill source:** `Fountain-Coach/.github`, including `.codex/skills/<name>/`, the catalog, digest checks, policy, and review history.
+**Domain repositories:** derived Codex/Claude and runtime-specific projections; historical origin commits are provenance, not independent skill authorship.
 **Authority:** [FCIS RFC 0001](../profile/README.md) and [Goal Fidelity and Non-Invention](FCIS-Non-Invention-and-Goal-Fidelity.md).
 
 ## The two different OpenAI surfaces
@@ -17,15 +17,15 @@ Do not put API keys, tokens, credentials, session cookies or account-specific en
 | FCIS layer | Responsibility |
 | --- | --- |
 | `AGENTS.md` and organization standards | Scope, prohibitions and review constraints |
-| `PLANS.md` in the executing owner repository | Requested skill and destination, source revision, validation, acceptance and rollback |
-| Owner skill `SKILL.md` | Authoring, packaging, validation, targeted publish and verification procedure |
+| Organization `PLANS.md` and the selected destination's scoped plan | Requested skill, canonical source revision, destination, validation, acceptance and rollback |
+| Canonical `.github/.codex/skills/<name>/SKILL.md` | Authoring, packaging, validation, targeted publish and verification procedure |
 | External API / connector | Authenticated access to OpenAI or ChatGPT services; no policy and no independent source authority |
 
-The organization catalog is a *declaration of desired distribution*, not a second copy of skill contents. `skills/openai-distribution.json` holds a small, reviewed initial selection with owning repository and path; execution receipts may subsequently record source commit, package SHA-256, returned API skill ID/version, and separate ChatGPT readback. These are never inferred from names or locally passing tests.
+The organization repo owns **both** the canonical skill packages in `.codex/skills` and the desired distribution declarations in `skills/openai-distribution.json`. Each entry pins its canonical path and complete source file-tree SHA-256. The catalog is not a substitute for the skill payload; external receipts record source commit, package SHA-256, returned API skill ID/version and separate ChatGPT account readback. Copies are never promoted to source by being observed. These are never inferred from names or locally passing tests.
 
 ## Targeted deployment contract
 
-1. Resolve the skill's declared Git source, recorded commit and complete package. Read owner `AGENTS.md` and `PLANS.md`. Check that there is exactly one `SKILL.md`, the frontmatter contains only `name` and `description`, and `agents/openai.yaml` exists when required by the ChatGPT authoring workflow. Run OpenAI Skill Creator validation where accessible and owner-specific tests. Treat package validation as distinct from FCIS acceptance.
+1. Resolve the skill's *organization-owned* Git source under `Fountain-Coach/.github/.codex/skills`, recorded commit, digest and complete package. Read that repository's `AGENTS.md` and `PLANS.md` as well as the domain Kit contracts where execution semantics matter. Check one `SKILL.md`, `name`/`description` frontmatter and required `agents/openai.yaml`. Run Skill Creator validation where accessible and organization-specific tests. Package validation is not FCIS or live destination acceptance.
 2. Compare the source package hash and available destination readback. Never reconcile by overwriting the entire destination catalog. Do not delete, retire or change unrelated packages just because they are undeclared or have drift.
 3. For the public Skills API, perform at most one named skill create or version upload per authorized operation. Capture returned `skill_id`, version and default-version state, read back the exact new version (allow a bounded retry for transient `404` after upload), and verify the payload and intended version pointer. Do not change the default version without an explicitly scoped promotion.
 4. For ChatGPT Skills, use only an authorized, supported installation workflow. If using an account-specific Git-backed adapter, distinguish its capabilities and errors from the public OpenAI API, preserve existing account packages, and verify the exact account/workspace installation by independent readback. Observed `HTTP 422` for an aggregate push does not authorize repeated aggregate retries.
@@ -35,10 +35,10 @@ The organization catalog is a *declaration of desired distribution*, not a secon
 
 The workspace's useful author-facing selection begins with **Teatro Scenario Composer**, **Linotype Estate Template**, and **FCIS Skill Authoring and Sync** (the FCIS/OpenAI Skill Creator integration). Keep their identities distinct and complementary. This is the desired-state declaration, **not** a claim that all three are currently and persistently installed at `chatgpt.com/skills`. Other installed user skills remain untouched. Do not promise grouping, ordering or workspace UI customization that OpenAI's interface has not demonstrated.
 
-The first live acceptance must demonstrate **one** source-pinned upload to the public API (if an authorized API credential and project are available), followed by version readback, and independently inspect account Skills state. An absent credential prevents that remote acceptance, not the documentation or validation. No code should silently publish on git push; no GitHub Actions automation is required.
+The first public API acceptance must demonstrate **one explicitly approved**, source-pinned upload (if an authorized API credential and project are available), followed by version-content and default-pointer readback. ChatGPT account Skills must be inspected independently. Absent credentials prevent only the remote proof. No code should silently publish on git push; no GitHub Actions automation is required.
 
-## Superseding Chapter 160 ownership
+## Chapter 160 ownership and evidence
 
-Historical descriptions above of separate domain repositories as skill authorities are superseded by the adopted and published Chapter 160: Fountain-Coach/.github alone owns canonical skill definitions. Domain copies are projections. The three complete canonical packages are held in .codex/skills under this repository. Migration origin revisions remain provenance, not current authority.
+Published Chapter 160 declares `Fountain-Coach/.github` as the sole authority over the agent skill packages. Individual domain repository copies and ChatGPT/OpenAI installations are derived. Their changes can return as observations or proposals, never become source automatically. Historical import commits are retained as provenance. The 26 October 2026 [ChatGPT Skills file-level audit](Skill-Distribution-Audit-2026-10-26.md) records two matching installed file inventories and one observed FCIS skill metadata drift; these observations do not establish an active-version pointer or public API upload.
 
 Execute python3 skills/skillctl.py check; then python3 -m unittest discover -s skills/tests -v. To create a deterministic ZIP, use python3 skills/skillctl.py package --skill teatro-scenario-composer --output /tmp/skill.zip. To compare an independently obtained exported package, use python3 skills/skillctl.py compare --skill teatro-scenario-composer --zip /tmp/observed.zip. Without readback, report remains UNVERIFIED. Optional local hooks: git config core.hooksPath .githooks. They do not control remote mutations or prevent administrators from changing ChatGPT installations.
