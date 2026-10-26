@@ -1,4 +1,4 @@
 interface:
   display_name: "FCIS Skill Authoring and Sync"
-  short_description: "Create FCIS skills and sync approved mirrors."
-  default_prompt: "Use this skill to create or update a repo-owned skill under FCIS and synchronize its declared mirrors."
+  short_description: "Author FCIS skills in .github and reconcile approved copies."
+  default_prompt: "Use this skill to revise one canonical agent skill in Fountain-Coach/.github and reconcile only its authorized derived distribution, with independent drift verification."
