@@ -25,3 +25,20 @@ Excluded: unrelated skill changes, remote credentials or account mutations, new 
 
 ## Definition of Done
 Canonical org source matches its declared SHA-256; exact ZIP re-build matches; hooks fail invalid source; known comparison failures are detected without mutating the original. End-to-end DoD additionally requires authorized and independently proven remote readback, pointer audit and one controlled reconciliation per distribution surface. Do not claim that final remote DoD until witnessed.
+
+
+## Phase 3 — canonical procedure correction and independent ChatGPT account readback (26 October 2026)
+
+**Goal:** Repair the existing FCIS skill-authoring procedure to obey the adopted Chapter 160 source authority, record independently observable differences from the account Skills projection, then validate one canonical package before any distribution mutation.
+
+**Governance reading record**
+- **Chapters read:** 07 (goal fidelity and bounded correction); 08 (evidence before status); 112 (runtime maintenance operation remains Kit-owned); 160 (Fountain-Coach/.github alone is canonical for agent skill packages). Organization AGENTS and the existing Chapter 160 implementation plan also apply.
+- **Forbidden here:** making installed ChatGPT files canonical, bulk synchronization, importing unknown account metadata into the source, silently changing default versions, treating SKILL.md body readback as full ZIP and selected-execution proof, editing unrelated skills.
+- **Conflict:** the existing canonical `fcis-skill-authoring-and-sync/SKILL.md` and the first paragraphs of `docs/OpenAI-Skills-API-Integration.md` assign skill ownership to domain repositories. This conflicts with the maintainer's explicit .github-only authority decision and Chapter 160. Repair the instructions at their source, while retaining historical origin commits as provenance only.
+- **Excluded:** Reframe Kit and MIDI2 schema changes, unrequested new instruments, production release, account-wide overwrite, API-key export or authentication changes. OpenAI API project Skills and ChatGPT account Skills remain separate observed surfaces.
+
+**Independent readback at authority commit `151c2944929c586dfdc74bc5f238fdda65bdde88`:** Via the installed ChatGPT Skills read interface and GitHub canonical file reads, Teatro Scenario Composer matched 7/7 accessible files, Linotype Estate Template matched 13/13 accessible files, and FCIS Skill Authoring matched its SKILL.md *body* but differed in `agents/openai.yaml`; account Skills also exposes `assets/icon.svg` that is not present in the canonical FCIS package. The installed FCIS icon has identical content to the installed Teatro icon. The installed YAML adds policy and icon properties, and changes formatting. Exact full archive content and effective execution/default-version pointers were not returned, so end-to-end synchronization remains **UNVERIFIED** even for the two content-matching packages.
+
+**Source slice:** revise only the FCIS authoring Skill and organization distribution documentation, recompute its `skills/openai-distribution.json` SHA-256 from the actual canonical files, and preserve this evidence in a dated review record. Independent readback does not itself authorize an external push.
+
+**Acceptance:** `python3 skills/skillctl.py check`, `python3 -m unittest discover -s skills/tests -v`, and Git hooks against the new org revision; inspect readback after any later one-skill authorized distribution, and report active-version state separately. A separately authorized Reframe Copilot scenario and a real OpenAI project readback are still required for full live acceptance.
