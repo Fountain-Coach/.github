@@ -42,3 +42,15 @@ Canonical org source matches its declared SHA-256; exact ZIP re-build matches; h
 **Source slice:** revise only the FCIS authoring Skill and organization distribution documentation, recompute its `skills/openai-distribution.json` SHA-256 from the actual canonical files, and preserve this evidence in a dated review record. Independent readback does not itself authorize an external push.
 
 **Acceptance:** `python3 skills/skillctl.py check`, `python3 -m unittest discover -s skills/tests -v`, and Git hooks against the new org revision; inspect readback after any later one-skill authorized distribution, and report active-version state separately. A separately authorized Reframe Copilot scenario and a real OpenAI project readback are still required for full live acceptance.
+
+
+## Phase 4 — correct remaining canonical metadata after account installation witness (26 October 2026)
+
+- **Chapters read:** 07 (bounded scope and goal fidelity); 08 (independent evidence before claims); 160 (organization-owned canonical skill and external projection boundary).
+- **Forbidden:** restoring obsolete `repo-owned` authoring instructions, treating a provider-generated icon/policy as canonical, silently editing additional skills, claiming save feedback proves exact package/version identity.
+- **Conflict:** the already corrected canonical FCIS `SKILL.md` said `Fountain-Coach/.github` is the sole source, but its own `agents/openai.yaml` default prompt still directed the agent to a generic `repo-owned` skill; the installed account YAML also retained icon/policy extensions not authored by Git.
+- **Excluded:** editing the installed platform's policy interface or unrelated skills; public API uploads, version promotion, Reframe UI/MIDI2 scenarios and Store receipt claims without actual host authentication and independent evidence.
+
+**Source slice:** change only the FCIS `agents/openai.yaml` short description/default prompt in `Fountain-Coach/.github`; recalculate its complete file-tree digest and project the two-file canonical package into the selected Reframe Codex/Claude mirrors without touching other skills. Record the observed ChatGPT body match and supporting-file divergence in the account audit.
+
+**Acceptance:** `python3 skills/skillctl.py check`; 8 source-side integrity tests; source/package quick validation; single-skill mirror checks and byte-for-byte readback. ChatGPT editor body and description were verified after reload; its YAML/icon and effective version remain divergent or unverified. Complete remote DoD remains open and no external API operation is implied.
