@@ -1,47 +1,51 @@
 ---
 name: fcis-skill-authoring-and-sync
-description: Create or update skills governed by FCIS, then synchronize the selected repo-owned package to its declared agent surfaces. Use when authoring, auditing, reconciling, or distributing Codex skills across repository-local, Claude-mirror, or ChatGPT Skills storage.
+description: Create, revise, audit, and distribute FCIS-governed agent skills from the sole canonical source Fountain-Coach/.github. Use for authoring, drift detection, and governed reconciliation of repository-local Codex/Claude mirrors, ChatGPT account Skills, or the public OpenAI Skills API.
 ---
 
 # FCIS Skill Authoring and Sync
 
 ## Purpose
 
-Use the OpenAI Skill Creator for skill-package design and validation while keeping FCIS authority, repository ownership, and distribution surfaces explicit.
+Design and validate skill packages using the OpenAI Skill Creator while enforcing Fountain Coach Governance Chapter 160: **`Fountain-Coach/.github` alone owns the canonical agent skill definition.** Every repository mirror, ChatGPT installation, or OpenAI project API version is a derived distribution. Changes observed downstream may return as proposals, but never automatically become source.
+
+Runtime capability identities remain owned by their declared FCIS Swift Kits. An agent procedure does not become a new runtime instrument or acquire implementation authority by being installed.
 
 ## When to use
 
-- Create, revise, validate, or reconcile a repository-owned skill.
-- Compare a skill available through ChatGPT with its source in a Fountain Coach repository.
-- Synchronize a selected skill to a repository-local agent mirror or to the account's ChatGPT Skills service.
+- Create, revise, validate, or retire one FCIS-governed agent skill.
+- Audit an installed skill or mirrored procedure against the declared organization source.
+- Reconcile one selected, authorized distribution without overwriting unrelated packages.
+- Explain unknown, missing, divergent, or active-version state with independent evidence.
 
 ## Procedure
 
-1. **Resolve ownership and scope.** Read the owning repository's root `AGENTS.md`, applicable scoped instructions, current plan, and existing skill history. Identify the skill's stable name, owning repository, intended audience, required agent surfaces, and finite acceptance proof. Keep unrelated repositories and skills out of the change.
+1. **Resolve canonical authority and scope.** Read `Fountain-Coach/.github/AGENTS.md`, the current organization `PLANS.md`, the published Chapter 160 and the selected skill's history. Declare one stable skill name, affected distribution, intended audience, authorizing source revision, and finite acceptance proof. Consult domain repository `AGENTS.md` for the domain's runtime or publication facts, not for ownership of an agent skill package. Preserve origin repository/commit as migration provenance only.
 
-2. **Use FCIS as the repository authority.** Keep behavioral law in `AGENTS.md`, task intent and DoD in `PLANS.md`, reusable execution steps in a skill, and external access in MCP. For a repository-owned skill, keep the canonical package in that repository's `.codex/skills/<skill-name>/`. Give each skill directory exactly one `SKILL.md`; use adjacent `references/`, `scripts/`, `assets/`, or `agents/openai.yaml` only when they support that skill. Do not make a global ChatGPT Skills checkout the sole source for an FCIS-owned procedure.
+2. **Author only in the organization source.** Edit `Fountain-Coach/.github/.codex/skills/<skill-name>/` as the canonical package. Keep exactly one `SKILL.md` with `name` and `description` frontmatter. Use `references/`, `scripts/`, `assets/`, and `agents/openai.yaml` only when they serve the named skill. `AGENTS.md` owns behavioral law, `PLANS.md` owns scope/acceptance, and an FCIS Kit owns runtime capability contracts; the Skill describes the agent's reusable procedure. Never take a platform-edited installation or an old domain copy as the source of truth.
 
-3. **Apply the Skill Creator within that boundary.** Write a concise YAML frontmatter with only `name` and `description`. Make the description state the capability and concrete triggers. Use imperative steps, progressive disclosure, and deterministic scripts only where they remove repeated fragile work. Keep required FCIS sections and repository-specific authorities intact. Generate `agents/openai.yaml` when the agent interface needs it, and run the Skill Creator's `quick_validate.py`. That validator checks package shape; it does not establish FCIS compliance or prove the procedure works.
+3. **Apply Skill Creator and verify the content.** Keep instructions imperative, concise, and focused on a real use case. Validate with Skill Creator's `quick_validate.py` when available, and test any modified scripts. Run `python3 skills/skillctl.py check` and `python3 -m unittest discover -s skills/tests -v` in the organization repository, then update `skills/openai-distribution.json` to the exact SHA-256 of the complete canonical file tree. These checks prove source shape and integrity, not successful installation.
 
-4. **Validate the procedure against the owner repository.** Check the skill's steps against its current `AGENTS.md`, standards, runtime contracts, and existing acceptance evidence. Add or update focused procedure validation only when the skill changes execution behavior. Do not create a new FCIS law, standard, DoD gate, runtime, or validation subsystem merely to accommodate the generic Skill Creator.
+4. **Observe destination drift before planning a write.** Inspect the exact installation or repository mirror using an authorized, supported interface. Record source commit, file-tree digest, available files, declared installed or default version, and the degree of readback. Classify complete equal content as `MATCHED`, verified differences as `DRIFT`, independently confirmed absence as `MISSING`, and partial, inaccessible, or ambiguous readback as `UNVERIFIED`. Do not infer complete package equality from a skill name, metadata listing, normalized `SKILL.md` body, or success message. Report selected-version drift separately from content drift.
 
-5. **Handle repository-local mirrors separately.** If the owner repository defines Codex-to-Claude synchronization, use its single-skill mode when available: check and synchronize only the named package, preserving unrelated drift and Claude-only packages. Do not run an all-skill rewrite to publish one package when other packages already drift. A passing targeted mirror check establishes only that repository-local mirror; it says nothing about the account's ChatGPT Skills service.
+5. **Refresh repository mirrors only as derived packages.** For each explicitly selected domain `.codex/skills` or `.claude/skills` surface, project the exact reviewed `.github` package at its pinned revision, preserving unrelated files and domain-owned runtime contracts. Use a single-skill sync/check when available, and independently read back the target. A mirror's previous Git commit records provenance, never independent canonical authorship.
 
-6. **Publish to ChatGPT Skills only when the user requests that surface.** Treat the account's ChatGPT Skills Git store as a distribution target, not as the authority for an FCIS-owned package. Copy the exact package and resources from the owning repository, retain source repository/commit provenance, and update one skill package per commit and push. The account service has rejected a multi-skill aggregate push with HTTP 422 and the response `invalid push content: aggregate skills push may modify only one skill`. This is a destination constraint, not an FCIS rule. Do not describe this account-level Skills store as the public OpenAI API or as an organization-wide skill registry.
+6. **Treat OpenAI destinations as two distinct surfaces.** ChatGPT account Skills and the public project-scoped OpenAI Skills API do not update each other. For ChatGPT, compare the full available installed bundle through the supported account readback and report resources or effective revisions that the interface does not expose as unverified. For the public API, use the existing Reframe `skills.synchronize` read-only observer to inspect project inventory, the exact immutable version's ZIP, and the active/default pointer; keep credentials inside the approved SecretStore host adapter. An API listing is metadata only. Never copy a secret into Git, prompts, receipts, or logs.
 
-7. **Verify each target independently.** After each commit or push, compare the target package with the owner source, inspect the target revision, and record the result. Report a surface as synchronized only when its exact source identity, contents, and commit are verified. Preserve and report failed syncs; do not claim that local validation installed or published a skill.
+7. **Reconcile only after explicit, targeted authorization.** Name the skill, destination, canonical source revision, expected prior installation and whether an active/default version would change. Submit one reviewed package at a time through the supported destination workflow, preserve the previous version and unrelated skills, and independently read back the resulting contents and version. A platform-specific policy or icon field found only in an installed copy is an observation, not permission to import it into Git. Do not silently delete, overwrite, retire, promote, or roll back anything; do not automate publishing on a Git push or through GitHub Actions.
+
+8. **Close with bounded evidence.** Report `PROVEN`, `DRIFT`, `MISSING`, or `UNVERIFIED` per destination, with the exact source commit and evidence address. An installation is synchronized only to the degree the complete package and effective selected execution version have both been independently verified. Leave a divergence open when an authorization or supported readback is absent; do not invent a replacement API or claim organization-wide synchronization from one skill.
 
 ## Output contract
 
-Report a mapping for each skill:
-
 | Field | Required result |
 | --- | --- |
-| Skill identity | Stable directory name and intended audience |
-| Source | Owning repository, path, and commit |
-| ChatGPT Skills | Synced commit or explicit not-requested/blocked state |
-| Repository mirror | Codex/Claude status and check result, when applicable |
-| Validation | Skill Creator validation and owner-procedure evidence |
-| Drift | Remaining differences, unsupported resources, or unknowns |
+| Skill | Stable organization-owned identity |
+| Source | `Fountain-Coach/.github`, exact path and Git commit |
+| Package | Canonical file-tree SHA-256 and validation outcome |
+| Domain mirrors | Selected derived revisions and independent readback |
+| ChatGPT account Skills | File coverage, observable drift, and version evidence limits |
+| OpenAI project Skills API | Exact skill/version identity, ZIP content result, and default pointer, or unverified |
+| Reconciliation | Explicit scope/approval, write receipt, independent readback, or a recorded blocker |
 
-Separate verified synchronization from recommendation or inferred mapping. Stop after the requested surfaces are reconciled; do not imply an organization-wide sync from a single-skill result.
+Chapter 160 governs ownership, not the vendor's UI or transport behavior. Keep proof, interpretation, proposal, and authorized promotion distinct.
