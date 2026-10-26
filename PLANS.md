@@ -54,3 +54,19 @@ Canonical org source matches its declared SHA-256; exact ZIP re-build matches; h
 **Source slice:** change only the FCIS `agents/openai.yaml` short description/default prompt in `Fountain-Coach/.github`; recalculate its complete file-tree digest and project the two-file canonical package into the selected Reframe Codex/Claude mirrors without touching other skills. Record the observed ChatGPT body match and supporting-file divergence in the account audit.
 
 **Acceptance:** `python3 skills/skillctl.py check`; 8 source-side integrity tests; source/package quick validation; single-skill mirror checks and byte-for-byte readback. ChatGPT editor body and description were verified after reload; its YAML/icon and effective version remain divergent or unverified. Complete remote DoD remains open and no external API operation is implied.
+
+## Phase 5 — bounded account editor and read-only Reframe observer follow-up (26 October 2026)
+
+**Goal:** Reconcile only the installed `fcis-skill-authoring-and-sync` ChatGPT package to the canonical `.github` revision and observe the exact public OpenAI project version through the existing Reframe read-only provider. Keep ChatGPT account and public project versions distinct; do not assert Reframe GUI/MIDI2 acceptance without its own live evidence.
+
+**Governance reading record**
+- **Chapters read:** 07 (no invented prerequisite and bounded work), 08 (independent artifact-backed proof), 160 (sole canonical source; observed differences never grant source authority). Organization `AGENTS.md` and the existing skill authoring/sync procedure also apply.
+- **Forbidden here:** bulk update or deletion of other ChatGPT skills, importing icon/policy additions into Git, copying credentials into tools or logs, pretending the provider's fixture tests are remote project readback, or inventing a scenario command to compensate for missing live acceptance.
+- **Conflict:** the editor's folder-upload flow exposed an added root-level `openai.yaml` instead of replacing `agents/openai.yaml`; the attempted account-side correction therefore did not achieve the required exact bundle comparison. Treat this as an observation of the UI path, not proof that the account service deliberately reauthors packages.
+- **Excluded:** destructive account updates, production OpenAI project version promotion, private source publication, unrelated Reframe GUI or Kit changes. A prospective runtime scenario must be separately authored and admitted through Reframe.
+
+**Observed execution:** Canonical organization head `4e70d5f` retains the versioned `b545a106319bf82d577761fe01a58168a179429827b2c7954abe2b3d681c647d` package digest. On the authorized Mac's ChatGPT FCIS skill editor, a folder upload did not replace the expected relative resource; a root-level `openai.yaml` appeared in the file tree. Removal was selected in the editor, but a durable save and subsequent ZIP/version readback were not established; the installed Skills read interface did not expose that root file. No unqualified account synchronization claim is permitted.
+
+**Reframe observer check:** Source at `Fountain-Coach/midi2-gpu-fabric` commit `f7d5741` contains the GET-only exact-version ZIP/default-pointer observer and the existing `skills.synchronize` Store adapter. The source scan found test call sites but no production invocation and no matching `LiveScenarios` contract. An isolated native focused test build was started without reading secret data; test completion and authenticated project readback require separate terminal receipts. A registered Keychain item alone is not project authorization or successful API access.
+
+**Current acceptance:** Canonical source and selected Reframe mirrors remain proven by preceding phases. ChatGPT content remains `DRIFT`; selected account version, project API version/default pointer and Reframe GUI/MIDI2 proof remain `UNVERIFIED`. Do not advance the DoD or report a completed remote update.
