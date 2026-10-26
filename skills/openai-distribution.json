@@ -2,10 +2,34 @@
   "schemaVersion": 1,
   "owner": "Fountain-Coach/.github",
   "status": "desired-state-only",
-  "destinations": ["openai-skills-api", "chatgpt-account-skills"],
+  "destinations": [
+    "openai-skills-api",
+    "chatgpt-account-skills"
+  ],
   "skills": [
-    {"name": "teatro-scenario-composer", "sourceRepository": "Fountain-Coach/midi2-gpu-fabric", "sourcePath": ".codex/skills/teatro-scenario-composer", "sourceStatus": "requires-owner-reconciliation", "distribution": "requested-not-verified"},
-    {"name": "linotype-estate-template", "sourceRepository": "Fountain-Coach/estate", "sourcePath": ".codex/skills/linotype-estate-template", "sourceStatus": "requires-owner-reconciliation", "distribution": "requested-not-verified"},
-    {"name": "fcis-skill-authoring-and-sync", "sourceRepository": "Fountain-Coach/midi2-gpu-fabric", "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync", "sourceStatus": "branch-only-unmerged", "distribution": "requested-not-verified"}
+    {
+      "name": "teatro-scenario-composer",
+      "sourceRepository": "Fountain-Coach/teatro.fountain.coach",
+      "sourcePath": ".codex/skills/teatro-scenario-composer",
+      "sourceStatus": "review-branch-pr-2",
+      "distribution": "chatgpt-installed-api-not-verified",
+      "sourceCommit": "31a1672a0d04803014b5d713658d83c5cac7d679"
+    },
+    {
+      "name": "linotype-estate-template",
+      "sourceRepository": "Fountain-Coach/estate",
+      "sourcePath": ".codex/skills/linotype-estate-template",
+      "sourceStatus": "review-branch-pr-6",
+      "distribution": "chatgpt-installed-api-not-verified",
+      "sourceCommit": "80887b637c58450d58494f914f372a0b5a65a4d3"
+    },
+    {
+      "name": "fcis-skill-authoring-and-sync",
+      "sourceRepository": "Fountain-Coach/midi2-gpu-fabric",
+      "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",
+      "sourceStatus": "branch-only-unmerged",
+      "distribution": "chatgpt-installed-api-not-verified",
+      "sourceCommit": "42995a7"
+    }
   ]
 }
