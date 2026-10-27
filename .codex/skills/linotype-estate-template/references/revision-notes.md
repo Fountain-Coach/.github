@@ -40,3 +40,11 @@ The ZIP is a static procedural artifact. Its validation proves package structure
 - Preserve EstatePublisher's established client-side SSH/rsync/SHA-256/atomic-symlink/rollback/HTTPS readback contract. No restricted identity, remote helper, custom signing ceremony, SecretStore enrollment, Store replication, new DNS tier, browser matrix or new CI requirement is added by this skill.
 - A skill cannot guarantee native enforcement: when the author's outcome explicitly requires a *machine-enforced guarantee*, verify the actual running publisher guard or truthfully report NOT YET GUARANTEED and propose the minimal existing-client correction. A unit test proves behavior of what was written, not necessity of unrelated machinery.
 - Added [invented-prerequisite-loop.md](invented-prerequisite-loop.md), citing the founding standard, Chapter 158 and the repository-owned EstatePublisher reversal incident. The earlier static HTML checker and icon remain unchanged.
+
+## 27 October 2026 — Route-template reproduction before semantic publication
+
+- Incident: *The Door Is a Score* was publicly reachable and visually illustrated, but its iPad screenshot showed three simplified reel icons instead of the adopted estate experience. Copying nine links from a snapshot was not itself shell acceptance; an attempted subsequent release was not activated.
+- Explicitly resolve the current adopted Fountain Coach Publication Core and an **existing** named template/preview scenario before composing a new route. Parameterize the existing scenario with route/source/shell/viewport and retain independent WebKit/AX/visual evidence; a scenario definition test alone proves no live acceptance.
+- Keep scenario reuse conditional on an existing capable executor; no new per-page scenario, universal shell renderer, platform ceremony or global publishing gate is required by this revision.
+- Preserve Chapter 158's approved SSH/Caddy static release profile, exact predecessor and unchanged estate content, and distinguish visual/template acceptance from terminal publication proof.
+- This is a skill procedure revision only. Its ZIP does not claim that an actual scenario ran or that the public article's reel was corrected.
