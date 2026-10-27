@@ -1,0 +1,4 @@
+interface:
+  display_name: "EstatePublisher Deployment"
+  short_description: "Publish static Fountain Coach routes through approved SSH/Caddy and operate other governed deployment lanes."
+  default_prompt: "Resolve the current EstatePublisher lane for the requested effect. For immutable static releases, reuse Chapter 158 authenticated SSH/Caddy without inventing Store or agent prerequisites; verify source, rollback and public HTTPS."

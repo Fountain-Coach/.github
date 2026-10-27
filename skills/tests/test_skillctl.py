@@ -8,7 +8,7 @@ import skillctl as ctl
 
 class SovereigntyTests(unittest.TestCase):
     def test_canonical_packages(self):
-        self.assertEqual(len(ctl.validate()["skills"]), 3)
+        self.assertEqual(len(ctl.validate()["skills"]), 4)
     def test_repeatable_zip_and_roundtrip(self):
         files = ctl.entries(ctl.SKILLS / "teatro-scenario-composer")
         data = ctl.archive(files, "teatro-scenario-composer")
@@ -17,6 +17,18 @@ class SovereigntyTests(unittest.TestCase):
             path = Path(directory) / "skill.zip"
             path.write_bytes(data)
             self.assertEqual(files, ctl.read_archive(path, "teatro-scenario-composer"))
+    def test_new_route_template_reuse(self):
+        text = (ctl.SKILLS / "linotype-estate-template" / "SKILL.md").read_text()
+        self.assertIn("New public route: scenario reuse before publication", text)
+        self.assertIn("an already-adopted template/preview scenario", text)
+
+    def test_static_chapter_158_lane(self):
+        text = (ctl.SKILLS / "estate-publisher-deployment" / "SKILL.md").read_text()
+        self.assertIn("Chapter 158", text)
+        self.assertIn("authenticated", text)
+        self.assertIn("not prerequisites", text)
+        self.assertNotIn("must return `estate.publication.sync`", text)
+
     def test_modified_content(self):
         state, delta = ctl.compare({"SKILL.md": b"source"}, {"SKILL.md": b"changed"})
         self.assertEqual((state, delta["modified"]), ("DRIFT", ["SKILL.md"]))

@@ -34,6 +34,14 @@ Observe the exact affected domain transition and current accepted contract. Comp
 
 If the request explicitly covers whole-estate parity, broaden to the declared routes and profiles, using existing WebKit/AX/visual mirror evidence and a correlated transition report. A new `estate.shared-shell.cross-domain-acceptance` operation is NOT automatically required. Propose one only on a proved missing executor seam, after checking the existing preview/visual mirror and typed Kit contract.
 
+### B2. Composing a new public route (not just fixing an existing link)
+
+**Resolve source and inherited template first.** Record route identity/host, owning Git SHA, current accepted Publication Core shell revision and the named *existing* estate preview/template scenario. Verify the current public reel, Info and legal-footer behavior and shell geometry from adopted source and actual predecessor; do not treat a historic nine-entry fixture or one page's copied HTML as the template. Compose one complete checked-in static HTML/CSS/JS route in its source owner, preserving all named shell regions and the domain's authored content.
+
+**Reuse scenario acceptance, parametrized for the route.** Run the available preview/template reproduction, relevant AX/WebKit/visual checks for desktop, iPad and phone, focus/Back, light/dark and media, and semantic graph/link/social metadata checks. Distinguish a source-unit test about scenario intent from a real scenario run/witness. If no current executable named scenario exists, report that exact gap; do not fabricate one per new URL or silently elevate a proposed cross-domain test into a binding release gate. Apply FCIS's four-question necessity test to any suggested extra implementation.
+
+**Bound publication.** Diff the route and affected collection/links against the actual public predecessor. Keep the existing SSH/Caddy static lane admitted by Chapter 158 available when it is the correct mode; do not invent FountainStore replication, signing, agent enrollment or an all-domains build. Publish and independently read back the new route, visual asset/audio and neighboring routes with rollback identity.
+
 ### C. Bookshelf or Linotype defect
 
 Prove candidate vs admitted work, writer authorization, exact source digest, cover identity, measured reader and return/reopen. Resolve it within Press or Reframe/FountainStore; never create a fourth CMS, public site, navigation identity, fake cover, or authored text from an Empty slot.

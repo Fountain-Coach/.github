@@ -22,7 +22,7 @@
       "name": "linotype-estate-template",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/linotype-estate-template",
-      "contentSHA256": "cd74f4933dd4442ad493b013b259e7aa1bc78c8c3f0f29652ae79b8687fb2321",
+      "contentSHA256": "2fcd9c1ead4ce94b25eecd17c9f5f3625b77d485d2b8c41b1bf3fc72200932dd",
       "provenance": {
         "importedFrom": "Fountain-Coach/estate",
         "sourcePath": ".codex/skills/linotype-estate-template",
@@ -38,6 +38,19 @@
         "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
         "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",
         "sourceCommit": "63cb1d337461058fd6460561661bd32450f64145"
+      }
+    },
+    {
+      "name": "estate-publisher-deployment",
+      "distribution": "not-content-verified",
+      "canonicalPath": ".codex/skills/estate-publisher-deployment",
+      "contentSHA256": "b567ba7c1ded271e0ddcca4ba0c64b877d962c08aff028cb52601737ccd5504c",
+      "provenance": {
+        "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
+        "sourcePath": ".codex/skills/estate-publisher-deployment",
+        "sourceCommit": "f7d57413a0f4cecf3e03e08f6c48f84bc01a5902",
+        "originalEntrypointBlob": "fed885d5ce1fc0d1fdc5e702ef6e1bea04efa0be",
+        "note": "Reviewed historical source; new canonical procedural package authored only in Fountain-Coach/.github."
       }
     }
   ]
