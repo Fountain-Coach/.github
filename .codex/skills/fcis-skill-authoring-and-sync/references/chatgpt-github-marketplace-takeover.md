@@ -60,7 +60,18 @@ settled marketplace list and plugin detail established success.
    A provider count of "1 hinzugefügt" does not prove a duplicate: the stable
    plugin ID is the deciding witness. Treat transient "status unavailable" as
    a symptom; reload or inspect the settled source/status before diagnosing.
-7. **Verify later updates separately.** After the canonical Skill next changes,
+7. **Audit for leftover ZIP-created duplicates.** The marketplace import can
+   preserve its declared workspace plugin ID while another, independent
+   ZIP-uploaded plugin with the *same display name* remains present. Inspect
+   **Plugins → Workspace**: compare every candidate's actual `Plugin_...` URL,
+   developer, availability and installed status against the marketplace's
+   linked plugin ID. Retain the active GitHub-linked plugin. If explicitly
+   authorized to clean up, delete only the independently identified private
+   duplicate through its own **Plugin-Aktionen → Plugin löschen** controls;
+   never delete by display name alone. A provider toast such as
+   `plugins_upstream_failure` does not settle the result either way: reload
+   the workspace inventory and prove that only the GitHub-linked ID remains.
+8. **Verify later updates separately.** After the canonical Skill next changes,
    check GitHub Action's derived-only commit and plugin version bump, then read
    the same workspace plugin after its scheduled auto-sync. For an immediate
    explicit test, the supported **Jetzt synchronisieren** action is permissible,
@@ -74,8 +85,13 @@ settled marketplace list and plugin detail established success.
   `INSTALLED_NOT_SYNCHRONIZED`; never recommend another ZIP.
 - **GitHub CI green or isolated `codex plugin add` succeeds, no provider
   readback:** `HOSTED_UNVERIFIED`.
-- **Wrong/missing pluginId or a second competing installed plugin:** refuse
-  takeover; preserve the existing identity and unrelated policies.
+- **Wrong/missing pluginId:** refuse takeover; preserve the existing identity
+  and unrelated policies.
+- **Two same-named workspace plugins:** distinguish IDs and GitHub provenance.
+  Do not claim there is no duplicate from a successful marketplace import.
+  Remove only an explicitly authorized, independently identified redundant
+  entry, then re-read the workspace inventory. A failed delete toast does not
+  override the final provider inventory either way.
 - **Provider status remains unavailable or import action absent:** classify
   `BLOCKED`; do not silently delete/recreate or use a private API.
 - **Imported marketplace but auto-sync off:** the *initial connection* exists,
@@ -96,4 +112,12 @@ receipts remain in `PLANS.md` and
 **Abgeschlossen**, one imported, zero failed, auto-sync checked; the imported
 plugin navigated to the *same* pre-existing workspace `Plugin_...` identity,
 activated and installed at 0.1.1. This proves the initial GitHub-backed
-workspace bridge, not a later daily version-update witness.
+workspace bridge, not a later daily version-update witness. An additional
+workspace audit exposed two distinct plugins with the same display name: an
+older private, unavailable ZIP entry and the active GitHub-connected entry.
+The private plugin's own delete control was used with its separately verified
+ID. Although the UI briefly displayed `plugins_upstream_failure`, a newly
+loaded workspace inventory showed exactly one remaining FCIS plugin, the
+GitHub-backed ID. The marketplace still reported one imported plugin,
+**Abgeschlossen** and automatic sync on. The new audit step therefore requires
+both workspace and marketplace readback, not a conclusion from either toast.

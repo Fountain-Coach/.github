@@ -20,6 +20,10 @@ class FcisMarketplaceLessonTests(unittest.TestCase):
             "INSTALLED_NOT_SYNCHRONIZED",
             "HOSTED_UNVERIFIED",
             "Jetzt synchronisieren",
+            "Plugins → Workspace",
+            "Plugin-Aktionen → Plugin löschen",
+            "plugins_upstream_failure",
+            "two distinct plugins",
         ):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, lesson)
