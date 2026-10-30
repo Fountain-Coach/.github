@@ -51,6 +51,43 @@ Record a reviewable candidate under `skills/proposals/`; do not author a new exe
 
 8. **Close with bounded evidence and a maintained plan.** Reconcile the active organization `PLANS.md` phase in place with exact commits, validation, distribution status and next unfinished action. Report `PROVEN`, `DRIFT`, `MISSING`, or `UNVERIFIED` per destination, with the exact source commit and evidence address. An installation is synchronized only to the degree the complete package and effective selected execution version have both been independently verified. Leave a divergence open when an authorization or supported readback is absent; do not invent a replacement API or claim organization-wide synchronization from one skill.
 
+## Verified scenario lessons
+
+<!-- FCIS-AUTO-LESSON 58fd839333f71c4fe51b -->
+### commands-discover — verified reusable procedure
+
+**Lesson:** When learning from an accepted Reframe command scenario, use its declared Composer MIDI2 ingress, witness the semantic chat reply through a bound Reframe-labelled AX row rather than a missing child title, and reconcile capability identity with terminal phase in one persisted Store event before automatically updating an existing canonical FCIS Skill.
+**Trigger:** An independently accepted Reframe scenario provides a reusable procedure involving command dialogue, virtualized response presentation, and persisted capability lifecycle evidence.
+**Distinct from prior instructions:** The earlier proposal checks scenario status and aliases but not current triadic input authority, virtualized AX reply semantics, or matching the capability and terminal phase within one persisted lifecycle event. Two invalidated live attempts establish the distinct failure boundaries.
+**Scenario provenance:** commands-discover at d10e6a6b32d9019793290099321bd6d64d71c4b2; run 045bdb10-ada3-4bce-be60-dc5525345b1b; typed receipt 85547b2f-b6ff-4822-8c94-02f691c02639.
+
+**Preconditions:**
+- A committed scenario contract and source revision with reproducible native Swift runner validation and an existing owning capability identity.
+- An independently accepted run with matching terminal receipt, event ledger, managed Store readback, AX transcript and CoreGraphics window-ID evidence.
+- An existing organization-owned FCIS agent Skill whose procedure is the right target; command aliases are not new capabilities.
+
+**Procedure:**
+- Resolve the scenario by stable ID, owning capability identity and actual operation instead of command spelling or Book acceptance status.
+- Enter writer dialogue through the declared Composer MIDI2 transport and canonical three participants, retaining AX as an independent read-only surface witness.
+- Witness long or virtualized results from the semantic Reframe-labelled chat row when the inner title is not exposed in the currently available accessibility tree.
+- Require the capability identity and terminal phase to agree within one persisted FountainStore lifecycle record; unrelated records cannot jointly satisfy a terminal predicate.
+- Match source commit, executable, managed Store, run ID, terminal receipt, AX transcript, window sidecar and accepted event sequence before invoking automatic canonical Skill elevation.
+- On missing or invalidated evidence, retain a non-admitted proposal; after an accepted run, revise the existing canonical Skill and package digest through the automatic Git commit path.
+
+**Stop conditions:**
+- Never bypass a MIDI2-only command ingress with AX settext or reinterpret a runtime transport refusal as accepted behavior.
+- Never turn a successful Store result into live acceptance when the required independent AX result is absent.
+- Never join a capability identity from one Store event to a terminal phase from another, or use an invalidated run as a transferable lesson.
+- Do not create a Kit capability, change the runtime contract authority, or install or publish ChatGPT and OpenAI Skill versions as a side effect of canonical learning.
+
+**Regression checks:**
+- For an AX command-input attempt refused by the triadic MIDI2 contract, classify the run invalidated and prohibit automatic learning.
+- For a long Reframe reply with a visible semantically labelled chat row and hidden child title, require a recorded same-row AX witness and matching Store terminal event.
+- For two Store events containing a capability identity and a terminal phase separately, reject a fabricated combined terminal success.
+- For a fully accepted source-pinned run, verify exactly one existing canonical Skill plus digest is committed, then repeat the same lesson without producing a duplicate commit.
+
+<!-- /FCIS-AUTO-LESSON 58fd839333f71c4fe51b -->
+
 ## Output contract
 
 | Field | Required result |
