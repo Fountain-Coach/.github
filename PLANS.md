@@ -1,21 +1,20 @@
 # Skill Sovereignty implementation
 
-## Maintenance of the existing plan — mandatory read/write continuation (30 October 2026)
+## Current continuation — project-state maintenance (30 October 2026)
 
-**Observed issue and unchanged writer outcome:** During R27 → R28 Reframe Free Reader continuation, the agent repeatedly considered a fresh plan and then discussed `PLANS.md` without maintaining its active phase. The author corrected the proposed read-only gate: **the plan must be maintained, not merely read**. This correction changes the existing canonical FCIS skill procedures; it is not a new Reframe scenario or publication plan.
+**Status:** implementing bounded correction in the existing Skill Sovereignty phase. **Goal:** make plan continuity read–write and transparent without producing an append-only activity diary, another workflow engine or new completion gates.
 
 **Governance reading record**
-- **Chapters read:** 07 (goal fidelity, smallest existing path, agent owns continuation), 08 (witness each completion stage honestly), 160 (only `Fountain-Coach/.github` may author canonical skill files); the organization FCIS Founding Rule §§1, 2, 3, 7, 8, 9 and the existing Skill Sovereignty plan.
-- **What they forbid here:** beginning fresh planning when an accepted phase exists, reading `PLANS.md` without writing material implementation results back into it, moving the DoD, using a skill update as reason to withhold a working Reader, editing downstream skill mirrors as canonical, claiming ChatGPT installed-version synchronization from Git commits.
-- **Conflicts:** Chapter 07 already commands phase-scoped `PLANS.md` maintenance; the current canonical Linotype Estate Template gives an inspect/verify workflow but no explicit read–write continuation trigger. The existing authoring/sync Skill reads the organization plan at entry but does not require recording subsequent source/validation/distribution states in it. Resolve by expressing the existing obligation explicitly in the **same** skill procedures and AGENTS conduct, not by creating new machinery.
-- **Excluded, and why:** no new skill, new scenario, new Git host, external plugin installation, public domain publication, or changes to Reframe source/runtime. Domain and ChatGPT skill distribution requires separate, exact-version authorization and independent readback under Chapter 160.
+- **Read:** FCIS Goal Fidelity §§1–3, 7–10; Governance 07 (continue existing phase), 08 (evidence/source separation), 55 (Store identity), 59 (Git project authority), 160 (organization skill source).
+- **Forbidden:** duplicate plans, moving DoD, fabricated Store receipts, plan prose presented as live execution, making GitHub a Store, unverified skill packaging or account distribution.
+- **Conflict:** previous lengthy continuation entry called for *appending* session records, while the writer requires an actively maintained, compact state. The previously edited Linotype skill has no matching updated package digest. Correct the entry and resolve the package discrepancy without deleting historical Git evidence.
+- **Excluded:** new project-manager service, Store schema/API, hosted publication, downstream skill sync, public Reader release and unrelated Reframe code.
 
-**Finite source correction:** For source-affecting governed sessions, **before source edits**, resolve the existing owning `PLANS.md` and current phase and append an evidence-labeled continuation record in it. **During execution**, update that same phase at material changes of source, tests, candidate, stage/production state or real blocker, keeping source hashes/receipts and actual acceptance status. **Before handoff**, persist what was changed, what was actually observed, what remains unfinished and the next executable action. A read-only question is not an excuse to fabricate a plan entry. Existing phase remains authoritative; never require the user to request continuation again.
+**Current accepted state:** Git is authority for authored project decisions and file revisions; FountainStore remains authority for persisted operations it actually supports; `PLANS.md` is the maintained, human-readable phase projection. Existing Store facts must be verified by receipt, never inferred from Markdown or a Git commit.
 
-**Source owners:** `Fountain-Coach/.github/AGENTS.md`, `.codex/skills/linotype-estate-template/SKILL.md`, `.codex/skills/fcis-skill-authoring-and-sync/SKILL.md`, and their exact tree digests in `skills/openai-distribution.json`. Derived repository mirrors and ChatGPT account Skills remain independently distributed surfaces; source edits do not activate them.
+**Source slice:** revise organization FCIS founding conduct and `AGENTS.md`; reconcile the previously edited canonical Linotype skill against the versioned package manifest; keep existing R27 and Skill Sovereignty phase identities. Any skill distribution remains separately authorized.
 
-**Acceptance / status:** Canonical edits and exact complete-tree hashes to be verified with `python3 skills/skillctl.py check` and `python3 -m unittest discover -s skills/tests -v` where runnable. Report unavailable validation as unverified rather than claiming success. Original R27 implementation goal remains open and is not made dependent on this documentation correction.
-
+**Next:** commit bounded source correction, independently read back changed files and validate the unchanged skill package digest where possible; then hand off with exact open evidence, without claiming public Governance or Store runtime changes.
 
 Governance authority: Chapter 160 at https://governance.fountain.coach/chapters/160-skill-sovereignty-and-governed-distribution/.
 
