@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "fcis-skill-authoring-and-sync",
+  "version": "0.1.0",
+  "description": "FCIS-governed agent skill authoring, verified scenario learning, and canonical Git source reconciliation.",
+  "repository": "https://github.com/Fountain-Coach/.github",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Fountain Coach FCIS",
+        "shortDescription": "Governed, evidence-backed agent skill learning.",
+        "longDescription": "Reusable Fountain Coach FCIS agent-skill procedure, derived from the organization-owned Git definition. No new Kit or model runtime capability.",
+        "developerName": "Fountain Coach",
+        "category": "Productivity",
+        "capabilities": [],
+        "websiteURL": "https://fountain.coach"
+      }
+    }
+  }
+}
