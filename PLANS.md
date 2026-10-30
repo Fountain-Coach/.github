@@ -1,5 +1,22 @@
 # Skill Sovereignty implementation
 
+## Maintenance of the existing plan — mandatory read/write continuation (30 October 2026)
+
+**Observed issue and unchanged writer outcome:** During R27 → R28 Reframe Free Reader continuation, the agent repeatedly considered a fresh plan and then discussed `PLANS.md` without maintaining its active phase. The author corrected the proposed read-only gate: **the plan must be maintained, not merely read**. This correction changes the existing canonical FCIS skill procedures; it is not a new Reframe scenario or publication plan.
+
+**Governance reading record**
+- **Chapters read:** 07 (goal fidelity, smallest existing path, agent owns continuation), 08 (witness each completion stage honestly), 160 (only `Fountain-Coach/.github` may author canonical skill files); the organization FCIS Founding Rule §§1, 2, 3, 7, 8, 9 and the existing Skill Sovereignty plan.
+- **What they forbid here:** beginning fresh planning when an accepted phase exists, reading `PLANS.md` without writing material implementation results back into it, moving the DoD, using a skill update as reason to withhold a working Reader, editing downstream skill mirrors as canonical, claiming ChatGPT installed-version synchronization from Git commits.
+- **Conflicts:** Chapter 07 already commands phase-scoped `PLANS.md` maintenance; the current canonical Linotype Estate Template gives an inspect/verify workflow but no explicit read–write continuation trigger. The existing authoring/sync Skill reads the organization plan at entry but does not require recording subsequent source/validation/distribution states in it. Resolve by expressing the existing obligation explicitly in the **same** skill procedures and AGENTS conduct, not by creating new machinery.
+- **Excluded, and why:** no new skill, new scenario, new Git host, external plugin installation, public domain publication, or changes to Reframe source/runtime. Domain and ChatGPT skill distribution requires separate, exact-version authorization and independent readback under Chapter 160.
+
+**Finite source correction:** For source-affecting governed sessions, **before source edits**, resolve the existing owning `PLANS.md` and current phase and append an evidence-labeled continuation record in it. **During execution**, update that same phase at material changes of source, tests, candidate, stage/production state or real blocker, keeping source hashes/receipts and actual acceptance status. **Before handoff**, persist what was changed, what was actually observed, what remains unfinished and the next executable action. A read-only question is not an excuse to fabricate a plan entry. Existing phase remains authoritative; never require the user to request continuation again.
+
+**Source owners:** `Fountain-Coach/.github/AGENTS.md`, `.codex/skills/linotype-estate-template/SKILL.md`, `.codex/skills/fcis-skill-authoring-and-sync/SKILL.md`, and their exact tree digests in `skills/openai-distribution.json`. Derived repository mirrors and ChatGPT account Skills remain independently distributed surfaces; source edits do not activate them.
+
+**Acceptance / status:** Canonical edits and exact complete-tree hashes to be verified with `python3 skills/skillctl.py check` and `python3 -m unittest discover -s skills/tests -v` where runnable. Report unavailable validation as unverified rather than claiming success. Original R27 implementation goal remains open and is not made dependent on this documentation correction.
+
+
 Governance authority: Chapter 160 at https://governance.fountain.coach/chapters/160-skill-sovereignty-and-governed-distribution/.
 
 ## Reading record
