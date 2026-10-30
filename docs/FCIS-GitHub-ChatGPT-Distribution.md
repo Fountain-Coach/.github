@@ -85,13 +85,26 @@ one imported plugin and zero failures. The marketplace's **automatic sync**
 switch is `aria-checked=true`. Clicking FCIS in that imported marketplace
 opened the existing `Plugin_fb9e0937c59c8191b9fa077fa5ea53ef` identity,
 which remains **Aktiviert**, **Installiert** and at **0.1.1**. This independently
-proves the initial GitHub-to-workspace connection without a duplicate plugin.
-A briefly reported inability to inspect status was transient; the final
-server-backed workspace inventory and revision readback both succeeded.
-The initial import plus enabled automatic synchronization is verified; a
-future upstream version update has not yet been witnessed. For subsequent
-accepted canonical learning, verify GitHub Action completion and later the
-same pluginId's new installed version before claiming upgrade acceptance.
+proves the initial GitHub-to-workspace connection and preservation of this
+one plugin ID; it did **not** prove that no other same-named plugin existed.
+A separate workspace inventory later found the redundant private ZIP-uploaded
+plugin `Plugin_13ac379589248191ae51f74ce1768eac` alongside the GitHub
+entry. Its identity-scoped admin delete action briefly raised
+`plugins_upstream_failure`, but a fresh workspace inventory proved that the
+private entry was absent and **only the GitHub-backed ID remained**. A transient
+provider toast cannot replace final workspace readback in either direction.
+
+**First post-import version upgrade witnessed (30 October 2026):** The
+accepted installation-lesson PR #21 merged as `5d19ac4`; GitHub Actions run
+`41114586095` succeeded and published the exact canonical Skill as plugin
+**0.1.2**, derived-only Git commit `d3abfc0be206b81e33f4667fe102f81b2a761dd8`.
+The operator used the supported **Jetzt synchronisieren** action in the
+previously imported marketplace. ChatGPT subsequently reported
+**Abgeschlossen**, revision `d3abfc0`, **1 updated, 0 failed**, unchanged
+installed plugin `Plugin_fb9e0937c59c8191b9fa077fa5ea53ef` at
+**0.1.2**, active and installed. Auto-sync remained enabled. This proves a
+**manually initiated** full GitHub-to-ChatGPT update. It does not prove the
+separate unattended daily trigger has executed.
 Do not upload another static ZIP or use undocumented private provider APIs.
 
 An independently created account Skill is a distinct installation; do not
