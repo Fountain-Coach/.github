@@ -76,18 +76,23 @@ The ID was independently read from the actual authenticated plugin detail URL;
 it is **not** placed in `plugin.json`. The projection verifier refuses a missing
 or changed takeover ID, and the identity is preserved on future source updates.
 
-Current provider-side state (30 October 2026): this plugin is **activated** in
-the correct workspace at version 0.1.1, but the Admin Console marketplace list
-shows **no imported marketplace**. The `Hinzufügen` modal on that marketplace
-page offered a plugin ZIP upload, which does not establish GitHub ownership.
-Do not assume this form is the GitHub import. Find the provider-supported
-`Plugins > Add > Import marketplace` action; supply the repository root,
-no path, and branch `main`; authorize GitHub through the visible supported
-provider flow. Verify a marketplace row, source revision, successful sync
-receipt and unchanged existing plugin ID. Only then declare the hosted bridge
-synchronized. If the supported import action is unavailable, report the
-specific UI/permission blocker; never create a second ZIP copy or use an
-undocumented private provider API.
+Provider-side acceptance (30 October 2026): authenticated Mac Safari
+verified the supported **Plugins > Hinzufügen > Marketplace importieren**
+workflow. The correct repository root was imported into the writer's workspace
+with branch `main`. The marketplace detail page confirms the GitHub source
+`fountain-coach/.github`, source revision `a81e566`, state **Abgeschlossen**,
+one imported plugin and zero failures. The marketplace's **automatic sync**
+switch is `aria-checked=true`. Clicking FCIS in that imported marketplace
+opened the existing `Plugin_fb9e0937c59c8191b9fa077fa5ea53ef` identity,
+which remains **Aktiviert**, **Installiert** and at **0.1.1**. This independently
+proves the initial GitHub-to-workspace connection without a duplicate plugin.
+A briefly reported inability to inspect status was transient; the final
+server-backed workspace inventory and revision readback both succeeded.
+The initial import plus enabled automatic synchronization is verified; a
+future upstream version update has not yet been witnessed. For subsequent
+accepted canonical learning, verify GitHub Action completion and later the
+same pluginId's new installed version before claiming upgrade acceptance.
+Do not upload another static ZIP or use undocumented private provider APIs.
 
 An independently created account Skill is a distinct installation; do not
 delete it just because the Git marketplace became available.
