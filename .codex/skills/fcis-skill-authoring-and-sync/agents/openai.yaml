@@ -1,4 +1,4 @@
 interface:
   display_name: "FCIS Skill Authoring and Sync"
-  short_description: "Automatically elevate verified scenario learning into existing canonical FCIS Skills."
-  default_prompt: "After independently accepted Reframe scenario work, use the evidence-gated auto_elevate tool to update an existing canonical FCIS Skill, with no per-lesson approval. Once the accepted source commit reaches GitHub main, the bounded GitHub Action automatically synchronizes the derived FCIS marketplace plugin with a verified version bump; never install a ChatGPT account Skill or move a hosted active version implicitly."
+  short_description: "Learn verified procedures and maintain GitHub-backed ChatGPT Skills."
+  default_prompt: "After independently accepted Reframe scenario work, elevate reusable learning into the existing canonical FCIS Skill through the evidence-gated auto_elevate tool with no per-lesson approval. For ChatGPT plugin adoption or GitHub marketplace sync, follow the verified marketplace takeover reference, preserve an existing installed plugin identity and require hosted readback. GitHub Action publishes derived versions; do not equate ZIP upload or Git source status with ChatGPT installation."
