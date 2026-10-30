@@ -22,7 +22,7 @@
       "name": "linotype-estate-template",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/linotype-estate-template",
-      "contentSHA256": "2fcd9c1ead4ce94b25eecd17c9f5f3625b77d485d2b8c41b1bf3fc72200932dd",
+      "contentSHA256": "b428d52a3898a79f1ef968b9036dec4be19e4d31f598d7bf2e9a155baf11d31c",
       "provenance": {
         "importedFrom": "Fountain-Coach/estate",
         "sourcePath": ".codex/skills/linotype-estate-template",
@@ -33,7 +33,7 @@
       "name": "fcis-skill-authoring-and-sync",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-skill-authoring-and-sync",
-      "contentSHA256": "b545a106319bf82d577761fe01a58168a179429827b2c7954abe2b3d681c647d",
+      "contentSHA256": "53d20e4308e8bac1bdffe9e3095c4038182642e4cca7ba0d2f764282ad71a9f3",
       "provenance": {
         "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
         "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",
