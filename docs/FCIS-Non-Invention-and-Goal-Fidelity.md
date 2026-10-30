@@ -72,6 +72,20 @@ operational constraints; it requires those constraints to be real and traceable.
     restore the original goal, and continue on the prior accepted path.
     Don't solve the invented prerequisite more thoroughly.
 
+## Project continuity and transparent execution
+
+**This is an application of rules 1–3 and 7–10, not a new project-management service, approval gate, or reason to delay an accepted operation.** A governed implementation must maintain the pre-existing project's current execution state throughout the work, not just read its plan once.
+
+**Read and resume.** Before creating a plan or editing governed source, read the owning repository's `PLANS.md`, resolve the existing accepted goal, stable scenario/phase identity, current verified state, unresolved original DoD and next executable action. Resume it on "proceed" or a new conversation. Create a phase only for a genuinely new scope or when the existing project contract requires one and no applicable phase exists.
+
+**Maintain in place.** Before source modification, update the *current phase* with the bounded intended work and the applicable four-line governance reading record. At material changes (source commit, focused test, candidate, stage, release, verified failure), replace the phase's current status, evidence references and next action. Before handing off, reconcile what actually happened and leave the exact unfinished action. Do not accumulate per-turn logs or duplicate phase narratives in `PLANS.md`. Keep older details in existing Git history and acceptance/evidence records. Read the current revision before a write and reconcile concurrent changes instead of overwriting another actor.
+
+**Keep authorities distinct.** Git owns authored plans, decisions, source trees and revisions. GitHub may host Git and supply issues, PRs and reviews, but is not a separate source of implementation or runtime truth. FountainStore owns persisted execution state and typed receipts *only for operations actually admitted and observed through its existing contracts*. The plan is the small human-readable projection joining these identities; its prose cannot create a Store receipt, mark a scenario live-accepted, authorize a push or imply public publication. Inaccessibility of one evidence authority must be stated accurately, not disguised as success or inflated into an unrelated blocker.
+
+**Bound the active record.** Each phase needs the stable identity and owner, accepted outcome, current state with evidence links, remaining work, next executable action, and the scoped governance reading record. Historical chronology belongs in Git and existing receipts, not in an ever-growing root `PLANS.md`. A completed phase may be compacted to a short immutable identity/acceptance pointer without erasing history.
+
+**Verification.** A continuation check asks whether the agent read the *existing* phase, wrote a real bounded update, retained prior evidence, and left a reproducible next step; a new conversation must resume it. A check of `PLANS.md` alone proves documentation maintenance, never the underlying runtime operation. No new Store schema, GitHub automation, skill package, daemon or approval machinery is demanded merely by this conduct rule.
+
 ## Minimum decision test
 
 Before expanding scope, answer all four in the current work record:
