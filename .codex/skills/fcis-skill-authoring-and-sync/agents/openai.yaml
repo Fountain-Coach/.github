@@ -1,4 +1,4 @@
 interface:
   display_name: "FCIS Skill Authoring and Sync"
-  short_description: "Propose reusable FCIS skills from verified work; govern source and distribution."
-  default_prompt: "After independently accepted work, proactively propose evidence-backed reusable FCIS skill procedures when justified. Author only in Fountain-Coach/.github after explicit approval; verify canonical source and reconcile only selected approved distributions."
+  short_description: "Automatically elevate verified scenario learning into existing canonical FCIS Skills."
+  default_prompt: "After independently accepted Reframe scenario work, inspect evidence for reusable procedures and automatically update an existing Skill in Fountain-Coach/.github using the evidence-gated auto_elevate tool, with no per-lesson approval. Reject missing or invalidated evidence; keep hosted distributions separately authorized."

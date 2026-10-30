@@ -61,19 +61,20 @@ class SovereigntyTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 ctl.read_archive(path, "sample")
 
-    def test_active_learning_is_proposal_only(self):
+    def test_active_learning_is_automatic_but_external_versions_stay_governed(self):
         org = (ctl.ROOT / "AGENTS.md").read_text()
         skill = (ctl.SKILLS / "fcis-skill-authoring-and-sync" / "SKILL.md").read_text()
         metadata = (ctl.SKILLS / "fcis-skill-authoring-and-sync" / "agents" / "openai.yaml").read_text()
-        self.assertIn("Active procedural learning (proposal-only)", org)
+        self.assertIn("Active procedural learning (automatic canonical elevation)", org)
         self.assertIn("## Active learning", skill)
         self.assertIn("independently accepted", skill)
-        self.assertIn("PROPOSED — NOT ADMITTED", skill)
-        self.assertIn("cannot silently author or amend canonical Git", skill)
-        self.assertIn("proactively propose", metadata.lower())
-        self.assertIn("not a background watcher", skill)
+        self.assertIn("skills/auto_elevate.py", skill)
+        self.assertIn("without a separate per-lesson approval", org)
+        self.assertIn("no per-lesson approval", metadata.lower())
+        self.assertIn("not a background service", skill)
         self.assertIn("Scenario-based learning input", skill)
         self.assertIn("skills/scenario_learning.py", skill)
+        self.assertIn("No ChatGPT/OpenAI version is changed", skill)
 
 if __name__ == "__main__":
     unittest.main()

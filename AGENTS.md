@@ -14,20 +14,24 @@ developing them further.
 
 **Project continuity (mandatory for governed implementation):** Read the owning repository's current `PLANS.md` and resolve its accepted scenario, active phase, latest evidenced state and next unfinished action **before** proposing another plan or modifying source. Maintain that same phase **in place** during work and reconcile it before handoff; do not append a new session narrative on each turn. Keep the readable state concise and point to Git commits and existing acceptance records. FountainStore proves only Store operations independently witnessed there; GitHub collaboration metadata is not runtime proof. An unavailable Store is not automatically a blocker to an otherwise authorized Git operation. Preserve concurrent plan changes by checking the revision before writing. Consult the [FCIS project continuity contract](docs/FCIS-Non-Invention-and-Goal-Fidelity.md#project-continuity-and-transparent-execution) for exact boundaries.
 
-**Active procedural learning (proposal-only):** At the independently accepted
-end of nontrivial work, without waiting for a request to create a Skill,
-inspect the actual accepted result and already accessible related evidence.
-Look for a transferable, non-obvious procedure and compare it with the
-canonical `.codex/skills/` catalogue before suggesting anything. Prefer
-improving an existing skill to creating a duplicate. An evidence-backed
-proposal names the observed effect, source revision and receipt(s), trigger,
-preconditions, steps, failure/stop conditions, scope and regression proof;
-distinguish one successful run from independently repeated success. If no
-transferable pattern is evidenced, make no proposal. A proposal is neither
-admission nor authority: never silently change a skill, Kit contract,
-project DoD, Git source, ChatGPT installation or OpenAI API distribution.
-This post-acceptance check is an agent workflow, not a claimed background
-monitor or unobserved FountainStore capability.
+**Active procedural learning (automatic canonical elevation):** After independently
+accepted nontrivial work, proactively inspect actual result and available evidence
+for a transferable, non-obvious procedure. Prefer revising an existing FCIS agent
+Skill to creating a duplicate. For a Reframe scenario with a reconciled accepted
+Swift terminal receipt, bound run/events, Store readback, AX and window-ID witness,
+prepare an evidence-backed candidate and invoke `skills/auto_elevate.py` against
+the exact evidence bundle and scenario source Git repository. A successful
+validation automatically revises the one existing Skill under this organization's
+`.codex/skills/`, updates its file-tree digest, and commits both canonical files
+without a separate per-lesson approval. Repeated evidence is idempotent. Missing,
+inconsistent, or invalidated evidence refuses mutation. If the work is not yet
+independently witnessed, retain a non-admitted proposal; never fabricate proof.
+Automatic elevation is delegated **only for canonical source learning**. It
+cannot create a Kit/runtime identity, rewrite the project's Definition of Done,
+change unrelated source, distribute ChatGPT/OpenAI Skills or move active versions.
+Those effects retain their distinct governing permissions and proofs. This is
+an agent task-closure workflow, not a claimed background service or unseen Store
+capability.
 
 A new blocker requires four traceable answers: requested outcome, current
 failed operation, governing source, smallest necessary correction. An
