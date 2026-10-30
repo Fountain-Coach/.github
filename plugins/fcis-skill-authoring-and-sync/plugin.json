@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "fcis-skill-authoring-and-sync",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "FCIS-governed agent skill authoring, verified scenario learning, and canonical Git source reconciliation.",
   "repository": "https://github.com/Fountain-Coach/.github",
   "extensions": {
