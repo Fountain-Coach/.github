@@ -11,6 +11,8 @@ authority for editing the Skill or installing any ChatGPT account version.
 - Git marketplace: .agents/plugins/marketplace.json
 - Portable plugin: plugins/fcis-skill-authoring-and-sync/
 - Plugin and included Skill: fcis-skill-authoring-and-sync
+- Existing ChatGPT workspace plugin ID: `Plugin_fb9e0937c59c8191b9fa077fa5ea53ef`
+  (authenticated Admin Console readback, activated and installed at 0.1.1)
 - No MCP service, runtime Kit capability, provider credentials or account action
 
 ## The automatic GitHub distribution path (writer-authorized)
@@ -59,7 +61,7 @@ authorized workspace administration interface (if available to that workspace):
 - Path: empty; the marketplace descriptor is at the repository root
 - Branch: main
 - Marketplace: fountain-coach
-- Plugin: fcis-skill-authoring-and-sync, not installed by default
+- Plugin: fcis-skill-authoring-and-sync, takeover of existing installed workspace plugin (source policy does not force installation)
 
 After a successful initial import, ChatGPT can synchronize imported GitHub
 marketplaces daily or on an admin-triggered sync. GitHub package publication
@@ -68,10 +70,27 @@ Check the actual account or workspace installation's contents and selected
 execution version using an authenticated supported readback before declaring
 that the hosted installation is up to date.
 
-If an existing *workspace plugin* should retain its ID, inspect the actual
-pluginId on the authorized admin surface before modifying the marketplace
-entry. An independently created account Skill is a distinct installation;
-do not delete it just because the Git marketplace became available.
+The existing ZIP-uploaded workspace plugin is now explicitly addressed by
+`pluginId` alongside `name` and `source` in `.agents/plugins/marketplace.json`.
+The ID was independently read from the actual authenticated plugin detail URL;
+it is **not** placed in `plugin.json`. The projection verifier refuses a missing
+or changed takeover ID, and the identity is preserved on future source updates.
+
+Current provider-side state (30 October 2026): this plugin is **activated** in
+the correct workspace at version 0.1.1, but the Admin Console marketplace list
+shows **no imported marketplace**. The `Hinzufügen` modal on that marketplace
+page offered a plugin ZIP upload, which does not establish GitHub ownership.
+Do not assume this form is the GitHub import. Find the provider-supported
+`Plugins > Add > Import marketplace` action; supply the repository root,
+no path, and branch `main`; authorize GitHub through the visible supported
+provider flow. Verify a marketplace row, source revision, successful sync
+receipt and unchanged existing plugin ID. Only then declare the hosted bridge
+synchronized. If the supported import action is unavailable, report the
+specific UI/permission blocker; never create a second ZIP copy or use an
+undocumented private provider API.
+
+An independently created account Skill is a distinct installation; do not
+delete it just because the Git marketplace became available.
 
 There is deliberately no action for OpenAI's project-scoped Skills API, and
 no unattended account Skill installation or active/default promotion.

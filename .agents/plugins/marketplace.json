@@ -6,6 +6,7 @@
   "plugins": [
     {
       "name": "fcis-skill-authoring-and-sync",
+      "pluginId": "Plugin_fb9e0937c59c8191b9fa077fa5ea53ef",
       "source": {
         "source": "local",
         "path": "./plugins/fcis-skill-authoring-and-sync"

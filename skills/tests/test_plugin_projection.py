@@ -39,6 +39,7 @@ class MarketplaceProjectionTests(unittest.TestCase):
             "name": "fountain-coach",
             "plugins": [{
                 "name": projection.PLUGIN,
+                "pluginId": projection.WORKSPACE_PLUGIN_ID,
                 "source": {
                     "source": "local",
                     "path": "./plugins/fcis-skill-authoring-and-sync"
@@ -88,6 +89,10 @@ class MarketplaceProjectionTests(unittest.TestCase):
         self.assertEqual(result["version"], "0.1.1")
         self.assertEqual(result["state"], "SYNCED")
         self.assertEqual(projection.check(self.root)["state"], "MATCHED")
+        self.assertEqual(
+            json.loads(self.marketplace.read_text())["plugins"][0]["pluginId"],
+            projection.WORKSPACE_PLUGIN_ID,
+        )
 
     def test_refuses_unreviewed_extra_mirror_file(self):
         projection.sync(self.root)
@@ -103,6 +108,19 @@ class MarketplaceProjectionTests(unittest.TestCase):
         self.marketplace.write_text(json.dumps(data))
         with self.assertRaises(projection.ProjectionError):
             projection.sync(self.root)
+
+    def test_refuses_lost_or_changed_workspace_plugin_identity(self):
+        for alternative in (None, "Plugin_00000000000000000000000000000000"):
+            data = json.loads(self.marketplace.read_text())
+            if alternative is None:
+                data["plugins"][0].pop("pluginId", None)
+            else:
+                data["plugins"][0]["pluginId"] = alternative
+            self.marketplace.write_text(json.dumps(data))
+            with self.assertRaisesRegex(projection.ProjectionError, "pluginId"):
+                projection.sync(self.root)
+            with self.assertRaisesRegex(projection.ProjectionError, "pluginId"):
+                projection.check(self.root)
 
     def test_refuses_changed_canonical_digest(self):
         self.canonical.joinpath("SKILL.md").write_text("Unrecorded source edit\n")

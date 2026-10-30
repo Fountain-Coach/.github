@@ -16,6 +16,9 @@ PLUGIN = "fcis-skill-authoring-and-sync"
 PLUGIN_PATH = Path("plugins") / SKILL
 MIRROR_PATH = PLUGIN_PATH / "skills" / SKILL
 MARKETPLACE_PATH = Path(".agents/plugins/marketplace.json")
+# Existing uploaded ChatGPT workspace plugin, observed in the authenticated admin URL.
+# OpenAI marketplace takeover must preserve this identity rather than add another.
+WORKSPACE_PLUGIN_ID = "Plugin_fb9e0937c59c8191b9fa077fa5ea53ef"
 
 
 class ProjectionError(ValueError):
@@ -54,6 +57,8 @@ def inspect(root=ROOT):
         "source": "local", "path": "./plugins/fcis-skill-authoring-and-sync"
     }:
         raise ProjectionError("Marketplace source path or plugin identity differs")
+    if item.get("pluginId") != WORKSPACE_PLUGIN_ID:
+        raise ProjectionError("Existing ChatGPT workspace pluginId must be preserved")
     if item.get("policy", {}).get("installation") != "AVAILABLE":
         raise ProjectionError("Marketplace must not silently install a plugin")
     if item.get("policy", {}).get("authentication") != "ON_INSTALL":
