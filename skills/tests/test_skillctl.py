@@ -61,5 +61,17 @@ class SovereigntyTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 ctl.read_archive(path, "sample")
 
+    def test_active_learning_is_proposal_only(self):
+        org = (ctl.ROOT / "AGENTS.md").read_text()
+        skill = (ctl.SKILLS / "fcis-skill-authoring-and-sync" / "SKILL.md").read_text()
+        metadata = (ctl.SKILLS / "fcis-skill-authoring-and-sync" / "agents" / "openai.yaml").read_text()
+        self.assertIn("Active procedural learning (proposal-only)", org)
+        self.assertIn("## Active learning", skill)
+        self.assertIn("independently accepted", skill)
+        self.assertIn("PROPOSED — NOT ADMITTED", skill)
+        self.assertIn("cannot silently author or amend canonical Git", skill)
+        self.assertIn("proactively propose", metadata.lower())
+        self.assertIn("not a background watcher", skill)
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,22 +1,31 @@
 ---
 name: fcis-skill-authoring-and-sync
-description: Create, revise, audit, and distribute FCIS-governed agent skills from the sole canonical source Fountain-Coach/.github. Use for authoring, drift detection, and governed reconciliation of repository-local Codex/Claude mirrors, ChatGPT account Skills, or the public OpenAI Skills API.
+description: Proactively recognize evidence-backed reusable procedures after accepted work; propose, author, revise, audit, and distribute FCIS-governed agent skills from Fountain-Coach/.github. Use for skill learning proposals, source validation, drift detection, and explicitly authorized reconciliation of derived installations.
 ---
 
 # FCIS Skill Authoring and Sync
 
 ## Purpose
 
-Design and validate skill packages using the OpenAI Skill Creator while enforcing Fountain Coach Governance Chapter 160: **`Fountain-Coach/.github` alone owns the canonical agent skill definition.** Every repository mirror, ChatGPT installation, or OpenAI project API version is a derived distribution. Changes observed downstream may return as proposals, but never automatically become source.
+Design and validate skill packages using FCIS-owned conventions; OpenAI Skill Creator may be used as a non-authoritative formatting aid. Fountain Coach Governance Chapter 160 establishes that **`Fountain-Coach/.github` alone owns the canonical agent skill definition.** Every repository mirror, ChatGPT installation, or OpenAI project API version is a derived distribution. Changes observed downstream may return as proposals, but never automatically become source.
 
 Runtime capability identities remain owned by their declared FCIS Swift Kits. An agent procedure does not become a new runtime instrument or acquire implementation authority by being installed.
 
 ## When to use
 
+- **Proactively after independently accepted, nontrivial work:** recognize a transferable procedure from actual acceptance evidence, whether or not the writer asked for a Skill.
 - Create, revise, validate, or retire one FCIS-governed agent skill.
 - Audit an installed skill or mirrored procedure against the declared organization source.
 - Reconcile one selected, authorized distribution without overwriting unrelated packages.
 - Explain unknown, missing, divergent, or active-version state with independent evidence.
+
+## Active learning — candidate before skill
+
+At the end of an independently accepted task, examine the completed operation and any already available related receipts, source revisions and tests. Identify a non-obvious procedure that could be reusable, and first compare it with the canonical FCIS skill catalogue; prefer a revision to an existing skill over a duplicate. Repetition may strengthen the case, but neither repetition nor one successful run establishes broad applicability. If no transferable procedure is evidenced, make no proposal.
+
+When there is a defensible candidate, **propose it without waiting to be asked to create a skill**. State: observed outcome and exact supporting artifact(s); proposed trigger and target audience; prerequisites and finite steps; failure and stop boundaries; distinctions from existing skills; tests needed to establish transfer; and why the evidence supports a new skill or revision. Label the proposal `PROPOSED — NOT ADMITTED` and distinguish one observed success from independent reproductions.
+
+This review is part of ordinary task closure; it must not expand, delay or redefine the original task's Definition of Done. It is an agent workflow when the governing instructions are available, not a background watcher or evidence that Reframe has a running learning service. A proposal cannot silently author or amend canonical Git, grant a Swift Kit capability, install an account Skill, publish to OpenAI's Skills API or move a provider's active version. Such changes retain separately authorized source and distribution workflows.
 
 ## Procedure
 
