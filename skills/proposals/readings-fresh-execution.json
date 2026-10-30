@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "proposalId": "fcis.learn.readings-comparison.fresh-execution.20261030",
+  "state": "PROPOSED_NOT_ADMITTED",
+  "scenario": {
+    "id": "readings-comparison",
+    "command": "/readings",
+    "capability": "manuscript.reading.compare",
+    "aliasCommands": [
+      "/readings"
+    ],
+    "contractStatus": "executable",
+    "coverageStatus": "live-accepted",
+    "contract": {
+      "repository": "Fountain-Coach/midi2-gpu-fabric",
+      "path": "apps/modernization-studio/LiveScenarios/readings.yaml",
+      "revision": "0eabc52d0b4595c5895f4b940394765919e1b286",
+      "blobSHA": "8f63ba4f954c1278183cbea957a896169573eeaf"
+    },
+    "coverage": {
+      "repository": "Fountain-Coach/book-of-reframe",
+      "path": "scenarios/coverage.json",
+      "revision": "dd4bf5628ec75cabc906421b7d7f353ed506dc8f",
+      "blobSHA": "7bbd7bf499d82468133717bb50892c40890968fd"
+    }
+  },
+  "evidence": {
+    "witnessKind": "published-summary",
+    "witness": {
+      "repository": "Fountain-Coach/book-of-reframe",
+      "path": "evidence/2026-08-15/verified-readings-scenario.md",
+      "revision": "dd4bf5628ec75cabc906421b7d7f353ed506dc8f",
+      "blobSHA": "03645528cd91355b02d5771d44889a76abb8ff62"
+    },
+    "observedFacts": [
+      "The 15 August published witness reports two distinct storify.source.start executions reaching succeeded; the second run cannot reuse the first run's success.",
+      "The current 30 October integration scenario declares executable, while Book coverage labels this same scenario live-accepted. This is status drift, not sufficient current acceptance proof.",
+      "The original private Store exports and window-ID/AX witness bundle were not independently re-read in this pilot."
+    ]
+  },
+  "candidate": {
+    "mode": "revise-existing",
+    "targetSkill": "fcis-skill-authoring-and-sync",
+    "lesson": "A reusable procedure derived from a scenario with repeated operations must point to fresh execution identities and distinct terminal evidence for each required run. Historical witnesses cannot override current scenario coverage disagreement.",
+    "novelty": "The general skill-learning proposal procedure does not yet require execution-freshness evidence when repeated success is used to justify transferability.",
+    "trigger": "An agent proposes procedural learning from a repeated scenario step, scenario cohort or restart/resume experiment.",
+    "prerequisites": [
+      "The exact scenario contract, coverage record, witness revision and evidence authority have been reconciled.",
+      "Independent terminal Store receipt identities from the repeated executions are available for review before stronger proof claims."
+    ],
+    "steps": [
+      "Inspect current scenario status and its published coverage without strengthening either status from prose.",
+      "Identify every repeated operation and its declared newExecution or replay semantics; require distinct terminal receipt identity where the contract requires fresh execution.",
+      "Compare independent Store, AX and window-ID proof against the same bound scenario source and process identity.",
+      "If evidence and status disagree, retain a non-admitted learning proposal and name the exact missing witnesses rather than inventing success."
+    ],
+    "failureBoundaries": [
+      "Reusing the first execution's success for a second step must fail.",
+      "An older published success cannot silently promote a current executable scenario to live-accepted.",
+      "A proposal cannot introduce a new runtime Kit identity or trigger account/OpenAI distribution."
+    ],
+    "transferTests": [
+      "A cohort with two required new executions and the same execution ID fails freshness validation.",
+      "A scenario with source status executable and Book coverage live-accepted remains status-drift even when an older accepted witness exists.",
+      "An independently verified two-run example with different Store receipts still requires separate owner review before any skill promotion."
+    ]
+  },
+  "independentProof": {
+    "executionIDs": [],
+    "storeReceipt": null,
+    "axTranscript": null,
+    "windowCapture": null
+  },
+  "authority": {
+    "admitted": false,
+    "canonicalChanged": false,
+    "distributed": false
+  }
+}

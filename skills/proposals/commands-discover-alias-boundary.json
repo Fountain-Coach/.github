@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "proposalId": "fcis.learn.commands-discover.alias-boundary.20261030",
+  "state": "PROPOSED_NOT_ADMITTED",
+  "scenario": {
+    "id": "commands-discover",
+    "command": "/commands",
+    "capability": "app.commands.discover",
+    "aliasCommands": [
+      "/commands",
+      "/help"
+    ],
+    "contractStatus": "live-accepted",
+    "coverageStatus": "live-accepted",
+    "contract": {
+      "repository": "Fountain-Coach/midi2-gpu-fabric",
+      "path": "apps/modernization-studio/LiveScenarios/commands-discover.yaml",
+      "revision": "0eabc52d0b4595c5895f4b940394765919e1b286",
+      "blobSHA": "7c3c86eafb528a3992c2fdaf8f647cc541e4a827"
+    },
+    "coverage": {
+      "repository": "Fountain-Coach/book-of-reframe",
+      "path": "scenarios/coverage.json",
+      "revision": "dd4bf5628ec75cabc906421b7d7f353ed506dc8f",
+      "blobSHA": "7bbd7bf499d82468133717bb50892c40890968fd"
+    }
+  },
+  "evidence": {
+    "witnessKind": "published-summary",
+    "witness": {
+      "repository": "Fountain-Coach/book-of-reframe",
+      "path": "evidence/2026-08-03/verified-command-catalog.md",
+      "revision": "dd4bf5628ec75cabc906421b7d7f353ed506dc8f",
+      "blobSHA": "457d897f88439cb01be0265a8f39629125cc0590"
+    },
+    "observedFacts": [
+      "The published historical catalog enumerates 95 command spellings and 22 aliases or compatibility spellings; these are not 95 separate capabilities.",
+      "The integration scenario and Book coverage both designate commands-discover as live-accepted; the Book evidence is a published summary, not raw execution receipts.",
+      "The scenario's operation is app.commands.discover; /commands is a spelling and /help its compatibility target."
+    ]
+  },
+  "candidate": {
+    "mode": "revise-existing",
+    "targetSkill": "fcis-skill-authoring-and-sync",
+    "lesson": "When harvesting accepted scenarios for reusable skills, resolve the typed operation and its owning Kit first. A command alias or a catalog entry alone is not a new skill or an independent successful execution.",
+    "novelty": "The existing FCIS skill authoring procedure checks for duplicate skill names but does not explicitly distinguish scenario command spellings or aliases from typed operation identities.",
+    "trigger": "After independently accepted scenario work exposes repeated or related command spellings and a candidate reusable procedure.",
+    "prerequisites": [
+      "A named scenario contract, capability identity, Book coverage record and independent witness are available and addressable at pinned revisions.",
+      "The canonical FCIS skill catalogue is read before deciding whether to revise an existing skill or propose a new one."
+    ],
+    "steps": [
+      "Resolve the scenario by stable ID, declared capability, target Kit and actual terminal operation rather than the slash-command label.",
+      "Compare the scenario contract status with published coverage status and record status drift without treating a historical witness as current execution.",
+      "Read the original witness; distinguish execution results, aliases, fixture claims and actual independent Store/AX/window proof.",
+      "Propose a revision to a relevant existing FCIS skill if the learning is genuinely transferable; leave the candidate non-admitted pending transfer tests and owner review."
+    ],
+    "failureBoundaries": [
+      "Do not treat alias count or catalog presence as execution or as an independent capability.",
+      "Do not call the candidate accepted from source metadata or a historical published witness alone.",
+      "Do not create or modify Kit identities, canonical skills, installed ChatGPT skills or OpenAI API versions during proposal assessment."
+    ],
+    "transferTests": [
+      "Given a scenario exposing /help and /commands for one typed capability, reject the creation of a new skill named for either alias.",
+      "Given a scenario contract at executable while Book coverage remains live-accepted, classify status drift and withhold an accepted-learning claim.",
+      "Given a witness summary without raw Store, AX and window-ID evidence, retain EVIDENCE_LIMITED rather than granting admission."
+    ]
+  },
+  "independentProof": {
+    "executionIDs": [],
+    "storeReceipt": null,
+    "axTranscript": null,
+    "windowCapture": null
+  },
+  "authority": {
+    "admitted": false,
+    "canonicalChanged": false,
+    "distributed": false
+  }
+}

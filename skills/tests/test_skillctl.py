@@ -72,6 +72,8 @@ class SovereigntyTests(unittest.TestCase):
         self.assertIn("cannot silently author or amend canonical Git", skill)
         self.assertIn("proactively propose", metadata.lower())
         self.assertIn("not a background watcher", skill)
+        self.assertIn("Scenario-based learning input", skill)
+        self.assertIn("skills/scenario_learning.py", skill)
 
 if __name__ == "__main__":
     unittest.main()
