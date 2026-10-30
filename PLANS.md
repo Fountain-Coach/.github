@@ -2,19 +2,19 @@
 
 ## Current continuation — project-state maintenance (30 October 2026)
 
-**Status:** implementing bounded correction in the existing Skill Sovereignty phase. **Goal:** make plan continuity read–write and transparent without producing an append-only activity diary, another workflow engine or new completion gates.
+**Status:** **SOURCE-VALIDATED; external skill versions NOT YET RECONCILED.** **Accepted goal:** read and maintain an existing project's active phase in place, with exact evidence/next action; never manufacture a new plan to continue existing work.
 
 **Governance reading record**
-- **Read:** FCIS Goal Fidelity §§1–3, 7–10; Governance 07 (continue existing phase), 08 (evidence/source separation), 55 (Store identity), 59 (Git project authority), 160 (organization skill source).
-- **Forbidden:** duplicate plans, moving DoD, fabricated Store receipts, plan prose presented as live execution, making GitHub a Store, unverified skill packaging or account distribution.
-- **Conflict:** previous lengthy continuation entry called for *appending* session records, while the writer requires an actively maintained, compact state. The previously edited Linotype skill has no matching updated package digest. Correct the entry and resolve the package discrepancy without deleting historical Git evidence.
-- **Excluded:** new project-manager service, Store schema/API, hosted publication, downstream skill sync, public Reader release and unrelated Reframe code.
+- **Read:** FCIS Goal Fidelity §§1–3, 7–10; Governance 07 (phase continuation), 08 (independent acceptance evidence), 55 (Store identity), 59 (Git project authority), 160 (sole organization skill-source authority).
+- **Forbidden:** duplicate plans or per-turn diaries, moved DoD, fabricated Store receipts, undocumented source/production claims, GitHub as replacement Store, unverified distribution.
+- **Conflict resolved:** prior 30 October append-oriented record was compacted **in place**; the prior Linotype skill/manifest mismatch was corrected by repinning its *complete tree* digest after source edits. History remains in Git, not copied into the active phase.
+- **Excluded:** new project-manager runtime, Store schema, public Governance/Reader release, downstream skill overwrites, account version promotion and unrelated Reframe changes.
 
-**Current accepted state:** Git is authority for authored project decisions and file revisions; FountainStore remains authority for persisted operations it actually supports; `PLANS.md` is the maintained, human-readable phase projection. Existing Store facts must be verified by receipt, never inferred from Markdown or a Git commit.
+**Current evidence:** `Fountain-Coach/.github` at `1d7f6a0264cb5e1b6958693318a2b055016bcb71` changes root `AGENTS.md`, the existing FCIS founding rule, Linotype Estate Template and FCIS Skill Authoring procedures, and repins their full-tree SHA-256 hashes in `skills/openai-distribution.json`. On the authorized Mac, exact Git source was reopened and `python3 skills/skillctl.py check` reported **4/4 valid skill trees**; `python3 -m unittest discover -s skills/tests -v` passed **10/10**; `git diff --check` returned clean. These checks prove **source/package consistency**, not effective ChatGPT account installation, Store event acceptance or runtime project-management behavior.
 
-**Source slice:** revise organization FCIS founding conduct and `AGENTS.md`; reconcile the previously edited canonical Linotype skill against the versioned package manifest; keep existing R27 and Skill Sovereignty phase identities. Any skill distribution remains separately authorized.
+**Linked pilot:** [Reframe R27 current phase](https://github.com/Fountain-Coach/Reframe/blob/main/PLANS.md#r27--estate-semantic-sorting-and-eventual-reader-migration-2026-10-29) was updated **in place** at `cac12bffb02cc1a1590ecc883ab828f0cc750f5e` to resume the existing original Reader objective from documented R28 v65 and retain **R27-01** as the next unfinished step. No separate scenario was created.
 
-**Next:** commit bounded source correction, independently read back changed files and validate the unchanged skill package digest where possible; then hand off with exact open evidence, without claiming public Governance or Store runtime changes.
+**Next:** preserve accepted canonical source, reconcile any specifically authorized repository/account skill distribution with independent full-content/version readback, and continue the existing R27-01 implementation on its own authority. External skill versions, FountainStore operational project-management support, public Governance publication and the Reader's live-stage state are **not established by this source change**.
 
 Governance authority: Chapter 160 at https://governance.fountain.coach/chapters/160-skill-sovereignty-and-governed-distribution/.
 
