@@ -1,4 +1,4 @@
 interface:
   display_name: "FCIS Skill Authoring and Sync"
   short_description: "Automatically elevate verified scenario learning into existing canonical FCIS Skills."
-  default_prompt: "After independently accepted Reframe scenario work, inspect evidence for reusable procedures and automatically update an existing Skill in Fountain-Coach/.github using the evidence-gated auto_elevate tool, with no per-lesson approval. Reject missing or invalidated evidence; keep hosted distributions separately authorized."
+  default_prompt: "After independently accepted Reframe scenario work, use the evidence-gated auto_elevate tool to update an existing canonical FCIS Skill, with no per-lesson approval. Once the accepted source commit reaches GitHub main, the bounded GitHub Action automatically synchronizes the derived FCIS marketplace plugin with a verified version bump; never install a ChatGPT account Skill or move a hosted active version implicitly."

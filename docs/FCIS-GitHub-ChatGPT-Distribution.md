@@ -2,65 +2,79 @@
 
 Authority: Fountain Coach Governance Chapter 160. Only
 Fountain-Coach/.github/.codex/skills/fcis-skill-authoring-and-sync/
-owns the agent procedure. This plugin is a derived package, not a second
-independent source.
+owns the procedure. This plugin is a derived Git artifact, not independent
+authority for editing the Skill or installing any ChatGPT account version.
 
-## Scope and identity
+## Identity and publication boundary
 
 - Canonical Git repository: https://github.com/Fountain-Coach/.github
-- Git marketplace file: .agents/plugins/marketplace.json
-- Portable plugin root: plugins/fcis-skill-authoring-and-sync/
-- ChatGPT plugin name: fcis-skill-authoring-and-sync
-- Included agent Skill: fcis-skill-authoring-and-sync
-- No MCP server, runtime Kit identity, provider credentials or external action
+- Git marketplace: .agents/plugins/marketplace.json
+- Portable plugin: plugins/fcis-skill-authoring-and-sync/
+- Plugin and included Skill: fcis-skill-authoring-and-sync
+- No MCP service, runtime Kit capability, provider credentials or account action
 
-## Update a derived Git plugin after accepted FCIS learning
+## The automatic GitHub distribution path (writer-authorized)
 
-From the organization repository, first verify the accepted lesson's canonical
-source commit and that skills/openai-distribution.json pins the exact Skill
-tree. Then, as a separate distribution-preparation operation:
+After accepted scenario evidence, the governed source agent may run
+skills/auto_elevate.py. It commits ONLY the canonical Skill and its digest.
+After that source commit is pushed to the canonical repository's main branch,
+.github/workflows/fcis-marketplace-sync.yml runs automatically:
 
-    python3 skills/plugin_projection.py sync
+1. Check the canonical full-tree SHA-256 and run the organization unit tests.
+2. Run python3 skills/plugin_projection.py sync.
+3. Verify python3 skills/plugin_projection.py check and git diff --check.
+4. Run python3 skills/marketplace_publish.py, which allows only the one existing
+   plugin's mirror files and plugin.json, refuses unrelated or staged changes,
+   verifies the GitHub origin and unchanged remote parent, and commits/pushes
+   just the derived files as a fast-forward to main.
+5. Only when the canonical Skill file-tree bytes change does the portable
+   plugin's patch version increase. Replaying unchanged input is a no-op.
+
+GitHub Actions uses only the repository's GITHUB_TOKEN with contents:write.
+The workflow cannot upload to ChatGPT/OpenAI, select a hosted active version,
+delete an existing installation, acquire credentials, or rewrite Kit source.
+An out-of-date main branch, invalid source digest, unknown extra mirrored file,
+failed test or unrelated dirty change refuses publication visibly. The
+derivative-only commit cannot retrigger the path-filtered workflow. A source
+commit and a derived commit remain separately inspectable in Git history.
+
+For manual read-only verification, run:
+
     python3 skills/plugin_projection.py check
     python3 skills/skillctl.py check
     python3 -m unittest discover -s skills/tests -v
 
-The sync operation copies exactly the canonical Skill file tree into the
-plugin's skills/ folder. It increases the portable plugin patch version only
-when updating an existing mirror. It refuses unknown extra files, bad owner
-metadata or an unpinned canonical Skill. Commit and review that distribution
-change through GitHub (for example, gh pr create). Git source publication is
-not evidence of a ChatGPT installation or selected active execution version.
+The explicit projection command python3 skills/plugin_projection.py sync
+remains available for diagnosis or a deliberate manual recovery, but it is no
+longer necessary after a verified canonical commit reaches main when GitHub
+Actions succeeds. Monitor its workflow result; do not misreport a failed
+Actions run as a deployed marketplace update.
 
-A canonical auto_elevate.py commit remains exactly a canonical Skill + digest
-change; it does not run this separate distribution operation, publish an
-OpenAI version or silently install a ChatGPT plugin. Do not add automatic
-GitHub Actions publishing on learning commits.
+## Separate ChatGPT workspace import and ongoing hosted readback
 
-## First ChatGPT workspace import
+A ChatGPT workspace admin must first import the GitHub marketplace via the
+authorized workspace administration interface (if available to that workspace):
 
-A ChatGPT workspace admin performs the initial import:
+- Repository: https://github.com/Fountain-Coach/.github
+- Path: empty; the marketplace descriptor is at the repository root
+- Branch: main
+- Marketplace: fountain-coach
+- Plugin: fcis-skill-authoring-and-sync, not installed by default
 
-1. In the intended workspace Admin Console, open Plugins > Add > Import marketplace.
-2. Source: https://github.com/Fountain-Coach/.github
-3. Path: leave empty, because .agents/plugins/marketplace.json is at repository root.
-4. Branch: main, once the reviewed marketplace PR has been merged.
-5. Authorize GitHub, import and review the import report; keep the installation
-   available only to intended members until independent post-install readback.
-6. After future reviewed plugin commits, the marketplace may synchronize daily,
-   or the admin may select Marketplaces > fountain-coach > Sync now.
+After a successful initial import, ChatGPT can synchronize imported GitHub
+marketplaces daily or on an admin-triggered sync. GitHub package publication
+does not establish that the user's ChatGPT workspace has imported it.
+Check the actual account or workspace installation's contents and selected
+execution version using an authenticated supported readback before declaring
+that the hosted installation is up to date.
 
-If an existing *workspace plugin* is to move under GitHub management without
-changing its identity or policies, read its actual ID in the Admin Console URL
-and add that exact ID as pluginId to its matching marketplace entry before
-import. This can preserve an eligible existing workspace plugin; it does not
-migrate an independently installed personal Skill automatically. Do not guess
-an ID or delete the current standalone personal installation in anticipation.
+If an existing *workspace plugin* should retain its ID, inspect the actual
+pluginId on the authorized admin surface before modifying the marketplace
+entry. An independently created account Skill is a distinct installation;
+do not delete it just because the Git marketplace became available.
 
-After import, verify the installed Skill instructions, bundled file tree,
-plugin version and workspace selected/active state. Only after this evidence
-supports replacement should the old independent Skill be retired. The
-ChatGPT account installation and OpenAI project Skills API are distinct.
+There is deliberately no action for OpenAI's project-scoped Skills API, and
+no unattended account Skill installation or active/default promotion.
 
 Vendor documentation:
 https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github
