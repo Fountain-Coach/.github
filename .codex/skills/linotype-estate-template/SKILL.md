@@ -7,6 +7,14 @@ description: "Audit, repair, stage, and verify Fountain Coach estate pages, Lino
 
 This skill explains how to conduct the work; it does NOT certify all FCIS chapters, create authority, define a new runtime capability, or supersede a typed Kit. Read [FCIS authority and reconciliation](references/fcis-authority-and-reconciliation.md) at the start of any implementation, publication, conformance, or architectural claim. The user's requested observable outcome fixes scope; the actual system fixes state.
 
+## Mandatory read–write continuation of the owning PLANS.md
+
+**Before proposing a plan, writing implementation/source files or staging a change, read the existing `PLANS.md` in the owning repository.** Identify the accepted scenario, active phase, actual last evidence, known gaps and **next uncompleted action**. A request to "proceed" means resume that phase; never start another plan, scenario or DoD simply because a conversation or session restarted. If no plan exists, establish that absence before creating the smallest phase record required by the existing repository contract.
+
+**Maintenance is part of execution, not a closing note.** For governed source-affecting work, write a continuation to that **same active `PLANS.md` phase before the first source modification**, recording the unchanged author goal, applicable governance, current observed state, the bounded source slice, verification and reversal. **At each material state transition**, update the same phase with the actual source revision, test result, release/receipt/readback, failed operation or changed next step; classify OBSERVED, PROVEN, DOCUMENTED, INFERRED and PROPOSED correctly. **Before handoff**, write the truthful completion/partial/failure state, evidence addresses, remaining original DoD and the next executable action. Re-read after another actor's changes before writing so their progress is not overwritten. Do not label plan text as live acceptance.
+
+For read-only questions or advice that makes no governed source or runtime change, read the existing plan as relevant but do not create a gratuitous entry. If the required plan write fails, report the exact write failure and the unrecorded status; do not claim plan maintenance or replace it with chat prose. A missing plan record is not permission for an unrelated new subsystem. Never ask the writer to repeat an already settled "proceed".
+
 ## Start with a bounded decision
 
 1. **Restate the concrete requested outcome and finite acceptance.** Do not change a viewing request into a deployment, a website fix into an architecture project, or Bookshelf admission into public release. New ambitions are separate follow-ups.
