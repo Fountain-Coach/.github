@@ -1,0 +1,41 @@
+name: FCIS Marketplace Projection
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.codex/skills/fcis-skill-authoring-and-sync/**'
+      - 'skills/openai-distribution.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fcis-marketplace-main
+  cancel-in-progress: false
+
+jobs:
+  project:
+    if: github.repository == 'Fountain-Coach/.github' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify the canonical source and test the learning mechanism
+        run: |
+          python3 skills/skillctl.py check
+          python3 -m unittest discover -s skills/tests -v
+      - name: Project the existing FCIS Skill into the GitHub marketplace
+        run: |
+          python3 skills/plugin_projection.py sync
+          python3 skills/plugin_projection.py check
+          git diff --check
+      - name: Publish only the verified derived marketplace files
+        run: |
+          python3 skills/marketplace_publish.py

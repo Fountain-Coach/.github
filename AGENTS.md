@@ -26,12 +26,19 @@ validation automatically revises the one existing Skill under this organization'
 without a separate per-lesson approval. Repeated evidence is idempotent. Missing,
 inconsistent, or invalidated evidence refuses mutation. If the work is not yet
 independently witnessed, retain a non-admitted proposal; never fabricate proof.
-Automatic elevation is delegated **only for canonical source learning**. It
-cannot create a Kit/runtime identity, rewrite the project's Definition of Done,
-change unrelated source, distribute ChatGPT/OpenAI Skills or move active versions.
-Those effects retain their distinct governing permissions and proofs. This is
-an agent task-closure workflow, not a claimed background service or unseen Store
-capability.
+Automatic elevation owns only canonical source learning. It cannot create a
+Kit/runtime identity, rewrite the project's Definition of Done, or change
+unrelated source. **Separate, explicitly delegated GitHub distribution:** once
+an admitted canonical Skill revision reaches `main`, the bounded GitHub Action
+`.github/workflows/fcis-marketplace-sync.yml` checks source proof, synchronizes
+only the matching existing portable GitHub marketplace Skill with a new plugin
+patch version when bytes changed, and commits only derived package files back to
+`main`. This publication is Git-only, idempotent and fail-closed on drift or
+unrelated changes; it is not ChatGPT account installation, hosted Skills API
+publication, active-version promotion or workspace-administration authority.
+Those distinct provider changes retain their governing permissions and proof.
+This is an agent task-closure plus GitHub-source workflow, not evidence of an
+unobserved Reframe learning service or a connected ChatGPT workspace.
 
 A new blocker requires four traceable answers: requested outcome, current
 failed operation, governing source, smallest necessary correction. An
