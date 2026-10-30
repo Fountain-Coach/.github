@@ -2,7 +2,7 @@
 
 ## Current continuation — scenario-based active skill learning (30 October 2026)
 
-**Status:** **ACCEPTED SCENARIO → CANONICAL GIT → AUTOMATIC GITHUB MARKETPLACE VERSION 0.1.1 VERIFIED; CHATGPT WORKSPACE IMPORT AND ACTIVE VERSION UNVERIFIED.** **Accepted goal (writer correction, 30 October):** once a scenario has independently validated terminal evidence, automatically incorporate transferable learning into an existing organization-owned FCIS skill, refresh its canonical digest and Git commit without an extra per-learning approval. Refuse missing, mismatched or invalidated evidence; make repeated learning idempotent. Do not invent Kit identities, alter external installations, or promote active versions.
+**Status:** **ACCEPTED SCENARIO → CANONICAL GIT → AUTOMATIC GITHUB MARKETPLACE 0.1.1 VERIFIED; CHATGPT WORKSPACE PLUGIN 0.1.1 ACTIVATED (SINGLE INSTANCE); GITHUB-TO-CHATGPT TAKEOVER IN PROGRESS / NOT YET VERIFIED.** **Accepted goal (writer correction, 30 October):** once a scenario has independently validated terminal evidence, automatically incorporate transferable learning into an existing organization-owned FCIS skill, refresh its canonical digest and Git commit without an extra per-learning approval. Refuse missing, mismatched or invalidated evidence; make repeated learning idempotent. Do not invent Kit identities, alter external installations, or promote active versions.
 
 **Governance reading record**
 - **Read:** FCIS Goal Fidelity (fixed result and no invented gates); Governance 07 (bound source change), 08 (independent Store/AX/window evidence), 112 (Kit-owned runtime identities), 119 (terminal scenario proof; source learning does not self-approve execution), 160 (one canonical skill source; distributions are separately governed).
