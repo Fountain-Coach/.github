@@ -53,6 +53,7 @@ class MarketplacePublishTests(unittest.TestCase):
         self.marketplace.write_text(json.dumps({
             "name": "fountain-coach", "plugins": [{
                 "name": "fcis-skill-authoring-and-sync",
+                "pluginId": projection.WORKSPACE_PLUGIN_ID,
                 "source": {"source": "local", "path": "./plugins/fcis-skill-authoring-and-sync"},
                 "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
             }],
