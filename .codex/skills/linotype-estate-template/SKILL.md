@@ -1,6 +1,6 @@
 ---
 name: linotype-estate-template
-description: "Audit, repair, stage, and verify Fountain Coach estate pages, Linotype books, Reframe Bookshelf, and EstatePublisher publication. Use for estate template or navigation defects, Git development versus staging versus production, staging refresh or promotion, production-baseline and development-delta reconciliation, browser/Safari parity, public/Git drift, and publication readiness. Resolve applicable current FCIS and Governance extensions; preserve source ownership and independently witnessed results. (requires code execution)"
+description: "Audit, compose, repair, stage, and verify Fountain Coach estate pages and Linotype reading experiences, including measured page-frame pagination, responsive/mobile reading, source-linked listening, semantic illustration, Reframe Bookshelf, and EstatePublisher publication. Use for reader/template/navigation defects, editorial over-complexity, Git development versus staging versus production, staging refresh or promotion, browser/Safari parity, public/Git drift, and publication readiness. Resolve current FCIS/Governance; preserve source ownership and witnessed results. (requires code execution)"
 ---
 
 # Linotype Estate Template - FCIS-governed procedural projection
@@ -28,6 +28,17 @@ Git is authority for authored plans and source revisions; GitHub is a collaborat
 9. **Verify claims relevant to the goal.** Structural HTML helper: `python3 scripts/check_shell_snapshot.py --contract <accepted-contract.json> --site estate=<staged-html> ...`. It tests a *declared static fixture/schema*, not lineage, FCIS, CSS, WebKit, rights, deployability or production. For visual parity use existing EstatePublisher/WebKit mirror and native Safari/iPad evidence where necessary. For a **new** public route, first reuse the accepted domain template and applicable named preview/scenario acceptance; check inherited navigation, active state, Info, theme, footer, visual geometry and relationships before packaging, as described below. For a stage transition, keep production-source verification, candidate inventory, live stage receipt and browser/readback evidence separate.
 10. **Publish publicly only under separate authorizing intent.** WLAN staging is not production. Production takes an already-built immutable digest-bound artifact through an authorized EstatePublisher plan, preserves rollback, and is confirmed with typed receipts and independent public readback. Never build on production, copy private Satzfunk media/tokens, or claim public publication from stage, Git push or HTTP 200 alone.
 11. **Stop when the requested outcome is proved.** Report separately source state, baseline lineage, declared Git delta, stage predecessor/current release, native enforcement state, tests, browser witness, public release, and open uncertainties with links, SHAs, receipts and exact bounded failures. Never claim universal FCIS compliance or a production/staging transition not actually verified.
+
+## Reader-facing Linotype: the page is the frame
+
+When the task changes a **reader, folio, page composition, semantic illustration, source-linked audio, or responsive book experience**, read [page-is-the-frame.md](references/page-is-the-frame.md) before implementation.
+
+- **Compose into pages; do not squeeze content into a screen.** Keep readable typography and repaginate into additional leaves when content or accessibility settings need more space. Treat portrait as one leaf and show a spread only when both leaves remain readable.
+- **Keep source identity stable and page identity disposable.** Reflow, rotation, viewport change and text enlargement may change page numbers; preserve the addressed passage and reading position.
+- **Reduce reader burden.** Keep the work primary. Expose only controls needed for the present reading/listening action; move architecture, production status, provenance detail and authoring machinery behind appropriate secondary surfaces.
+- **Use semantic media only when it clarifies.** An illustration should remove explanatory burden, not add another object that needs interpretation. Treat listening as a property of the source passage/page, not a second application nested inside the reader.
+- **State the present.** Reader-facing prose and status must describe observed current capability. Do not announce hypothetical future tests, roadmap states or unperformed transfers as part of the work's present identity.
+- **Keep rigor underneath.** Simplicity never weakens source ownership, accessibility, rights, evidence, publication or rollback contracts. Hide machinery from the reader only when the reader does not need it; do not delete the machinery or its proof.
 
 ## New public route: scenario reuse before publication
 

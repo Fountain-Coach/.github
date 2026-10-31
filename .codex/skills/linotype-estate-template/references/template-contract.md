@@ -32,6 +32,14 @@ A work/edition/source digest and semantic passage identity persist; a folio/page
 
 Historical reader paper tokens (`--book-paper`, serif fonts) belong to the Press reader, not the common estate chrome. Do not force Teatro Stage, Satzfunk archive or public Governance body into a book-paper aesthetic to make them visually uniform.
 
+## 3A. Reader presentation: keep complexity underneath
+
+For reader-facing Linotype work, apply [the page-frame contract](page-is-the-frame.md): the page is a measured responsive frame, not a fixed screenshot or shrink-to-fit canvas. Preserve readable type and repaginate when viewport or accessibility settings require more leaves. Keep source/passage identity stable across those projections.
+
+Do not expose implementation architecture merely because it exists. Source ownership, renderer/player provenance, production receipts and authoring controls remain real and inspectable in their owning records, but the default reader surface presents only what helps the reader read, hear, navigate or understand the work now. Treat accumulated explanatory furniture as an **over-editing** defect when the interface becomes harder to understand than the source.
+
+Semantic illustration and source-linked listening must lower cognitive burden. An illustration that needs its own explanation, or an audio feature that grows into a second nested application without a reader need, has crossed the Linotype boundary. Public/editorial copy states current observed capability; speculative future tests and roadmap claims belong outside the reading surface.
+
 ## 4. Development/source, staging and publication are also distinct
 
 Git is the development authority and does not require a DNS-based `dev` environment. A local Store-backed preview of that Git revision remains local. The registered Ubuntu Mac mini is the canonical private staging executor and public HTTPS is a separate production observation. The user's explicit production-first requirement means a **canonical development-to-staging transition** must first independently capture production into an immutable, nonactive staging baseline, apply only a pinned Git delta, refuse undeclared loss and require native publisher enforcement plus staging readback. This does not mean temporarily replacing the live stage with bare production. See [development / staging / production](development-staging-production.md). A source owner/rights decision remains separate from a production byte observation.
