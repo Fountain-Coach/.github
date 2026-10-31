@@ -28,6 +28,13 @@ class FcisMarketplaceLessonTests(unittest.TestCase):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, lesson)
 
+    def test_github_backed_skill_does_not_fall_back_to_zip_delivery(self):
+        skill = (BASE / "SKILL.md").read_text()
+        agent = (BASE / "agents" / "openai.yaml").read_text()
+        self.assertIn("do not package, attach, offer, or recommend a `skill.zip`", skill)
+        self.assertIn("Generic Skill Creator packaging guidance is non-authoritative here", skill)
+        self.assertIn("never return or recommend skill.zip as the normal deliverable", agent)
+
     def test_reference_is_not_an_installation_specific_template(self):
         lesson = (BASE / "references/chatgpt-github-marketplace-takeover.md").read_text()
         self.assertNotIn("Plugin_fb9e0937c59c8191b9fa077fa5ea53ef", lesson)
