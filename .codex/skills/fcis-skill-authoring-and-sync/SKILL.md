@@ -11,6 +11,12 @@ Design and validate skill packages using FCIS-owned conventions; OpenAI Skill Cr
 
 Runtime capability identities remain owned by their declared FCIS Swift Kits. An agent procedure does not become a new runtime instrument or acquire implementation authority by being installed.
 
+### Distribution override for organization-owned Skills
+
+For a Fountain Coach Skill already owned in `Fountain-Coach/.github` and distributed through the imported GitHub marketplace, **do not package, attach, offer, or recommend a `skill.zip` as the normal deliverable.** Generic Skill Creator packaging guidance is non-authoritative here and is superseded by Chapter 160 plus the established GitHub-backed distribution path.
+
+The normal completion artifact is: canonical Git commit + validated file-tree digest + GitHub marketplace projection/version + hosted sync/readback state when observable. A ZIP is permitted only when the writer explicitly requests a legacy/manual archive, when diagnosing a ZIP-to-Git migration, or when a distinct provider API itself requires archive bytes internally. In those cases, never present the archive as the canonical source or as the preferred installation path.
+
 ## When to use
 
 - **Proactively after independently accepted, nontrivial work:** recognize a transferable procedure from actual acceptance evidence, whether or not the writer asked for a Skill.
@@ -98,7 +104,7 @@ For a request to install, adopt, repair or synchronize an existing ChatGPT works
 | --- | --- |
 | Skill | Stable organization-owned identity |
 | Source | `Fountain-Coach/.github`, exact path and Git commit |
-| Package | Canonical file-tree SHA-256 and validation outcome |
+| Package | Canonical Git revision + file-tree SHA-256 and validation outcome; no user-facing ZIP unless explicitly requested for a legacy/manual path |
 | Domain mirrors | Selected derived revisions and independent readback |
 | ChatGPT account Skills | File coverage, observable drift, and version evidence limits |
 | OpenAI project Skills API | Exact skill/version identity, ZIP content result, and default pointer, or unverified |
