@@ -6,6 +6,8 @@
 
 **Finite acceptance:** update the existing `fcis-skill-authoring-and-sync` Skill and agent prompt with the no-ZIP fallback rule; regression-test the rule; refresh the canonical digest; merge to `main`; let the existing GitHub marketplace action publish the derived FCIS plugin revision. Do not create a new Skill, reinstall the ChatGPT plugin, or touch the preserved plugin ID.
 
+**Accepted state:** PR #23 merged at `e2c2fa512e8b9a1a8ba7e7de5a331765376a459d`; main Test Suite run `41205028539` passed. FCIS Marketplace Projection run `41205028524` passed and published derived commit `82a2b7f37153c156de9b933a59c4ce35027bdab4`, advancing `fcis-skill-authoring-and-sync` to **0.1.3**. Canonical FCIS Skill tree digest is `5196556712fb51bf586d11b3ae98af48a67eebeb02118547d3e1ff57f7d07339`. No ZIP was installed or delivered, no new Skill was created, and the preserved ChatGPT plugin identity was not changed. Hosted workspace auto-sync to 0.1.3 is not claimed until provider readback observes it.
+
 ## Linotype page-frame modernization learning — 31 October 2026
 
 **Requested outcome:** retain the reusable Linotype lessons proven while building the FCIS editorial app, without creating another Skill or expanding runtime/publication scope. Update the existing canonical `linotype-estate-template` procedure and its Teatro handoff so future work keeps semantic depth while lowering reader burden.
