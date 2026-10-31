@@ -48,3 +48,13 @@ The ZIP is a static procedural artifact. Its validation proves package structure
 - Keep scenario reuse conditional on an existing capable executor; no new per-page scenario, universal shell renderer, platform ceremony or global publishing gate is required by this revision.
 - Preserve Chapter 158's approved SSH/Caddy static release profile, exact predecessor and unchanged estate content, and distinguish visual/template acceptance from terminal publication proof.
 - This is a skill procedure revision only. Its ZIP does not claim that an actual scenario ran or that the public article's reel was corrected.
+
+## 31 October 2026 — Page-frame modernization and editorial restraint
+
+- Learned from the accepted FCIS reader work without creating another Skill: **the page is the frame**. Responsive reading repaginates rather than shrinking type, and durable source/passage identity survives page-number changes, rotation and accessibility enlargement.
+- Added a concrete **over-edited** failure mode. Visible controls, labels, diagrams, status, architecture and production explanation are defects when their accumulation makes the interface harder to understand than the work.
+- Semantic illustration must reduce explanatory burden; do not default to illustration for abstract concepts or turn concrete use cases into conceptual art objects.
+- Source-linked audio remains attached to the work. Keep a minimal page-level transport by default and preserve playback/source position across reflow; do not introduce a second player or application surface merely because production architecture exists.
+- Reader-facing copy states observed current capability only. Remove speculative future tests, hypothetical transfers, roadmap claims and planned destinations from the work's present identity.
+- Underlying rigor is unchanged: accessibility, source ownership, rights, provenance, renderer/player ownership, publication receipts and rollback evidence remain in their proper authorities even when not foregrounded to readers.
+- Added [page-is-the-frame.md](page-is-the-frame.md) and a Teatro handoff correction. This revision changes procedure/presentation guidance only; it does not claim a new Press renderer, player, runtime capability or public release.
