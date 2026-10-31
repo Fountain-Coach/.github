@@ -11,6 +11,18 @@ The companion ChatGPT skill is `linotype-estate-template` (Linotype Estate Templ
 
 The current First Hearing includes a Linotype reader that embeds a Teatro Stage element. That is an **integration boundary**; the iframe, folio and source quote do not re-own the live Stage or authorize sound. Keep only the source-appropriate visual projection in the page and make source identity, canvas dimensions, lifecycle, audio ownership, focus and exit/Stop behavior explicit. Never publish the unadmitted `composing-by-ear.live.json` as a proven performance.
 
+## Reader-surface restraint at the handoff
+
+When Teatro material enters a Linotype page, **do not turn the page into a control room or an explanatory diagram of the Teatro stack**. The Linotype side keeps the work primary and reveals only the current reader/listener action that is needed.
+
+- A stage/score projection earns space only when it clarifies the source relationship better than prose alone.
+- Source-linked listening should normally arrive as a small page-level action with stable source/time return, not a second application surface.
+- Runtime identities, admission state, telemetry, routing and provenance stay available in their owning evidence, but do not become default reader furniture.
+- Do not use a static metaphor or illustration to imply an unobserved executable state.
+- Do not announce a future Scenario, transfer, or test on the reader surface. Present observed current behavior; where evidence ends, the public/editorial prose ends.
+
+For responsive reading, preserve Linotype's **page-is-the-frame** rule: keep readable type, repaginate instead of shrink-to-fit, and preserve the same source passage across rotation/reflow. Load the companion Linotype reference `references/page-is-the-frame.md` when implementing the reader side.
+
 ## Minimal handoff record
 
 For Teatro -> Linotype, provide:
