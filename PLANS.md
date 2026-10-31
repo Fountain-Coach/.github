@@ -1,5 +1,16 @@
 # Skill Sovereignty implementation
 
+## Linotype page-frame modernization learning — 31 October 2026
+
+**Requested outcome:** retain the reusable Linotype lessons proven while building the FCIS editorial app, without creating another Skill or expanding runtime/publication scope. Update the existing canonical `linotype-estate-template` procedure and its Teatro handoff so future work keeps semantic depth while lowering reader burden.
+
+**Observed lesson:** the accepted FCIS reader work established a useful design correction: *the page is the frame*. Responsive reading must repaginate instead of shrinking type; source identity must survive page projection and rotation; listening belongs to the source passage rather than becoming a second application; semantic illustration must reduce explanation rather than create another object to interpret; public/editorial surfaces must state what exists now and omit speculative future tests. The later podcast surface demonstrated the failure mode called **over-edited**: individually defensible controls, status, architecture and editorial furniture can collectively obscure the work.
+
+**Chapters/read:** organization Goal Fidelity and Non-Invention; current canonical Skill Sovereignty procedure; Linotype Estate Template and Teatro Linotype handoff. **Forbidden:** new Linotype/FCIS Skill identity, new renderer/player, hiding accessibility/provenance requirements, treating a mockup as acceptance, or turning reader simplicity into an excuse to discard underlying source/evidence contracts. **Conflict:** none; this narrows presentation while preserving existing owners and proof. **Excluded:** changing the FCIS app itself, public release, DNS, plugin installation, runtime Kit identities or automatic distribution.
+
+**Finite acceptance:** canonical Linotype Skill gains one concise reader-facing rule and one single-level reference covering page-frame composition, source-address stability, responsive/accessibility behavior, semantic illustration, source-bound listening, present-tense trust and the over-editing smell test; Teatro handoff preserves the same boundary. Regression tests assert those rules; canonical package digests are refreshed after validation. Distribution remains separately governed.
+
+
 ## Current continuation — scenario-based active skill learning (30 October 2026)
 
 **Status:** **ACCEPTED SCENARIO → CANONICAL GIT → AUTOMATIC GITHUB MARKETPLACE → CHATGPT WORKSPACE GITHUB IMPORT AND FIRST MANUAL UPGRADE TO 0.1.2 VERIFIED; REDUNDANT ZIP COPY DELETED, EXISTING GITHUB PLUGIN ID PRESERVED AND ACTIVE, AUTO-SYNC ENABLED.** **Accepted goal (writer correction, 30 October):** once a scenario has independently validated terminal evidence, automatically incorporate transferable learning into an existing organization-owned FCIS skill, refresh its canonical digest and Git commit without an extra per-learning approval. Refuse missing, mismatched or invalidated evidence; make repeated learning idempotent. Do not invent Kit identities, alter external installations, or promote active versions.
