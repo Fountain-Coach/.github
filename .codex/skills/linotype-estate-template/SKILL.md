@@ -33,7 +33,7 @@ Git is authority for authored plans and source revisions; GitHub is a collaborat
 
 When the task changes a **reader, folio, page composition, semantic illustration, source-linked audio, or responsive book experience**, read [page-is-the-frame.md](references/page-is-the-frame.md) before implementation.
 
-- **Compose into pages; do not squeeze content into a screen.** Keep readable typography and create additional leaves when content or accessibility settings need more space. Treat portrait as one leaf and show a spread only when both leaves remain readable.
+- **Compose into pages; do not squeeze content into a screen.** Keep readable typography and repaginate into additional leaves when content or accessibility settings need more space. Treat portrait as one leaf and show a spread only when both leaves remain readable.
 - **Keep source identity stable and page identity disposable.** Reflow, rotation, viewport change and text enlargement may change page numbers; preserve the addressed passage and reading position.
 - **Reduce reader burden.** Keep the work primary. Expose only controls needed for the present reading/listening action; move architecture, production status, provenance detail and authoring machinery behind appropriate secondary surfaces.
 - **Use semantic media only when it clarifies.** An illustration should remove explanatory burden, not add another object that needs interpretation. Treat listening as a property of the source passage/page, not a second application nested inside the reader.
