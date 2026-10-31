@@ -22,6 +22,18 @@ class SovereigntyTests(unittest.TestCase):
         self.assertIn("New public route: scenario reuse before publication", text)
         self.assertIn("an already-adopted template/preview scenario", text)
 
+    def test_linotype_page_frame_simplicity_is_canonical(self):
+        skill = (ctl.SKILLS / "linotype-estate-template" / "SKILL.md").read_text()
+        reference = (ctl.SKILLS / "linotype-estate-template" / "references" / "page-is-the-frame.md").read_text()
+        handoff = (ctl.SKILLS / "teatro-scenario-composer" / "references" / "linotype-handoff.md").read_text()
+        self.assertIn("Reader-facing Linotype: the page is the frame", skill)
+        self.assertIn("repaginate", skill)
+        self.assertIn("over-edited", reference)
+        self.assertIn("Complexity stays in the system", reference)
+        self.assertIn("Write in the present tense of evidence", reference)
+        self.assertIn("Reader-surface restraint at the handoff", handoff)
+        self.assertIn("Present observed current behavior", handoff)
+
     def test_static_chapter_158_lane(self):
         text = (ctl.SKILLS / "estate-publisher-deployment" / "SKILL.md").read_text()
         self.assertIn("Chapter 158", text)
