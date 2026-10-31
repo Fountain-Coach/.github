@@ -75,11 +75,17 @@ def inspect(root=ROOT):
     source_digest = digest(source)
     if declared["contentSHA256"] != source_digest:
         raise ProjectionError("Canonical Skill file tree differs from pinned digest")
-    return root, plugin, source, source_digest
+    website = declared.get("marketplaceWebsiteURL")
+    if not isinstance(website, str) or not re.fullmatch(r"https://[^\s]+/", website):
+        raise ProjectionError("Canonical FCIS marketplace website URL missing or invalid")
+    return root, plugin, source, source_digest, website
 
 
 def check(root=ROOT):
-    root, plugin, source, source_digest = inspect(root)
+    root, plugin, source, source_digest, website = inspect(root)
+    interface = plugin["extensions"]["com.openai"]["interface"]
+    if interface.get("websiteURL") != website:
+        raise ProjectionError("Plugin websiteURL differs from canonical distribution metadata")
     dest = root / MIRROR_PATH
     if not dest.exists():
         raise ProjectionError("Plugin skill mirror not yet materialized")
@@ -96,26 +102,38 @@ def check(root=ROOT):
 
 
 def sync(root=ROOT):
-    root, plugin, source, _ = inspect(root)
+    root, plugin, source, _, website = inspect(root)
+    interface = plugin["extensions"]["com.openai"]["interface"]
+    metadata_changed = interface.get("websiteURL") != website
+    if metadata_changed:
+        interface["websiteURL"] = website
+
     dest = root / MIRROR_PATH
     existing = entries(dest) if (dest / "SKILL.md").is_file() else {}
     unexpected = set(existing) - set(source)
     if unexpected:
         raise ProjectionError("Refusing to remove unreviewed mirror files: " + ", ".join(sorted(unexpected)))
-    if existing == source:
-        return check(root)
-    for relative, data in source.items():
-        target = dest / relative
-        if target.is_symlink():
-            raise ProjectionError(f"Refusing to replace a mirror symlink: {relative}")
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(data)
-    if existing:
+
+    mirror_changed = existing != source
+    if mirror_changed:
+        for relative, data in source.items():
+            target = dest / relative
+            if target.is_symlink():
+                raise ProjectionError(f"Refusing to replace a mirror symlink: {relative}")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+
+    if existing and (mirror_changed or metadata_changed):
         major, minor, patch = map(int, plugin["version"].split("."))
         plugin["version"] = f"{major}.{minor}.{patch + 1}"
+
+    if metadata_changed or (existing and mirror_changed):
         (root / PLUGIN_PATH / "plugin.json").write_text(
             json.dumps(plugin, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
         )
+
+    if not mirror_changed and not metadata_changed:
+        return check(root)
     result = check(root)
     result["state"] = "SYNCED"
     return result

@@ -30,6 +30,7 @@ class MarketplaceProjectionTests(unittest.TestCase):
             "owner": "Fountain-Coach/.github",
             "skills": [{
                 "name": projection.SKILL,
+                "marketplaceWebsiteURL": "https://fcis.fountain.coach/",
                 "contentSHA256": digest(entries(self.canonical))
             }]
         }))
@@ -73,6 +74,23 @@ class MarketplaceProjectionTests(unittest.TestCase):
         result = projection.sync(self.root)
         self.assertEqual(result["state"], "MATCHED")
         self.assertEqual(result["version"], "0.1.0")
+
+    def test_metadata_only_website_drift_is_corrected_and_versioned(self):
+        projection.sync(self.root)
+        data = json.loads(self.manifest.read_text())
+        data["extensions"]["com.openai"]["interface"]["websiteURL"] = "https://fountain.coach"
+        self.manifest.write_text(json.dumps(data))
+        with self.assertRaisesRegex(projection.ProjectionError, "websiteURL"):
+            projection.check(self.root)
+        result = projection.sync(self.root)
+        self.assertEqual(result["state"], "SYNCED")
+        self.assertEqual(result["version"], "0.1.1")
+        updated = json.loads(self.manifest.read_text())
+        self.assertEqual(
+            updated["extensions"]["com.openai"]["interface"]["websiteURL"],
+            "https://fcis.fountain.coach/",
+        )
+        self.assertEqual(entries(self.canonical), entries(self.root / projection.MIRROR_PATH))
 
     def test_source_change_requires_sync_and_versions_derived_release(self):
         projection.sync(self.root)
