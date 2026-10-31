@@ -45,6 +45,7 @@ class MarketplacePublishTests(unittest.TestCase):
             "skills": [{
                 "name": "fcis-skill-authoring-and-sync",
                 "canonicalPath": ".codex/skills/fcis-skill-authoring-and-sync",
+                "marketplaceWebsiteURL": "https://fcis.fountain.coach/",
                 "contentSHA256": digest(entries(self.skill.parent)),
             }],
         }))
