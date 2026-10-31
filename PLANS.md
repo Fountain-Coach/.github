@@ -10,6 +10,8 @@
 
 **Finite acceptance:** canonical Linotype Skill gains one concise reader-facing rule and one single-level reference covering page-frame composition, source-address stability, responsive/accessibility behavior, semantic illustration, source-bound listening, present-tense trust and the over-editing smell test; Teatro handoff preserves the same boundary. Regression tests assert those rules; canonical package digests are refreshed after validation. Distribution remains separately governed.
 
+**Current source state:** canonical Linotype package now includes `references/page-is-the-frame.md`; the Teatro handoff carries the same reader-surface restraint. Exact branch package digests are Linotype `bb876d428a85e96426dfb859b72cedf368c09aae7f8584280b4ced42b25bc72d` and Teatro `f80208aee907ad86f5c63f3586976a5c8dd4a54b2cc940e44fb629417cdbdbab`, recorded in `skills/openai-distribution.json`. Skill Creator validation passes; Linotype's 9/9 bundled helper tests pass; a complete updated Linotype `skill.zip` was packaged without generated cache files. New organization regression assertions bind page-frame, over-editing, present-tense and Teatro-handoff wording. **Next:** source PR and repository-wide checks; no ChatGPT/OpenAI installation or marketplace version is changed by this phase.
+
 
 ## Current continuation — scenario-based active skill learning (30 October 2026)
 
