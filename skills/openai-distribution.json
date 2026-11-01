@@ -22,7 +22,7 @@
       "name": "linotype-estate-template",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/linotype-estate-template",
-      "contentSHA256": "19d0c37bac541bac451600ce10b53324c37abac9d8ddedefab1ef63a1fb90651",
+      "contentSHA256": "3bf2954388e8c2397bf52dc193b656b1ae72f945dc5461f9a1a999f5068b24dd",
       "provenance": {
         "importedFrom": "Fountain-Coach/estate",
         "sourcePath": ".codex/skills/linotype-estate-template",
@@ -58,7 +58,7 @@
       "name": "satzfunk-voice-render",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/satzfunk-voice-render",
-      "contentSHA256": "b03115b478baaea11fcdfedd42d87c1ca4528a76e56740c5c975f5ccd3c598b9",
+      "contentSHA256": "086082b56c83dd579911a80de3a8b516e3f1cd15a71272b018474394fe70166c",
       "provenance": {
         "importedFrom": "Fountain-Coach/Satzfunk",
         "sourcePath": "scripts/render-fcis-essay-readaloud.mjs",
