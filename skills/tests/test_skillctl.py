@@ -34,6 +34,35 @@ class SovereigntyTests(unittest.TestCase):
         self.assertIn("Reader-surface restraint at the handoff", handoff)
         self.assertIn("Present observed current behavior", handoff)
 
+    def test_reader_navigation_is_one_book_with_distinct_scroll_modes(self):
+        skill = (ctl.SKILLS / "linotype-estate-template" / "SKILL.md").read_text()
+        ref_path = ctl.SKILLS / "linotype-estate-template" / "references" / "reader-navigation-and-score-composition.md"
+        self.assertTrue(ref_path.is_file())
+        reference = ref_path.read_text()
+        self.assertIn("reader-navigation-and-score-composition.md", skill)
+        self.assertIn("On Continuity → Bookshelf → collection contents → work", reference)
+        self.assertIn("Horizontal", reference)
+        self.assertIn("Vertical", reference)
+        self.assertIn("no page numbers", reference)
+        self.assertIn("bottom bar", reference)
+        self.assertIn("Returning restores", reference)
+        self.assertIn("focus", reference)
+        self.assertIn("design prototypes", reference)
+        self.assertIn("live behavior unverified", reference)
+
+    def test_teatro_score_largest_balanced_fit_is_source_bound(self):
+        reference = (ctl.SKILLS / "linotype-estate-template" / "references" / "reader-navigation-and-score-composition.md").read_text()
+        self.assertIn("Largest Balanced Fit", reference)
+        self.assertIn("scale = min(W/w, H/h)", reference)
+        self.assertIn("square", reference)
+        self.assertIn("wide", reference)
+        self.assertIn("tall", reference)
+        self.assertIn("Teatro Score", reference)
+        self.assertIn("dark", reference)
+        self.assertIn("SatzfunkPlayer", reference)
+        self.assertIn("one folio", reference)
+        self.assertIn("do not", reference.lower())
+
     def test_static_chapter_158_lane(self):
         text = (ctl.SKILLS / "estate-publisher-deployment" / "SKILL.md").read_text()
         self.assertIn("Chapter 158", text)
