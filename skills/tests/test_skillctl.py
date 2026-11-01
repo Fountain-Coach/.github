@@ -90,6 +90,25 @@ class SovereigntyTests(unittest.TestCase):
         self.assertIn("one folio", reference)
         self.assertIn("do not", reference.lower())
 
+    def test_british_vergil_narrator_source_and_linotype_handoff(self):
+        base = ctl.SKILLS / "linotype-estate-template"
+        spec = (base / "references" / "vergil-voice.md").read_text()
+        entry = (base / "SKILL.md").read_text()
+        frame = (base / "references" / "page-is-the-frame.md").read_text()
+        handoff = (ctl.SKILLS / "teatro-scenario-composer" / "references" / "linotype-handoff.md").read_text()
+        for phrase in ("The Voice of Illustrating Inferno", "British Vergil",
+                       "already-available", "not a condition of use", "exact written text",
+                       "AI-generated", "Zork, Bee, N.", "not an OpenAI consent script",
+                       "The first drawing shows a room", "We shall not decide too early"):
+            self.assertIn(phrase.lower(), spec.lower())
+        self.assertIn("references/vergil-voice.md", entry)
+        self.assertIn("The written page itself is the transcript", frame)
+        self.assertIn("Do not add a Continuous reading mode", frame)
+        self.assertIn("companion Linotype", handoff)
+        self.assertIn("not Teatro's live stage sound", handoff)
+        self.assertNotIn("Keep an explicit continuous-reading alternative", frame)
+        self.assertNotIn("Let a synchronized or section-timed transcript compose", frame)
+
     def test_static_chapter_158_lane(self):
         text = (ctl.SKILLS / "estate-publisher-deployment" / "SKILL.md").read_text()
         self.assertIn("Chapter 158", text)

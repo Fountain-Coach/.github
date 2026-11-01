@@ -26,7 +26,7 @@ Treat the available reading area as a measured frame.
 - Use actual geometry, not browser names. Portrait normally presents one leaf. Landscape may present two only when each leaf remains readable at the current type size and safe area.
 - Preserve margins and hierarchy as layout semantics, not decorative paper simulation. Modern CSS, React/Vite and responsive controls are compatible with Linotype; faux-book skeuomorphism is not required.
 - Let 200% text enlargement, WCAG text-spacing overrides and larger system type **repaginate**. Do not clip, overlap, hide, or reduce type to preserve a page count.
-- Keep an explicit continuous-reading alternative when it materially helps accessibility or source inspection. Do not use that alternative to excuse broken pagination.
+- Keep the book paginated. Do not add a Continuous reading mode or use a separate scrolling manuscript to excuse broken pagination. Meet accessibility needs through readable type, repagination, usable page navigation and an optional PDF projection of the same work.
 
 The page count is a projection of source + viewport + typography. Never make it the durable identity of the text.
 
@@ -62,9 +62,11 @@ When a passage can be heard, keep listening inside the reading relationship.
 - Offer a small deliberate Play/Pause action near the relevant work or passage; never autoplay.
 - Keep the audio session stable while the page recomposes. Rotation or repagination must not restart the recording.
 - Bind time to stable passage/section identity, not page number.
-- Let a synchronized or section-timed transcript compose inside the same page system and link deliberately back to source.
-- Prefer the minimum transport needed for listening: play/pause, position, transcript/source return, close. Add a cover, episode browser, production status, local audition UI, architecture map or DAW controls only when the user's actual task requires that separate experience.
+- The written page itself is the transcript. Do not create a separate transcript view or editable narration text. When verified passage/time alignment exists, highlight the corresponding authoritative passage in place; without verified alignment, do not pretend to synchronize.
+- Prefer the minimum transport needed for listening: play/pause, position, source-page return, close. Add a cover, episode browser, production status, local audition UI, architecture map or DAW controls only when the user's actual task requires that separate experience.
 - Keep voice provenance truthful and concise. Store detailed render receipts, provider/model evidence and authoring controls outside the reader surface unless they are directly relevant to the reader's decision.
+
+For Vergil or British-English literary voice-over, read [Vergil — narrator and voice specification](vergil-voice.md). The current British Vergil uses an auditioned existing synthetic voice; recording the author's voice is optional, not a prerequisite. Keep the narrating persona independent of the speech provider, publish only exact-source recordings and disclose synthetic audio.
 
 Do not create a second player engine or second paginator to make audio visible.
 
