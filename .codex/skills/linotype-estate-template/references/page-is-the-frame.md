@@ -66,7 +66,9 @@ When a passage can be heard, keep listening inside the reading relationship.
 - Prefer the minimum transport needed for listening: play/pause, position, source-page return, close. Add a cover, episode browser, production status, local audition UI, architecture map or DAW controls only when the user's actual task requires that separate experience.
 - Keep voice provenance truthful and concise. Store detailed render receipts, provider/model evidence and authoring controls outside the reader surface unless they are directly relevant to the reader's decision.
 
-For Vergil or British-English literary voice-over, read [Vergil — narrator and voice specification](vergil-voice.md). The current British Vergil uses an auditioned existing synthetic voice; recording the author's voice is optional, not a prerequisite. Keep the narrating persona independent of the speech provider, publish only exact-source recordings and disclose synthetic audio.
+For Vergil or British-English literary voice-over, read [Vergil — narrator and voice specification](vergil-voice.md). The current British Vergil uses an existing synthetic voice as a **private audition candidate**, not yet an artistically approved accent or performance; recording the author's voice remains optional, not a prerequisite. Keep the narrating persona independent of the speech provider, publish only exact-source recordings and disclose synthetic audio.
+
+On the registered owner-WLAN stage, preserve the source WAV as Satzfunk's private master and verify a compatible **MP3 listening derivative** before stage activation. The existing native preview inspector rejects unadmitted WAV files; do not alter its admission policy or activate a release before running it against the candidate. Follow [Satzfunk Voice Render's host boundary](../../../satzfunk-voice-render/references/host-contract.md) for the observed v110 refusal, v109 rollback and v111 accepted derivative. Keep voice/audition, source digest, compressed-media digest and private staging status distinct.
 
 Do not create a second player engine or second paginator to make audio visible.
 
