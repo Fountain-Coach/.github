@@ -58,7 +58,7 @@
       "name": "satzfunk-voice-render",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/satzfunk-voice-render",
-      "contentSHA256": "657f06c621b9f216b612341b8f4259a07e5715240f4a15c861aad72aca0d9c3a",
+      "contentSHA256": "882743d6260923bba4608f1b010b8cc1045c8f822cc787b0d0e052db447bdf80",
       "provenance": {
         "importedFrom": "Fountain-Coach/Satzfunk",
         "sourcePath": "scripts/render-fcis-essay-readaloud.mjs",

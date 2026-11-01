@@ -100,7 +100,7 @@ class SovereigntyTests(unittest.TestCase):
             self.assertIn('Official OpenAPI', item)
         for phrase in ('c2aecc2fbe1ddff3e7500a0eaa5c2bc4c19c5318',
                        'd80bb28992f6c2a86876d866dcae0b1f15e130de94238592bc57a4a579448b5f',
-                       'oneOf', '34.2', 'American female', '68-schema'):
+                       'oneOf', '34.2', 'American female', '67-schema'):
             self.assertIn(phrase, policy)
         self.assertIn('npm run contract:check', voice)
         self.assertIn('official provider', host.lower())
