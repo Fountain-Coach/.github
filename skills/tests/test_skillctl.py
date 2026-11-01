@@ -90,6 +90,28 @@ class SovereigntyTests(unittest.TestCase):
         self.assertIn("one folio", reference)
         self.assertIn("do not", reference.lower())
 
+    def test_official_upstream_openapi_dependency_propagates_verified_and_rejected_examples(self):
+        org = (ctl.ROOT / "AGENTS.md").read_text()
+        entry = (ctl.SKILLS / "fcis-skill-authoring-and-sync" / "SKILL.md").read_text()
+        voice = (ctl.SKILLS / "satzfunk-voice-render" / "SKILL.md").read_text()
+        reference_path = ctl.SKILLS / "fcis-skill-authoring-and-sync" / "references" / "official-openapi-and-example-propagation.md"
+        self.assertTrue(reference_path.is_file())
+        guide = reference_path.read_text()
+        self.assertIn("Official provider API contract dependence", org)
+        self.assertIn("official-openapi-and-example-propagation.md", org)
+        self.assertIn("official-openapi-and-example-propagation.md", entry)
+        self.assertIn("official-openapi-and-example-propagation.md", voice)
+        for phrase in ("official machine-readable API contract", "immutable revision", "content SHA-256",
+                       "upstream bytes", "transitive schema closure", "outgoing request/event",
+                       "inbound", "negative fixtures", "rejected outcomes", "OFFICIAL_OPENAPI_UNAVAILABLE",
+                       "Fountain-Coach/Satzfunk", "c2aecc2fbe1ddff3e7500a0eaa5c2bc4c19c5318",
+                       "67", "oneOf", "anyOf", "TRANSPORT_ACCEPTED", "ARTISTIC_REJECTED",
+                       "American female voice", "not a captured production trace"):
+            self.assertIn(phrase.lower(), guide.lower())
+        self.assertIn("npm run contract:check", voice)
+        self.assertIn("not an accepted British male Vergil", voice)
+        self.assertNotIn("Transport success implies artistically accepted", guide)
+
     def test_british_vergil_narrator_source_and_linotype_handoff(self):
         base = ctl.SKILLS / "linotype-estate-template"
         spec = (base / "references" / "vergil-voice.md").read_text()

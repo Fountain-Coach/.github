@@ -13,6 +13,10 @@ Consult [OpenAI's current deprecation schedule](https://developers.openai.com/ap
 
 For British Vergil, read the canonical [literary voice specification](../linotype-estate-template/references/vergil-voice.md) **before** rendering. Vergil's character is independent of model and preset. Use an authored original audition passage, consistent natural British English and restrained literary direction. An existing preset (currently `marin`) is an **unaccepted candidate** even when the model transcript matches source text. If the accent/performance does not sound like Vergil, reject the result; do not present it as an edition.
 
+## Official upstream Realtime contract gate
+
+Before a Realtime audition, use the **official, pinned OpenAI OpenAPI 3.1** provider-boundary implementation now merged in [Satzfunk PR #5](https://github.com/Fountain-Coach/Satzfunk/pull/5). The source owner maintains `contracts/openai/realtime.lock.json`, the seven-root 67-schema projection, `src/openai-realtime-contract.mjs`, and offline `npm run contract:check`; no second API client or schema is authored in this Skill. Read the FCIS [official OpenAPI and evidence propagation contract](../fcis-skill-authoring-and-sync/references/official-openapi-and-example-propagation.md). The previous Marin audition is a **valid prior provider transport**, but is **not an accepted British male Vergil**: the user heard an American female voice. Preserve it as a technical success and an artistic negative example. Never initiate a new full reading from that preset without a separately accepted vocal candidate.
+
 ## Repeatable host procedure
 
 1. Inspect the current Satzfunk source, `AGENTS.md`, existing phase in `PLANS.md`, the written manuscript, voice directions and digest; use only an approved source revision. Read [the native host contract](references/host-contract.md).

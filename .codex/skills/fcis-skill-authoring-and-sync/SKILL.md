@@ -25,6 +25,10 @@ The normal completion artifact is: canonical Git commit + validated file-tree di
 - Reconcile one selected, authorized distribution without overwriting unrelated packages.
 - Explain unknown, missing, divergent, or active-version state with independent evidence.
 
+## External provider contracts: official OpenAPI and verified examples
+
+For a new or revised FCIS external API adapter, first use the provider's **official versioned OpenAPI** where available. Follow [official OpenAPI dependence and positive/negative example propagation](references/official-openapi-and-example-propagation.md) before promoting reusable learning. Pin official bytes and provenance, validate the *used* provider request/event schema at the actual adapter boundary, test provider lifecycle and media properties independently, and propagate only the evidence-backed successful layer. An accepted provider transport is not an accepted literary voice, human result, accessibility claim or public release. Do not invent an OpenAPI if the provider does not publish one or treat a provider schema as owning FCIS domain governance.
+
 ## Active learning — verified evidence to canonical Skill
 
 At ordinary task closure, inspect the accepted operation, its source revision, terminal receipt and independent witness. Compare transferable, non-obvious procedures with the existing canonical FCIS skill catalogue first, preferring an update to a duplicate. Do not invent a reusable lesson where the observed result supports none. Repetition adds evidence; one successful run does not establish broader applicability.

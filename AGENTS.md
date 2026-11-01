@@ -45,6 +45,8 @@ failed operation, governing source, smallest necessary correction. An
 unproven worry is a non-blocking hypothesis. A completed source patch is
 not a completed live outcome.
 
+**Official provider API contract dependence (1 November 2026):** For an external API consumed by an FCIS-owned adapter, prefer the provider's official published OpenAPI (or equivalent official machine-readable contract), pinned by immutable revision and SHA-256. Generate the used typed/schema closure and validate the actual outbound/inbound provider boundary; keep transport sequencing, source-rights, runtime and human acceptance separately proved. Record an independently witnessed successful provider operation as an executable, source-linked regression example, and record an artistic failure as a negative example even when transport succeeds. When no official specification exists for the used interface, document that precisely and validate against official provider documentation instead; never invent official schemas or make this an unrelated prerequisite. Reuse the [canonical FCIS OpenAPI and example propagation procedure](.codex/skills/fcis-skill-authoring-and-sync/references/official-openapi-and-example-propagation.md). OpenAI/Satzfunk is the first verified implementation, not a universal provider authority.
+
 This file governs this repository. Other Fountain Coach repositories must
 carry an explicit root AGENTS import; GitHub does not automatically inject
 organization-repository instructions into agents working elsewhere.
