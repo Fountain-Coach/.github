@@ -16,7 +16,7 @@ The current First Hearing includes a Linotype reader that embeds a Teatro Stage 
 When Teatro material enters a Linotype page, **do not turn the page into a control room or an explanatory diagram of the Teatro stack**. The Linotype side keeps the work primary and reveals only the current reader/listener action that is needed.
 
 - A stage/score projection earns space only when it clarifies the source relationship better than prose alone.
-- Source-linked listening should normally arrive as a small page-level action with stable source/time return, not a second application surface.
+- Source-linked listening should normally arrive as a small page-level action with stable source/time return, not a second application surface. When a book or *Illustrating Inferno* reading calls for Vergil, use the companion Linotype [Vergil specification](../../linotype-estate-template/references/vergil-voice.md): British Vergil is a provisional British-English synthetic literary narrator, not Teatro's live stage sound or an automatic voice for Zork, Bee or N. The authoritative prose is the transcript; no duplicate transcript or Continuous mode.
 - Runtime identities, admission state, telemetry, routing and provenance stay available in their owning evidence, but do not become default reader furniture.
 - Do not use a static metaphor or illustration to imply an unobserved executable state.
 - Do not announce a future Scenario, transfer, or test on the reader surface. Present observed current behavior; where evidence ends, the public/editorial prose ends.
