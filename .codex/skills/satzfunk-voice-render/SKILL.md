@@ -11,7 +11,7 @@ description: "Produce source-locked, privately auditioned literary voice recordi
 
 Consult [OpenAI's current deprecation schedule](https://developers.openai.com/api/docs/deprecations) before any paid recording. As of 1 November 2026, `gpt-4o-mini-tts`, `tts-1` and `tts-1-hd` are **deprecated** for January 6, 2027 shutdown; **do not generate new voice takes using `/audio/speech`**. OpenAI recommends `gpt-realtime-2.1-mini` via the Realtime API. This is an endpoint and event-protocol change, not a model-ID flag.
 
-For British Vergil, read the canonical [literary voice specification](../../linotype-estate-template/references/vergil-voice.md) **before** rendering. Vergil's character is independent of model and preset. Use an authored original audition passage, consistent natural British English and restrained literary direction. An existing preset (currently `marin`) is an **unaccepted candidate** even when the model transcript matches source text. If the accent/performance does not sound like Vergil, reject the result; do not present it as an edition.
+For British Vergil, read the canonical [literary voice specification](../linotype-estate-template/references/vergil-voice.md) **before** rendering. Vergil's character is independent of model and preset. Use an authored original audition passage, consistent natural British English and restrained literary direction. An existing preset (currently `marin`) is an **unaccepted candidate** even when the model transcript matches source text. If the accent/performance does not sound like Vergil, reject the result; do not present it as an edition.
 
 ## Repeatable host procedure
 
