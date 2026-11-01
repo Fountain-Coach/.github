@@ -156,7 +156,7 @@ export async function run(argv, { getCredential = keychainCredential, loadAdapte
     return {status:'VERIFIED_AUDIO_BYTES_NOT_AUDITIONED',sourceSHA256:ctx.plan.sourceSHA256,
       audioSHA256:sha(bytes),...facts};
   }
-  if (!existed) throw Error('Run plan first and review its exact source hash');
+  // This CLI is archival-only after the 2026-10-01 Speech API deprecation.\n  // Preserve old receipts and WAV verification; do not buy new obsolete-model audio.\n  throw Error('NEW_RENDER_REFUSED: gpt-4o-mini-tts is deprecated. Use an independently verified current Realtime adapter and approved Vergil audition.');\n  if (!existed) throw Error('Run plan first and review its exact source hash');
   for (const p of [ctx.receiptFile, ctx.outfile]) {
     try { await access(p); throw Error('Attempt or output exists: no automatic paid retry'); }
     catch(e) {if (e.code !== 'ENOENT') throw e;}
