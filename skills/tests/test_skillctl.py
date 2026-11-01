@@ -90,6 +90,22 @@ class SovereigntyTests(unittest.TestCase):
         self.assertIn("one folio", reference)
         self.assertIn("do not", reference.lower())
 
+    def test_official_openapi_is_a_pinned_external_dependency_not_a_kit(self):
+        policy = (ctl.ROOT / 'docs' / 'FCIS-Official-OpenAPI-Dependency.md').read_text()
+        agents = (ctl.ROOT / 'AGENTS.md').read_text()
+        authoring = (ctl.SKILLS / 'fcis-skill-authoring-and-sync' / 'SKILL.md').read_text()
+        voice = (ctl.SKILLS / 'satzfunk-voice-render' / 'SKILL.md').read_text()
+        host = (ctl.SKILLS / 'satzfunk-voice-render' / 'references' / 'host-contract.md').read_text()
+        for item in (policy, agents, authoring, voice):
+            self.assertIn('Official OpenAPI', item)
+        for phrase in ('c2aecc2fbe1ddff3e7500a0eaa5c2bc4c19c5318',
+                       'd80bb28992f6c2a86876d866dcae0b1f15e130de94238592bc57a4a579448b5f',
+                       'oneOf', '34.2', 'American female', '67-schema'):
+            self.assertIn(phrase, policy)
+        self.assertIn('npm run contract:check', voice)
+        self.assertIn('official provider', host.lower())
+        self.assertIn('never', policy.lower())
+
     def test_british_vergil_narrator_source_and_linotype_handoff(self):
         base = ctl.SKILLS / "linotype-estate-template"
         spec = (base / "references" / "vergil-voice.md").read_text()

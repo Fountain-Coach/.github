@@ -34,7 +34,7 @@
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-skill-authoring-and-sync",
       "marketplaceWebsiteURL": "https://fcis.fountain.coach/",
-      "contentSHA256": "5196556712fb51bf586d11b3ae98af48a67eebeb02118547d3e1ff57f7d07339",
+      "contentSHA256": "6760f59d88a19b4c1ee14027ff67f3b74a797003ebe4705b5b6ad83f486547d8",
       "provenance": {
         "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
         "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",
@@ -58,7 +58,7 @@
       "name": "satzfunk-voice-render",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/satzfunk-voice-render",
-      "contentSHA256": "b3cad9b058c5bb3dcef9826393ae4133a3902999db9ba61b8d7f3e9df65917dc",
+      "contentSHA256": "882743d6260923bba4608f1b010b8cc1045c8f822cc787b0d0e052db447bdf80",
       "provenance": {
         "importedFrom": "Fountain-Coach/Satzfunk",
         "sourcePath": "scripts/render-fcis-essay-readaloud.mjs",
