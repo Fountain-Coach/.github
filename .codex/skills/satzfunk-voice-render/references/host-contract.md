@@ -1,24 +1,26 @@
-# Existing host path, source owner, and staging handoff
+# Satzfunk voice rendering — verified host and publication boundary
 
-The successful FCIS speech operation on 31 October 2026 is implemented by `Fountain-Coach/Satzfunk/scripts/render-fcis-essay-readaloud.mjs` and `src/openai-voice.mjs`.
+## Current provider path
 
-It retrieves Keychain credentials **inside Node** using `/usr/bin/security find-generic-password -s <service> -a <account> -w` as a child process with captured, unlogged output. Declared references, in order:
+**Source owner:** `Fountain-Coach/Satzfunk`, `src/openai-realtime-voice.mjs`, `scripts/vergil-realtime-audition.mjs`, `corpora/vergil/british-vergil-audition-01.txt` and its direction file. This replaces the deprecated `/audio/speech` workflow for **new** British Vergil recordings. The Realtime model for the 1 November 2026 audition is `gpt-realtime-2.1-mini`, via WebSocket `/v1/realtime`. Its original author-approved voice passage was extracted from the canonical [Vergil voice specification](../../linotype-estate-template/references/vergil-voice.md).
 
-- service `Reframe`, account `modernization.settings.openaiApiKey`
-- service `com.fountain-coach.stage-native`, account `openai.apiKey`
+**Credential host:** existing authorized macOS Reframe/StageNative Keychain entries, accessed inside the source-owned Node process without logging a token. The declared references remain:
 
-The `src/openai-voice.mjs` owner supports `gpt-4o-mini-tts`, `wav` and the `cedar` or `marin` built-in presets. Its `renderSpeech` implementation requires the output to be inside the checkout's `drafts/` tree. The skill's CLI imports that module; it never implements OpenAI request transport itself.
+- service `Reframe`, account `modernization.settings.openaiApiKey`;
+- service `com.fountain-coach.stage-native`, account `openai.apiKey`.
 
-For the initial v109 *On Continuity* British Vergil candidate, the verified source input contains ten authorial text blocks (title + paragraphs 1–9), 2,637 characters, source SHA-256 `fb57e1726c816497beed41a12504a276a7eeed8b9e1359e35ed07426c56f4b4c`. The active private v109 estate source was observed under `/home/benedikt/estate-shell-acceptance-staging/releases/shared-shell-20261101-v109-secondary-art-in-prose`. This snapshot identifies the work; always recheck the live source and the exact manuscript before rendering or staging. Bibliographical footnotes are not automatically spoken prose.
+Do not invent a new key, shell interpolation, delegated user setup, browser request, dependency repository, or keychain export. The exact running script was acceptance-tested on the existing Mac. A fake WebSocket event sequence covers the unit tests without touching Keychain.
 
-Two-stage responsibility: Satzfunk owns private, recorded media and receipt; the Linotype/SatzfunkPlayer integration owns private staged playback, source binding, transport continuity and accessible controls. The page is the frame. No separate transcript, Continuous mode, live browser generation, speculative cue timestamps or public promotion.
+## Source and one-attempt evidence
 
-The CLI's `plan` operation creates an idempotent source plan, `render` attempts exactly once, and `verify` checks existing media. Explicit publication/rights approval and artistic audition remain independent of a successful audio file.
+Initial private literary audition, 1 November 2026: the original 554-character excerpt beginning **“The first drawing shows a room”**, source SHA-256 `447d628b03e6b72ac0ba8d815b9a2086dd19172ead869c0f898e7cefb96f1a08`. Provider `gpt-realtime-2.1-mini`, preset `marin`, 34.2-second 24kHz mono PCM16 WAV, SHA-256 `0f6219c329e4dec9b46799c1a2b90b846340e6c3d23b8a008b5254d89f1790f6`. One paid attempt; immutable sanitized receipt; `verify` rechecks the stored bytes and source. The returned **model-generated output transcript** normalizes to the supplied excerpt but is not an independent acoustic transcription or an artistic voice verdict. British accent, characterization and exact audible coverage require additional listening judgement.
 
-## Verified private Linotype staging boundary — 1 November 2026
+The previous `gpt-4o-mini-tts`/`cedar` “On Continuity” WAV and receipts remain **historical, unapproved** evidence. The dated Speech API was deprecated on 1 October 2026 for shutdown on 6 January 2027. Do not issue new paid requests using it. Do not substitute the model identifier in the old `/audio/speech` route: the replacement uses Realtime events.
 
-**Do not put the WAV master into the existing owner-WLAN preview root.** The actual `serve_shared_shell_preview.py` inspector refuses every WAV outside its narrowly admitted sound-study paths. The first immutable British Vergil candidate `v110` failed with `RuntimeError: WAV not allowed on preview`; the active stage was rolled back to v109 and HTTPS recovery witnessed. This is a real native policy, not a reason to weaken admission, provision a new service, or announce a missing credential.
+## Private Linotype boundary
 
-Retain the source-locked WAV master and its SHA-256 in Satzfunk's private drafts. Create a separate, checksum-verified compatible **MP3 listening derivative** using the existing host encoder; record both master and derivative digests, encoding, complete text digest, permissions and audio disclosure in the private edition. Use the native preview inspector **against the complete candidate before changing the active symlink**, then validate exactly the changed files relative to the active immutable predecessor. Reuse the existing owner-WLAN HTTPS/SSH/staging service and keep the predecessor for immediate rollback. Never stage an unlisted media type or call derivative validation an artistic audition.
+Satzfunk owns the private WAV master; Linotype owns pagination and source-bound SatzfunkPlayer integration. The existing native owner-WLAN staging inspector **refuses unadmitted WAV**. For author audition, retain a SHA-256-checked MP3 listening derivative and stage it only in an immutable owner-WLAN candidate after native inspector acceptance, preserving the prior active release and rollback.
 
-**Accepted witness:** the corrected `v111-british-vergil-mp3` candidate passed the native inspector, preserved 1,261 predecessor files, and served an MP3 derivative at SHA-256 `36c1f88c05e896fc1c2f509a898d2858dab1352fdff49d6b3f9f63660a241e40` from the independently verified WAV master `73e20acd6d063b420c33beb6eb8176a5069eba0949a233412a090c9783757168`. Browser preflight and then live HTTPS playback passed in Chrome and WebKit at landscape, portrait and phone sizes (six live profiles, zero errors/overflow). The actual code and proof are in `Fountain-Coach/fountain.coach` PR #4; this reference does not grant public release or claim physical iPad/VoiceOver or the author's vocal approval.
+The initially staged v111 Cedar reading was rejected artistically and removed; v109 source/reader were restored. The separately staged v112 `shared-shell-20261101-v112-vergil-realtime-audition` is the **unchanged v109 reader plus a private 34.2-second MP3 listening candidate**, SHA-256 `14eea06150dd16ffa604d7267178761c85970206c8a89b2248c40b9545ff36ef`. Native inspector and HTTPS readback returned success. The reader has **no accepted Vergil Read Aloud control**; no public release or physical iPad/VoiceOver claim follows.
+
+Only an author-heard, author-approved full exact-text recording may be admitted into the Linotype book after its source rights and playback acceptance. Keep the literary narrator identity separate from provider/model/voice preset.
