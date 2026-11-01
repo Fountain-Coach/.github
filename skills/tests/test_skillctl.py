@@ -8,7 +8,7 @@ import skillctl as ctl
 
 class SovereigntyTests(unittest.TestCase):
     def test_canonical_packages(self):
-        self.assertEqual(len(ctl.validate()["skills"]), 4)
+        self.assertEqual(len(ctl.validate()["skills"]), 5)
     def test_repeatable_zip_and_roundtrip(self):
         files = ctl.entries(ctl.SKILLS / "teatro-scenario-composer")
         data = ctl.archive(files, "teatro-scenario-composer")

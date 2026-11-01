@@ -53,6 +53,18 @@
         "originalEntrypointBlob": "fed885d5ce1fc0d1fdc5e702ef6e1bea04efa0be",
         "note": "Reviewed historical source; new canonical procedural package authored only in Fountain-Coach/.github."
       }
+    },
+    {
+      "name": "satzfunk-voice-render",
+      "distribution": "not-content-verified",
+      "canonicalPath": ".codex/skills/satzfunk-voice-render",
+      "contentSHA256": "b03115b478baaea11fcdfedd42d87c1ca4528a76e56740c5c975f5ccd3c598b9",
+      "provenance": {
+        "importedFrom": "Fountain-Coach/Satzfunk",
+        "sourcePath": "scripts/render-fcis-essay-readaloud.mjs",
+        "sourceCommit": "historical-accepted-20261031",
+        "note": "Reuses established host adapter; no alternate paid transport"
+      }
     }
   ]
 }
