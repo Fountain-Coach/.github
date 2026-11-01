@@ -131,7 +131,7 @@ async function existingPlan(ctx) {
   } catch(e) { if (e.code === 'ENOENT') return false; throw e; }
 }
 
-export async function run(argv) {
+export async function run(argv, { getCredential = keychainCredential, loadAdapter = async root => import(pathToFileURL(join(root,'src','openai-voice.mjs'))) } = {}) {
   const args = parseArgs(argv);
   const ctx = await createContext(args);
   // Always inspect plan / existing output before any paid effect.
@@ -161,14 +161,14 @@ export async function run(argv) {
     catch(e) {if (e.code !== 'ENOENT') throw e;}
   }
   // Import the *existing* Satzfunk capability; do not implement another client.
-  const {planSpeech,renderSpeech} = await import(pathToFileURL(join(args.root,'src','openai-voice.mjs')));
+  const {planSpeech,renderSpeech} = await loadAdapter(args.root);
   planSpeech({text:ctx.text,voice:args.voice,instructions:ctx.instructions,format:'wav'});
   const receipt={schema:'satzfunk.voice-render-receipt.v1',id:ctx.plan.id,
     sourceSHA256:ctx.plan.sourceSHA256,voice:args.voice,
     status:'attempt-recorded',attempts:1,startedAt:new Date().toISOString()};
   await writeFile(ctx.receiptFile,JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});
   try {
-    let key = keychainCredential();
+    let key = getCredential();
     try {
       process.chdir(args.root);
       process.env.OPENAI_API_KEY = key; key = null;
