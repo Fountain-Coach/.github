@@ -40,7 +40,7 @@ class SovereigntyTests(unittest.TestCase):
         self.assertTrue(ref_path.is_file())
         reference = ref_path.read_text()
         self.assertIn("reader-navigation-and-score-composition.md", skill)
-        self.assertIn("On Continuity → Bookshelf → collection contents → work", reference)
+        self.assertIn("On Continuity → Bookshelf (complete collection contents facing its gallery) → work", reference)
         self.assertIn("Horizontal", reference)
         self.assertIn("Vertical", reference)
         self.assertIn("no page numbers", reference)
@@ -56,9 +56,18 @@ class SovereigntyTests(unittest.TestCase):
         for token in ("collection-gallery alternation", "text → its square-thumbnail gallery",
                       "vertically", "1:1", "object-fit: contain", "first authenticated narrative image",
                       "source order", "fixed bottom reader navigation", "dark", "same reader",
-                      "preserving the horizontal shelf", "vertical gallery"):
+                      "retaining the horizontal shelf", "vertical gallery"):
             self.assertIn(token.lower(), ref.lower())
         self.assertIn("Bookshelf text/gallery alternation",skill)
+
+    def test_bookshelf_contents_are_visible_without_extra_click(self):
+        ref=(ctl.SKILLS / "linotype-estate-template" / "references" / "reader-navigation-and-score-composition.md").read_text()
+        for phrase in ("complete scrolling table of contents", "every admitted source-ordered entry",
+                       "Read Essays", "no extra collection-opening click",
+                       "directly to the facing Bookshelf", "both contents and gallery",
+                       "independently remembered position", "introductory pieces"):
+            self.assertIn(phrase.lower(),ref.lower())
+        self.assertNotIn("with an accessible action to enter the collection's complete vertical contents",ref)
 
     def test_teatro_score_largest_balanced_fit_is_source_bound(self):
         reference = (ctl.SKILLS / "linotype-estate-template" / "references" / "reader-navigation-and-score-composition.md").read_text()
