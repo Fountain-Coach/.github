@@ -63,7 +63,7 @@ test('plan is idempotent, exact-source digest is mandatory, no output is fabrica
 test('one attempt is recorded before unavailable host credential; no automatic retry',async()=>{
   const h=await host();
   await run(h.args('plan'));
-  await assert.rejects(run(h.args('render')),/Keychain|macOS/);
+  await assert.rejects(run(h.args('render'),{getCredential:()=>{throw Error('Keychain fake refusal');}}),/Keychain/);
   const receipt=JSON.parse(await readFile(join(h.dir,'render-receipt.json'),'utf8'));
   assert.equal(receipt.attempts,1);
   assert.equal(receipt.status,'failed-inspect-before-retry');
@@ -85,4 +85,24 @@ test('verify rejects a fabricated or drifting receipt, accepts only exact measur
   const verified=await run(h.args('verify'));
   assert.equal(verified.status,'VERIFIED_AUDIO_BYTES_NOT_AUDITIONED');
   assert.equal(verified.durationSeconds,3);
+});
+
+test('fake adapter completes one receipt without touching Keychain or making a network request',async()=>{
+  const h=await host();
+  await run(h.args('plan'));
+  let requests=0;
+  const result=await run(h.args('render'),{
+    getCredential:()=> 'test-only-credential-not-real',
+    loadAdapter:async()=>({
+      planSpeech:({text,voice})=>{assert.equal(text,h.text);assert.equal(voice,'cedar');},
+      renderSpeech:async({out})=>{requests++;const bytes=wav(48000);await writeFile(out,bytes);return {bytes:bytes.length,voice:'cedar',model:'gpt-4o-mini-tts'};}
+    })
+  });
+  assert.equal(result.status,'RENDERED_PRIVATE_UNREVIEWED');
+  assert.equal(requests,1);
+  assert.equal(result.durationSeconds,2);
+  const verified=await run(h.args('verify'));
+  assert.equal(verified.audioSHA256,result.audioSHA256);
+  await assert.rejects(run(h.args('render')),/no automatic paid retry/);
+  assert.equal(process.env.OPENAI_API_KEY,undefined);
 });
