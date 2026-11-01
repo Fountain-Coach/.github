@@ -5,6 +5,7 @@
  * Supports deterministic plan / one-attempt render / verify.
  */
 import { readFile, writeFile, mkdir, access } from 'node:fs/promises';
+import { realpathSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
@@ -193,7 +194,7 @@ export async function run(argv, { getCredential = keychainCredential, loadAdapte
   }
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(resolve(process.argv[1])) === realpathSync(fileURLToPath(import.meta.url))) {
   run(process.argv.slice(2)).then(v=>console.log(JSON.stringify(v,null,2)))
     .catch(e=>{console.error('REFUSED:',e.message);process.exitCode=1;});
 }
