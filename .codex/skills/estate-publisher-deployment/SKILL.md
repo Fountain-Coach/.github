@@ -29,6 +29,10 @@ Mutable Store-backed routes may require `estate.publication.sync` and its native
 
 When interrupted or failed, inspect the persisted terminal receipt and active identity before retrying. Preserve the previous release, use its supported idempotency/resume contract if available, and avoid overlapping processes or repeated credential prompts. A keychain prompt, source commit, tested proposal, running process, or homepage HTTP 200 does not prove deployment.
 
+## Developing estate identity before an audio staging effect
+
+When the work extends a new Bookshelf, collection, internal work or source-bound narrated edition, read [developing-estate audio staging and recovery](references/developing-estate-audio-staging.md) before choosing an HTML/asset target. Inspect the *currently active* new-reader staging root, live collection/volume identity and its owning development branch. A legacy published essay matching the title is not automatically the current editorial source. The actual stage, Git source and public production remain **three separate authorities**; report any uncommitted stage-only work instead of silently overwriting it.
+
 ## Owner-controlled WLAN
 
 Use [WLAN staging](references/wlan-staging.md), confirm the registered Ubuntu Mac mini's actual current release and keep this private. Require HTTPS for WebAudio AudioWorklet when the browser needs it; do not impose production ceremonies on a disposable preview.
