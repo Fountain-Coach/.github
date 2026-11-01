@@ -53,21 +53,29 @@ class SovereigntyTests(unittest.TestCase):
     def test_bookshelf_collection_gallery_alternation(self):
         ref=(ctl.SKILLS / "linotype-estate-template" / "references" / "reader-navigation-and-score-composition.md").read_text()
         skill=(ctl.SKILLS / "linotype-estate-template" / "SKILL.md").read_text()
-        for token in ("collection-gallery alternation", "text → its square-thumbnail gallery",
+        for token in ("collection-gallery alternation", "one collection identity as one horizontal navigation unit",
                       "vertically", "1:1", "object-fit: contain", "first authenticated narrative image",
                       "source order", "fixed bottom reader navigation", "dark", "same reader",
-                      "retaining the horizontal shelf", "vertical gallery"):
+                      "horizontal collection navigation", "gallery scroll"):
             self.assertIn(token.lower(), ref.lower())
-        self.assertIn("Bookshelf text/gallery alternation",skill)
+        self.assertIn("Bookshelf collection identity and coordinated text/gallery views",skill)
 
     def test_bookshelf_contents_are_visible_without_extra_click(self):
         ref=(ctl.SKILLS / "linotype-estate-template" / "references" / "reader-navigation-and-score-composition.md").read_text()
-        for phrase in ("complete scrolling table of contents", "every admitted source-ordered entry",
-                       "Read Essays", "no extra collection-opening click",
-                       "directly to the facing Bookshelf", "both contents and gallery",
-                       "independently remembered position", "introductory pieces"):
+        for phrase in ("complete scrolling table of contents", "source order",
+                       "Read Essays", "without extra navigation steps",
+                       "containing Bookshelf collection", "two coordinated projections",
+                       "gallery scroll", "introductory source entries"):
             self.assertIn(phrase.lower(),ref.lower())
         self.assertNotIn("with an accessible action to enter the collection's complete vertical contents",ref)
+
+    def test_one_collection_one_selected_work_in_both_projections(self):
+        ref=(ctl.SKILLS / "linotype-estate-template" / "references" / "reader-navigation-and-score-composition.md").read_text()
+        for phrase in ("one collection identity as one horizontal navigation unit", "two coordinated projections",
+          "selected work identity per collection", "compact/portrait", "Contents / Images",
+          "seven and thirty-two text entries", "seven and thirty illustrated items", "visible image",
+          "remains outside all scrollports", "native iPad gestures"):
+            self.assertIn(phrase.lower(),ref.lower())
 
     def test_teatro_score_largest_balanced_fit_is_source_bound(self):
         reference = (ctl.SKILLS / "linotype-estate-template" / "references" / "reader-navigation-and-score-composition.md").read_text()
