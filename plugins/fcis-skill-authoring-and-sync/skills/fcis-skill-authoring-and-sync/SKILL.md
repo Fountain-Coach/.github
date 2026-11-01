@@ -25,6 +25,8 @@ The normal completion artifact is: canonical Git commit + validated file-tree di
 - Reconcile one selected, authorized distribution without overwriting unrelated packages.
 - Explain unknown, missing, divergent, or active-version state with independent evidence.
 
+**Official provider contracts and example promotion:** When a governed task uses an external API, apply the organization [Official OpenAPI dependency](../../../docs/FCIS-Official-OpenAPI-Dependency.md) to the owning adapter before calling its behavior reusable. Require a pinned *official* upstream schema file and SHA-256, unchanged relevant schema projection, validated request/response payloads, bounded documented exceptions, and a source-addressed successful use that distinguishes real terminal evidence from official-example fixtures. Propagate accepted adapter lessons to an existing canonical Skill and derived GitHub distribution; never turn a provider OpenAPI into an FCIS-owned standard or let API success certify literary/audio acceptance.
+
 ## Active learning — verified evidence to canonical Skill
 
 At ordinary task closure, inspect the accepted operation, its source revision, terminal receipt and independent witness. Compare transferable, non-obvious procedures with the existing canonical FCIS skill catalogue first, preferring an update to a duplicate. Do not invent a reusable lesson where the observed result supports none. Repetition adds evidence; one successful run does not establish broader applicability.
