@@ -19,6 +19,19 @@ Make each navigation action reversible, with clear Back/Breadcrumb semantics. Sa
 
 Allow a long collection contents list to scroll inside its **bounded page area**. Keep bottom controls outside that scroll container, fixed and reachable at every position; do **not** allow list scrolling to move the reader footer. Use stable accessible names, focus order, keyboard arrows/Tab/Enter, touch swipe and appropriate wheel handling. A visual index entry may be clickable without looking like a blue underlined hyperlink; **retain visible keyboard focus** and true semantics.
 
+
+### Bookshelf collection-gallery alternation
+
+For every **admitted collection**, arrange a horizontally scrollable sequence of **collection editorial text → its square-thumbnail gallery**, then the next collection's text → gallery. This is the existing Bookshelf's left/right movement, not a vertical web landing, a card mosaic or another app. The gallery **itself scrolls vertically** in its bounded page region; the Bookshelf's horizontal position and each gallery's vertical position are independent, preserved when entering a work and returning. The fixed bottom reader navigation never participates in either scroll.
+
+- Start each pair with a **typographic collection statement** (title, sourced editorial description, admitted count and ordering), with an accessible action to enter the collection's complete vertical contents.
+- Derive the gallery **one item per admitted published text**, in the collection's source order. Each item carries source work ID, accessible text title and original image address/provenance; do not synthesize or misattribute artwork. For works with multiple images, choose their first authenticated narrative image, retaining every original figure in the work itself.
+- Render each thumbnail inside an **equal square frame (1:1)** with `object-fit: contain` / equivalent proportional fitting and calm unpainted margins. **Square is the gallery presentation cell, not an instruction to crop or deform the original illustration.** Deliberate light/dark image rendering still applies; transparency or auto-inversion is not a dark artwork.
+- Selecting a thumbnail opens that work **within the same reader**, retaining breadcrumb to its collection and preserving the horizontal shelf and vertical gallery scroll positions. A collection editorial surface remains distinguishable from a full work contents list; both can be entered without leaving the book.
+- Keep the gallery scrollable **top-down** with keyboard, touch and pointer interaction and reliable focus; wheel/touch inside the gallery must not accidentally advance the horizontal shelf. Keep heading, reader chrome, and footer fixed while gallery items move.
+
+**Acceptance:** independently count source work IDs and thumbnails in each collection; require *exactly one* image per admitted text, no broken/missing assets or substitute covers, source-ordered titles, 1:1 cell boxes with whole-image fitting, accessible names/focus, bounded vertical gallery motion, horizontal alternation, fixed footer, and restored scroll offsets after navigating to an image's work and back. Verify landscape spread, portrait, narrow phone, light/dark presentation; do not infer physical iPad/VoiceOver acceptance from desktop WebKit.
+
 ## 2. Proof before changing the page
 
 Identify the source-authorized **On Continuity editorial** and capture **that actual opening spread** at the selected revision, route, theme and viewport. Never substitute an essay, another book, a generated impression or a convenient screenshot. Label exploratory organigrams as **design prototypes**; they prove the author-approved interaction model, not live staging behavior.

@@ -50,6 +50,16 @@ class SovereigntyTests(unittest.TestCase):
         self.assertIn("design prototypes", reference)
         self.assertIn("live behavior unverified", reference)
 
+    def test_bookshelf_collection_gallery_alternation(self):
+        ref=(ctl.SKILLS / "linotype-estate-template" / "references" / "reader-navigation-and-score-composition.md").read_text()
+        skill=(ctl.SKILLS / "linotype-estate-template" / "SKILL.md").read_text()
+        for token in ("collection-gallery alternation", "text → its square-thumbnail gallery",
+                      "vertically", "1:1", "object-fit: contain", "first authenticated narrative image",
+                      "source order", "fixed bottom reader navigation", "dark", "same reader",
+                      "preserving the horizontal shelf", "vertical gallery"):
+            self.assertIn(token.lower(), ref.lower())
+        self.assertIn("Bookshelf text/gallery alternation",skill)
+
     def test_teatro_score_largest_balanced_fit_is_source_bound(self):
         reference = (ctl.SKILLS / "linotype-estate-template" / "references" / "reader-navigation-and-score-composition.md").read_text()
         self.assertIn("Largest Balanced Fit", reference)
