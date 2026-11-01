@@ -31,7 +31,7 @@ Git is authority for authored plans and source revisions; GitHub is a collaborat
 
 ## Reader-facing Linotype: the page is the frame
 
-When the task changes a **reader, folio, page composition, semantic illustration, source-linked audio, or responsive book experience**, read [page-is-the-frame.md](references/page-is-the-frame.md) before implementation. For **reader navigation, Bookshelf/contents geometry, page transitions, or Teatro Scores**, also read [reader-navigation-and-score-composition.md](references/reader-navigation-and-score-composition.md) before design or implementation; the interactive organigram is writer-accepted design, not live acceptance.
+When the task changes a **reader, folio, page composition, semantic illustration, source-linked audio, or responsive book experience**, read [page-is-the-frame.md](references/page-is-the-frame.md) before implementation. For **reader navigation, Bookshelf text/gallery alternation, contents geometry, page transitions, or Teatro Scores**, also read [reader-navigation-and-score-composition.md](references/reader-navigation-and-score-composition.md) before design or implementation; the interactive organigram is writer-accepted design, not live acceptance.
 
 - **Compose into pages; do not squeeze content into a screen.** Keep readable typography and repaginate into additional leaves when content or accessibility settings need more space. Treat portrait as one leaf and show a spread only when both leaves remain readable.
 - **Keep source identity stable and page identity disposable.** Reflow, rotation, viewport change and text enlargement may change page numbers; preserve the addressed passage and reading position.
