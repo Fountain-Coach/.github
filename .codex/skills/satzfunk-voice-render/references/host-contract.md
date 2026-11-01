@@ -11,6 +11,10 @@
 
 Do not invent a new key, shell interpolation, delegated user setup, browser request, dependency repository, or keychain export. The exact running script was acceptance-tested on the existing Mac. A fake WebSocket event sequence covers the unit tests without touching Keychain.
 
+## Pinned official provider interface
+
+The source-owned Realtime adapter must pass the [FCIS Official OpenAPI dependency](../../../../docs/FCIS-Official-OpenAPI-Dependency.md). Its provider contract is pinned to `openai/openai-openapi` commit `c2aecc2fbe1ddff3e7500a0eaa5c2bc4c19c5318`, `openapi.json` SHA-256 `d80bb28992f6c2a86876d866dcae0b1f15e130de94238592bc57a4a579448b5f`. The 68-schema unchanged transitive projection, source-generated event fixtures and exact request builders must validate through the Satzfunk owner-native `npm run contract:check`. Two *upstream* anomalies have narrowly reviewed exceptions (`conversation: "none"` overlapping `oneOf`; official `response.done` nullable status details). Neither is a reason to invent a second provider client or claim a successful sounding British male voice.
+
 ## Source and one-attempt evidence
 
 Initial private literary audition, 1 November 2026: the original 554-character excerpt beginning **“The first drawing shows a room”**, source SHA-256 `447d628b03e6b72ac0ba8d815b9a2086dd19172ead869c0f898e7cefb96f1a08`. Provider `gpt-realtime-2.1-mini`, preset `marin`, 34.2-second 24kHz mono PCM16 WAV, SHA-256 `0f6219c329e4dec9b46799c1a2b90b846340e6c3d23b8a008b5254d89f1790f6`. One paid attempt; immutable sanitized receipt; `verify` rechecks the stored bytes and source. The returned **model-generated output transcript** normalizes to the supplied excerpt but is not an independent acoustic transcription or an artistic voice verdict. British accent, characterization and exact audible coverage require additional listening judgement.
