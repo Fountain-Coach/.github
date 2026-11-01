@@ -4,6 +4,8 @@ import {mkdtemp, mkdir,writeFile,readFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {run,parseArgs,wavFacts} from './record.mjs';
 
 const sha=b=>createHash('sha256').update(b).digest('hex');
@@ -105,4 +107,13 @@ test('fake adapter completes one receipt without touching Keychain or making a n
   assert.equal(verified.audioSHA256,result.audioSHA256);
   await assert.rejects(run(h.args('render')),/no automatic paid retry/);
   assert.equal(process.env.OPENAI_API_KEY,undefined);
+});
+
+test('actual CLI plan entrypoint invokes script and writes the source plan',async()=>{
+  const h=await host();
+  const script=fileURLToPath(new URL('./record.mjs',import.meta.url));
+  const output=execFileSync(process.execPath,[script,...h.args('plan')],{encoding:'utf8'});
+  assert.match(output,/PLANNED_NO_COST/);
+  const plan=JSON.parse(await readFile(join(h.dir,'plan.json'),'utf8'));
+  assert.equal(plan.requests,1);
 });
