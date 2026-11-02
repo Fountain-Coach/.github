@@ -27,6 +27,12 @@ The normal completion artifact is: canonical Git commit + validated file-tree di
 
 **Official provider contracts and example promotion:** When a governed task uses an external API, apply the organization [Official OpenAPI dependency](../../../docs/FCIS-Official-OpenAPI-Dependency.md) to the owning adapter before calling its behavior reusable. Require a pinned *official* upstream schema file and SHA-256, unchanged relevant schema projection, validated request/response payloads, bounded documented exceptions, and a source-addressed successful use that distinguishes real terminal evidence from official-example fixtures. Propagate accepted adapter lessons to an existing canonical Skill and derived GitHub distribution; never turn a provider OpenAPI into an FCIS-owned standard or let API success certify literary/audio acceptance.
 
+## Exact-blocker and resume-point learning
+
+When a requested outcome stops before terminal acceptance, use [exact-blocker continuity](references/exact-blocker-continuity.md) to maintain the original goal, the failed **operation**, the independently observed result, and the first unmet acceptance test in the existing owning plan. Only call an outcome `BLOCKED` at the specific layer of an **attempted** operation with a real refusal and binding authority. Label never-attempted or unobserved eligibility `NOT_ESTABLISHED`; don't infer an authorization denial from missing receipts, compiler checks or a denied remote execution command.
+
+A failed or unexecuted Reframe scenario cannot be automatically elevated as an accepted scenario lesson. Preserve a non-admitted candidate with exact evidence. If the writer explicitly directs that transferable **blocker-reporting procedure** itself be elevated, a separately reviewed and tested canonical Skill-source revision may record the reporting lesson; it does not grant the runtime permission, change the scenario status, publish an API integration, or count as a successful automatic `auto_elevate.py` run.
+
 ## Active learning — verified evidence to canonical Skill
 
 At ordinary task closure, inspect the accepted operation, its source revision, terminal receipt and independent witness. Compare transferable, non-obvious procedures with the existing canonical FCIS skill catalogue first, preferring an update to a duplicate. Do not invent a reusable lesson where the observed result supports none. Repetition adds evidence; one successful run does not establish broader applicability.
