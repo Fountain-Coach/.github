@@ -3,6 +3,7 @@
 ## Index
 
 - **Founding conduct standard (mandatory):** [FCIS Goal Fidelity and Non-Invention](FCIS-Non-Invention-and-Goal-Fidelity.md)
+- **FCIS MCP capability independence (RFC 0001 §7.3):** [FCIS-MCP-2 Provider-Independent Capability Access](../profile/README.md#73-provider-independent-capability-access-fcis-mcp-2) — tool availability, authorization and execution are distinct from paid-model availability and cost.
 
 - Mandatory Security Architecture Briefing: [FCIS-Security-Architecture-Briefing](FCIS-Security-Architecture-Briefing.md)
 - FCIS Apple Intelligence Compliance Specification (Preflight): [FCIS-AIC-Preflight-RFC](FCIS-AIC-Preflight-RFC.md)
