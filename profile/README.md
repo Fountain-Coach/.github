@@ -5,7 +5,7 @@
 **Category:** Standards Track  
 **Organization:** fountain.coach  
 **Applies to:** All Codex-operated repositories  
-**Version:** 1.3.0
+**Version:** 1.4.0
 
 ---
 
@@ -173,6 +173,40 @@ They **MUST NOT**:
 MCP configuration **MUST** occur outside repositories.
 Repositories **MUST NOT** rely on MCP presence for correctness.
 
+### 7.3 Provider-Independent Capability Access (FCIS-MCP-2)
+
+A capability and the reasoning provider that may choose to use it are separate authorities. A fully specified, admitted
+computer, filesystem, process, service, or MCP operation **MAY** be invoked without an LLM session when its own
+executable contract does not require inference. A tool provider's access or payment terms do not constitute an
+LLM provider's model entitlement.
+
+- **Independent availability:** Implementations **MUST** distinguish tool reachability, authorization, execution
+  admission, and terminal evidence from model availability, credentials, usage quotas, and billing. A model quota
+  refusal **MUST NOT** be presented as evidence that an independently reachable tool is unavailable.
+- **No artificial paid dependency:** An FCIS consumer **MUST NOT** require an OpenAI, Codex, or other paid reasoning
+  session solely to invoke an already admitted, fully specified external operation when a provider-independent
+  execution path is available. It **MUST NOT** substitute an unapproved chargeable reasoning call for a deterministic
+  tool operation. This rule does not manufacture a direct path where none has been implemented and proven.
+- **Reasoning is a separate operation:** If the request needs interpretation, argument synthesis, or agentic tool
+  selection, the actual reasoning lane **MUST** be admitted and elected under the existing provider, consent, cost,
+  and budget contract. The absence of a usable reasoning lane **MUST** yield a truthful, typed refusal; it
+  **MUST NOT** silently cause paid fallback or invented command arguments.
+- **Existing execution authority remains binding:** An MCP connection or tool advertisement is discovery, not
+  permission, execution admission, or success. For FCIS-KIT capabilities the owning kit **MUST** enforce
+  FCIS-KIT-14/15 mechanical constraints, scoped authorization, lifecycle, refusal, and terminal evidence. An MCP
+  client, host adapter, or model **MUST NOT** become a parallel executor or bypass the owning kit. MCP servers
+  still enforce their own transport security and service-side access controls; this does not transfer FCIS
+  execution policy to the server.
+- **Cost truth:** Costs, quotas, and entitlements for the tool service and the model service **MUST** be
+  represented separately, to the extent known. Unlimited or prepaid tool calls **MUST NOT** be described as
+  unlimited model inference. Unknown pricing or runtime availability **MUST** remain unknown rather than
+  presented as free, unlimited, or admitted.
+
+This is an additive clarification of the existing MCP capability layer, not a fifth FCIS layer, a mandatory MCP
+dependency, a new agent runtime, or permission to bypass existing owner-controlled operations. A consumer
+**MUST NOT** claim provider-free execution merely because a server is configured: it needs an accepted tool call
+and the required independent outcome evidence.
+
 ---
 
 ## 8. Orthogonality Violations (Non-Exhaustive)
@@ -268,6 +302,7 @@ FCIS uses semantic versioning for the standards suite. RFC 0001 defines the FCIS
 
 ### Version history
 
+- **v1.4.0** — Adds **FCIS-MCP-2 Provider-Independent Capability Access**: separately admitted deterministic tools may be invoked without compulsory model turns, while reasoning, authorization, cost, and FCIS-KIT execution authority remain independently governed. Additive; the four-layer model is unchanged.
 - **v1.3.0** — Adopts **FCIS-KIT-16 History-First Reconstruction**, requiring an evidence-backed reconstruction of
   the existing authority, proof, failure seam, reuse decision, and bounded acceptance before capability changes.
   Additive; RFC 0001 architecture unchanged.

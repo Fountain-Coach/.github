@@ -1,5 +1,24 @@
 # Skill Sovereignty implementation
 
+## FCIS-CAP — provider-independent tool access (2 November 2026)
+
+**Writer outcome:** Author an additive FCIS rule that keeps the use of already admitted MCP/computer capabilities independent of optional paid AI reasoning sessions when the underlying operation does not require inference. The observed case is Reframe's use of Desktop Commander; this phase authors FCIS only, not a Reframe runtime or provider integration.
+
+**Status and evidence:** **SOURCE AUTHORED AND CI-VERIFIED** in [PR #40](https://github.com/Fountain-Coach/.github/pull/40); the PR and the exact organization main revision determine adoption state. No Reframe runtime, public FCIS site, or independent model-free tool invocation is claimed. Documented existing FCIS RFC 0001 four-layer model, FCIS-KIT-14/15 sole kit execution authority, Reframe's Codex-lane architecture, Desktop Commander remote Mac connection and available filesystem/process tools. No claim of independently tested Reframe MCP invocation or provider-free natural-language reasoning.
+
+**Governance reading record:**
+- **Chapters read:** 07 (goal fidelity and reuse); 08 (evidence and no unsupported acceptance); 20 (paid-first concerns reasoned turns; the writer controls spend); 51 (one recorded decision for each reasoning lane, typed refusal); 91 (kit owns the instrument capability plane). RFC 0001 and FCIS-KIT-14/15 also read from canonical organization source.
+- **Forbidden here:** forcing a separately available deterministic tool behind a paid model session; treating unlimited tool calls as unlimited inference; inventing an unrestricted execution path; transferring consent, admission or evidence authority to MCP; weakening FCIS-KIT-15.
+- **Conflicts:** the published Chapter 91 page contains historical host-adapter enforcement wording, while organization FCIS-KIT-15 explicitly requires owning-kit execution. This amendment retains kit-only execution and leaves reconciliation of that separate public chapter outside scope. Chapter 20's paid-first quality policy applies to model-requiring turns, not an independent authorization to charge for deterministic tools.
+- **Excluded and why:** no changes to Reframe, Desktop Commander configuration, Codex, secrets, model contracts, MIDI2 IDL, SKILL.md, governance publication, fcis.fountain.coach deployment or provider pricing; the user asked to author FCIS first.
+
+**Acceptance:** a narrowly written standards-track amendment, discoverable from RFC 0001 and the organization docs index; unchanged four-layer model; clear normative language with denial/cost/authority/evidence boundaries; source review PR and independent GitHub read-back. Do not claim live runtime behaviour or publication from a source PR.
+
+**Source outcome:** RFC 0001 §7.3 `FCIS-MCP-2` authored in `profile/README.md` (additive v1.4.0); organization `docs/README.md` links the rule. GitHub branch diff read back: three changed files, no runtime/Kit/Skill changes. The organization Test Suite passed on the authored PR head (`e571b321`), including PR and push checks. [PR #40](https://github.com/Fountain-Coach/.github/pull/40) records the source-review and adoption state; public website publication remains a distinct operation.
+
+**Next executable action:** complete PR #40 adoption and independently read back organization main. Once accepted, the standards-authorship phase ends; Reframe MCP execution is separately scoped future work. No fcis.fountain.coach or Governance site deployment is implied.
+
+
 ## Current phase — Vergil source fidelity and developing Bookshelf learning (1 November 2026)
 
 **Writer outcome:** Promote reusable lessons from the completed, independently transcribed 14-segment Vergil reading and its *new unified Bookshelf* integration into existing FCIS Skills; keep the owning Swift Kit, reader engine, staging and production contracts unchanged. This continues the established Chapter 160 canonical-Skill sovereignty phase, using learning proposal PR #39; it is not a new runtime or publication phase.
