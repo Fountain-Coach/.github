@@ -1,6 +1,6 @@
 ---
 name: satzfunk-voice-render
-description: "Produce and verify source-locked literary voice recordings through the currently owning Satzfunk adapter or native FCIS Swift spoken-edition instrument, with private auditions and automatic long-form comparison/repair. Use for British Vergil, Illustrating Inferno, Linotype Read Aloud, FCIS source-bound voice work, model deprecation migration and safe paid-render recovery. Requires actual code execution on an authorized connected Mac."
+description: "Guide and verify source-locked voice readings through the existing Satzfunk adapter or native FCIS Swift Spoken Edition Kit, including British Vergil, consented own-voice and multilingual narration requests from writers or teachers, language-learning audio, and accessible Linotype playback. Check real provider availability before offering voice cloning or accent guarantees; preserve source fidelity, private permissions and bounded spend. Use for voice auditions, exact-text long-form correction, and source-owned audio verification. Execution requires an authorized connected host."
 ---
 
 # Satzfunk Voice Render — current source-owned workflow
@@ -14,6 +14,12 @@ description: "Produce and verify source-locked literary voice recordings through
 Do not make the original short Satzfunk Node Realtime audition a universal prerequisite for a complete spoken book. Resolve the manuscript's active source revision, current narrator/voice identity, existing accepted source-bound recording, selected provider route, the **actual** owning Swift Kit or Satzfunk adapter, and its latest declared API contract. A successful Realtime transport audition, a separate Swift voice implementation, and an admitted literary edition are distinct outcomes. Check provider support and exact documented API schemas for **the selected** renderer rather than assuming two adapters can exchange event formats or models.
 
 For a full-chapter recording, or when independent transcripts disagree with the manuscript, read [long-form source-verified recording and automatic repair](references/long-form-source-fidelity.md). The writer's desired outcome is a checked reading, not a manual clip-repair task; do the comparison and bounded correction using the owner's existing instrument. Neither a short audition, an old model, a fabricated SDK call nor an incompatible browser voice is an acceptable shortcut.
+
+## Multilingual writer and teacher requests — check capability first
+
+For requests such as “read my essay in my own voice using native British English” or “make accessible bilingual listening exercises for my pupils”, load [multilingual writer and teacher voice editions](references/multilingual-writer-teacher.md). Guide the writer/teacher conversationally through source, authorized speaker reference, language/accent, learner audience, provider/cost decision and accessible delivery. **This is a guidance path in the existing Skill, not a claim that cloning or a new provider is installed.**
+
+Preserve existing owner-native Swift interfaces `SpokenEditionAudioProvider` and `SpokenEditionIndependentTranscriber`, Reframe admission and source identity, and the existing Linotype/Satzfunk player. The current Reframe OpenAI host route is bound to original Vergil and `openai-key`: do not teach a cloned speaker, self-hosted model or local ASR as executable until the owning runtime implements and witnesses it. Never substitute a model-generated transcript for independent waveform verification, confuse alignment with word accuracy, or infer native British pronunciation from metadata. For teachers, distinguish consented educator voice from collecting pupils' voices.
 
 ## First choose the supported model and the approved literary voice
 
