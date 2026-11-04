@@ -1,3 +1,3 @@
 interface:
   display_name: "Satzfunk Voice Render"
-  short_description: "Exact-source British Vergil and Linotype speech through the existing Keychain host"
+  short_description: "Source-verified voice reading for writers and educators through existing FCIS hosts"
