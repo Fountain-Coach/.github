@@ -125,6 +125,49 @@ class SovereigntyTests(unittest.TestCase):
         self.assertNotIn("Keep an explicit continuous-reading alternative", frame)
         self.assertNotIn("Let a synchronized or section-timed transcript compose", frame)
 
+    def test_semantic_ink_bounds_are_independent_from_figure_outer_box(self):
+        skill_root = ctl.SKILLS / "linotype-estate-template"
+        entry = (skill_root / "SKILL.md").read_text()
+        page = (skill_root / "references/page-is-the-frame.md").read_text()
+        spec_path = skill_root / "references/semantic-illustration-ink-boundaries.md"
+        self.assertTrue(spec_path.is_file())
+        spec = spec_path.read_text()
+        for text in (entry, page):
+            self.assertIn("semantic-illustration-ink-boundaries.md", text)
+        for phrase in (
+            "Three separate measured boundaries",
+            "Satzspiegel",
+            "getBBox()",
+            "visible",
+            "drawn",
+            "28",
+            "30",
+            "not universal",
+            "WEB READER",
+            "physical iPad",
+            "source words",
+            "rightInset",
+        ):
+            self.assertIn(phrase.lower(), spec.lower())
+        self.assertIn("drawn internal rectangle", entry)
+        self.assertIn("actual iPad", page)
+        self.assertIn("no letters crossing", entry.lower() + " " + spec.lower())
+
+    def test_ink_escaping_frame_is_negative_case_not_passed_css_geometry(self):
+        skill_root = ctl.SKILLS / "linotype-estate-template"
+        spec = (skill_root / "references/semantic-illustration-ink-boundaries.md").read_text()
+        self.assertIn("1047.17", spec)
+        self.assertIn("1046", spec)
+        self.assertIn("outside", spec)
+        self.assertIn("44", spec)
+        self.assertIn("66ec9c5144953766bc99e7f9cf704b5ea17cf7a0", spec)
+        self.assertIn("source", spec.lower())
+        self.assertIn("not proof", spec.lower())
+        handoff = (ctl.SKILLS / "teatro-scenario-composer" / "references/linotype-handoff.md").read_text()
+        self.assertIn("semantic-illustration-ink-boundaries.md", handoff)
+        self.assertIn("correctly aligned image element does not prove", handoff)
+        self.assertIn("live Teatro execution", handoff)
+
     def test_static_chapter_158_lane(self):
         text = (ctl.SKILLS / "estate-publisher-deployment" / "SKILL.md").read_text()
         self.assertIn("Chapter 158", text)

@@ -21,7 +21,9 @@ When Teatro material enters a Linotype page, **do not turn the page into a contr
 - Do not use a static metaphor or illustration to imply an unobserved executable state.
 - Do not announce a future Scenario, transfer, or test on the reader surface. Present observed current behavior; where evidence ends, the public/editorial prose ends.
 
-For responsive reading, preserve Linotype's **page-is-the-frame** rule: keep readable type, repaginate instead of shrink-to-fit, and preserve the same source passage across rotation/reflow. Load the companion Linotype reference `references/page-is-the-frame.md` when implementing the reader side.
+For responsive reading, preserve Linotype's **page-is-the-frame** rule: keep readable type, repaginate instead of shrink-to-fit, and preserve the same source passage across rotation/reflow.
+
+**Labels inside a Teatro Score or source-owned diagram:** when the Score is projected as a Linotype illustration, follow the companion Linotype [semantic illustration ink-boundary procedure](../../linotype-estate-template/references/semantic-illustration-ink-boundaries.md). Measure labels/glyphs *against the drawn internal semantic frame* as well as the outer page's `Satzspiegel`; a correctly aligned image element does not prove its in-frame text is readable. Preserve the versioned original Score, stage/runtime ownership and actual musical relationships; adapt only a sanctioned static editorial projection. A browser `getBBox()` pass is source-layout evidence, never physical iPad, live Teatro execution or MIDI2 capability proof. Load the companion Linotype reference `references/page-is-the-frame.md` when implementing the reader side.
 
 ## Minimal handoff record
 

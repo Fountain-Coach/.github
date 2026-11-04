@@ -23,6 +23,7 @@ Treat the available reading area as a measured frame.
 
 - Keep typography at its readable authored/accessibility size. Never shrink type merely to fit one screen.
 - Add physical leaves when content needs more room. Do not make the default paginated leaf vertically scroll to absorb overflow.
+- **Golden editorial leaf:** the actual iPad in portrait orientation establishes the reference for one complete Linotype page: *Satzspiegel*, margins (*Stege*), line leading (*Durchschuss*), illustration balance, folio and empty space. "Golden" does not prescribe a golden ratio or fixed pixels. Landscape is two complete leaves facing, not two squeezed panels; A4 Druckfahne is a separately composed proof with correction space.
 - Use actual geometry, not browser names. Portrait normally presents one leaf. Landscape may present two only when each leaf remains readable at the current type size and safe area.
 - Preserve margins and hierarchy as layout semantics, not decorative paper simulation. Modern CSS, React/Vite and responsive controls are compatible with Linotype; faux-book skeuomorphism is not required.
 - Let 200% text enlargement, WCAG text-spacing overrides and larger system type **repaginate**. Do not clip, overlap, hide, or reduce type to preserve a page count.
@@ -54,6 +55,8 @@ Remove, simplify, or demote an illustration when it:
 - misrepresents an executable/runtime object as a static metaphor.
 
 A semantic illustration succeeds when the reader understands **more with less explanation**.
+
+**Measured semantic frame rule:** the body text, actual figure, image and caption must share the composed *Satzspiegel* edge, but this outer alignment is insufficient for a labeled rectangle. Inspect every visible SVG glyph's *actual ink bounds* against the **drawn internal border** with usable padding on both sides; the CSS box and SVG `viewBox` do not certify containment. Never hide overflow or shrink the Reader to conceal wrong inner spacing. For reproducible WEB READER failure and corrected geometry, read [semantic illustration ink boundaries](semantic-illustration-ink-boundaries.md).
 
 ## 5. Treat listening as a property of the source
 
@@ -104,6 +107,8 @@ For a changed Linotype reader, verify only the states relevant to the requested 
 - source position survives rotation/reflow and copied passage links;
 - keyboard/touch controls remain reachable and named;
 - illustrations reduce rather than add explanatory burden;
+- illustrations with semantic frames prove **visible glyph containment inside each drawn rectangle**, independently of figure/CSS alignment, preserving actual source words and purposeful white space;
+- the physical iPad portrait remains the golden editorial page witness; a source/browser proof and a photographed *uncorrected* iPad defect must never be relabeled as an accepted corrected device;
 - audio, when present, remains source-bound and does not become a nested application by default;
 - reader-facing text states observed current behavior and contains no speculative future success;
 - architecture/evidence remains available in its owning records without dominating the reading surface.
