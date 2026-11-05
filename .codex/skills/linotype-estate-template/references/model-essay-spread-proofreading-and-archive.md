@@ -1,6 +1,6 @@
 # The model essay — source-bound editorial proof, responsive spread and archive
 
-**Evidence date: 5 November 2026.** The active private staging reader of *What Makes a Page Modern? — Self Out Loud* at `Fountain-Coach/fountain.coach@17e32af5b875ec5356ddfa8a9680711d60aaa4eb`, served as immutable v151 and independently observed in WebKit and Chromium, is a **tested model for composition procedure**, not an instruction to copy its text, artwork, exact page count, or privately staged assets. Published production, physical iPad Safari and external VoiceOver do not inherit acceptance from this test. Pair with [page-is-the-frame.md](page-is-the-frame.md), [reader-navigation-and-score-composition.md](reader-navigation-and-score-composition.md), and [semantic-illustration-ink-boundaries.md](semantic-illustration-ink-boundaries.md).
+**Evidence date: 5 November 2026.** The private staging reader of *What Makes a Page Modern? — Self Out Loud* at `Fountain-Coach/fountain.coach@17e32af5b875ec5356ddfa8a9680711d60aaa4eb`, served as immutable v151 and independently observed in WebKit and Chromium, is a **tested model for composition procedure**, not an instruction to copy its text, artwork, exact page count, or privately staged assets. The later recorded stopping point is v152 below; do not describe v151 as the current release. Published production, physical iPad Safari and external VoiceOver do not inherit acceptance from these tests. Pair with [page-is-the-frame.md](page-is-the-frame.md), [reader-navigation-and-score-composition.md](reader-navigation-and-score-composition.md), and [semantic-illustration-ink-boundaries.md](semantic-illustration-ink-boundaries.md).
 
 ## Apply the model, not its screenshot
 
@@ -21,4 +21,27 @@
 - Do **not** interpret these ratios as targets for every page: some end leaves and deliberate semantic pauses properly contain blank space. The actual observed cause in v151 was the compositor's same-leaf image reserve, not a demand that all leaves become 98% full.
 - The historical essay archived by the writer remains subject to source and rights retention. Future essays inherit the **proof procedure**, not a mandate to reproduce this essay's layout or to update an account Skill by editing a local mirror.
 
-**Stop condition:** Each active work has a source-addressed editorial/proofreading record; every changed work/reader part has both source and running-stage validation where staged. If a paragraph requires an author's decision or supporting evidence is unavailable, preserve the original, mark the finding pending and do not invent a factual replacement.
+## Recorded stopping point — private staging v152
+
+This is a historical checkpoint from the inspected 5 November records, not a fresh live-state assertion. Before any later stage change, read the canonical Estate registry and actual service/current symlink; preserve a newer verified release rather than restoring this checkpoint automatically.
+
+| Binding | Recorded identity |
+| --- | --- |
+| Release | `shared-shell-20261105-v152-editorial-archive-1609cb9` |
+| Press source | `Fountain-Coach/fountain.coach@1609cb909ae2f89b4b28223fe70c482638d6b854` |
+| Estate provenance gate | `Fountain-Coach/estate@2914f1e` |
+| Retained predecessor/rollback | `shared-shell-20261105-v151-semantic-spread-17e32af` |
+| Reader root SHA-256 | `77f90b8db05a42700f727b4558f7e91a6406e2ae6bf25d59d953fa5ddae7b3d9` |
+| Reader app SHA-256 | `9fa017c008cebad8586a49a03741aae398a36a0fc61e935364f45b6e913b6345` |
+
+The writer archived **Did the Machine Actually Read the Book?**, ID `essay--to-read-is-not-to-remember`. The current edition contains **five Essays and 30 First Readings**. Keep the archive out of current contents, coordinated gallery, selection, adjacency and current share promotion. Preserve `#/read/essay--to-read-is-not-to-remember` with its distinct archival note, `/estate/essays/to-read-is-not-to-remember/`, original prose and attribution. Reconcile the standalone legacy Essays gallery as well as the modern Reader; those are separate navigation projections.
+
+**Reuse source evidence:** the pinned [archival decision](https://github.com/Fountain-Coach/fountain.coach/blob/1609cb909ae2f89b4b28223fe70c482638d6b854/scenarios/reading-first-20261101/editorial-archive-decision.json), [per-work proofreading ledger](https://github.com/Fountain-Coach/fountain.coach/blob/1609cb909ae2f89b4b28223fe70c482638d6b854/scenarios/reading-first-20261101/fountain-press-proofreading-ledger.md), and [Estate gate revision](https://github.com/Fountain-Coach/estate/commit/2914f1e) establish the source paths to reuse. The inspected local records `source-lock-v152.json`, `editorial-archive-LIVE-proof.json`, and Estate `docs/acceptance/2026-11-05-press-all-current-publications-v152.json` retain additional release/test observations; local availability does not establish their Git publication.
+
+**Recorded acceptance:** 6/6 archive Reader checks, 4/4 legacy-gallery checks and 105/105 live first-folio/page-turn smoke cases across 35 current works. The source inventory contains 49 Reader templates, including historical/support surfaces, and 28,416 machine-tokenized words in current works. Advisory native spelling inspected 41 source projections. These different denominators must not be reported as 49 current publications or complete literary review. Automated browser contexts bypassed the private CA trust error; no trusted physical Safari witness follows. No public-production change or persisted FountainStore archival was established.
+
+**Next unfinished work:** resume the existing per-work proofreading ledger, inspect actual prose and dated factual/rights claims against their authoritative sources, and keep unresolved author choices explicit. In 23/30 First Readings, gallery artwork exists without a source-bound inline image in the Reader body. This is an editorial-admission finding: verify author intent, source relationship and rights before inserting artwork. Full literary proofreading, physical iPad Safari/VoiceOver, audio/source alignment and trust remain unverified. Do not add a new Reader or rerun staging merely to update this Skill.
+
+**Regeneration must preserve archival state.** The source-only follow-up to the existing `build_bookshelf_gallery.cjs` and `build_essay_share_assets.cjs` uses `integrated-manifest.currentEssays`, the admitted gallery and writer decision so historical inventory cannot resurrect archived cards or current promotion. Preserve `editorialState:'archived'` and `currentEditionPromotion:false`. Those inspected uncommitted follow-up edits are not part of v152's pinned `1609cb9`; verify their own source commit and regeneration checks before claiming they shipped. A rebuilt gallery must agree with the current source-admitted membership and keep direct archival routes intact.
+
+**Stop condition:** Each active work has a source-addressed editorial/proofreading record; every changed work/reader part has both source and running-stage validation where staged. An inventory or smoke pass alone does not close that editorial goal. If a paragraph requires an author's decision or supporting evidence is unavailable, preserve the original, mark the finding pending and do not invent a factual replacement.
