@@ -41,6 +41,15 @@ When the task changes a **reader, folio, page composition, semantic illustration
 - **State the present.** Reader-facing prose and status must describe observed current capability. Do not announce hypothetical future tests, roadmap states or unperformed transfers as part of the work's present identity.
 - **Keep rigor underneath.** Simplicity never weakens source ownership, accessibility, rights, evidence, publication or rollback contracts. Hide machinery from the reader only when the reader does not need it; do not delete the machinery or its proof.
 
+## Model essay, complete editorial proofreading, and archival state
+
+For **Fountain Press essay proofreading, source-grounded editorial copy, nested typographic specimens, large-screen semantic spread balance, current-publication lists or archival status changes**, read [model-essay-spread-proofreading-and-archive.md](references/model-essay-spread-proofreading-and-archive.md) alongside the existing page-frame and navigation contracts.
+
+- The privately staged **What Makes a Page Modern? — Self Out Loud** v151 is an independently browser-verified **model of procedure**, not a master screenshot, source for unrelated writing, or public-production acceptance. The spread is one semantic field: keep adjacent proof/illustration and prose visibly related without shrinking every picture, fabricating fill, or erasing legitimate white space.
+- Proofread **every actual active edition** through an exact author-source inventory: title, summary/proem, writer prose, figures/captions, factual claims, credits/rights, linked references, accessibility, responsive folio, source position and recorded reading where available. Distinguish verified corrections from unresolved editorial decisions; do not silently alter an original manuscript.
+- An explicit archive decision withdraws a work from the **active** contents, coordinated gallery, adjacency and current promotion; its source, direct Reader route and historical credits remain available with an accurate separate archival note. Never infer public-domain retirement, SourceStore removal, or a new Reader from a changed staged collection list.
+- Acceptance includes before/after current-source block order, natural image proportions, measured facing-folio relationships, strict mobile-presentation preservation, working archive deep links, archive/active membership disjointness and independent active-stage readback. Preserve the immutable staging predecessor and public-production boundary.
+
 ## New public route: scenario reuse before publication
 
 For requests such as "publish this new essay," **compose the inherited Fountain Coach Publication Core before releasing the route**. The new route is an input to an already-adopted template/preview scenario; a new scenario is **not** created merely because a new URL exists.
