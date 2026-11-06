@@ -6,6 +6,14 @@ Use this path only for staging explicitly scoped to the owner's WLAN or intranet
 
 Stage the current admitted estate bytes with correct host-root semantics, iPad accessibility, and the secure browser capabilities the application needs.
 
+## Fountain Press staging acceptance for books and editions
+
+The canonical WLAN release serves the **same Fountain Press source-bound edition and original Linotype Reader** intended for any later authorized public production. The staging identity is read from the current estate registry and actual active service/symlink, never from a hard-coded v162 label or an old screenshot. For an admitted book, pin the original owner SHA, complete contents/statuses, rights, artwork and links; pin the Press compositor revision and manifest. Derive an immutable candidate from the accepted active predecessor with a declared route/asset diff; preserve private media and unrelated routes byte-for-byte. Use the existing stage's authorized source-lock/digest guard, authenticated SSH/rsync delivery, atomic activation and rollback. Do not publish through an arbitrary alternate page server.
+
+Independently verify the active symlink, HTTPS-served HTML/JS/receipt digests, existing Reader navigation and original source identities. Exercise the entire corpus when full-book completeness is the stated goal; record exact missing items rather than substituting a sampler. A 6 November 2026 accepted **Governance v162** witness comprised 160/160 chapters, 72 current/88 reference, 70 original figures, 1,132/1,132 author links, 160/160 browser compositions and 10 focused Reader journeys; original stage lineage v161/v160 remained rollback-ready. Those counts describe *one edition*, not mandatory global fixtures. Physical iPad Safari/VoiceOver acceptance and public production release each demand their own observed evidence.
+
+On successful stage acceptance, hand off the exact source-pinned Press release identity and artifact inventory to the **existing EstatePublisher production lane**; do not install a second compositor, copy stage-private assets into a public artifact, or treat staging as an authorization to release. If a public route has different asset hosts, declare and verify the transformation rather than silently rebuilding the work.
+
 ## Procedure
 
 - Prefer the simple staging path. Do not impose production SecretStore, approval, or publication ceremony on a disposable preview unless production-equivalent staging was explicitly requested.

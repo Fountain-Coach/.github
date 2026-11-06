@@ -1,4 +1,4 @@
 interface:
   display_name: "EstatePublisher Deployment"
-  short_description: "Publish static Fountain Coach routes through approved SSH/Caddy and operate other governed deployment lanes."
-  default_prompt: "Resolve the current EstatePublisher lane for the requested effect. For immutable static releases, reuse Chapter 158 authenticated SSH/Caddy without inventing Store or agent prerequisites; verify source, rollback and public HTTPS."
+  short_description: "Deploy Fountain Press source-bound editions from canonical WLAN staging to authorized production using EstatePublisher."
+  default_prompt: "For book publications, keep one source-authentic Fountain Press Linotype composition across canonical WLAN staging and public production. Preserve source rights, exact Git and artifact digests, chapter/link/media fidelity and rollback; activate only with EstatePublisher and separately authorized public HTTPS readback. For nonbook effects, select their current governed lane without inventing Store or agent prerequisites."

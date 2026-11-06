@@ -1,11 +1,19 @@
 ---
 name: estate-publisher-deployment
-description: "Publish and verify Fountain Coach immutable static estate releases and other governed EstatePublisher effects. Use for SSH/Caddy static articles, route and template reconciliation, rollback, managed services, authorization, WLAN staging, Safari/iPad acceptance, and public deployment verification. Follow FCIS Goal Fidelity and Governance Chapter 158."
+description: "Deploy and verify Fountain Press source-bound editions through the same immutable composition in owner-WLAN staging and separately authorized public production, using EstatePublisher delivery, SHA-256, receipts, rollback and HTTPS readback. Use for book/essay/Governance releases, SSH/Caddy static publishing, route and template reconciliation, authorization, managed services, staging, Safari/iPad acceptance and production verification. Follow FCIS Goal Fidelity and Governance Chapter 158."
 ---
 
 # EstatePublisher Deployment — governed lanes
 
 This skill is a procedure, not a runtime publisher. Its **only canonical skill authority is Fountain-Coach/.github** (Governance Chapter 160); EstatePublisher's installed executable and Swift Kits own effects. Begin with [FCIS Goal Fidelity](https://github.com/Fountain-Coach/.github/blob/main/docs/FCIS-Non-Invention-and-Goal-Fidelity.md) and current [Governance Chapter 158](https://governance.fountain.coach/chapters/158-publishing-is-not-a-distributed-transaction/).
+
+## Fountain Press standard: one source-bound composition for staging and production
+
+**Writer-adopted 6 November 2026.** Fountain Press is the standard **publication-composition and reading presentation** for every admitted book/essay/Governance edition in *both* canonical WLAN staging and public production. An approved work is projected once from the exact source-owner Git commit into the existing Press manifest/Bookshelf/Linotype Reader and its immutable artifacts. The production handoff reuses the verified Press composition and pinned source/asset identities (with declared stage-only URL transforms), **never** invents a new production Reader or republishes a short chapter sampler as a complete book. Nonbook Teatro/other service surfaces keep their native bodies while following their approved publication-shell and custody contract; Press does not seize their functionality or private-media rights.
+
+**Authority boundaries remain unchanged:** source owners retain text, statuses, illustrations, links and rights; Reframe/FountainStore retains any writer Bookshelf admission; Fountain Press composes the edition; **EstatePublisher alone** authorizes/delivers/activates immutable staging and public release, records terminal receipts and preserves rollback. Production requires distinct approval and independent HTTPS/asset/metadata acceptance. A stage URL, Git push, local Press build, source digest or passed browser tests are not public publication receipts.
+
+For the current tested pattern, inspect the 6 November 2026 **Governance v162** admission: 160/160 original chapters, 72 current/88 reference classifications, 70 retained source figures, 1,132 original links and 160/160 live browser compositions; one original Press compositor, source-lock SHA, immutable v161/v160 rollback and independent HTTPS HTML/JS/receipt digests. This is a **verified owner-WLAN stage**, not a public or physical iPad/VoiceOver proof. Apply this evidence model to the *actual scope* of each edition rather than imposing those fixed counts. Read [WLAN staging](references/wlan-staging.md) and [deployment modes](references/deployment-matrix.md) before promotion.
 
 ## Resolve the actual operation
 
