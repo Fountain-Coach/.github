@@ -1,6 +1,6 @@
 interface:
   display_name: Linotype Estate Template
-  short_description: Fountain Press books, illustrations and social cards from source to release
+  short_description: Fountain Press publication; Governance text-first, other books optionally illustrated
   icon: book-open
   icon_small: assets/icon.svg
   icon_large: assets/icon.svg
