@@ -16,6 +16,7 @@ SCRIPT = pathlib.Path(__file__).with_name("validate_agent_publication.py")
 SPEC = importlib.util.spec_from_file_location("press_agent_validation", SCRIPT)
 VALIDATOR = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = VALIDATOR
+sys.dont_write_bytecode = True  # Preserve canonical packaged Skill tree during CI tests.
 SPEC.loader.exec_module(VALIDATOR)
 
 

@@ -3,6 +3,7 @@
 These are source checks, not independent staging, public or API observations.
 """
 from pathlib import Path
+import os
 import subprocess
 import sys
 import unittest
@@ -41,7 +42,8 @@ class AgentReadablePublicationPolicyTests(unittest.TestCase):
 
     def test_positive_negative_parity_fixtures(self):
         command = [sys.executable, str(PRESS / "scripts/test_validate_agent_publication.py")]
-        run = subprocess.run(command, text=True, capture_output=True, timeout=30)
+        run = subprocess.run(command, text=True, capture_output=True, timeout=30,
+                             env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
         self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
         self.assertIn("Ran 15 tests", run.stderr)
 
