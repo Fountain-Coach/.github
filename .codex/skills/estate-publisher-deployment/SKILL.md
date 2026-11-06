@@ -1,6 +1,6 @@
 ---
 name: estate-publisher-deployment
-description: "Deploy and verify Fountain Press source-bound editions through the same immutable composition in owner-WLAN staging and separately authorized public production, using EstatePublisher delivery, SHA-256, receipts, rollback and HTTPS readback. Use for book/essay/Governance releases, SSH/Caddy static publishing, route and template reconciliation, authorization, managed services, staging, Safari/iPad acceptance and production verification. Follow FCIS Goal Fidelity and Governance Chapter 158."
+description: "Deploy and verify Fountain Press source-bound editions through the same immutable composition in owner-WLAN staging and separately authorized public production, using EstatePublisher delivery, SHA-256, receipts, rollback and HTTPS readback. Use for book/essay/Governance releases, machine-readable publication readback, agent-guidance version parity, SSH/Caddy static publishing, route and template reconciliation, authorization, managed services, staging, Safari/iPad acceptance and production verification. Follow FCIS Goal Fidelity and Governance Chapter 158."
 ---
 
 # EstatePublisher Deployment — governed lanes
@@ -14,6 +14,12 @@ This skill is a procedure, not a runtime publisher. Its **only canonical skill a
 **Authority boundaries remain unchanged:** source owners retain text, statuses, illustrations, links and rights; Reframe/FountainStore retains any writer Bookshelf admission; Fountain Press composes the edition; **EstatePublisher alone** authorizes/delivers/activates immutable staging and public release, records terminal receipts and preserves rollback. Production requires distinct approval and independent HTTPS/asset/metadata acceptance. A stage URL, Git push, local Press build, source digest or passed browser tests are not public publication receipts.
 
 For the current tested pattern, inspect the 6 November 2026 **Governance v162** admission: 160/160 original chapters, 72 current/88 reference classifications, 70 retained source figures, 1,132 original links and 160/160 live browser compositions; one original Press compositor, source-lock SHA, immutable v161/v160 rollback and independent HTTPS HTML/JS/receipt digests. This is a **verified owner-WLAN stage**, not a public or physical iPad/VoiceOver proof. Apply this evidence model to the *actual scope* of each edition rather than imposing those fixed counts. Read [WLAN staging](references/wlan-staging.md) and [deployment modes](references/deployment-matrix.md) before promotion.
+
+## Agent-readable publication release check (when declared)
+
+For a publication with an adopted or explicitly requested machine-readable interface, inspect the Fountain Press source/edition manifest and its public agent guidance before package, stage or release. Require the **same source owner, revision, edition identity, publication state, complete entry ordering, exact source SHA/status and guidance digest** in the human and machine projections. For Governance, preserve all current/reference statuses, original links and source identities; never call a historical/reference chapter a current instruction. Reject fabricated tool permissions, stale agent guidance, unsupported APIs, private `AGENTS.md` exposure, private media and unauthorized access claims. The [Fountain Press machine-readable publication procedure](../linotype-estate-template/references/agent-readable-publication.md) and its offline validator provide a bounded check, **not** proof of legal rights or running publication.
+
+Stage the machine discovery route and guidance alongside the **same immutable Press artifact**, verify their actual HTTPS bytes with a non-browser reader and separately verify Linotype navigation. On production, require distinct author/publisher approval and independent public readback of the same versioned machine and human surfaces, with rollback. If the machine interface is not part of the adopted/requested scope, report it as not established rather than inventing a deployment blocker or new service.
 
 ## Resolve the actual operation
 

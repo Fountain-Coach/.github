@@ -1,6 +1,6 @@
 interface:
   display_name: Linotype Estate Template
-  short_description: Fountain Press page-framed Linotype and source-bound staging/production releases
+  short_description: Fountain Press Linotype, agent-readable publications and staging/production
   icon: book-open
   icon_small: assets/icon.svg
   icon_large: assets/icon.svg
