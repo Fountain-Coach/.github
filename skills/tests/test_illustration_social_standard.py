@@ -51,10 +51,25 @@ class IllustrationSocialStandardTests(unittest.TestCase):
         for text in (l,p,ref):
             self.assertIn("generic",text.lower())
             self.assertIn("89",text)
-        self.assertIn("not corrected",ref)
+        self.assertIn("historical audit evidence",ref)
+        self.assertIn("not a Governance acceptance gap",ref)
         self.assertIn("separately authorized",ref)
         self.assertIn("cannot silently",ref)
         self.assertIn("source owner's review",ref)
+
+    def test_governance_does_not_require_illustrations_or_social_cards(self):
+        l=(LINOTYPE/"SKILL.md").read_text()
+        p=(PUBLISHER/"SKILL.md").read_text()
+        ref=(LINOTYPE/"references/illustration-and-social-card.md").read_text()
+        self.assertIn("Governance text-first exception",l)
+        self.assertIn("Governance image-free publication acceptance",p)
+        self.assertIn("without** illustrations",l)
+        self.assertIn("Do not reject Governance",p)
+        self.assertIn("outstanding mandatory Governance remediation",l)
+        self.assertIn("or block a Governance release",ref)
+        self.assertIn("other source-authored illustrated works",ref)
+        self.assertIn("do not mass-delete",l)
+        self.assertIn("private v163/v164",l)
 
     def test_reference_is_bundled(self):
         self.assertTrue((LINOTYPE/"references/illustration-and-social-card.md").is_file())
