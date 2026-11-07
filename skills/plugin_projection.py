@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Project one FCIS-owned Git Skill into a GitHub-backed ChatGPT plugin.
+"""Project all five canonical FCIS Skills into one existing GitHub-backed plugin.
 
-This is a derived package. Sync is an explicit distribution-preparation step;
-nothing here installs, activates, publishes or deletes an account Skill.
+The plugin identity stays unchanged; this performs only derived Git file changes.
+It never installs or promotes a hosted ChatGPT version.
 """
 import argparse
 import json
@@ -12,13 +12,21 @@ import re
 from skillctl import ROOT, digest, entries
 
 SKILL = "fcis-skill-authoring-and-sync"
-PLUGIN = "fcis-skill-authoring-and-sync"
-PLUGIN_PATH = Path("plugins") / SKILL
+PLUGIN = SKILL
+PLUGIN_PATH = Path("plugins") / PLUGIN
 MIRROR_PATH = PLUGIN_PATH / "skills" / SKILL
 MARKETPLACE_PATH = Path(".agents/plugins/marketplace.json")
-# Existing uploaded ChatGPT workspace plugin, observed in the authenticated admin URL.
-# OpenAI marketplace takeover must preserve this identity rather than add another.
 WORKSPACE_PLUGIN_ID = "Plugin_fb9e0937c59c8191b9fa077fa5ea53ef"
+
+# Fixed reviewed inventory: adding a sixth skill is a separate admission, not
+# an accidental consequence of a catalog change.
+CANONICAL_SKILLS = (
+    "estate-publisher-deployment",
+    "fcis-skill-authoring-and-sync",
+    "linotype-estate-template",
+    "satzfunk-voice-render",
+    "teatro-scenario-composer",
+)
 
 
 class ProjectionError(ValueError):
@@ -36,106 +44,137 @@ def _read_json(path):
 
 def inspect(root=ROOT):
     root = Path(root).resolve(strict=True)
-    manifest_path = root / PLUGIN_PATH / "plugin.json"
-    market_path = root / MARKETPLACE_PATH
-    plugin = _read_json(manifest_path)
-    market = _read_json(market_path)
+    plugin = _read_json(root / PLUGIN_PATH / "plugin.json")
+    market = _read_json(root / MARKETPLACE_PATH)
 
     if plugin.get("$schema") != "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json":
-        raise ProjectionError("Plugin manifest lacks the portable schema")
+        raise ProjectionError("Portable plugin schema is missing")
     if plugin.get("name") != PLUGIN or not re.fullmatch(r"\d+\.\d+\.\d+", plugin.get("version", "")):
-        raise ProjectionError("Plugin identity or semantic version invalid")
+        raise ProjectionError("Plugin identity or version invalid")
     if plugin.get("repository") != "https://github.com/Fountain-Coach/.github":
-        raise ProjectionError("Plugin does not point to canonical Git owner")
-    if not plugin.get("extensions", {}).get("com.openai", {}).get("interface", {}).get("displayName"):
+        raise ProjectionError("Plugin repository must remain canonical")
+    interface = plugin.get("extensions", {}).get("com.openai", {}).get("interface", {})
+    if not interface.get("displayName"):
         raise ProjectionError("Plugin display name missing")
 
+    # One installed workspace plugin, not five new installations.
     if market.get("name") != "fountain-coach" or len(market.get("plugins", [])) != 1:
-        raise ProjectionError("Marketplace must contain exactly one bounded FCIS entry")
+        raise ProjectionError("Marketplace must retain the single existing plugin")
     item = market["plugins"][0]
     if item.get("name") != PLUGIN or item.get("source") != {
         "source": "local", "path": "./plugins/fcis-skill-authoring-and-sync"
     }:
-        raise ProjectionError("Marketplace source path or plugin identity differs")
+        raise ProjectionError("Marketplace source or identity changed")
     if item.get("pluginId") != WORKSPACE_PLUGIN_ID:
-        raise ProjectionError("Existing ChatGPT workspace pluginId must be preserved")
+        raise ProjectionError("Preserve the existing hosted workspace pluginId")
     if item.get("policy", {}).get("installation") != "AVAILABLE":
-        raise ProjectionError("Marketplace must not silently install a plugin")
+        raise ProjectionError("No automatic workspace installation")
     if item.get("policy", {}).get("authentication") != "ON_INSTALL":
-        raise ProjectionError("Marketplace authentication policy mismatch")
+        raise ProjectionError("Marketplace authentication policy changed")
 
     catalog = _read_json(root / "skills" / "openai-distribution.json")
     if catalog.get("owner") != "Fountain-Coach/.github":
-        raise ProjectionError("Canonical Skill ownership mismatch")
-    try:
-        declared = next(x for x in catalog["skills"] if x["name"] == SKILL)
-    except (KeyError, StopIteration) as exc:
-        raise ProjectionError("Canonical Skill has no catalog entry") from exc
-    source = entries(root / ".codex" / "skills" / SKILL)
-    source_digest = digest(source)
-    if declared["contentSHA256"] != source_digest:
-        raise ProjectionError("Canonical Skill file tree differs from pinned digest")
-    website = declared.get("marketplaceWebsiteURL")
+        raise ProjectionError("Wrong canonical Skill owner")
+    declared = catalog.get("skills")
+    if not isinstance(declared, list) or len(declared) != len(CANONICAL_SKILLS):
+        raise ProjectionError("Canonical Skill inventory has changed; explicit review required")
+    records = {i["name"]: i for i in declared}
+    if set(records) != set(CANONICAL_SKILLS):
+        raise ProjectionError("Canonical Skill inventory differs from reviewed five")
+
+    source, digests = {}, {}
+    for name in CANONICAL_SKILLS:
+        if records[name].get("canonicalPath") != f".codex/skills/{name}":
+            raise ProjectionError(f"Wrong canonical path for {name}")
+        files = entries(root / ".codex" / "skills" / name)
+        h = digest(files)
+        if h != records[name].get("contentSHA256"):
+            raise ProjectionError(f"Unpinned canonical bytes for {name}")
+        if "agents/openai.yaml" not in files:
+            raise ProjectionError(f"Missing OpenAI metadata for {name}")
+        source[name], digests[name] = files, h
+
+    website = records[SKILL].get("marketplaceWebsiteURL")
     if not isinstance(website, str) or not re.fullmatch(r"https://[^\s]+/", website):
-        raise ProjectionError("Canonical FCIS marketplace website URL missing or invalid")
-    return root, plugin, source, source_digest, website
+        raise ProjectionError("Missing canonical FCIS website")
+    return root, plugin, source, digests, website
+
+
+def _mirrors(root):
+    parent = root / PLUGIN_PATH / "skills"
+    if parent.is_symlink():
+        raise ProjectionError("Refusing skill directory symlink")
+    if parent.exists():
+        extras = sorted(p.name for p in parent.iterdir() if p.name not in CANONICAL_SKILLS)
+        if extras:
+            raise ProjectionError("Unknown plugin skill entries: " + ", ".join(extras))
+    observed = {}
+    for name in CANONICAL_SKILLS:
+        dest = parent / name
+        if dest.is_symlink() or (dest.exists() and not dest.is_dir()):
+            raise ProjectionError("Refusing unexpected mirror type: " + name)
+        if dest.exists() and not (dest / "SKILL.md").is_file():
+            raise ProjectionError("Incomplete existing mirror: " + name)
+        observed[name] = entries(dest) if dest.exists() else {}
+    return observed
 
 
 def check(root=ROOT):
-    root, plugin, source, source_digest, website = inspect(root)
-    interface = plugin["extensions"]["com.openai"]["interface"]
-    if interface.get("websiteURL") != website:
-        raise ProjectionError("Plugin websiteURL differs from canonical distribution metadata")
-    dest = root / MIRROR_PATH
-    if not dest.exists():
-        raise ProjectionError("Plugin skill mirror not yet materialized")
-    mirror = entries(dest)
-    if source != mirror:
-        missing = sorted(source.keys() - mirror.keys())
-        unexpected = sorted(mirror.keys() - source.keys())
-        modified = sorted(p for p in source.keys() & mirror.keys() if source[p] != mirror[p])
-        raise ProjectionError(
-            f"Derived Skill drift: missing={missing}, unexpected={unexpected}, modified={modified}"
-        )
+    root, plugin, source, digests, website = inspect(root)
+    if plugin["extensions"]["com.openai"]["interface"].get("websiteURL") != website:
+        raise ProjectionError("Plugin websiteURL differs from canonical metadata")
+    observed = _mirrors(root)
+    for name in CANONICAL_SKILLS:
+        if observed[name] != source[name]:
+            expected, actual = source[name], observed[name]
+            missing = sorted(expected.keys() - actual.keys())
+            extra = sorted(actual.keys() - expected.keys())
+            modified = sorted(p for p in expected.keys() & actual.keys() if expected[p] != actual[p])
+            raise ProjectionError(f"Derived {name} drift: missing={missing}, extra={extra}, modified={modified}")
     return {"state": "MATCHED", "plugin": PLUGIN, "version": plugin["version"],
-            "sourceSkill": SKILL, "contentSHA256": source_digest}
+            "sourceSkill": SKILL, "contentSHA256": digests[SKILL], "skills": digests}
 
 
 def sync(root=ROOT):
-    root, plugin, source, _, website = inspect(root)
+    root, plugin, source, digests, website = inspect(root)
     interface = plugin["extensions"]["com.openai"]["interface"]
     metadata_changed = interface.get("websiteURL") != website
     if metadata_changed:
         interface["websiteURL"] = website
+    existing = _mirrors(root)
 
-    dest = root / MIRROR_PATH
-    existing = entries(dest) if (dest / "SKILL.md").is_file() else {}
-    unexpected = set(existing) - set(source)
-    if unexpected:
-        raise ProjectionError("Refusing to remove unreviewed mirror files: " + ", ".join(sorted(unexpected)))
+    changed = set()
+    for name in CANONICAL_SKILLS:
+        current = existing[name]
+        target = source[name]
+        unexpected = current.keys() - target.keys()
+        if unexpected:
+            raise ProjectionError(f"Refusing to remove unreviewed {name} files: {sorted(unexpected)}")
+        if current != target:
+            changed.add(name)
 
-    mirror_changed = existing != source
-    if mirror_changed:
-        for relative, data in source.items():
-            target = dest / relative
-            if target.is_symlink():
-                raise ProjectionError(f"Refusing to replace a mirror symlink: {relative}")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(data)
+    # Validate all packages before touching any derived files.
+    for name in changed:
+        dest = root / PLUGIN_PATH / "skills" / name
+        for relative, data in source[name].items():
+            path = dest / relative
+            if path.is_symlink():
+                raise ProjectionError(f"Refusing mirror symlink: {name}/{relative}")
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
 
-    if existing and (mirror_changed or metadata_changed):
+    # One existing plugin identity, one patch bump even if multiple skills changed.
+    # A brand-new empty test fixture starts at its initial version.
+    if any(existing.values()) and (changed or metadata_changed):
         major, minor, patch = map(int, plugin["version"].split("."))
         plugin["version"] = f"{major}.{minor}.{patch + 1}"
-
-    if metadata_changed or (existing and mirror_changed):
+    if metadata_changed or (any(existing.values()) and changed):
         (root / PLUGIN_PATH / "plugin.json").write_text(
-            json.dumps(plugin, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
-        )
-
-    if not mirror_changed and not metadata_changed:
-        return check(root)
+            json.dumps(plugin, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     result = check(root)
-    result["state"] = "SYNCED"
+    if changed or metadata_changed:
+        result["state"] = "SYNCED"
+        result["changedSkills"] = sorted(changed)
     return result
 
 

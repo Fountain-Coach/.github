@@ -1,15 +1,18 @@
-name: FCIS Marketplace Projection
+name: FCIS Marketplace Release Verification
 
 on:
   push:
     branches: [main]
     paths:
-      - '.codex/skills/fcis-skill-authoring-and-sync/**'
+      - '.codex/skills/**'
       - 'skills/openai-distribution.json'
+      - 'skills/plugin_projection.py'
+      - 'skills/marketplace_publish.py'
+      - 'plugins/fcis-skill-authoring-and-sync/**'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: fcis-marketplace-main
@@ -31,11 +34,7 @@ jobs:
         run: |
           python3 skills/skillctl.py check
           python3 -m unittest discover -s skills/tests -v
-      - name: Project the existing FCIS Skill into the GitHub marketplace
+      - name: Verify all five canonical Skills already released in Git
         run: |
-          python3 skills/plugin_projection.py sync
           python3 skills/plugin_projection.py check
           git diff --check
-      - name: Publish only the verified derived marketplace files
-        run: |
-          python3 skills/marketplace_publish.py

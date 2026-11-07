@@ -30,17 +30,20 @@ inconsistent, or invalidated evidence refuses mutation. If the work is not yet
 independently witnessed, retain a non-admitted proposal; never fabricate proof.
 Automatic elevation owns only canonical source learning. It cannot create a
 Kit/runtime identity, rewrite the project's Definition of Done, or change
-unrelated source. **Separate, explicitly delegated GitHub distribution:** once
-an admitted canonical Skill revision reaches `main`, the bounded GitHub Action
-`.github/workflows/fcis-marketplace-sync.yml` checks source proof, synchronizes
-only the matching existing portable GitHub marketplace Skill with a new plugin
-patch version when bytes changed, and commits only derived package files back to
-`main`. This publication is Git-only, idempotent and fail-closed on drift or
-unrelated changes; it is not ChatGPT account installation, hosted Skills API
-publication, active-version promotion or workspace-administration authority.
-Those distinct provider changes retain their governing permissions and proof.
-This is an agent task-closure plus GitHub-source workflow, not evidence of an
-unobserved Reframe learning service or a connected ChatGPT workspace.
+unrelated source. **Separate, explicitly delegated Git distribution:** the
+versioned local `.githooks/post-commit` calls the existing
+`skills/plugin_projection.py` and `skills/marketplace_publish.py` to make
+one **separate derived commit** (never part of the canonical learning commit)
+for the five reviewed Skill directories in the **existing single plugin**.
+`test.yml` and the read-only main-branch
+`.github/workflows/fcis-marketplace-sync.yml` refuse missing or drifting
+mirrors. Source and derivative are reviewed in the *same PR*, and protected
+`main` is updated only through required checks, not a bot push. A missing
+local hook is not a bypass: CI fails when the exact mirrored package is absent.
+This Git-owned procedure does not update ChatGPT account installations, the
+hosted Skills API or active/default pointers. Independent provider
+synchronization/readback remains a separate accepted operation; a source
+commit is not hosted Skill acceptance.
 
 A new blocker requires four traceable answers: requested outcome, current
 failed operation, governing source, smallest necessary correction. An

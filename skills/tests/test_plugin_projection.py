@@ -26,13 +26,25 @@ class MarketplaceProjectionTests(unittest.TestCase):
         )
         catalog = self.root / "skills/openai-distribution.json"
         catalog.parent.mkdir(parents=True)
+        rows = []
+        for name in projection.CANONICAL_SKILLS:
+            folder = self.root / ".codex" / "skills" / name
+            folder.mkdir(parents=True, exist_ok=True)
+            (folder / "agents").mkdir(exist_ok=True)
+            if name != projection.SKILL:
+                (folder / "SKILL.md").write_text(
+                    "---\nname: " + name + "\ndescription: Reviewed\n---\n# " + name + "\n"
+                )
+                (folder / "agents/openai.yaml").write_text(
+                    "interface:\n  display_name: " + name + "\n"
+                )
+            row = {"name": name, "canonicalPath": ".codex/skills/" + name,
+                   "contentSHA256": digest(entries(folder))}
+            if name == projection.SKILL:
+                row["marketplaceWebsiteURL"] = "https://fcis.fountain.coach/"
+            rows.append(row)
         catalog.write_text(json.dumps({
-            "owner": "Fountain-Coach/.github",
-            "skills": [{
-                "name": projection.SKILL,
-                "marketplaceWebsiteURL": "https://fcis.fountain.coach/",
-                "contentSHA256": digest(entries(self.canonical))
-            }]
+            "owner": "Fountain-Coach/.github", "skills": rows
         }))
         self.marketplace = self.root / projection.MARKETPLACE_PATH
         self.marketplace.parent.mkdir(parents=True)
@@ -99,7 +111,8 @@ class MarketplaceProjectionTests(unittest.TestCase):
         )
         catalog = self.root / "skills/openai-distribution.json"
         data = json.loads(catalog.read_text())
-        data["skills"][0]["contentSHA256"] = digest(entries(self.canonical))
+        next(item for item in data["skills"] if item["name"] == projection.SKILL
+             )["contentSHA256"] = digest(entries(self.canonical))
         catalog.write_text(json.dumps(data))
         with self.assertRaises(projection.ProjectionError):
             projection.check(self.root)
@@ -111,6 +124,41 @@ class MarketplaceProjectionTests(unittest.TestCase):
             json.loads(self.marketplace.read_text())["plugins"][0]["pluginId"],
             projection.WORKSPACE_PLUGIN_ID,
         )
+
+    def test_all_five_skills_projected_in_one_plugin_identity(self):
+        result = projection.sync(self.root)
+        self.assertEqual(set(result["skills"]), set(projection.CANONICAL_SKILLS))
+        self.assertEqual(len(result["changedSkills"]), 5)
+        for name in projection.CANONICAL_SKILLS:
+            self.assertEqual(entries(self.root / ".codex/skills" / name),
+                             entries(self.root / projection.PLUGIN_PATH / "skills" / name))
+        self.assertEqual(len(json.loads(self.marketplace.read_text())["plugins"]), 1)
+
+    def test_only_secondary_skill_change_bumps_once(self):
+        projection.sync(self.root)
+        other = "linotype-estate-template"
+        source = self.root / ".codex/skills" / other
+        (source / "SKILL.md").write_text((source / "SKILL.md").read_text() +
+                                        "\nA new accepted rule.\n")
+        catalog = self.root / "skills/openai-distribution.json"
+        data = json.loads(catalog.read_text())
+        next(item for item in data["skills"] if item["name"] == other
+             )["contentSHA256"] = digest(entries(source))
+        catalog.write_text(json.dumps(data))
+        with self.assertRaises(projection.ProjectionError):
+            projection.check(self.root)
+        result = projection.sync(self.root)
+        self.assertEqual(result["changedSkills"], [other])
+        self.assertEqual(result["version"], "0.1.1")
+        self.assertEqual(projection.sync(self.root)["state"], "MATCHED")
+
+    def test_rejects_unreviewed_sixth_skill(self):
+        projection.sync(self.root)
+        extra = self.root / projection.PLUGIN_PATH / "skills" / "intruder"
+        extra.mkdir()
+        (extra / "SKILL.md").write_text("unreviewed\n")
+        with self.assertRaisesRegex(projection.ProjectionError, "Unknown"):
+            projection.sync(self.root)
 
     def test_refuses_unreviewed_extra_mirror_file(self):
         projection.sync(self.root)
