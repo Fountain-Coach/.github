@@ -1,0 +1,10 @@
+#!/bin/sh
+# Git hooks are local actions, not GitHub Actions or hosted installation proofs.
+repo=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+if [ -x "$repo/scripts/git-disaster-recovery.sh" ]; then
+  "$repo/scripts/git-disaster-recovery.sh" snapshot || {
+    printf 'FCIS recovery WARNING: backup degraded; inspect the recovery destination.\n' >&2
+  }
+fi
+# An unavailable removable drive never blocks the writer's commits or legitimate pushes.
+exit 0
