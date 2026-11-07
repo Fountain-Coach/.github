@@ -14,6 +14,8 @@ jobs:
           python-version: '3.11'
       - name: Validate all canonical FCIS Skill digests
         run: python3 skills/skillctl.py check
+      - name: Verify all five packaged GitHub marketplace Skills
+        run: python3 skills/plugin_projection.py check
       - name: Run organization source, learning and projection tests
         run: python3 -m unittest discover -s skills/tests -v
       - name: Validate changed file formatting

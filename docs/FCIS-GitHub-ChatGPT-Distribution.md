@@ -10,47 +10,63 @@ authority for editing the Skill or installing any ChatGPT account version.
 - Canonical Git repository: https://github.com/Fountain-Coach/.github
 - Git marketplace: .agents/plugins/marketplace.json
 - Portable plugin: plugins/fcis-skill-authoring-and-sync/
-- Plugin and included Skill: fcis-skill-authoring-and-sync
+- Plugin: fcis-skill-authoring-and-sync (one identity); included Skills: all five exact canonical FCIS packages
 - Existing ChatGPT workspace plugin ID: `Plugin_fb9e0937c59c8191b9fa077fa5ea53ef`
   (authenticated Admin Console readback, activated and installed at 0.1.1)
 - No MCP service, runtime Kit capability, provider credentials or account action
 
-## The automatic GitHub distribution path (writer-authorized)
+## One reviewed plugin, five canonical Skills (7 November 2026)
 
-After accepted scenario evidence, the governed source agent may run
-skills/auto_elevate.py. It commits ONLY the canonical Skill and its digest.
-After that source commit is pushed to the canonical repository's main branch,
-.github/workflows/fcis-marketplace-sync.yml runs automatically:
+The portable Agent Plugins format supports multiple Skill directories under one
+plugin's `skills/` root. Preserve the installed GitHub-backed FCIS plugin identity
+and its marketplace `pluginId`. The **five current organization canonical Skills**
+are projected into that existing plugin, with independent full-tree SHA-256
+verification for every Skill, while the plugin has **one** semantic patch version.
+One changed Skill causes one plugin patch bump; unchanged content is idempotent.
+A sixth Skill is never silently admitted. Do not create five new plugins or
+modify personal ChatGPT account Skills to fix this Git package.
 
-1. Check the canonical full-tree SHA-256 and run the organization unit tests.
-2. Run python3 skills/plugin_projection.py sync.
-3. Verify python3 skills/plugin_projection.py check and git diff --check.
-4. Run python3 skills/marketplace_publish.py, which allows only the one existing
-   plugin's mirror files and plugin.json, refuses unrelated or staged changes,
-   verifies the GitHub origin and unchanged remote parent, and commits/pushes
-   just the derived files as a fast-forward to main.
-5. Only when the canonical Skill file-tree bytes change does the portable
-   plugin's patch version increase. Replaying unchanged input is a no-op.
+The publisher and GitHub Actions only produce derived Git bytes. Marketplace
+import/sync and effective ChatGPT skill routing remain provider-side acts,
+with separate independent readback. A missing plugin runtime on web/desktop
+is not proof of platform refusal until the actual installed plugin version
+and the selected Skill provenance have been observed.
 
-GitHub Actions uses only the repository's GITHUB_TOKEN with contents:write.
-The workflow cannot upload to ChatGPT/OpenAI, select a hosted active version,
-delete an existing installation, acquire credentials, or rewrite Kit source.
-An out-of-date main branch, invalid source digest, unknown extra mirrored file,
-failed test or unrelated dirty change refuses publication visibly. The
-derivative-only commit cannot retrigger the path-filtered workflow. A source
-commit and a derived commit remain separately inspectable in Git history.
+## Git-native canonical-to-derived source distribution (7 November 2026)
 
-For manual read-only verification, run:
+The existing local `.githooks/post-commit` recognizes a canonical Skill,
+the canonical digest catalogue, or the projection program changing. After the
+first canonical commit it uses `skills/plugin_projection.py sync` and
+`skills/marketplace_publish.py` to create a **separate derived Git commit**
+in the same review branch. This does not push GitHub main or alter an account.
+Only the reviewed five Skill trees and existing `plugin.json` may be
+modified, with one patch bump of the single existing plugin when content
+changes. An unchanged projection is a no-op.
 
-    python3 skills/plugin_projection.py check
+On pull requests, `.github/workflows/test.yml` validates all five canonical
+source tree digests, checks all five derived tree contents against them,
+runs regression tests, and checks formatting. Protected `main` admits
+merges only after the required checks pass. `fcis-marketplace-sync.yml`
+is now a **read-only verification** of what was merged: GitHub Actions
+does not make a second commit or bypass branch protection. GitHub's
+auto-merge option may be enabled for a selected PR once its review
+requirements are met. No unconditional merge of arbitrary PRs is granted.
+
+If a clone has no hooks, run the same bounded commands on a review branch:
+
     python3 skills/skillctl.py check
+    python3 skills/plugin_projection.py sync
+    python3 skills/marketplace_publish.py
+    python3 skills/plugin_projection.py check
     python3 -m unittest discover -s skills/tests -v
 
-The explicit projection command python3 skills/plugin_projection.py sync
-remains available for diagnosis or a deliberate manual recovery, but it is no
-longer necessary after a verified canonical commit reaches main when GitHub
-Actions succeeds. Monitor its workflow result; do not misreport a failed
-Actions run as a deployed marketplace update.
+Then submit the canonical and derived commits through the same PR.
+CI refuses an unprojected canonical source change. Do not "fix" that
+by disabling CI or pushing directly to `main`.
+
+GitHub commits, package contents, hosted import and active runtime are
+four distinct acceptance stages. Passing local checks is not evidence
+that a new ChatGPT skill version is available.
 
 ## Separate ChatGPT workspace import and ongoing hosted readback
 

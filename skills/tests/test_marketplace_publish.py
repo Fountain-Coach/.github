@@ -39,15 +39,26 @@ class MarketplacePublishTests(unittest.TestCase):
         skills.mkdir()
         shutil.copy2(Path(__file__).resolve().parents[1] / "skillctl.py",
                      skills / "skillctl.py")
+        rows = []
+        for name in projection.CANONICAL_SKILLS:
+            folder = self.root / ".codex" / "skills" / name
+            folder.mkdir(parents=True, exist_ok=True)
+            (folder / "agents").mkdir(exist_ok=True)
+            if name != projection.SKILL:
+                (folder / "SKILL.md").write_text(
+                    "---\nname: " + name + "\ndescription: Reviewed\n---\n# " + name + "\n"
+                )
+                (folder / "agents/openai.yaml").write_text(
+                    "interface:\n  display_name: " + name + "\n"
+                )
+            row = {"name": name, "canonicalPath": ".codex/skills/" + name,
+                   "contentSHA256": digest(entries(folder))}
+            if name == projection.SKILL:
+                row["marketplaceWebsiteURL"] = "https://fcis.fountain.coach/"
+            rows.append(row)
         self.catalog = skills / "openai-distribution.json"
         self.catalog.write_text(json.dumps({
-            "owner": "Fountain-Coach/.github",
-            "skills": [{
-                "name": "fcis-skill-authoring-and-sync",
-                "canonicalPath": ".codex/skills/fcis-skill-authoring-and-sync",
-                "marketplaceWebsiteURL": "https://fcis.fountain.coach/",
-                "contentSHA256": digest(entries(self.skill.parent)),
-            }],
+            "owner": "Fountain-Coach/.github", "skills": rows
         }))
         self.marketplace = self.root / projection.MARKETPLACE_PATH
         self.marketplace.parent.mkdir(parents=True)
@@ -76,11 +87,47 @@ class MarketplacePublishTests(unittest.TestCase):
     def accept_new_canonical_skill(self):
         self.skill.write_text(self.skill.read_text() + "\nObserved accepted lesson.\n")
         content = json.loads(self.catalog.read_text())
-        content["skills"][0]["contentSHA256"] = digest(entries(self.skill.parent))
+        next(item for item in content["skills"] if item["name"] == projection.SKILL
+             )["contentSHA256"] = digest(entries(self.skill.parent))
         self.catalog.write_text(json.dumps(content))
         git(self.root, "add", "--", ".codex/skills/fcis-skill-authoring-and-sync/SKILL.md",
             "skills/openai-distribution.json")
         git(self.root, "commit", "-q", "-m", "accepted canonical learning")
+
+    def test_versioned_post_commit_hook_makes_separate_derived_commit(self):
+        hooks = self.root / '.githooks'
+        hooks.mkdir()
+        import shutil
+        for name in ('plugin_projection.py', 'marketplace_publish.py'):
+            shutil.copy2(Path(__file__).resolve().parents[1] / name,
+                         self.root / 'skills' / name)
+        source_hook = Path(__file__).resolve().parents[2] / '.githooks' / 'post-commit'
+        destination = hooks / 'post-commit'
+        shutil.copy2(source_hook, destination)
+        destination.chmod(0o755)
+        (self.root / '.gitignore').write_text('__pycache__/\n')
+        git(self.root, 'add', '.gitignore', '.githooks/post-commit',
+            'skills/plugin_projection.py', 'skills/marketplace_publish.py')
+        git(self.root, 'commit', '-q', '-m', 'Install local source and hook fixtures')
+        git(self.root, 'config', 'core.hooksPath', '.githooks')
+        self.accept_new_canonical_skill()
+        result = projection.check(self.root)
+        self.assertEqual(result['version'], '0.1.1')
+        messages = git(self.root, 'log', '-2', '--pretty=%s').splitlines()
+        self.assertEqual(messages, [
+            'plugins: sync FCIS marketplace from canonical Skill',
+            'accepted canonical learning',
+        ])
+        changed = set(git(self.root, 'show', '--pretty=format:', '--name-only',
+                          'HEAD').splitlines())
+        self.assertEqual(changed, {
+            'plugins/fcis-skill-authoring-and-sync/plugin.json',
+            'plugins/fcis-skill-authoring-and-sync/skills/fcis-skill-authoring-and-sync/SKILL.md',
+        })
+
+    def test_direct_main_push_is_refused(self):
+        with self.assertRaisesRegex(publishing.PublicationError, "Direct push"):
+            publishing.publish(self.root, perform_push=True)
 
     def test_no_change_means_no_new_commit(self):
         result = publishing.publish(self.root, perform_push=False)
@@ -92,7 +139,7 @@ class MarketplacePublishTests(unittest.TestCase):
         source_commit = git(self.root, "rev-parse", "HEAD")
         projection.sync(self.root)
         result = publishing.publish(self.root, perform_push=False)
-        self.assertEqual(result["state"], "DERIVED_COMMITTED_FOR_TEST")
+        self.assertEqual(result["state"], "DERIVED_COMMITTED_LOCAL")
         self.assertEqual(result["parent"], source_commit)
         self.assertEqual(result["version"], "0.1.1")
         changed = set(git(self.root, "show", "--pretty=format:", "--name-only", "HEAD").splitlines())

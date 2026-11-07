@@ -39,7 +39,16 @@ At ordinary task closure, inspect the accepted operation, its source revision, t
 
 Prepare a source-addressed learning candidate for a defensible procedure, specifying the observed outcome, exact evidence, trigger, prerequisites, steps, failure boundaries, novelty and regression checks. For an existing canonical Skill and independently reconciled accepted scenario evidence, run automatic elevation and let the tool make the narrowly scoped Git commit. **Do not ask for another approval for this canonical learning operation.** When the raw independent witness is missing or the scenario status drifts, keep the candidate non-admitted and do not mutate Git.
 
-This learning check is part of ordinary task closure and must not expand or delay the original Definition of Done. It is an agent workflow, not a background service or evidence of a running Reframe learning observer. Validated scenario lessons may update existing canonical Git Skills through the delegated tool; they cannot grant Swift Kit capabilities or change the running scenario. A separate, delegated GitHub Action synchronizes the derived marketplace package after the verified canonical revision reaches `main`, checking the complete source tree and bumping the plugin version only when the canonical bytes change. This GitHub-only publication cannot install a ChatGPT account Skill, publish to the OpenAI Skills API or move a hosted active version; those effects remain separately governed.
+This learning check is part of ordinary task closure and must not expand or
+delay the original Definition of Done. It is an agent workflow, not a background service. Validated evidence may update one
+canonical Skill through the delegated tool. That source commit remains
+separate from any portable plugin projection. With the versioned local hooks
+enabled, the following post-commit action checks all **five** canonical source
+trees and makes a distinct, idempotent derived Git commit under the **single
+existing** FCIS plugin. GitHub PR tests and the read-only release workflow
+must independently verify the complete packaged file trees before protected
+main accepts the change. No direct GitHub bot main push and no hosted account
+installation or active-version promotion follow from this source work.
 
 ### Scenario-based learning input
 
@@ -61,7 +70,23 @@ Record a reviewable candidate under `skills/proposals/`; do not author a new exe
 
 6. **Treat OpenAI destinations as two distinct surfaces.** ChatGPT account Skills and the public project-scoped OpenAI Skills API do not update each other. For ChatGPT, compare the full available installed bundle through the supported account readback and report resources or effective revisions that the interface does not expose as unverified. For the public API, use the existing Reframe `skills.synchronize` read-only observer to inspect project inventory, the exact immutable version's ZIP, and the active/default pointer; keep credentials inside the approved SecretStore host adapter. An API listing is metadata only. Never copy a secret into Git, prompts, receipts, or logs.
 
-7. **Keep GitHub distribution and hosted installation distinct.** The writer explicitly authorized the existing FCIS Skill's GitHub marketplace projection after verified canonical learning: `.github/workflows/fcis-marketplace-sync.yml` runs the source/digest tests, projects that one Skill with `skills/plugin_projection.py sync`, verifies byte equality, and uses `skills/marketplace_publish.py` for a derived-only fast-forward Git commit. Changed Skill bytes increment the plugin patch version; unchanged bytes are a no-op. Do not publish unrelated files or silently rewrite the original. ChatGPT account installation, Skills API upload and selected active/default version changes still require their own supported authorized workflow and independent readback. A platform-specific icon or policy field found only in an installed copy is an observation, not permission to import it into Git.
+7. **Keep Git distribution and hosted installation distinct.** Source authority stays
+   in `Fountain-Coach/.github/.codex/skills`. The five currently reviewed
+   canonical Skills are projected into the *one existing* workspace plugin, with
+   unchanged `pluginId` and independently pinned tree digests.
+   `skills/plugin_projection.py sync` writes only derived package files.
+   `skills/marketplace_publish.py` commits those files only to the **local**
+   branch, normally from the versioned post-commit hook after a canonical
+   change. The source and derivative commits are presented together in one PR.
+   `.github/workflows/test.yml` and the main-branch read-only release workflow
+   require exact package parity; neither performs a direct bot push to protected
+   `main`. One changed Skill bumps the existing plugin patch version once,
+   and replay without changed bytes is a no-op. Preserve the local
+   Git-disaster recovery copy. Actual ChatGPT marketplace sync, standalone
+   account Skills and project API active/default pointers are different
+   provider destinations; no Git check alone establishes their versions.
+   A platform icon, policy or stale installed Skill is evidence, never
+   permission to rewrite canonical source.
 
 ### Verified GitHub-to-ChatGPT installation lesson
 

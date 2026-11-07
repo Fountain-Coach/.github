@@ -34,7 +34,7 @@
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-skill-authoring-and-sync",
       "marketplaceWebsiteURL": "https://fcis.fountain.coach/",
-      "contentSHA256": "9caee05dfe5ddc3ac80bf7cb1d680d0ef1ebddfd41e175be90ac42d485ae1624",
+      "contentSHA256": "54ba2ba44383f3a8d629ccb5b3673203bdd1a23a9214ccaf1aa3c40835169dfa",
       "provenance": {
         "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
         "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",

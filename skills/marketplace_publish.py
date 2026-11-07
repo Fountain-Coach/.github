@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Publish ONLY a validated derived FCIS marketplace projection to canonical Git.
+"""Commit only validated derived FCIS plugin files to local Git.
 
-Run on the main-branch checkout in GitHub Actions, after plugin_projection.sync,
-its digest verification, and the organization's source tests. The target is
-Fountain-Coach/.github Git only, never a ChatGPT installation or Skills API.
+A versioned hook runs this after a canonical source commit; main is reached
+only by a verified pull request, never by a GitHub bot direct push.
 """
 import json
 from pathlib import Path
@@ -11,7 +10,7 @@ import re
 import subprocess
 import sys
 
-from plugin_projection import MIRROR_PATH, PLUGIN_PATH, ProjectionError, check
+from plugin_projection import CANONICAL_SKILLS, MIRROR_PATH, PLUGIN_PATH, ProjectionError, check
 from skillctl import ROOT
 
 
@@ -33,11 +32,11 @@ def git(root, *args):
 
 
 def eligible_path(path):
-    """No changes outside the single derived FCIS plugin may be committed."""
-    return path == (PLUGIN_PATH / "plugin.json").as_posix() or (
-        path.startswith(MIRROR_PATH.as_posix() + "/")
-        and path.count("/") > 3
-    )
+    """Only the existing plugin manifest and reviewed five Skill mirror trees."""
+    if path == (PLUGIN_PATH / "plugin.json").as_posix():
+        return True
+    return any(path.startswith((PLUGIN_PATH / "skills" / name).as_posix() + "/")
+               for name in CANONICAL_SKILLS)
 
 
 def validate_changed_paths(root):
@@ -55,20 +54,7 @@ def validate_changed_paths(root):
 
 
 def check_remote(root):
-    name = git(root, "symbolic-ref", "--short", "HEAD")
-    if name != "main":
-        raise PublicationError("GitHub marketplace publication must run on main")
-    url = git(root, "remote", "get-url", "origin")
-    if not re.fullmatch(
-        r"(https://github\.com/Fountain-Coach/\.github(?:\.git)?|git@github\.com:Fountain-Coach/\.github\.git)",
-        url,
-    ):
-        raise PublicationError("Unexpected canonical origin repository")
-    head = git(root, "rev-parse", "HEAD")
-    ref = git(root, "ls-remote", "origin", "refs/heads/main").split()
-    if len(ref) != 2 or ref[1] != "refs/heads/main" or ref[0] != head:
-        raise PublicationError("Canonical main advanced or diverged; refusing to publish stale files")
-    return head
+    raise PublicationError("Direct-to-main publishing retired; use the verified PR")
 
 
 def validate_projection(root):
@@ -82,7 +68,9 @@ def validate_projection(root):
     return check(root)
 
 
-def publish(root=ROOT, *, perform_push=True):
+def publish(root=ROOT, *, perform_push=False):
+    if perform_push:
+        raise PublicationError("Direct push to protected main is disabled")
     root = Path(root).resolve(strict=True)
     data = validate_projection(root)
     changes = validate_changed_paths(root)
@@ -93,7 +81,7 @@ def publish(root=ROOT, *, perform_push=True):
             "digest": data["contentSHA256"],
             "version": data["version"],
         }
-    prior = check_remote(root) if perform_push else git(root, "rev-parse", "HEAD")
+    prior = git(root, "rev-parse", "HEAD")
 
     # Do not include any source changes in the projection commit.
     git(root, "add", "--", *changes)
@@ -101,17 +89,8 @@ def publish(root=ROOT, *, perform_push=True):
     if staged != set(changes):
         raise PublicationError("Staging did not preserve the exact derived file set")
     git(root, "diff", "--cached", "--check")
-    if perform_push:
-        git(root, "config", "user.name", "github-actions[bot]")
-        git(root, "config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com")
     git(root, "commit", "-m", "plugins: sync FCIS marketplace from canonical Skill")
     result = git(root, "rev-parse", "HEAD")
-    if perform_push:
-        # A non-fast-forward push is rejected: no force, reset or rebase of others.
-        git(root, "push", "origin", "HEAD:refs/heads/main")
-        remote = git(root, "ls-remote", "origin", "refs/heads/main").split()
-        if len(remote) != 2 or remote[0] != result:
-            raise PublicationError("Remote branch did not read back to the published commit")
     if git(root, "status", "--porcelain", "--untracked-files=all"):
         raise PublicationError("Unexpected source changes remain after derived commit")
     if not set(changes).issubset(set(
@@ -119,7 +98,7 @@ def publish(root=ROOT, *, perform_push=True):
     )):
         raise PublicationError("Derived changes missing from the resulting commit")
     return {
-        "state": "GITHUB_MARKETPLACE_PUBLISHED" if perform_push else "DERIVED_COMMITTED_FOR_TEST",
+        "state": "DERIVED_COMMITTED_LOCAL",
         "commit": result, "parent": prior, "digest": data["contentSHA256"],
         "version": data["version"], "files": changes,
     }
@@ -127,7 +106,7 @@ def publish(root=ROOT, *, perform_push=True):
 
 def main():
     try:
-        output = publish()
+        output = publish(perform_push=False)
     except (PublicationError, ProjectionError, OSError, KeyError, ValueError) as exc:
         sys.exit(f"REFUSED: {exc}")
     print(json.dumps(output, indent=2))

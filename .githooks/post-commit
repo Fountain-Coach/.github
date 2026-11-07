@@ -1,10 +1,23 @@
 #!/bin/sh
-# Git hooks are local actions, not GitHub Actions or hosted installation proofs.
+# The writer's local Git hook snapshots first, then projects a reviewed
+# canonical Skill source change as a *separate derived Git commit*.
+# It never contacts ChatGPT or pushes directly to a protected GitHub branch.
 repo=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
 if [ -x "$repo/scripts/git-disaster-recovery.sh" ]; then
-  "$repo/scripts/git-disaster-recovery.sh" snapshot || {
-    printf 'FCIS recovery WARNING: backup degraded; inspect the recovery destination.\n' >&2
-  }
+  "$repo/scripts/git-disaster-recovery.sh" snapshot ||
+    printf 'FCIS recovery WARNING: backup degraded\n' >&2
 fi
-# An unavailable removable drive never blocks the writer's commits or legitimate pushes.
+[ "${FCIS_SKIP_DERIVED:-}" != "1" ] || exit 0
+# Only canonical Skill/manifest/projection changes require mirror update.
+if git -C "$repo" show --pretty=format: --name-only HEAD |
+   grep -Eq '^(.codex/skills/|skills/openai-distribution.json|skills/plugin_projection.py)'; then
+  if [ -e "$repo/skills/plugin_projection.py" ]; then
+    if python3 "$repo/skills/plugin_projection.py" sync; then
+      FCIS_SKIP_DERIVED=1 python3 "$repo/skills/marketplace_publish.py" ||
+        printf 'FCIS marketplace WARNING: derived commit not accepted; CI must refuse drift\n' >&2
+    else
+      printf 'FCIS marketplace WARNING: projection refused; inspect canonical bytes\n' >&2
+    fi
+  fi
+fi
 exit 0
