@@ -126,7 +126,7 @@ For confirmed absence use {"environment":"chatgpt-web","skill":"satzfunk-voice-r
 Run: python3 skills/skillctl.py audit --observations /path/to/observations.json
 
 DRIFT means the observed entrypoint text differs from the canonical text.
-MISSING requires evidence of a complete destination inventory. UNVERIFIED means
+MISSING requires independent evidence that the relevant destination inventory is complete; a list of skills exposed to one chat is not proof of account-wide absence. UNVERIFIED means
 missing evidence, incomplete inventory, or a matching entrypoint without
 independently verified full package contents and selected effective version.
 The existing skillctl compare command supports complete ZIP file-tree checks.

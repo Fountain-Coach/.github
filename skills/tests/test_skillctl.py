@@ -175,6 +175,20 @@ class SovereigntyTests(unittest.TestCase):
         self.assertIn("not prerequisites", text)
         self.assertNotIn("must return `estate.publication.sync`", text)
 
+    def test_audit_cli_returns_pure_json(self):
+        import json
+        import subprocess
+        with tempfile.TemporaryDirectory() as directory:
+            observation = Path(directory) / "observations.json"
+            observation.write_text(json.dumps([{"environment": "chatgpt-session",
+                "skill": "linotype-estate-template", "presence": "present",
+                "entrypointText": "# historical"}]))
+            result = subprocess.run([sys.executable, str(ctl.ROOT / "skills" / "skillctl.py"),
+                "audit", "--observations", str(observation)], check=True,
+                capture_output=True, text=True)
+            report = json.loads(result.stdout)
+            self.assertEqual(report["results"][0]["status"], "DRIFT")
+
     def test_audit_entrypoint(self):
         source = {"sample": {"SKILL.md": b"---\nname: sample\n---\n# Current\n", "assets/icon.svg": b"image"}}
         rows = [{"environment": "web", "skill": "sample", "entrypointText": "# Old"},

@@ -72,7 +72,7 @@ def catalog():
         raise ValueError("Duplicate skill names")
     return data
 
-def validate():
+def validate(quiet=False):
     data = catalog()
     for item in data["skills"]:
         name = item["name"]
@@ -84,7 +84,8 @@ def validate():
             raise ValueError(name + ": canonical path not in organization")
         if not (SKILLS / name / "agents" / "openai.yaml").is_file():
             raise ValueError(name + ": missing ChatGPT metadata")
-        print("VALID", name, actual)
+        if not quiet:
+            print("VALID", name, actual)
     return data
 
 def compare(expected, observed):
@@ -141,7 +142,7 @@ def main():
     p.add_argument("--output")
     p.add_argument("--observations")
     a = p.parse_args()
-    c = validate()
+    c = validate(quiet=a.command == "audit")
     if a.command == "check":
         return
     if a.command == "audit":
