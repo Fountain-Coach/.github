@@ -105,6 +105,33 @@ Record a reviewable candidate under `skills/proposals/`; do not author a new exe
    A platform icon, policy or stale installed Skill is evidence, never
    permission to rewrite canonical source.
 
+### Account Skill collision guard — learned from verified uninstall
+
+A GitHub marketplace version matching canonical Git does not remove older,
+separately installed ChatGPT account Skills of the same names. Every FCIS
+provider synchronization and scheduled convergence check MUST apply the
+[standalone account collision guard](references/chatgpt-standalone-collision-guard.md)
+to the five canonical Skill identities. Inspect the signed-in account's
+**installed** state independently: an old standalone with **Uninstall**
+available is a conflict even when its instructions happen to match, because
+it can drift later. The observable **Add** action after reversible
+Uninstall is the acceptance witness. Never mistake an authored but
+uninstalled copy for a second running instance.
+
+The writer has approved reversible uninstallation of the four identified
+old standalone entries in this workspace; this is not consent to **Delete**
+their authored definitions or remove unrelated Skills. Future checks may
+reconcile only exact, independently verified canonical-owned duplicates in
+the authorized account through supported provider actions. If the account
+session, supported action, or identity proof is absent, report UNVERIFIED
+without deletion or a ZIP workaround. Use the read-only
+`python3 skills/skillctl.py guard --observations <local-json>` to reject
+collisions (exit 2) and missing proof (exit 3); keep observations out of
+public Git. After cleanup read back the GitHub plugin and test one *new*
+ChatGPT conversation, distinguishing a response-level witness from an
+independent provider routing trace. Do not claim that source Git can
+prevent future account installation or provider routing bugs.
+
 ### Verified GitHub-to-ChatGPT installation lesson
 
 For a request to install, adopt, repair or synchronize an existing ChatGPT workspace plugin from GitHub, first read [the verified marketplace takeover procedure](references/chatgpt-github-marketplace-takeover.md). Do not confuse ZIP upload with an imported GitHub marketplace. In the authenticated workspace Admin Console, preserve the installed plugin's exact ID in the GitHub marketplace declaration, choose **Plugins → Hinzufügen → Marketplace importieren**, and independently read back the Git revision, completed import, enabled auto-sync, and the original installed plugin identity and version. Treat a transient status warning as a symptom until the settled provider status is inspected. This lesson comes from an independently witnessed provider installation, not a Reframe native scenario.

@@ -195,6 +195,71 @@ class SovereigntyTests(unittest.TestCase):
             report = json.loads(result.stdout)
             self.assertEqual(report["results"][0]["status"], "DRIFT")
 
+    def test_guard_detects_old_account_install_and_clear_reversible_uninstall(self):
+        names = {"linotype-estate-template", "teatro-scenario-composer"}
+        rows = [
+            {"environment": "chatgpt-workspace-web", "skill": "linotype-estate-template",
+             "origin": "standalone-skill", "installed": True, "observedAction": "uninstall"},
+            {"environment": "chatgpt-workspace-web", "skill": "teatro-scenario-composer",
+             "origin": "standalone-skill", "installed": False, "observedAction": "add"},
+        ]
+        results = ctl.guard_standalone_installations(rows, names)
+        self.assertEqual([r["state"] for r in results], ["CONFLICT", "CLEAR"])
+        rows[0]["installed"], rows[0]["observedAction"] = False, "add"
+        self.assertEqual({r["state"] for r in ctl.guard_standalone_installations(rows, names)},
+                         {"CLEAR"})
+
+    def test_guard_unverified_missing_and_fail_closed_observations(self):
+        rows = [{"environment": "chatgpt-web", "skill": "linotype-estate-template",
+                 "origin": "standalone-skill", "installed": False, "observedAction": "add"}]
+        r = ctl.guard_standalone_installations(rows, {"linotype-estate-template",
+                                                      "satzfunk-voice-render"})
+        self.assertEqual([x["state"] for x in r], ["CLEAR", "UNVERIFIED"])
+        for mutation in ({"observedAction": "uninstall"},
+                         {"origin": "marketplace-plugin"},
+                         {"skill": "unowned-skill"},
+                         {"installed": "false"}):
+            with self.assertRaises(ValueError):
+                ctl.guard_standalone_installations([dict(rows[0], **mutation)],
+                                                   {"linotype-estate-template"})
+
+    def test_guard_cli_json_and_status_codes(self):
+        import json, subprocess
+        with tempfile.TemporaryDirectory() as directory:
+            observation = Path(directory) / "account.json"
+            base = {"environment": "chatgpt-workspace-web", "origin": "standalone-skill"}
+            names = [i["name"] for i in ctl.catalog()["skills"]]
+            records = [dict(base, skill=n, installed=False, observedAction="add") for n in names]
+            def invoke():
+                return subprocess.run(
+                    [sys.executable, str(ctl.ROOT / "skills" / "skillctl.py"),
+                     "guard", "--observations", str(observation)],
+                    capture_output=True, text=True)
+            observation.write_text(json.dumps(records))
+            result = invoke()
+            self.assertEqual(result.returncode, 0)
+            self.assertEqual(json.loads(result.stdout)["status"], "CLEAR")
+            records[0]["installed"], records[0]["observedAction"] = True, "uninstall"
+            observation.write_text(json.dumps(records))
+            result = invoke()
+            self.assertEqual(result.returncode, 2)
+            self.assertEqual(json.loads(result.stdout)["status"], "CONFLICT")
+            observation.write_text(json.dumps(records[1:]))
+            result = invoke()
+            self.assertEqual(result.returncode, 3)
+            self.assertEqual(json.loads(result.stdout)["status"], "UNVERIFIED")
+
+    def test_canonical_collision_lesson_is_source_owned(self):
+        skill = (ctl.SKILLS / "fcis-skill-authoring-and-sync" / "SKILL.md").read_text()
+        reference = (ctl.SKILLS / "fcis-skill-authoring-and-sync" /
+                     "references/chatgpt-standalone-collision-guard.md").read_text()
+        self.assertIn("standalone account collision guard", skill)
+        self.assertIn("Deinstallieren", reference)
+        self.assertIn("Hinzufügen", reference)
+        self.assertIn("Never reinstall", reference)
+        self.assertIn("fail closed", reference)
+        self.assertIn("not consent to **Delete**", skill)
+
     def test_audit_entrypoint(self):
         source = {"sample": {"SKILL.md": b"---\nname: sample\n---\n# Current\n", "assets/icon.svg": b"image"}}
         rows = [{"environment": "web", "skill": "sample", "entrypointText": "# Old"},

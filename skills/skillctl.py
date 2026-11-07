@@ -141,14 +141,61 @@ def audit_observations(observations, source=None):
             )
     return results
 
+def guard_standalone_installations(observations, names=None):
+    """Read-only account-installed collision guard; no provider mutation."""
+    names = set(names if names is not None else [i["name"] for i in catalog()["skills"]])
+    if not isinstance(observations, list):
+        raise ValueError("Guard observations must be an array")
+    seen = {}
+    environments = set()
+    for item in observations:
+        if not isinstance(item, dict):
+            raise ValueError("Each installed-Skill witness must be an object")
+        name = item.get("skill")
+        environment = item.get("environment")
+        if name not in names or not isinstance(environment, str) or not environment.strip():
+            raise ValueError("Guard witness must select a canonical Skill and an environment")
+        if item.get("origin") != "standalone-skill":
+            raise ValueError("Only standalone account-Skill installations are guard targets")
+        installed = item.get("installed")
+        action = item.get("observedAction")
+        if type(installed) is not bool or action not in {"add", "uninstall"}:
+            raise ValueError("A verified account action (add/uninstall) is required")
+        if (installed and action != "uninstall") or (not installed and action != "add"):
+            raise ValueError("Observed account action and installed state disagree")
+        key = (environment, name)
+        if key in seen:
+            raise ValueError("Duplicate standalone Skill observation")
+        seen[key] = installed
+        environments.add(environment)
+    if not environments:
+        raise ValueError("At least one account environment observation is required")
+    results = []
+    for environment in sorted(environments):
+        for name in sorted(names):
+            installed = seen.get((environment,name))
+            state = "UNVERIFIED" if installed is None else ("CONFLICT" if installed else "CLEAR")
+            results.append({
+                "environment": environment,
+                "skill": name,
+                "state": state,
+                "reason": {
+                    "CONFLICT": "Standalone installation can shadow the canonical marketplace Skill",
+                    "CLEAR": "Account UI offered Add, not Uninstall, for the exact standalone Skill",
+                    "UNVERIFIED": "No exact account-installation action was observed",
+                }[state],
+            })
+    return results
+
+
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("command", choices=["check", "compare", "report", "audit"])
+    p.add_argument("command", choices=["check", "compare", "report", "audit", "guard"])
     p.add_argument("--skill")
     p.add_argument("--zip")
     p.add_argument("--observations")
     a = p.parse_args()
-    c = validate(quiet=a.command == "audit")
+    c = validate(quiet=a.command in {"audit", "guard"})
     if a.command == "check":
         return
     if a.command == "audit":
@@ -158,6 +205,21 @@ def main():
         if not isinstance(observations, list):
             raise ValueError("Observations must be a JSON array")
         print(json.dumps({"source": "Fountain-Coach/.github", "results": audit_observations(observations)}, indent=2))
+        return
+    if a.command == "guard":
+        if not a.observations:
+            raise ValueError("--observations required")
+        observations = json.loads(Path(a.observations).read_text(encoding="utf-8"))
+        results = guard_standalone_installations(observations, [i["name"] for i in c["skills"]])
+        print(json.dumps({"source": "Fountain-Coach/.github",
+                          "status": "CONFLICT" if any(r["state"] == "CONFLICT" for r in results)
+                                  else ("UNVERIFIED" if any(r["state"] == "UNVERIFIED" for r in results)
+                                        else "CLEAR"),
+                          "results": results}, indent=2))
+        if any(r["state"] == "CONFLICT" for r in results):
+            raise SystemExit(2)
+        if any(r["state"] == "UNVERIFIED" for r in results):
+            raise SystemExit(3)
         return
     if not a.skill or a.skill not in {i["name"] for i in c["skills"]}:
         raise ValueError("Select a declared skill with --skill")
