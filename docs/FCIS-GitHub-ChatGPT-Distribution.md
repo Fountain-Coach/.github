@@ -116,3 +116,19 @@ no unattended account Skill installation or active/default promotion.
 Vendor documentation:
 https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github
 https://developers.openai.com/plugins/build/plugins
+
+
+## Read-only ChatGPT installed-entrypoint audit (7 November 2026)
+
+For a supported readback, create a local JSON array of observations such as
+[{"environment":"chatgpt-web","skill":"linotype-estate-template","entrypointText":"literal observed entrypoint"}].
+For confirmed absence use {"environment":"chatgpt-web","skill":"satzfunk-voice-render","presence":"absent","inventoryComplete":true}.
+Run: python3 skills/skillctl.py audit --observations /path/to/observations.json
+
+DRIFT means the observed entrypoint text differs from the canonical text.
+MISSING requires evidence of a complete destination inventory. UNVERIFIED means
+missing evidence, incomplete inventory, or a matching entrypoint without
+independently verified full package contents and selected effective version.
+The existing skillctl compare command supports complete ZIP file-tree checks.
+No entrypoint comparison alone proves actual ChatGPT routing or an active version.
+No account installation, marketplace update, or provider mutation occurs.
