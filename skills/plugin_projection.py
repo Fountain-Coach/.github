@@ -8,6 +8,7 @@ import argparse
 import json
 from pathlib import Path
 import re
+import xml.etree.ElementTree as ET
 
 from skillctl import ROOT, digest, entries
 
@@ -40,6 +41,34 @@ def _read_json(path):
     if not isinstance(value, dict):
         raise ProjectionError(f"Manifest must be an object: {path}")
     return value
+
+
+def validate_skill_host_metadata(name, files):
+    """Catch provider-documented policy and SVG asset rejects before Git merge."""
+    meta = files["agents/openai.yaml"].decode("utf-8")
+    if re.search(r"(?m)^  icon:\s*", meta):
+        raise ProjectionError(f"{name}: unsupported interface.icon; use icon_small/large")
+    match = re.search(r"(?ms)^policy:\n((?:[ \t]+[^\n]*\n)*)", meta)
+    if match and re.search(r"(?m)^  products:\s*$", match.group(1)):
+        products = re.findall(r"(?m)^  -\s*(\S+)\s*$", match.group(1))
+        if not products or any(product not in {"CHAT", "CODEX"} for product in products):
+            raise ProjectionError(f"{name}: unsupported policy.products (only CHAT/CODEX)")
+    for field, raw_path in re.findall(
+        r"(?m)^  (icon_small|icon_large):\s*([^\n]+)$", meta
+    ):
+        path = raw_path.strip().strip("'\"").removeprefix("./")
+        if path not in files:
+            raise ProjectionError(f"{name}: {field} asset missing: {path}")
+        if path.endswith(".svg"):
+            try:
+                root = ET.fromstring(files[path])
+                width = float(root.attrib["width"])
+                height = float(root.attrib["height"])
+                box = [float(x) for x in root.attrib["viewBox"].replace(",", " ").split()]
+            except (ET.ParseError, KeyError, TypeError, ValueError) as exc:
+                raise ProjectionError(f"{name}: malformed {field} SVG") from exc
+            if width < 48 or height < 48 or len(box) != 4 or box[2] < 48 or box[3] < 48:
+                raise ProjectionError(f"{name}: {field} SVG below 48x48 provider minimum")
 
 
 def inspect(root=ROOT):
@@ -92,6 +121,7 @@ def inspect(root=ROOT):
             raise ProjectionError(f"Unpinned canonical bytes for {name}")
         if "agents/openai.yaml" not in files:
             raise ProjectionError(f"Missing OpenAI metadata for {name}")
+        validate_skill_host_metadata(name, files)
         source[name], digests[name] = files, h
 
     website = records[SKILL].get("marketplaceWebsiteURL")

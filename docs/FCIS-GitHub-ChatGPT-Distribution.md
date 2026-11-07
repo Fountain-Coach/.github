@@ -32,6 +32,26 @@ with separate independent readback. A missing plugin runtime on web/desktop
 is not proof of platform refusal until the actual installed plugin version
 and the selected Skill provenance have been observed.
 
+## Provider-compatible metadata is part of release validity (7 November 2026)
+
+Portable plugin import may process only part of a plugin even when the
+marketplace reports one plugin updated and zero failed. In the actual
+workspace's initial v0.1.7 import, the plugin was installed but only three
+of five packaged Skills appeared. The omitted Linotype and Teatro Skills had
+`policy.products` names `chatgpt`, `codex`, `api`, `atlas`, while the official
+OpenAI skill agent metadata rules support only `CHAT` and `CODEX`. Their
+original SVG icons also declared 24x24 geometry, while OpenAI's published
+icon rules require at least 48x48. The repaired canonical packages retain
+the same Skill names and artwork, use supported product policy values, and
+present a valid 48x48 vector. `plugin_projection.py` now tests these metadata
+preconditions (including negative regressions) before permitting the Git
+release. This is a source-supported likely cause, not a claim of hosted
+acceptance until all five Skills have been observed in the imported plugin.
+
+Sources:
+- https://developers.openai.com/plugins/deploy/submission-errors
+- https://developers.openai.com/plugins/build/plugins
+
 ## Git-native canonical-to-derived source distribution (7 November 2026)
 
 The existing local `.githooks/post-commit` recognizes a canonical Skill,

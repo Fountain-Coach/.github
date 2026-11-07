@@ -11,7 +11,7 @@
       "name": "teatro-scenario-composer",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/teatro-scenario-composer",
-      "contentSHA256": "5a8ece3372a89e65d8377f287aaa17f35651de0dae7c10bdb1450d3ccb86a713",
+      "contentSHA256": "b6000d5bdb08df887fe55ba2a7e5f93b137f0e71f374f6c3b141aa1c5cc82d14",
       "provenance": {
         "importedFrom": "Fountain-Coach/teatro.fountain.coach",
         "sourcePath": ".codex/skills/teatro-scenario-composer",
@@ -22,7 +22,7 @@
       "name": "linotype-estate-template",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/linotype-estate-template",
-      "contentSHA256": "e2e7c262d2e00ec0169867cd15e2e9a5686130b6f8e03fdfbc7816d6152777e7",
+      "contentSHA256": "9cf4254980c195a219b94be381595fd074f1bedad6a7c6e19e2a8a92d47c738f",
       "provenance": {
         "importedFrom": "Fountain-Coach/estate",
         "sourcePath": ".codex/skills/linotype-estate-template",
