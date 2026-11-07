@@ -188,6 +188,33 @@ class MarketplaceProjectionTests(unittest.TestCase):
             with self.assertRaisesRegex(projection.ProjectionError, "pluginId"):
                 projection.check(self.root)
 
+    def test_invalid_product_policy_is_refused_before_projection(self):
+        source = self.root / ".codex/skills/linotype-estate-template"
+        with (source / "agents/openai.yaml").open("a") as out:
+            out.write("policy:\n  products:\n  - chatgpt\n  - atlas\n")
+        catalog = self.root / "skills/openai-distribution.json"
+        data = json.loads(catalog.read_text())
+        next(item for item in data["skills"] if item["name"] == "linotype-estate-template"
+             )["contentSHA256"] = digest(entries(source))
+        catalog.write_text(json.dumps(data))
+        with self.assertRaisesRegex(projection.ProjectionError, "policy.products"):
+            projection.sync(self.root)
+
+    def test_undersized_svg_is_refused_before_projection(self):
+        source = self.root / ".codex/skills/teatro-scenario-composer"
+        asset = source / "assets/icon.svg"
+        asset.parent.mkdir()
+        asset.write_text('<svg width="24" height="24" viewBox="0 0 24 24"/>')
+        with (source / "agents/openai.yaml").open("a") as out:
+            out.write("  icon_small: assets/icon.svg\n")
+        catalog = self.root / "skills/openai-distribution.json"
+        data = json.loads(catalog.read_text())
+        next(item for item in data["skills"] if item["name"] == "teatro-scenario-composer"
+             )["contentSHA256"] = digest(entries(source))
+        catalog.write_text(json.dumps(data))
+        with self.assertRaisesRegex(projection.ProjectionError, "below 48x48"):
+            projection.sync(self.root)
+
     def test_refuses_changed_canonical_digest(self):
         self.canonical.joinpath("SKILL.md").write_text("Unrecorded source edit\n")
         with self.assertRaises(projection.ProjectionError):
