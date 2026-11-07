@@ -105,9 +105,12 @@ def audit_observations(observations, source=None):
         if not isinstance(row, dict):
             raise ValueError("Observation must be an object")
         name, environment = row.get("skill"), row.get("environment")
+        origin = row.get("origin", "unspecified")
         if name not in source or not isinstance(environment, str) or not environment.strip():
             raise ValueError("Observation requires known skill and named environment")
-        identity = (environment, name)
+        if origin not in {"unspecified", "standalone-skill", "marketplace-plugin", "project-api"}:
+            raise ValueError("Unsupported observed skill origin")
+        identity = (environment, name, origin)
         if identity in seen:
             raise ValueError("Duplicate observation")
         seen.add(identity)
@@ -131,7 +134,23 @@ def audit_observations(observations, source=None):
                     status, reason = "DRIFT", "Installed entrypoint differs from canonical source"
         else:
             raise ValueError("Invalid presence")
-        results.append({"skill": name, "environment": environment, "status": status, "reason": reason, "canonicalSHA256": digest(source[name]), "effectiveVersion": "UNVERIFIED"})
+        results.append({
+            "skill": name, "environment": environment, "origin": origin,
+            "status": status, "reason": reason,
+            "canonicalSHA256": digest(source[name]),
+            "effectiveVersion": "UNVERIFIED",
+            "routingStatus": "UNVERIFIED",
+            "routingReason": "No independently bound Skill-source execution trace",
+        })
+    for row in results:
+        origins = sorted({other["origin"] for other in results
+                          if other["environment"] == row["environment"]
+                          and other["skill"] == row["skill"]})
+        if len(origins) > 1:
+            row["collisionOrigins"] = origins
+            row["routingReason"] = (
+                "Same skill name exposed by multiple installed origins; selection authority not established"
+            )
     return results
 
 def main():
