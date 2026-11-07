@@ -72,7 +72,7 @@ def catalog():
         raise ValueError("Duplicate skill names")
     return data
 
-def validate():
+def validate(quiet=False):
     data = catalog()
     for item in data["skills"]:
         name = item["name"]
@@ -84,7 +84,8 @@ def validate():
             raise ValueError(name + ": canonical path not in organization")
         if not (SKILLS / name / "agents" / "openai.yaml").is_file():
             raise ValueError(name + ": missing ChatGPT metadata")
-        print("VALID", name, actual)
+        if not quiet:
+            print("VALID", name, actual)
     return data
 
 def compare(expected, observed):
@@ -96,15 +97,61 @@ def compare(expected, observed):
                      "unexpected": sorted(set(observed) - set(expected)),
                      "modified": sorted(p for p in expected.keys() & observed.keys() if expected[p] != observed[p])}
 
+def audit_observations(observations, source=None):
+    """Read-only entrypoint comparison. Partial evidence never proves package parity."""
+    source = source or {item["name"]: entries(SKILLS / item["name"]) for item in catalog()["skills"]}
+    results, seen = [], set()
+    for row in observations:
+        if not isinstance(row, dict):
+            raise ValueError("Observation must be an object")
+        name, environment = row.get("skill"), row.get("environment")
+        if name not in source or not isinstance(environment, str) or not environment.strip():
+            raise ValueError("Observation requires known skill and named environment")
+        identity = (environment, name)
+        if identity in seen:
+            raise ValueError("Duplicate observation")
+        seen.add(identity)
+        presence = row.get("presence", "present")
+        if presence == "absent":
+            status = "MISSING" if row.get("inventoryComplete") is True else "UNVERIFIED"
+            reason = "Complete inventory shows absent skill" if status == "MISSING" else "Inventory incomplete"
+        elif presence == "present":
+            observed = row.get("entrypointText")
+            if not isinstance(observed, str) or not observed.strip():
+                status, reason = "UNVERIFIED", "Entrypoint unavailable"
+            else:
+                canonical = source[name]["SKILL.md"].decode("utf-8")
+                if canonical.startswith("---\n"):
+                    canonical = canonical.split("\n---\n", 1)[1]
+                if observed.startswith("---\n"):
+                    observed = observed.split("\n---\n", 1)[1]
+                if canonical.strip() == observed.strip():
+                    status, reason = "UNVERIFIED", "Entrypoint matches, but complete package and selected version not verified"
+                else:
+                    status, reason = "DRIFT", "Installed entrypoint differs from canonical source"
+        else:
+            raise ValueError("Invalid presence")
+        results.append({"skill": name, "environment": environment, "status": status, "reason": reason, "canonicalSHA256": digest(source[name]), "effectiveVersion": "UNVERIFIED"})
+    return results
+
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("command", choices=["check", "package", "compare", "report"])
+    p.add_argument("command", choices=["check", "package", "compare", "report", "audit"])
     p.add_argument("--skill")
     p.add_argument("--zip")
     p.add_argument("--output")
+    p.add_argument("--observations")
     a = p.parse_args()
-    c = validate()
+    c = validate(quiet=a.command == "audit")
     if a.command == "check":
+        return
+    if a.command == "audit":
+        if not a.observations:
+            raise ValueError("--observations required")
+        observations = json.loads(Path(a.observations).read_text(encoding="utf-8"))
+        if not isinstance(observations, list):
+            raise ValueError("Observations must be a JSON array")
+        print(json.dumps({"source": "Fountain-Coach/.github", "results": audit_observations(observations)}, indent=2))
         return
     if not a.skill or a.skill not in {i["name"] for i in c["skills"]}:
         raise ValueError("Select a declared skill with --skill")

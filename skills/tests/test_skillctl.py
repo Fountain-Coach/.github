@@ -175,6 +175,40 @@ class SovereigntyTests(unittest.TestCase):
         self.assertIn("not prerequisites", text)
         self.assertNotIn("must return `estate.publication.sync`", text)
 
+    def test_audit_cli_returns_pure_json(self):
+        import json
+        import subprocess
+        with tempfile.TemporaryDirectory() as directory:
+            observation = Path(directory) / "observations.json"
+            observation.write_text(json.dumps([{"environment": "chatgpt-session",
+                "skill": "linotype-estate-template", "presence": "present",
+                "entrypointText": "# historical"}]))
+            result = subprocess.run([sys.executable, str(ctl.ROOT / "skills" / "skillctl.py"),
+                "audit", "--observations", str(observation)], check=True,
+                capture_output=True, text=True)
+            report = json.loads(result.stdout)
+            self.assertEqual(report["results"][0]["status"], "DRIFT")
+
+    def test_audit_entrypoint(self):
+        source = {"sample": {"SKILL.md": b"---\nname: sample\n---\n# Current\n", "assets/icon.svg": b"image"}}
+        rows = [{"environment": "web", "skill": "sample", "entrypointText": "# Old"},
+                {"environment": "desktop", "skill": "sample", "entrypointText": "# Current"}]
+        self.assertEqual([r["status"] for r in ctl.audit_observations(rows, source)], ["DRIFT", "UNVERIFIED"])
+
+    def test_audit_absence_needs_complete_inventory(self):
+        source = {"sample": {"SKILL.md": b"# Current"}}
+        row = {"environment": "web", "skill": "sample", "presence": "absent"}
+        self.assertEqual(ctl.audit_observations([row], source)[0]["status"], "UNVERIFIED")
+        self.assertEqual(ctl.audit_observations([dict(row, inventoryComplete=True)], source)[0]["status"], "MISSING")
+
+    def test_audit_refuses_duplicate_and_unknown(self):
+        source = {"sample": {"SKILL.md": b"# Current"}}
+        row = {"environment": "web", "skill": "sample", "entrypointText": "# Current"}
+        with self.assertRaises(ValueError):
+            ctl.audit_observations([row, row], source)
+        with self.assertRaises(ValueError):
+            ctl.audit_observations([dict(row, skill="unknown")], source)
+
     def test_modified_content(self):
         state, delta = ctl.compare({"SKILL.md": b"source"}, {"SKILL.md": b"changed"})
         self.assertEqual((state, delta["modified"]), ("DRIFT", ["SKILL.md"]))
