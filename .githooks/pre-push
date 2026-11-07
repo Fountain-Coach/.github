@@ -1,4 +1,9 @@
 #!/bin/sh
 set -eu
 repo=$(git rev-parse --show-toplevel)
+# Preserve existing mandatory canonical package integrity gate.
 python3 "$repo/skills/skillctl.py" check
+# Recovery is additive. An unplugged drive cannot turn a valid push into a blocker.
+if [ -x "$repo/scripts/git-disaster-recovery.sh" ]; then
+  "$repo/scripts/git-disaster-recovery.sh" snapshot || printf 'FCIS recovery WARNING: backup degraded\n' >&2
+fi
