@@ -168,3 +168,30 @@ independently verified full package contents and selected effective version.
 The existing skillctl compare command supports complete ZIP file-tree checks.
 No entrypoint comparison alone proves actual ChatGPT routing or an active version.
 No account installation, marketplace update, or provider mutation occurs.
+
+## Same-name standalone Skills can shadow an updated GitHub plugin (7 November 2026)
+
+A successful imported marketplace update, plugin version and visible bundled
+Skill names do **not** determine which instruction source the ChatGPT model
+will select. In the authorized workspace, plugin 0.1.8 correctly listed five
+Skills while a fresh chat explicitly selecting Fountain Coach FCIS returned
+the older Linotype standalone Skill's first heading. The Admin Skills catalog
+confirmed a separate historical account Skill of that same identity and body.
+This is a real incompatible output witness, not a definitive internal routing
+trace. Do not claim the GitHub plugin is absent or that provider routing has
+been proven solely from a model answer.
+
+For read-only evidence, run `skillctl.py audit --observations` with distinct
+`origin` values (`standalone-skill`, `marketplace-plugin`, `project-api`),
+scoped to the same environment and named Skill. This distinguishes old entrypoint
+content drift from an installed plugin whose complete contents and execution
+version remain unverified. Same-name origins produce a `routingStatus=UNVERIFIED`
+collision witness. Never coerce that into MATCHED from version metadata.
+
+Retaining a standalone Skill preserves its ownership/history and prior use.
+Disabling, overwriting, renaming, or deleting it is an independent user-account
+mutation, not an automatic effect of GitHub marketplace sync. Prefer a
+supported non-destructive per-skill routing/installation control if one is
+available; otherwise name the exact old Skill and destination and obtain
+targeted authorization before altering it. Existing private Skills must not be
+silently deleted just to make an acceptance test green.

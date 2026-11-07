@@ -195,6 +195,24 @@ class SovereigntyTests(unittest.TestCase):
                 {"environment": "desktop", "skill": "sample", "entrypointText": "# Current"}]
         self.assertEqual([r["status"] for r in ctl.audit_observations(rows, source)], ["DRIFT", "UNVERIFIED"])
 
+    def test_same_skill_from_plugin_and_standalone_is_a_routing_collision(self):
+        source = {"sample": {"SKILL.md": b"# Current"}}
+        observations = [
+            {"environment": "chatgpt-web", "skill": "sample",
+             "origin": "standalone-skill", "entrypointText": "# Old"},
+            {"environment": "chatgpt-web", "skill": "sample",
+             "origin": "marketplace-plugin", "entrypointText": "# Current"},
+        ]
+        results = ctl.audit_observations(observations, source)
+        self.assertEqual([r["status"] for r in results], ["DRIFT", "UNVERIFIED"])
+        self.assertEqual([r["routingStatus"] for r in results],
+                         ["UNVERIFIED", "UNVERIFIED"])
+        self.assertEqual(results[0]["collisionOrigins"],
+                         ["marketplace-plugin", "standalone-skill"])
+        with self.assertRaises(ValueError):
+            ctl.audit_observations(
+                [dict(observations[0], origin="unknown")], source)
+
     def test_audit_absence_needs_complete_inventory(self):
         source = {"sample": {"SKILL.md": b"# Current"}}
         row = {"environment": "web", "skill": "sample", "presence": "absent"}
