@@ -52,6 +52,10 @@ workspace plugin versions are separate destinations. If a provider's
 full-package/effective-version readback is unsupported, report UNVERIFIED
 and leave FINAL DoD open, even when GitHub is green.
 
+## Applied repository settings (7 November 2026)
+
+Canonical `main` ruleset **26748083** was installed from the reviewed JSON and independently read back as active, with no bypass actors. It requires a PR and the GitHub Actions `build` check (app ID 15368), conversation resolution, and rejection of force-push and deletion. The repository's `allow_auto_merge=true` was read back. These settings do not establish that any particular PR has successfully auto-merged; that acceptance remains separate.
+
 ## GitHub unavailable
 
 Git-only backups, verified bundles, and local validations continue to work.
