@@ -9,14 +9,20 @@ import skillctl as ctl
 class SovereigntyTests(unittest.TestCase):
     def test_canonical_packages(self):
         self.assertEqual(len(ctl.validate()["skills"]), 5)
-    def test_repeatable_zip_and_roundtrip(self):
-        files = ctl.entries(ctl.SKILLS / "teatro-scenario-composer")
-        data = ctl.archive(files, "teatro-scenario-composer")
-        self.assertEqual(data, ctl.archive(files, "teatro-scenario-composer"))
+    def test_zip_delivery_is_disabled_at_cli_and_python_boundary(self):
+        import subprocess
+        self.assertFalse(hasattr(ctl, "archive"))
         with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "skill.zip"
-            path.write_bytes(data)
-            self.assertEqual(files, ctl.read_archive(path, "teatro-scenario-composer"))
+            path = Path(directory) / "do-not-create.zip"
+            result = subprocess.run(
+                [sys.executable, str(ctl.ROOT / "skills" / "skillctl.py"),
+                 "package", "--skill", "linotype-estate-template",
+                 "--output", str(path)],
+                capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertFalse(path.exists())
+            self.assertIn("invalid choice", result.stderr)
+
     def test_new_route_template_reuse(self):
         text = (ctl.SKILLS / "linotype-estate-template" / "SKILL.md").read_text()
         self.assertIn("New public route: scenario reuse before publication", text)

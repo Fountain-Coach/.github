@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""FCIS chapter 160: Git-owned deterministic skill packaging and drift observation."""
+"""FCIS chapter 160: Git-owned Skill integrity and read-only drift observation."""
 import argparse
 import hashlib
-import io
 import json
 from pathlib import Path
 import sys
@@ -34,17 +33,6 @@ def entries(folder):
     if not result:
         raise ValueError("Empty package")
     return result
-
-def archive(files, name):
-    out = io.BytesIO()
-    with zipfile.ZipFile(out, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as z:
-        for path, data in sorted(files.items()):
-            info = zipfile.ZipInfo(name + "/" + path, (1980, 1, 1, 0, 0, 0))
-            info.create_system = 3
-            info.external_attr = 0o100644 << 16
-            info.compress_type = zipfile.ZIP_DEFLATED
-            z.writestr(info, data, compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
-    return out.getvalue()
 
 def read_archive(path, name):
     files = {}
@@ -155,10 +143,9 @@ def audit_observations(observations, source=None):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("command", choices=["check", "package", "compare", "report", "audit"])
+    p.add_argument("command", choices=["check", "compare", "report", "audit"])
     p.add_argument("--skill")
     p.add_argument("--zip")
-    p.add_argument("--output")
     p.add_argument("--observations")
     a = p.parse_args()
     c = validate(quiet=a.command == "audit")
@@ -176,13 +163,6 @@ def main():
         raise ValueError("Select a declared skill with --skill")
     name = a.skill
     files = entries(SKILLS / name)
-    if a.command == "package":
-        if not a.output:
-            raise ValueError("--output required")
-        data = archive(files, name)
-        Path(a.output).write_bytes(data)
-        print(json.dumps({"skill": name, "fileTreeSHA256": digest(files), "zipSHA256": hashlib.sha256(data).hexdigest(), "zip": a.output}, indent=2))
-        return
     if a.command == "report" and not a.zip:
         print(json.dumps({"skill": name, "status": "UNVERIFIED", "reason": "No remote readback was supplied; installation visibility alone is not content proof"}, indent=2))
         return

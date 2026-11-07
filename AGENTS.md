@@ -45,6 +45,21 @@ hosted Skills API or active/default pointers. Independent provider
 synchronization/readback remains a separate accepted operation; a source
 commit is not hosted Skill acceptance.
 
+**FCIS Skills: NO ZIP DELIVERY (binding, all agents and interfaces).**
+Never create, attach, download for handoff, upload, recommend, or distribute
+`skill.zip` or any ZIP archive as a means of releasing, installing, fixing,
+overwriting, or synchronizing a Fountain Coach Skill. This prohibition
+overrides generic Skill Creator packaging advice for organization-owned Skills.
+Use **only** canonical `Fountain-Coach/.github` Git commits, protected merge,
+the existing GitHub-backed marketplace, and independent provider readback.
+A stale personal ChatGPT Skill may be updated **in place** only through a
+supported editor when separately authorized; that is an account reconciliation,
+not a second Skill distribution route. If no supported non-ZIP write surface
+exists, record the blocker; do not fall back to ZIP. Read-only parsing of
+historical/provider-supplied archive bytes is allowed for forensic comparison,
+never as a creation or publication action. This rule does not affect
+non-Skill archives or the tested Git disaster-recovery bundles.
+
 A new blocker requires four traceable answers: requested outcome, current
 failed operation, governing source, smallest necessary correction. An
 unproven worry is a non-blocking hypothesis. A completed source patch is
