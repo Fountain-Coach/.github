@@ -195,3 +195,23 @@ supported non-destructive per-skill routing/installation control if one is
 available; otherwise name the exact old Skill and destination and obtain
 targeted authorization before altering it. Existing private Skills must not be
 silently deleted just to make an acceptance test green.
+
+## No Skill ZIP delivery: enforced source contract (7 November 2026)
+
+FCIS explicitly prohibits generating, attaching or uploading a Skill ZIP as
+an installation/update/repair workaround. A historical individual ChatGPT
+Skill may be edited only through a supported in-place editor under explicit
+narrow authorization, or left unresolved. Do not create another personal Skill
+or package an archive just because a generic Skill Creator guide proposes it.
+
+The `skills/skillctl.py package` CLI and its archive-writing helper are
+removed. Unit tests require the legacy CLI to refuse and verify that it writes
+no file. The remaining ZIP **reader** only compares older provider-supplied
+readback evidence and cannot publish or create a ZIP. GitHub PR CI runs these
+tests alongside all five canonical file-tree and marketplace checks. The only
+FCIS publication path remains the reviewed Git-backed marketplace plugin.
+
+Repository enforcement cannot change OpenAI's built-in Skill Creator text in
+other accounts; workspace instructions and actual provider routing still
+require independent acceptance. Never claim an installation is current from
+this source-side prohibition alone.

@@ -1,6 +1,6 @@
 ---
 name: fcis-skill-authoring-and-sync
-description: Automatically elevate verified scenario lessons into canonical FCIS Skills and govern GitHub marketplace publication, existing ChatGPT workspace plugin adoption and Git-backed synchronization. Use for task closure learning, marketplace import and ZIP-to-Git migration, preservation of plugin identities, source drift and version verification.
+description: Automatically elevate verified scenario lessons into canonical FCIS Skills and govern GitHub marketplace publication, existing ChatGPT workspace plugin adoption and Git-backed synchronization. Use for task closure learning, marketplace import and migration of historical standalone Skills to Git ownership, preservation of plugin identities, source drift and version verification.
 ---
 
 # FCIS Skill Authoring and Sync
@@ -11,11 +11,28 @@ Design and validate skill packages using FCIS-owned conventions; OpenAI Skill Cr
 
 Runtime capability identities remain owned by their declared FCIS Swift Kits. An agent procedure does not become a new runtime instrument or acquire implementation authority by being installed.
 
-### Distribution override for organization-owned Skills
+### Binding distribution prohibition: NO ZIP
 
-For a Fountain Coach Skill already owned in `Fountain-Coach/.github` and distributed through the imported GitHub marketplace, **do not package, attach, offer, or recommend a `skill.zip` as the normal deliverable.** Generic Skill Creator packaging guidance is non-authoritative here and is superseded by Chapter 160 plus the established GitHub-backed distribution path.
+For a Fountain Coach Skill already owned in `Fountain-Coach/.github` and
+distributed through the imported GitHub marketplace, **do not package, attach,
+offer, or recommend a `skill.zip`** for any delivery, update, overwrite,
+installation, fallback or troubleshooting step. Generic Skill Creator
+packaging guidance is non-authoritative here and is superseded by Chapter 160
+and the approved GitHub-backed distribution path. There is **no ZIP exception**
+for a stalled account editor or a failed marketplace synchronization.
 
-The normal completion artifact is: canonical Git commit + validated file-tree digest + GitHub marketplace projection/version + hosted sync/readback state when observable. A ZIP is permitted only when the writer explicitly requests a legacy/manual archive, when diagnosing a ZIP-to-Git migration, or when a distinct provider API itself requires archive bytes internally. In those cases, never present the archive as the canonical source or as the preferred installation path.
+The sole skill publication path is canonical Git commit, validated SHA-256,
+protected PR merge, existing marketplace plugin projection/version, provider
+sync and independent installed-content/routing readback. A separately
+authorized historical standalone ChatGPT Skill can be reconciled using
+a supported **in-place editor**, without a ZIP or new Skill installation.
+If no supported non-ZIP editor exists, leave that account state UNVERIFIED
+and report the exact blocker. Never rename, delete or replace other Skills
+to bypass this restriction.
+
+Read-only inspection of an older provider-supplied archive for drift evidence
+is not a delivery operation. Do not create archive bytes even for a
+"helpful" user download.
 
 ## When to use
 
@@ -68,7 +85,7 @@ Record a reviewable candidate under `skills/proposals/`; do not author a new exe
 
 5. **Refresh repository mirrors only as derived packages.** For each explicitly selected domain `.codex/skills` or `.claude/skills` surface, project the exact reviewed `.github` package at its pinned revision, preserving unrelated files and domain-owned runtime contracts. Use a single-skill sync/check when available, and independently read back the target. A mirror's previous Git commit records provenance, never independent canonical authorship.
 
-6. **Treat OpenAI destinations as two distinct surfaces.** ChatGPT account Skills and the public project-scoped OpenAI Skills API do not update each other. For ChatGPT, compare the full available installed bundle through the supported account readback and report resources or effective revisions that the interface does not expose as unverified. For the public API, use the existing Reframe `skills.synchronize` read-only observer to inspect project inventory, the exact immutable version's ZIP, and the active/default pointer; keep credentials inside the approved SecretStore host adapter. An API listing is metadata only. Never copy a secret into Git, prompts, receipts, or logs.
+6. **Treat OpenAI destinations as two distinct surfaces.** ChatGPT account Skills and the public project-scoped OpenAI Skills API do not update each other. For ChatGPT, compare the full available installed bundle through the supported account readback and report resources or effective revisions that the interface does not expose as unverified. For the public API, use the existing Reframe `skills.synchronize` read-only observer to inspect project inventory, the independently exposed immutable version contents (read-only), and the active/default pointer; keep credentials inside the approved SecretStore host adapter. An API listing is metadata only. Never copy a secret into Git, prompts, receipts, or logs.
 
 7. **Keep Git distribution and hosted installation distinct.** Source authority stays
    in `Fountain-Coach/.github/.codex/skills`. The five currently reviewed
@@ -137,10 +154,10 @@ For a request to install, adopt, repair or synchronize an existing ChatGPT works
 | --- | --- |
 | Skill | Stable organization-owned identity |
 | Source | `Fountain-Coach/.github`, exact path and Git commit |
-| Package | Canonical Git revision + file-tree SHA-256 and validation outcome; no user-facing ZIP unless explicitly requested for a legacy/manual path |
+| Package | Canonical Git revision + file-tree SHA-256 and validation outcome; no Skill ZIP distribution |
 | Domain mirrors | Selected derived revisions and independent readback |
 | ChatGPT account Skills | File coverage, observable drift, and version evidence limits |
-| OpenAI project Skills API | Exact skill/version identity, ZIP content result, and default pointer, or unverified |
+| OpenAI project Skills API | Exact skill/version identity, read-only provider version evidence and default pointer, or unverified |
 | Reconciliation | Explicit scope/approval, write receipt, independent readback, or a recorded blocker |
 
 Chapter 160 governs ownership, not the vendor's UI or transport behavior. Keep proof, interpretation, proposal, and authorized promotion distinct.
