@@ -60,6 +60,21 @@ historical/provider-supplied archive bytes is allowed for forensic comparison,
 never as a creation or publication action. This rule does not affect
 non-Skill archives or the tested Git disaster-recovery bundles.
 
+**FCIS account Skill collision guard (binding for FCIS maintenance).**
+The five canonical FCIS Skills are distributed through the single imported
+GitHub-backed marketplace plugin. An independently installed account Skill of
+the same canonical identity is a runtime authority collision even if its text
+matches today. Following each marketplace synchronization, inspect the
+authenticated account's exact installed state and run the read-only
+`skills/skillctl.py guard` before claiming convergence. Under the user's
+bounded authorization, a proven duplicate may be **uninstalled** using the
+provider's reversible account control; never **delete** its authored copy,
+touch unrelated Skills, or change the plugin identity. Preserve separate
+evidence for the account uninstall, marketplace version, and actual fresh-chat
+execution. GitHub Actions cannot see or manage account Skills, so a source
+CI pass is not an account-cleanliness guarantee. Missing account access is
+UNVERIFIED; no ZIP fallback or undocumented provider API.
+
 A new blocker requires four traceable answers: requested outcome, current
 failed operation, governing source, smallest necessary correction. An
 unproven worry is a non-blocking hypothesis. A completed source patch is
