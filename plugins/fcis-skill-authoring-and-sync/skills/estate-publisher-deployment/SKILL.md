@@ -47,6 +47,8 @@ Compile → validate → package → deliver → activate → verify, through th
 
 ## Other production and interrupted operations
 
+For a dedicated Hetzner-managed hostname or DNS/TLS change, read [Hetzner DNS through the installed hcloud CLI](references/hcloud-dns-authority.md) before diagnosing a blocker or introducing credentials. Inspect the current `hcloud` version, active project, zone visibility and exact RRset; `Zone not found` in one context is **not** evidence that `hcloud` cannot manage DNS or that authorization was refused. Reuse an already authorized zone-owning context and retain the separately approved Caddy/HTTPS publication boundary. Never create a duplicate zone or impose a separate token/SecretStore dependency without a demonstrated missing contract.
+
 Mutable Store-backed routes may require `estate.publication.sync` and its native typed Store operation; services, identity and DNS/TLS require their own currently admitted commands. **Never impose those prerequisites on an otherwise authorized immutable static release, nor replace a genuinely managed operation with ungoverned static copying.** Read the live native operation contract and its permission boundaries.
 
 When interrupted or failed, inspect the persisted terminal receipt and active identity before retrying. Preserve the previous release, use its supported idempotency/resume contract if available, and avoid overlapping processes or repeated credential prompts. A keychain prompt, source commit, tested proposal, running process, or homepage HTTP 200 does not prove deployment.
