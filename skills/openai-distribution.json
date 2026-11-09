@@ -34,7 +34,7 @@
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-skill-authoring-and-sync",
       "marketplaceWebsiteURL": "https://fcis.fountain.coach/",
-      "contentSHA256": "5e325ccd496868ce70dc1f2777e5f41f02e14499d78454292c05e4001387a696",
+      "contentSHA256": "836cbe6bcb8050319d2fc149b0a6e24428872d381c935c471ba00652bc94670d",
       "provenance": {
         "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
         "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",
@@ -45,7 +45,7 @@
       "name": "estate-publisher-deployment",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/estate-publisher-deployment",
-      "contentSHA256": "23184b165290cab9588c91a18b8bcc304aeb484c1dadbc6a34c238db7494c55b",
+      "contentSHA256": "116c57f3f532e8a575bbea976e4e438b23c1a8da74e840190b7afc5b42b2c5aa",
       "provenance": {
         "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
         "sourcePath": ".codex/skills/estate-publisher-deployment",
