@@ -65,3 +65,9 @@ The ZIP is a static procedural artifact. Its validation proves package structure
 - The actual Reader lacked a link to each *book* with crawler-readable metadata; a `#/read/...` route alone cannot carry its own Open Graph social identity.
 - Added a **deterministic, source-bound book-level sharing procedure**: direct static book URL, original first eligible illustrated chapter's image as the 1200x630 social asset, source/derivative SHA parity, ordinary Reader and Bookshelf navigation, Schema.org Book and machine manifest, live browser and non-JS crawler checks.
 - This is a procedural Skill revision, not proof that GitHub marketplace import, provider sync or public production occurred. A staged original does not automatically confer public rights. No ZIP distribution.
+
+## 11 November 2026 — Full Fountain Press main-domain root parity
+
+- Actual public Orange Dot publication initially updated only `/estate/` while the host root `/` still served the old two-book Reader. The public host returned HTTP 200 at both, so superficial availability checks were insufficient.
+- The smallest source-bound repair aligned root `index.html` byte-for-byte with the accepted current `estate/index.html` as an immutable 483-file EstatePublisher release with one changed file and retained rollback. Native HTTPS receipt and independent WebKit proved identical three-book Bookshelf and original Orange Dot opening chapter on root and estate across three viewports.
+- Full-site Press deployments must verify all adopted entry routes, not only deep book links. This is an exact observed public runtime regression lesson, not an argument for a new CMS, redirect or Caddyfile mutation. Source Git and terminal EstatePublisher receipts are distinct.
