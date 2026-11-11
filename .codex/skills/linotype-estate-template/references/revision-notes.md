@@ -58,3 +58,10 @@ The ZIP is a static procedural artifact. Its validation proves package structure
 - Reader-facing copy states observed current capability only. Remove speculative future tests, hypothetical transfers, roadmap claims and planned destinations from the work's present identity.
 - Underlying rigor is unchanged: accessibility, source ownership, rights, provenance, renderer/player ownership, publication receipts and rollback evidence remain in their proper authorities even when not foregrounded to readers.
 - Added [page-is-the-frame.md](page-is-the-frame.md) and a Teatro handoff correction. This revision changes procedure/presentation guidance only; it does not claim a new Press renderer, player, runtime capability or public release.
+
+## 11 November 2026 - Direct book links, first-chapter social identity
+
+- Production and WLAN staging were inspected independently. The publisher's compact Bookshelf is the adopted visual baseline; private Orange Dot staging added only Essays, First Readings and Orange Dot, not Works/Scores/Governance shelves.
+- The actual Reader lacked a link to each *book* with crawler-readable metadata; a `#/read/...` route alone cannot carry its own Open Graph social identity.
+- Added a **deterministic, source-bound book-level sharing procedure**: direct static book URL, original first eligible illustrated chapter's image as the 1200x630 social asset, source/derivative SHA parity, ordinary Reader and Bookshelf navigation, Schema.org Book and machine manifest, live browser and non-JS crawler checks.
+- This is a procedural Skill revision, not proof that GitHub marketplace import, provider sync or public production occurred. A staged original does not automatically confer public rights. No ZIP distribution.
