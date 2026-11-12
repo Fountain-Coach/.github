@@ -34,11 +34,22 @@
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-skill-authoring-and-sync",
       "marketplaceWebsiteURL": "https://fcis.fountain.coach/",
-      "contentSHA256": "836cbe6bcb8050319d2fc149b0a6e24428872d381c935c471ba00652bc94670d",
+      "contentSHA256": "a69e07f45be8752b4171e0c69e488e60d0bd2e574534d53d691d898d47aef76c",
       "provenance": {
         "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
         "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",
         "sourceCommit": "63cb1d337461058fd6460561661bd32450f64145"
+      }
+    },
+    {
+      "name": "fcis-owner-access",
+      "distribution": "not-content-verified",
+      "canonicalPath": ".codex/skills/fcis-owner-access",
+      "contentSHA256": "433bacf28bcb6cd5df030a09e9b382ae8e3482e0562b585d5a6cd21f886a2387",
+      "provenance": {
+        "sourceDocument": "Fountain-Coach/fountain-press/docs/access-passkey-first-owner-signin-2026-11-12.md",
+        "sourceCommit": "ef9226a2dc25106caffc0ef3e87a7e110a17aef4",
+        "note": "New canonical agent procedure approved by owner; not an admitted WebAuthn implementation or new runtime Kit"
       }
     },
     {

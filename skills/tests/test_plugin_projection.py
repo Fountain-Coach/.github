@@ -125,10 +125,10 @@ class MarketplaceProjectionTests(unittest.TestCase):
             projection.WORKSPACE_PLUGIN_ID,
         )
 
-    def test_all_five_skills_projected_in_one_plugin_identity(self):
+    def test_all_six_skills_projected_in_one_plugin_identity(self):
         result = projection.sync(self.root)
         self.assertEqual(set(result["skills"]), set(projection.CANONICAL_SKILLS))
-        self.assertEqual(len(result["changedSkills"]), 5)
+        self.assertEqual(len(result["changedSkills"]), 6)
         for name in projection.CANONICAL_SKILLS:
             self.assertEqual(entries(self.root / ".codex/skills" / name),
                              entries(self.root / projection.PLUGIN_PATH / "skills" / name))

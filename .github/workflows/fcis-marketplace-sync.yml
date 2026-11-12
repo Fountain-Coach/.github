@@ -34,7 +34,7 @@ jobs:
         run: |
           python3 skills/skillctl.py check
           python3 -m unittest discover -s skills/tests -v
-      - name: Verify all five canonical Skills already released in Git
+      - name: Verify all six canonical Skills already released in Git
         run: |
           python3 skills/plugin_projection.py check
           git diff --check
