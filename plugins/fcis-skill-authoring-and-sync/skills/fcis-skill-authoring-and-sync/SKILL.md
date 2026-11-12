@@ -60,7 +60,7 @@ This learning check is part of ordinary task closure and must not expand or
 delay the original Definition of Done. It is an agent workflow, not a background service. Validated evidence may update one
 canonical Skill through the delegated tool. That source commit remains
 separate from any portable plugin projection. With the versioned local hooks
-enabled, the following post-commit action checks all **five** canonical source
+enabled, the following post-commit action checks all **six** canonical source
 trees and makes a distinct, idempotent derived Git commit under the **single
 existing** FCIS plugin. GitHub PR tests and the read-only release workflow
 must independently verify the complete packaged file trees before protected
@@ -88,7 +88,7 @@ Record a reviewable candidate under `skills/proposals/`; do not author a new exe
 6. **Treat OpenAI destinations as two distinct surfaces.** ChatGPT account Skills and the public project-scoped OpenAI Skills API do not update each other. For ChatGPT, compare the full available installed bundle through the supported account readback and report resources or effective revisions that the interface does not expose as unverified. For the public API, use the existing Reframe `skills.synchronize` read-only observer to inspect project inventory, the independently exposed immutable version contents (read-only), and the active/default pointer; keep credentials inside the approved SecretStore host adapter. An API listing is metadata only. Never copy a secret into Git, prompts, receipts, or logs.
 
 7. **Keep Git distribution and hosted installation distinct.** Source authority stays
-   in `Fountain-Coach/.github/.codex/skills`. The five currently reviewed
+   in `Fountain-Coach/.github/.codex/skills`. The six currently reviewed
    canonical Skills are projected into the *one existing* workspace plugin, with
    unchanged `pluginId` and independently pinned tree digests.
    `skills/plugin_projection.py sync` writes only derived package files.
@@ -111,7 +111,7 @@ A GitHub marketplace version matching canonical Git does not remove older,
 separately installed ChatGPT account Skills of the same names. Every FCIS
 provider synchronization and scheduled convergence check MUST apply the
 [standalone account collision guard](references/chatgpt-standalone-collision-guard.md)
-to the five canonical Skill identities. Inspect the signed-in account's
+to the six canonical Skill identities. Inspect the signed-in account's
 **installed** state independently: an old standalone with **Uninstall**
 available is a conflict even when its instructions happen to match, because
 it can drift later. The observable **Add** action after reversible
