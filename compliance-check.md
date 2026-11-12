@@ -22,7 +22,7 @@ If the current repository is not in the allowlist, STOP and report: "Repo not al
 - You MUST keep changes minimal and focused on FCIS compliance.
 
 ## Objective
-1) Audit the current allowlisted repository for compliance with **Fountain Codex Instruction System (FCIS), RFC 0001**.
+1) Audit the current allowlisted repository for compliance with **Fountain Coach Instruction System (FCIS), RFC 0001**.
 2) Produce a **Compliance Plan**.
 3) Implement the plan in a PR with minimal changes.
 

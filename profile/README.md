@@ -1,4 +1,4 @@
-# Fountain Codex Instruction System (FCIS)
+# Fountain Coach Instruction System (FCIS)
 ## RFC 0001 — Orthogonal Instruction Architecture for LLM-Governed Repositories
 
 **Status:** Adopted  
@@ -11,7 +11,7 @@
 
 ## Abstract
 
-This document defines the **Fountain Codex Instruction System (FCIS)**, a normative, organization-wide standard for governing how OpenAI Codex is instructed, constrained, and enabled across repositories.
+This document defines the **Fountain Coach Instruction System (FCIS)**, a normative, organization-wide standard for governing how OpenAI Codex is instructed, constrained, and enabled across repositories.
 
 FCIS establishes **four orthogonal instruction layers**:
 
@@ -21,6 +21,8 @@ FCIS establishes **four orthogonal instruction layers**:
 4. MCP servers — external capabilities and data access  
 
 Strict separation of these layers is required to ensure **predictability, auditability, and scalability** of LLM-driven development.
+
+**Name and ownership:** FCIS expands to **Fountain Coach Instruction System**. The name identifies the Fountain Coach standard, not a particular execution tool. References to OpenAI Codex elsewhere in this RFC describe its supported execution context and are not part of the FCIS expansion. This clarification does not modify the adopted instruction layers or the standard's scope. See [FCIS Name and Identity](../docs/FCIS-Name-and-Identity.md).
 
 ---
 
