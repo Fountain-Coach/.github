@@ -32,7 +32,7 @@ def git(root, *args):
 
 
 def eligible_path(path):
-    """Only the existing plugin manifest and reviewed five Skill mirror trees."""
+    """Only the existing plugin manifest and reviewed six Skill mirror trees."""
     if path == (PLUGIN_PATH / "plugin.json").as_posix():
         return True
     return any(path.startswith((PLUGIN_PATH / "skills" / name).as_posix() + "/")

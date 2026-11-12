@@ -34,7 +34,7 @@ unrelated source. **Separate, explicitly delegated Git distribution:** the
 versioned local `.githooks/post-commit` calls the existing
 `skills/plugin_projection.py` and `skills/marketplace_publish.py` to make
 one **separate derived commit** (never part of the canonical learning commit)
-for the five reviewed Skill directories in the **existing single plugin**.
+for the six reviewed Skill directories in the **existing single plugin**.
 `test.yml` and the read-only main-branch
 `.github/workflows/fcis-marketplace-sync.yml` refuse missing or drifting
 mirrors. Source and derivative are reviewed in the *same PR*, and protected
@@ -61,7 +61,7 @@ never as a creation or publication action. This rule does not affect
 non-Skill archives or the tested Git disaster-recovery bundles.
 
 **FCIS account Skill collision guard (binding for FCIS maintenance).**
-The five canonical FCIS Skills are distributed through the single imported
+The six canonical FCIS Skills are distributed through the single imported
 GitHub-backed marketplace plugin. An independently installed account Skill of
 the same canonical identity is a runtime authority collision even if its text
 matches today. Following each marketplace synchronization, inspect the

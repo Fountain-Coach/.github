@@ -1,0 +1,4 @@
+interface:
+  display_name: "FCIS Owner Access"
+  short_description: "Govern owner passkeys, recovery, browser sessions and client access."
+  default_prompt: "Audit the existing Fountain Coach Access and Host issuer. Follow Governance 142, 152, 161 and WebAuthn/RFC 9700/RFC 10017; keep one FountainAuthKit owner identity and a secure session, prove independent recovery and iPad/Host/Store acceptance, and never reveal passwords or create a second issuer or grant store."

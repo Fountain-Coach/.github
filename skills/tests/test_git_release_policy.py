@@ -19,7 +19,7 @@ class GitReleasePolicyTests(unittest.TestCase):
         checks = by_type["required_status_checks"]["parameters"]["required_status_checks"]
         self.assertEqual(checks, [{"context": "build", "integration_id": 15368}])
 
-    def test_ci_requires_actual_five_skill_package_parity(self):
+    def test_ci_requires_actual_six_skill_package_parity(self):
         test = (ROOT / ".github/workflows/test.yml").read_text()
         self.assertIn("python3 skills/skillctl.py check", test)
         self.assertIn("python3 skills/plugin_projection.py check", test)
