@@ -3,7 +3,7 @@
 **Status:** Proposed  
 **Category:** Informational proposal  
 **Applies to:** Fountain Coach organization repositories, when a repository architecture baseline is requested  
-**Authority:** Subordinate to RFC 0001 of the Fountain Codex Instruction System (FCIS)  
+**Authority:** Subordinate to RFC 0001 of the Fountain Coach Instruction System (FCIS)
 **Version:** 0.1.0 (proposal)
 
 ---
