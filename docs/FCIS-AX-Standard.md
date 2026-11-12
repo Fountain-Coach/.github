@@ -78,7 +78,7 @@ FCIS-AX Declaration
 ## 5. Relationship to other FCIS standards
 
 - **FCIS-VRT (Visual Regression Testing):** VRT governs *visual fidelity* (does it look right); FCIS-AX governs *semantic truth and operability* (is the content there, correct, stateful, and operable, and can it be introspected). A surface is fully verified only under both. Reading state off a VRT screenshot to stand in for AX assertion is a FCIS-AX-05 violation.
-- **FCIS RFC 0001 (repo layering):** This standard is declarative. Platform-specific *how-to* (the accessibility APIs, the driver harness, the test patterns) belongs in each repo's `.codex/skills/*` runbooks, not in AGENTS.md and not here.
+- **FCIS RFC 0001 (repo layering):** This standard is declarative. Platform-specific *how-to* (accessibility APIs, driver harnesses, test patterns) belongs in the appropriate canonical FCIS Skill or a verified runtime-specific Skill projection, not in AGENTS.md and not here. A `.codex/skills/` path is a provider-specific projection, not an FCIS-wide model requirement.
 
 ---
 

@@ -1,6 +1,6 @@
 # Elevated-Authority Task: FCIS (RFC 0001) Compliance Audit + Remediation (GitHub Authorized)
 
-You are Codex with **elevated GitHub authority** for the repositories explicitly allowlisted below.
+You are an **authorized repository-maintenance agent** operating only on the repositories explicitly allowlisted below. This instruction does not grant GitHub permission; use only the actual permissions exposed by the connected account.
 You are permitted to read, branch, commit, and open pull requests on these repos.
 
 ## Allowlist (STRICT)
@@ -57,8 +57,8 @@ Must include:
 The PR MUST:
 - Add/adjust `AGENTS.md`
 - Add/adjust `PLANS.md` (or declare `PLAN.md` in `AGENTS.md` if you keep it)
-- Add `.codex/skills/<skill-name>/SKILL.md` AND its identical copy at `.claude/skills/<skill-name>/SKILL.md` for any runbooks currently embedded in AGENTS/PLAN docs
-- Ensure `.gitignore` excludes neither skills path, so both copies ship with the clone
+- For extracted runbooks, reference the canonical Fountain-Coach/.github Skill and project it to each **actually supported and verified** agent discovery path; do not require a new runtime or create a second canonical source
+- Ensure `.gitignore` does not exclude any approved Skill projection that must ship with the clone
 - Remove orthogonality violations by moving content to the correct layer
 - Not require any MCP server presence for correctness
 
@@ -66,11 +66,10 @@ The PR MUST:
 - `AGENTS.md` = behavioral law. MUST define invariants and routing. MUST NOT contain step-by-step procedures or tool configuration.
 - `PLANS.md` = long-task intent protocol. Must be required by AGENTS.md for multi-step/high-risk work.
 - Skills = execution technique modules. Each skill directory MUST contain `SKILL.md` with: purpose, when-to-use, steps, output contract.
-- **Skill parity (RFC 0001 amendment).** A skill MUST be discoverable by EVERY agent runtime the repository supports, and agent runtimes do not share a discovery path: Codex reads `.codex/skills/`, Claude Code reads `.claude/skills/`. A skill present in only one is invisible to the other agent, so the runbook silently gets reinvented by whichever agent cannot see it — the exact waste skills exist to prevent. Therefore each skill MUST exist as an IDENTICAL copy at `.codex/skills/<name>/SKILL.md` and `.claude/skills/<name>/SKILL.md`.
-  - Copies, not symlinks: symlink discovery is not guaranteed across runtimes, and a link is silently broken by an archive export, a worktree, or a filesystem that does not carry it.
-  - Neither path may be excluded by `.gitignore`. A skill that does not ship with the clone is not a skill.
-  - Content must be byte-identical. Divergence is drift, and drift in a procedure is worse than no procedure: two agents then follow different steps while both believe they are compliant.
-  - The skill is authored once and copied; the repository states which path is the editing origin so the copy direction is never ambiguous.
+- **Skill source and supported-runtime parity.** The canonical source for organization FCIS Skills is `Fountain-Coach/.github/.codex/skills/` (Governance Chapter 160). Codex and Claude Code are examples of separately configured agent runtimes, not mandatory FCIS dependencies. Where a repository actually supports either, validate discoverability and an exact derived mirror in that runtime's recognized path (for example `.codex/skills/` or `.claude/skills/`). A missing path for a *non-admitted* runtime is not a compliance failure.
+  - Do not author a new competing source in a domain repo; follow the approved canonical-to-projection process and review SHA/digest parity.
+  - Do not assume a symlink, directory copy, name alone, or marketplace listing proves actual agent discovery or active provider routing; separately witness what the runtime supports.
+  - Preserve the owning repository's authorization, capabilities and tested source contracts; provider compatibility is independently verified rather than presumed.
 - MCP = capability only. MUST NOT encode workflow/policy; MUST be configured outside repo; repo must not depend on MCP for correctness.
 - Each layer answers exactly one question:
   - AGENTS: What is allowed?
@@ -86,8 +85,8 @@ Locate and read:
 - `README.md` (and any referenced policy docs)
 - `AGENTS.md` (and any nested equivalents)
 - `PLANS.md` and/or `PLAN.md`
-- `.codex/skills/**/SKILL.md` and `.claude/skills/**/SKILL.md` (if present) — compare them; a skill in only one path, or differing content between them, is a parity violation
-- `.gitignore` — confirm it excludes neither skills path
+- Canonical FCIS Skills and any **admitted** `.codex/skills/**/SKILL.md`, `.claude/skills/**/SKILL.md`, or other agent projections — check their declared source revision, content parity, and actual supported discovery scope
+- `.gitignore` — confirm it does not exclude any declared, admitted Skill projection
 Search for instruction spillover keywords:
 - "how to", "steps", "run", "command", "config", "MCP", "policy", "workflow"
 

@@ -4,14 +4,14 @@
 **Status:** Adopted  
 **Category:** Standards Track  
 **Organization:** fountain.coach  
-**Applies to:** All Codex-operated repositories  
-**Version:** 1.4.0
+**Applies to:** Fountain Coach-governed repositories and supported agent runtimes
+**Version:** 1.5.0
 
 ---
 
 ## Abstract
 
-This document defines the **Fountain Coach Instruction System (FCIS)**, a normative, organization-wide standard for governing how OpenAI Codex is instructed, constrained, and enabled across repositories.
+This document defines the **Fountain Coach Instruction System (FCIS)**, a normative, organization-wide standard for governing instructions, plans, Skills, and tool-capability access across supported agent runtimes. It does not own or require a particular model provider.
 
 FCIS establishes **four orthogonal instruction layers**:
 
@@ -22,7 +22,7 @@ FCIS establishes **four orthogonal instruction layers**:
 
 Strict separation of these layers is required to ensure **predictability, auditability, and scalability** of LLM-driven development.
 
-**Name and ownership:** FCIS expands to **Fountain Coach Instruction System**. The name identifies the Fountain Coach standard, not a particular execution tool. References to OpenAI Codex elsewhere in this RFC describe its supported execution context and are not part of the FCIS expansion. This clarification does not modify the adopted instruction layers or the standard's scope. See [FCIS Name and Identity](../docs/FCIS-Name-and-Identity.md).
+**Name and ownership:** FCIS expands to **Fountain Coach Instruction System**. Fountain Coach governs its instruction contracts and source artifacts; an LLM or agent vendor owns its own models and service. Codex, when used, is an optional integration, not FCIS identity, authority, or a mandatory runtime. See [FCIS Name and Identity](../docs/FCIS-Name-and-Identity.md) and [Model Provider and Execution Boundary](../docs/FCIS-Model-Provider-Boundary.md).
 
 ---
 
@@ -70,6 +70,32 @@ LLM-based systems degrade rapidly when:
 Orthogonality prevents these failure modes by making responsibility **explicit,
 exclusive, and reviewable**.
 
+### 2.3 Model and Runtime Independence (FCIS-MODEL-1)
+
+FCIS is a **Fountain Coach-governed instruction and capability contract**, not a model service, inference engine,
+provider subscription, or ownership claim over model weights. The four layers MUST remain meaningful regardless of
+which eligible human, local model, hosted model, or agent runtime executes an admitted task.
+
+- **Separate authorities:** Fountain Coach owns and reviews its authored policies, plans, canonical Skills, and
+  FCIS capability contracts. Each model or agent provider retains its own service, model, authentication,
+  availability, licensing, quota, and billing boundaries. FCIS MUST NOT claim ownership or control of that
+  provider infrastructure merely because an adapter or Skill uses it.
+- **Provider-neutral requirements:** An FCIS MUST, SHALL, or compliance rule MUST NOT require Codex, OpenAI,
+  ChatGPT, Claude, or any named model/agent provider unless an *explicitly scoped integration contract* actually
+  depends on that provider. A provider-specific adapter MAY impose its own verified technical prerequisites
+  without widening the organization-wide FCIS standard.
+- **Admitted reasoning:** When a task requires inference, the chosen provider/model/runtime MUST be explicitly
+  available and authorized under its actual access, consent, security, price, and budget terms. Provider
+  substitution is not automatic proof of equivalent capability, quality, or entitlements.
+- **Independent tools and source:** Git-owned instruction source and separately admitted deterministic tool
+  execution MUST NOT acquire a compulsory paid model dependency merely through an FCIS integration. Model
+  selection does not change the owning Kit's capability permission or terminal-evidence requirements.
+- **Portable projections, not fabricated support:** Provider-specific discovery directories and adapters are
+  derived surfaces of their governing source. Their presence proves neither a running model nor compatibility
+  with another runtime. Support for an additional runtime requires explicit adapter and acceptance evidence.
+
+These rules preserve the original four instruction layers and the independent FCIS-MCP-2 execution boundary.
+
 ---
 
 ## 3. Instruction Layers (Normative)
@@ -91,8 +117,8 @@ No layer MAY answer another layer’s question.
 
 ### 4.1 Purpose
 
-`AGENTS.md` **MUST** define non-negotiable behavioral constraints under which Codex
-operates in a repository.
+`AGENTS.md` **MUST** define non-negotiable behavioral constraints for the supported
+actors and agent runtimes operating in a governed repository.
 
 ### 4.2 Mandatory Content
 
@@ -121,7 +147,7 @@ Violation constitutes a **law breach**.
 ### 5.2 Invocation Rule
 
 `AGENTS.md` **MUST** define when PLANS.md is required.
-Codex **SHALL NOT** execute qualifying tasks without a plan.
+An executing agent **SHALL NOT** undertake qualifying tasks without a plan.
 
 ### 5.3 Required Structure
 
@@ -227,21 +253,20 @@ Violations **SHOULD** block merges.
 
 ## 9. Standard Repository Layout
 
+The canonical organization-owned Skill source is `Fountain-Coach/.github/.codex/skills/` under
+Governance Chapter 160. The `.codex` directory name is a retained **repository and distribution path**, not a
+model or provider requirement. A participating repository declares its behavioral and planning layers:
+
 ```
 repo-root/
   AGENTS.md
   PLANS.md
-  .codex/
-    skills/
-      <skill-name>/
-        SKILL.md
 ```
 
-User-level configuration:
-```
-~/.codex/config.toml
-~/.codex/AGENTS.override.md
-```
+An admitted runtime MAY require a discoverable Skill projection in its own path (for example,
+`.codex/skills/` for Codex or `.claude/skills/` for Claude Code). Such paths are **derived adapters** and
+MUST NOT become competing canonical Skill sources. User-level configuration (for example,
+`~/.codex/config.toml`) is adapter-specific and is never a general FCIS compliance prerequisite.
 
 ---
 
@@ -257,9 +282,10 @@ A repository is FCIS-compliant if:
 
 ## 11. Rationale
 
-FCIS treats Codex as a **compiler-like system**:
+FCIS uses a **compiler-like separation of responsibilities** across agent runtimes:
 - law → intent → execution → capability
-This mirrors successful separation patterns from compilers, operating systems, and safety-critical automation.
+This mirrors successful patterns from compilers, operating systems, and safety-critical automation.
+It does not mandate a particular model or inference vendor.
 
 ---
 
@@ -276,7 +302,7 @@ FCIS reduces these risks through explicit separation and review.
 
 FCIS-KIT extends the FCIS architecture from repository governance to governed capability distribution. An instrument
 is a bounded capability that presents a typed MIDI2 surface, declares its permissions and execution lane, reports its
-lifecycle, and carries the evidence needed for admission. Reframe remains the host authority; Codex may help build or
+lifecycle, and carries the evidence needed for admission. Reframe remains the host authority; a supported agent or model may help build or
 compose an instrument, but it does not decide admission or release.
 
 The FCIS-KIT standard's [FCIS-KIT-14 mechanical constraint](../docs/FCIS-KIT-Standard.md#fcis-kit-14-mechanical-constraints)
@@ -304,6 +330,7 @@ FCIS uses semantic versioning for the standards suite. RFC 0001 defines the FCIS
 
 ### Version history
 
+- **v1.5.0** — Adopts **FCIS-MODEL-1 Model and Runtime Independence** and clarifies provider-neutral obligations, derived Skill paths, and external model-service ownership. The four-layer architecture is unchanged.
 - **v1.4.0** — Adds **FCIS-MCP-2 Provider-Independent Capability Access**: separately admitted deterministic tools may be invoked without compulsory model turns, while reasoning, authorization, cost, and FCIS-KIT execution authority remain independently governed. Additive; the four-layer model is unchanged.
 - **v1.3.0** — Adopts **FCIS-KIT-16 History-First Reconstruction**, requiring an evidence-backed reconstruction of
   the existing authority, proof, failure seam, reuse decision, and bounded acceptance before capability changes.
@@ -315,11 +342,11 @@ FCIS uses semantic versioning for the standards suite. RFC 0001 defines the FCIS
 
 ## 14. Summary
 
-FCIS establishes a **contractual architecture** for Codex:
+FCIS establishes a **provider-independent contractual architecture** for supported agent runtimes:
 
 - `AGENTS.md` defines law
 - `PLANS.md` defines intent
 - Skills define execution
 - MCP defines capability
 
-Adherence is mandatory for all fountain.coach Codex repositories.
+Adherence is mandatory for Fountain Coach repositories that adopt the FCIS standard, independent of their elected model provider.
