@@ -1,5 +1,14 @@
 # Skill Sovereignty implementation
 
+## 13 November 2026 — shared Fountain Press editorial introduction style
+
+**Goal:** Update existing canonical `linotype-estate-template` only, so all admitted Fountain Press works render existing editorial prefaces using one source-addressed aside, while subtitles and raw authorial prose stay distinct. `Fountain-Coach/fountain-press` owns the deterministic projection instrument and tests; the current WLAN estate owns stage admission. No new agent Skill or FCIS-KIT identity and no production effect.
+
+**Chapters read:** 07 (goal-bounded changes), 08 (actual evidence classes), 158 (immutable publishing and rollback), 160 (canonical Skill owner). **Forbidden:** inventing missing introductions, refactoring unrelated native applications, editing plugin mirrors as sources, ZIP distribution, or claiming the ChatGPT installed version changed from a Git branch. **Conflicts:** none. **Excluded:** public promotion, new Swift/MIDI2 instrument, rewriting texts and mobile device app behavior.
+
+**Source verification:** review the v199 iPad editorial-proem repair and present stage template inventory; compare to the source-owned Fountain Press instrument and tests. **Target acceptance:** updated canonical Skill contents, integrity digest and tests, reviewed Git PR, actual staging release including every affected Press static route, and separate installed plugin sync status. Independent full plugin readback is not established by this source work.
+
+
 ## PINNED — FINAL DoD: canonical-to-ChatGPT skill convergence (7 November 2026)
 
 **State: ACTIVE — not FINAL.** This is the existing Skill Sovereignty phase, not another service or a replacement for the working Git recovery. Preserve this entry, updating the evidence and next action **in place** until FINAL DoD is independently witnessed. Owner: `Fountain-Coach/.github`. Target: the six source-admitted FCIS Skills in the existing Git-backed plugin (sixth merged 12 November 2026) and their actual ChatGPT workspace distribution, with personal account Skills and project API versions explicitly separate.
