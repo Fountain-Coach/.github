@@ -51,5 +51,56 @@ class OwnerAccessSkillTests(unittest.TestCase):
         for term in ("wrong", "revoked", "expired", "CSRF", "lost", "iPad"):
             self.assertIn(term.lower(), self.matrix.lower())
 
+    def test_internal_fcis_openapi_maintenance_is_part_of_existing_skill(self):
+        reference = (ROOT / ".codex/skills/fcis-owner-access/references/openapi-maintenance.md").read_text()
+        metadata = (ROOT / ".codex/skills/fcis-owner-access/agents/openai.yaml").read_text()
+        self.assertIn("internal FCIS owner OpenAPI 3.1 contract", self.body)
+        self.assertIn("references/openapi-maintenance.md", self.body)
+        self.assertIn("OpenAPI 3.1", metadata)
+        self.assertIn("FCIS OpenAPI maintenance protocol", self.matrix)
+        self.assertIn("not a new FCIS-KIT capability", reference)
+        self.assertEqual(len(self.catalog["skills"]), 6)
+
+    def test_openapi_existing_sources_versions_and_native_contract_checks(self):
+        ref = (ROOT / ".codex/skills/fcis-owner-access/references/openapi-maintenance.md").read_text()
+        for required in (
+            "contracts/fcis-owner.openapi.json",
+            "FountainHostMCPOAuthHandler",
+            "FountainHostMachineEnrollment",
+            "FountainHostOwnerPairing",
+            "FountainHostMCPAuthorizationRevoke",
+            "node --test apps/estate-publisher/Tests/fcis-owner-openapi.test.mjs",
+            "swift test --package-path apps/estate-publisher",
+            "FountainHost(OwnerOpenAPIContract|OwnerTarget|OwnerPairingHTTP|MCPAuthorizationOwnerHTTP|MachineEnrollment)Tests",
+            "git diff --check",
+            "info.version",
+            "x-fcis-not-admitted"
+        ):
+            self.assertIn(required, ref)
+
+    def test_openapi_refuses_fabricated_scope_and_release_claims(self):
+        ref = (ROOT / ".codex/skills/fcis-owner-access/references/openapi-maintenance.md").read_text()
+        for required in (
+            "approved-pending-channel",
+            "authorizationState=verified",
+            "host.describe?inventory=1",
+            "passkey",
+            "Origin",
+            "Cookie",
+            "Authorization",
+            "Foundation reference-date seconds",
+            "404",
+            "signed issuer/Caddy",
+            "physical-iPad acceptance",
+        ):
+            self.assertIn(required.lower(), ref.lower())
+
+    def test_openapi_avoids_replacing_upstream_or_Kit_contracts(self):
+        ref = (ROOT / ".codex/skills/fcis-owner-access/references/openapi-maintenance.md").read_text()
+        self.assertIn("FCIS-Official-OpenAPI-Dependency.md", ref)
+        self.assertIn("generated-contract-regeneration", ref)
+        self.assertIn("not a new FCIS-KIT capability", ref)
+
+
 if __name__ == "__main__":
     unittest.main()
