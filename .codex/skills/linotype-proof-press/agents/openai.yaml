@@ -1,0 +1,10 @@
+interface:
+  display_name: Linotype Proof Press
+  short_description: Exhaustive, source-addressed page proofing for Fountain Press books
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - CHAT
+  - CODEX
+  allow_implicit_invocation: true

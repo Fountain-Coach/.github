@@ -14,8 +14,8 @@ class OwnerAccessSkillTests(unittest.TestCase):
         cls.matrix = MATRIX.read_text()
         cls.catalog = json.loads((ROOT / "skills/openai-distribution.json").read_text())
 
-    def test_only_one_canonical_owner_skill_inside_six(self):
-        self.assertEqual(len(self.catalog["skills"]), 6)
+    def test_only_one_canonical_owner_skill_inside_seven(self):
+        self.assertEqual(len(self.catalog["skills"]), 7)
         names = [x["name"] for x in self.catalog["skills"]]
         self.assertEqual(names.count("fcis-owner-access"), 1)
         self.assertIn("fcis-owner-access", names)
@@ -59,7 +59,7 @@ class OwnerAccessSkillTests(unittest.TestCase):
         self.assertIn("OpenAPI 3.1", metadata)
         self.assertIn("FCIS OpenAPI maintenance protocol", self.matrix)
         self.assertIn("not a new FCIS-KIT capability", reference)
-        self.assertEqual(len(self.catalog["skills"]), 6)
+        self.assertEqual(len(self.catalog["skills"]), 7)
 
     def test_openapi_existing_sources_versions_and_native_contract_checks(self):
         ref = (ROOT / ".codex/skills/fcis-owner-access/references/openapi-maintenance.md").read_text()
