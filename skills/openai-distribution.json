@@ -22,7 +22,7 @@
       "name": "linotype-estate-template",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/linotype-estate-template",
-      "contentSHA256": "b8f2061a95c36c0ddfaea9db135fd4829e48ee5c21e2f7fdd3a69212a6e8f9f0",
+      "contentSHA256": "433dd36a289c81604e83b13a1c75ee085776ce60754085ba141294797dd4bb66",
       "provenance": {
         "importedFrom": "Fountain-Coach/estate",
         "sourcePath": ".codex/skills/linotype-estate-template",
@@ -56,7 +56,7 @@
       "name": "estate-publisher-deployment",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/estate-publisher-deployment",
-      "contentSHA256": "116c57f3f532e8a575bbea976e4e438b23c1a8da74e840190b7afc5b42b2c5aa",
+      "contentSHA256": "688ff379164ac99e20f187a50a50324cb036687a5389f6cd4a7744712ccfaa50",
       "provenance": {
         "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
         "sourcePath": ".codex/skills/estate-publisher-deployment",
