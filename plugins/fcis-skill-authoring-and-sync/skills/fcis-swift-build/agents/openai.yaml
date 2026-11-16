@@ -1,0 +1,3 @@
+interface:
+  display_name: "FCIS Swift Build"
+  short_description: "Call the admitted workstation build instrument"
