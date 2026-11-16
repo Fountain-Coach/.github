@@ -76,6 +76,17 @@
         "sourceCommit": "historical-accepted-20261031",
         "note": "Reuses established host adapter; no alternate paid transport"
       }
+    },
+    {
+      "name": "linotype-proof-press",
+      "distribution": "not-content-verified",
+      "canonicalPath": ".codex/skills/linotype-proof-press",
+      "contentSHA256": "f60e59975757a98d66d7a0095ba87bdef896a65b25a876ad0d1018938859f024",
+      "provenance": {
+        "sourceDocument": "Fountain-Coach/fountain.coach/site/essays/what-makes-a-page-modern/combined-essay.md",
+        "sourceCommit": "17e32af5b875ec5356ddfa8a9680711d60aaa4eb",
+        "note": "Explicitly commissioned seventh Skill. Source-based machine proof is not editorial sign-off, EstatePublisher release, or a new runtime Kit."
+      }
     }
   ]
 }
