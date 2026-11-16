@@ -1,5 +1,8 @@
 # Skill Sovereignty implementation
 
+**Current publication parity correction (16 November 2026):** Writer explicitly requests updates to existing EstatePublisher and Linotype skills after Better Ear publication left direct collection pages and catalog stale. Read organization Goal Fidelity, Chapter 158 publication lane and Chapter 160 ownership. Require finite pre-release and independent post-release agreement across root, Bookshelf contents/gallery, every affected direct book route, catalogue, work/edition manifest and static OG/Twitter/JSON-LD artwork. Preserve existing publisher and plugin identity. Next: validate source, project existing plugin and merge via checked PR; provider active version remains separately unverified.
+
+
 ## 13 November 2026 — shared Fountain Press editorial introduction style
 
 **Goal:** Update existing canonical `linotype-estate-template` only, so all admitted Fountain Press works render existing editorial prefaces using one source-addressed aside, while subtitles and raw authorial prose stay distinct. `Fountain-Coach/fountain-press` owns the deterministic projection instrument and tests; the current WLAN estate owns stage admission. No new agent Skill or FCIS-KIT identity and no production effect.
