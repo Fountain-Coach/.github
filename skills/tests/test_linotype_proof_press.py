@@ -54,6 +54,16 @@ class ProofPressSkillTests(unittest.TestCase):
         self.assertIn('1,000+ leaf runs',ref)
         self.assertIn('a low occupancy warning is a',ref)
 
+    def test_ubuntu_macmini_is_only_current_owner_wlan_proof_host(self):
+        policy=(SKILL/'SKILL.md').read_text()
+        for phrase in ('benedikt-Macmini', 'MacBook Pro', 'must **not** render',
+                       '192.168.8.50:8200', '/home/benedikt/fountain-press-proof/runs/',
+                       'one isolated browser process per admitted work',
+                       'host guard must reject', 'physical-device witness'):
+            self.assertIn(phrase.lower(),policy.lower())
+        self.assertIn('report the proof blocked',policy)
+        self.assertIn('not an automatic workstation fallback',policy)
+
     def test_thousand_plus_per_platform_is_exactly_counted_without_editorial_self_approval(self):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td);populate(root,count=1001)
