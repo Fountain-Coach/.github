@@ -8,7 +8,7 @@ import skillctl as ctl
 
 class SovereigntyTests(unittest.TestCase):
     def test_canonical_packages(self):
-        self.assertEqual(len(ctl.validate()["skills"]), 7)
+        self.assertEqual(len(ctl.validate()["skills"]), 8)
     def test_zip_delivery_is_disabled_at_cli_and_python_boundary(self):
         import subprocess
         self.assertFalse(hasattr(ctl, "archive"))
