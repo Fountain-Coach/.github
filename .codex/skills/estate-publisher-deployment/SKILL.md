@@ -7,6 +7,10 @@ description: "Deploy and verify Fountain Press source-bound editions through the
 
 This skill is a procedure, not a runtime publisher. Its **only canonical skill authority is Fountain-Coach/.github** (Governance Chapter 160); EstatePublisher's installed executable and Swift Kits own effects. Begin with [FCIS Goal Fidelity](https://github.com/Fountain-Coach/.github/blob/main/docs/FCIS-Non-Invention-and-Goal-Fidelity.md) and current [Governance Chapter 158](https://governance.fountain.coach/chapters/158-publishing-is-not-a-distributed-transaction/).
 
+## Admitted Swift build authority
+
+For native EstatePublisher compilation, tests or dependency resolution, invoke the canonical `fcis-swift-build` skill and its **admitted** Swift Build Instrument against the existing workstation launcher, exact source revision and approved external storage. Do not run direct `swift build`, `swift test`, `swiftc`, `xcodebuild` or guessed SSH/cache workarounds. The initial v0.1.0 instrument candidate declares only Reframe quick/focused/governance workflows: an EstatePublisher compilation is NOT authorized by that source profile. If no matching admitted native build profile is available, report it as unavailable. This must not turn existing signed, previously admitted EstatePublisher publication effects into a new build prerequisite; the publisher's own separate approval and immutable release receipts remain authoritative.
+
 ## Publication closure requires collection and catalogue parity
 
 For every added, removed or reordered work, enumerate all affected published projections before packaging: root and `/estate/`, Bookshelf contents and illustrated gallery, direct collection/book URLs, machine book catalogue, work permalink and edition/publication manifests, static Open Graph/Twitter and JSON-LD. Derive them from the same admitted source order and current Reader composition. Rebuild copied collection shells when shared membership or content-addressed Reader modules change; never update only the root and work permalink.

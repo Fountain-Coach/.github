@@ -34,7 +34,7 @@
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-skill-authoring-and-sync",
       "marketplaceWebsiteURL": "https://fcis.fountain.coach/",
-      "contentSHA256": "a69e07f45be8752b4171e0c69e488e60d0bd2e574534d53d691d898d47aef76c",
+      "contentSHA256": "17ba0ac2674806509f63cb9afde9c1e329c7eed7fc475419e3b7ea7a22d4d9e7",
       "provenance": {
         "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
         "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",
@@ -56,7 +56,7 @@
       "name": "estate-publisher-deployment",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/estate-publisher-deployment",
-      "contentSHA256": "70fdf38caf581c588b22a649c4741017a12a0bacf9d64c8c38a80b46475df752",
+      "contentSHA256": "4e19862ad598528b3e5b3e0b220bbc8898e62e261819eab8c31a0c24dd9fdc08",
       "provenance": {
         "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
         "sourcePath": ".codex/skills/estate-publisher-deployment",
@@ -86,6 +86,18 @@
         "sourceDocument": "Fountain-Coach/fountain.coach/site/essays/what-makes-a-page-modern/combined-essay.md",
         "sourceCommit": "17e32af5b875ec5356ddfa8a9680711d60aaa4eb",
         "note": "Explicitly commissioned seventh Skill. Source-based machine proof is not editorial sign-off, EstatePublisher release, or a new runtime Kit."
+      }
+    },
+    {
+      "name": "fcis-swift-build",
+      "distribution": "not-content-verified",
+      "canonicalPath": ".codex/skills/fcis-swift-build",
+      "contentSHA256": "03f4c0c73bf49952adc6a82157853d5855d2f0d8dea30cf7e8fb9944a87f3aa5",
+      "provenance": {
+        "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
+        "sourcePath": ".codex/skills/fcis-swift-build",
+        "sourceCommit": "e6112810ad1549fed8adf7208f0ae568a6a60b3d",
+        "note": "User requested a new governed caller Skill; native Swift Build Instrument is a source candidate, not admitted or callable."
       }
     }
   ]
