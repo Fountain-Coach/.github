@@ -1,6 +1,6 @@
 ---
 name: estate-publisher-deployment
-description: "Deploy and verify Fountain Press source-bound editions through the same immutable composition in owner-WLAN staging and separately authorized public production, using EstatePublisher delivery, SHA-256, receipts, rollback and HTTPS readback. Use for book/essay/Governance releases, machine-readable publication readback, agent-guidance version parity, social OG/Twitter image and first-page fallback verification, SSH/Caddy static publishing, route and template reconciliation, authorization, managed services, staging, Safari/iPad acceptance and production verification. Follow FCIS Goal Fidelity and Governance Chapter 158."
+description: "Deploy and verify Fountain Press source-bound editions through the same immutable composition in owner-WLAN staging and separately authorized public production, using EstatePublisher delivery, SHA-256, receipts, rollback and HTTPS readback. Use for book/essay/Governance releases, machine-readable publication readback, agent-guidance version parity, social OG/Twitter image and first-page fallback verification, SSH/Caddy static publishing, route and template reconciliation including published Bookshelf navigation/legacy-route parity, authorization, managed services, staging, Safari/iPad acceptance and production verification. Follow FCIS Goal Fidelity and Governance Chapter 158."
 ---
 
 # EstatePublisher Deployment — governed lanes
@@ -16,6 +16,10 @@ Before delivery, compare ordered work IDs, first eligible illustrated chapter, o
 After native EstatePublisher activation, independently read public HTTPS bytes for every affected collection URL and catalogue as well as the work, edition/publication manifests, hero/social image, Reader module and representative neighbors. Exercise the actual public Bookshelf contents and gallery selections and direct collection routes in the browser; require initialized Reader pages and working transitions. Include all affected public routes in publisher witnesses, excluding private internal release manifests. A receipt, HTTP 200, source-only test or successful essay permalink alone cannot establish collection parity.
 
 Report COMPLETE only after pre-release and live post-release checks agree on this same artifact and source. Persist the acceptance evidence; any reproduced mismatch keeps publication incomplete. Distinguish server-provided crawler metadata from third-party social cache refresh, which requires its own observation.
+
+## Frontend catalogue/legacy-route acceptance, not a separate publisher
+
+For a Fountain Press Bookshelf or collection-navigation change, read [the canonical Linotype Bookshelf frontend procedure](../linotype-estate-template/references/bookshelf-published-frontend.md) and the source-owned Fountain Press decision. This is an **HTML/CSS/JavaScript presentation** of one published data snapshot, not grounds to deploy a new CMS or persistence host. Compare **every supported entrance** including public `/`, `/estate/`, `/estate/read/library/` and `/estate/books/<id>/`, plus `books/catalog.json`, against one edition/status/ordered collection inventory and content-addressed Reader module. A legacy route that returns HTTP 200 with fewer published books or old work membership is NOT accepted. Respect explicit archive routes; retain original media, current release and rollback. Verify relevant navigation and visible horizontal continuation in the actual source-bound Reader; a standalone local proxy or proposed side-tab cannot substitute for canonical staging or public evidence. No release is implied by changing a Skill.
 
 ## Fountain Press standard: one source-bound composition for staging and production
 
