@@ -102,5 +102,37 @@ class OwnerAccessSkillTests(unittest.TestCase):
         self.assertIn("not a new FCIS-KIT capability", ref)
 
 
+    def test_intent_readable_operations_and_registry_backed_discovery(self):
+        reference = (ROOT / ".codex/skills/fcis-owner-access/references/openapi-maintenance.md").read_text()
+        metadata = (ROOT / ".codex/skills/fcis-owner-access/agents/openai.yaml").read_text()
+        for field in ("operationId", "summary", "description", "selection", "when not to", "typed", "authorization"):
+            self.assertIn(field.lower(), reference.lower())
+        for state in ("declared", "installed", "admitted", "routable", "authorized-for-this-client", "callable", "NOT_ESTABLISHED"):
+            self.assertIn(state, reference)
+        for boundary in ("MIDI2", "FCIS-KIT", "Host", "MCP", "tools/list", "tools/call", "FountainStore"):
+            self.assertIn(boundary, reference)
+        self.assertIn("reasoning-expressive", self.body.lower())
+        self.assertIn("OpenAPI 3.1/MCP", metadata)
+
+    def test_host_describe_is_not_a_permanent_capability_ceiling(self):
+        reference = (ROOT / ".codex/skills/fcis-owner-access/references/openapi-maintenance.md").read_text()
+        for term in ("OwnerFleetHost.capabilities.items.enum", "host.describe", "not a lasting security requirement",
+                     "source limitations", "newly admitted extra instrument", "without editing a fixed",
+                     "cannot be called", "same client, grant, source revision and target"):
+            self.assertIn(term.lower(), reference.lower())
+        self.assertIn("No hardcoded", self.body)
+        self.assertIn("not an executable grant", self.body)
+        self.assertIn("native", self.body)
+
+    def test_skill_policy_never_confuses_documentation_with_live_capability(self):
+        matrix = (ROOT / ".codex/skills/fcis-owner-access/references/acceptance.md").read_text()
+        for term in ("Semantic operation discovery", "Capability inventory parity", "Callability and effects",
+                     "FountainStore", "revoked", "NOT_ESTABLISHED"):
+            self.assertIn(term, matrix)
+        self.assertIn("do not invent endpoints", self.body.lower())
+        self.assertIn("A new operation is DOCUMENTED only after contract parity", self.body)
+        self.assertIn("CALLABLE or LIVE-ACCEPTED require separately witnessed execution", self.body)
+
+
 if __name__ == "__main__":
     unittest.main()
