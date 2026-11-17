@@ -9,6 +9,24 @@ import skillctl as ctl
 class SovereigntyTests(unittest.TestCase):
     def test_canonical_packages(self):
         self.assertEqual(len(ctl.validate()["skills"]), 9)
+    def test_go_migration_hard_stop_prevents_recursive_implementation(self):
+        skill = (ctl.SKILLS / "fcis-go-runtime-migration" / "SKILL.md").read_text()
+        reference = (ctl.SKILLS / "fcis-go-runtime-migration" /
+                     "references" / "ownership-and-acceptance.md").read_text()
+        for required in ("Mandatory finite execution contract",
+                         "One slice, one Definition of Done",
+                         "Authority before compilation",
+                         "15-minute hard limit",
+                         "one implementation attempt and one focused retry",
+                         "at most one full native/SwiftPM rebuild",
+                         "Freeze dependency scope",
+                         "Stop on the first terminal condition",
+                         "first unmet acceptance predicate"):
+            self.assertIn(required, skill)
+        self.assertIn("three-hour escalation", reference)
+        self.assertIn("host.describe", reference)
+        self.assertIn("workstation.go.verify", reference)
+
     def test_zip_delivery_is_disabled_at_cli_and_python_boundary(self):
         import subprocess
         self.assertFalse(hasattr(ctl, "archive"))
