@@ -24,7 +24,7 @@ An FCIS OpenAPI operation is written to be *selected by a person or reasoning cl
 
 | Required dimension | Existing authority | Required human/machine projection |
 | --- | --- | --- |
-| HTTP management operation | Current `FountainHostMCPOAuthHandler` route and OpenAPI 3.1 | Unique stable `operationId`, action-oriented `summary`, explanatory `description` with positive and negative selection cues; real parameters, JSON Schema and status codes |
+| HTTP management operation | Current `FountainHostMCPOAuthHandler` route and OpenAPI 3.1 | Unique stable `operationId`, action-oriented `summary`, explanatory `description` with when to select and when not to use cues; real parameters, JSON Schema and status codes |
 | Instrument purpose and available actions | MIDI2 IDL, FCIS-KIT declared instrument identities, signed installed Host registry | Purpose, usable intent, exact capability/operation ID and version, target, typed inputs/results, side effects, bounded execution and evidence obligations |
 | Availability and authority | Current target route, signed issuer admission, Host execution registry, scoped client grant | Distinct `declared`, `installed`, `admitted`, `routable`, `authorized-for-this-client` and `callable` claims; source and observation identity for positive claims |
 | Client-facing tools | Actual MCP adapter `tools/list` and `tools/call` | Semantic tool descriptions and input schemas derived from the same admitted operations; explicit mapping back to IDL/Host identity; recheck grants at dispatch |
