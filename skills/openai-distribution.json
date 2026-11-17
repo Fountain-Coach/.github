@@ -34,7 +34,7 @@
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-skill-authoring-and-sync",
       "marketplaceWebsiteURL": "https://fcis.fountain.coach/",
-      "contentSHA256": "17ba0ac2674806509f63cb9afde9c1e329c7eed7fc475419e3b7ea7a22d4d9e7",
+      "contentSHA256": "88c5e3f2ec704a7f2d9bcb8a35b9188fdb01f84136ac7d44647c3378fe00ed72",
       "provenance": {
         "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
         "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",
@@ -98,6 +98,17 @@
         "sourcePath": ".codex/skills/fcis-swift-build",
         "sourceCommit": "e6112810ad1549fed8adf7208f0ae568a6a60b3d",
         "note": "User requested a new governed caller Skill; native Swift Build Instrument is a source candidate, not admitted or callable."
+      }
+    },
+    {
+      "name": "fcis-go-runtime-migration",
+      "distribution": "not-content-verified",
+      "canonicalPath": ".codex/skills/fcis-go-runtime-migration",
+      "contentSHA256": "1d41ca4dcfedf3258d3de954c106faee3413ecabde6495261f2a01d70e286445",
+      "provenance": {
+        "sourceDocument": "Fountain-Coach/midi2-gpu-fabric/docs/fcis-go-build-instrument-v0.1.0.md",
+        "sourceCommit": "a41166fea218741c502b1b17f3bb860c3f5e8e40",
+        "note": "Writer-commissioned ninth canonical caller Skill; the Go Build Instrument remains a source candidate and is not admitted or callable."
       }
     }
   ]

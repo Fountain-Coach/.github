@@ -125,10 +125,10 @@ class MarketplaceProjectionTests(unittest.TestCase):
             projection.WORKSPACE_PLUGIN_ID,
         )
 
-    def test_all_eight_skills_projected_in_one_plugin_identity(self):
+    def test_all_nine_skills_projected_in_one_plugin_identity(self):
         result = projection.sync(self.root)
         self.assertEqual(set(result["skills"]), set(projection.CANONICAL_SKILLS))
-        self.assertEqual(len(result["changedSkills"]), 8)
+        self.assertEqual(len(result["changedSkills"]), 9)
         for name in projection.CANONICAL_SKILLS:
             self.assertEqual(entries(self.root / ".codex/skills" / name),
                              entries(self.root / projection.PLUGIN_PATH / "skills" / name))
@@ -152,7 +152,7 @@ class MarketplaceProjectionTests(unittest.TestCase):
         self.assertEqual(result["version"], "0.1.1")
         self.assertEqual(projection.sync(self.root)["state"], "MATCHED")
 
-    def test_rejects_unreviewed_eighth_skill(self):
+    def test_rejects_unreviewed_tenth_skill(self):
         projection.sync(self.root)
         extra = self.root / projection.PLUGIN_PATH / "skills" / "intruder"
         extra.mkdir()
