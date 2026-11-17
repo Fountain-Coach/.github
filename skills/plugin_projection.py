@@ -19,8 +19,9 @@ MIRROR_PATH = PLUGIN_PATH / "skills" / SKILL
 MARKETPLACE_PATH = Path(".agents/plugins/marketplace.json")
 WORKSPACE_PLUGIN_ID = "Plugin_fb9e0937c59c8191b9fa077fa5ea53ef"
 
-# Fixed reviewed inventory: the writer explicitly authorized the ninth
-# Swift Build caller skill on 16 November; further identities require separate admission.
+# Fixed reviewed inventory: the writer authorized eight canonical Skills through
+# 16 November and the ninth Go migration Skill on 17 November.
+# Further identities require separate review and admission.
 CANONICAL_SKILLS = (
     "estate-publisher-deployment",
     "fcis-go-runtime-migration",
