@@ -59,7 +59,7 @@ class OwnerAccessSkillTests(unittest.TestCase):
         self.assertIn("OpenAPI 3.1", metadata)
         self.assertIn("FCIS OpenAPI maintenance protocol", self.matrix)
         self.assertIn("not a new FCIS-KIT capability", reference)
-        self.assertEqual(len(self.catalog["skills"]), 8)
+        self.assertEqual(len(self.catalog["skills"]), 9)
 
     def test_openapi_existing_sources_versions_and_native_contract_checks(self):
         ref = (ROOT / ".codex/skills/fcis-owner-access/references/openapi-maintenance.md").read_text()
