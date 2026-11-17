@@ -45,5 +45,29 @@ class BookshelfPublishedFrontendTests(unittest.TestCase):
         self.assertIn('not permanent counts or evidence that the frontend repair has been performed', text)
         self.assertIn('No release is implied', (PUBLISHER / 'SKILL.md').read_text())
 
+    def test_mandatory_preflight_is_required_not_an_optional_skill_tip(self):
+        lino = (LINOTYPE / 'SKILL.md').read_text()
+        estate = (PUBLISHER / 'SKILL.md').read_text()
+        ref = (LINOTYPE / 'references/bookshelf-published-frontend.md').read_text()
+        for text in (lino, estate, ref):
+            self.assertIn('publication_closure.py', text)
+            self.assertIn('/estate/essays/', text)
+            self.assertIn('EstatePublisher', text)
+        self.assertIn('MUST execute', lino)
+        self.assertIn('not eligible for activation', estate)
+        self.assertIn('refuse activation', estate)
+        self.assertIn('PUBLICATION_CLOSURE_REFUSED', lino)
+        self.assertIn('PUBLISHER PREFLIGHT BINDING NOT ESTABLISHED', estate)
+
+    def test_stage_mismatch_must_not_be_accepted_as_live_success(self):
+        estate = (PUBLISHER / 'SKILL.md').read_text()
+        lino = (LINOTYPE / 'SKILL.md').read_text()
+        self.assertIn('mandatory refusal', lino)
+        self.assertIn('stale Essays index', estate)
+        self.assertIn('source preflight', lino)
+        self.assertIn('independently re-run', estate)
+        self.assertIn('original Reader', estate)
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -2,6 +2,10 @@
 
 **Writer-pinned frontend decision (16 November 2026).** Source owner: `Fountain-Coach/fountain.coach`, `scenarios/press-books/BOOKSHELF-TEMPLATE-MAINTENANCE.md`, initial source commit `54ac999f65d8d81a9c74aae7a173c343cd6dcab7`. That source decision governs the requested scope; this FCIS Skill explains the procedure, not a second implementation or publication authority.
 
+## Mandatory source-locked execution (17 November 2026)
+
+Before any Fountain Press staging release that changes an admitted book, essay, Reader, gallery, membership or catalogue, run the existing source-owned compositor, `scenarios/press-books/publication_closure.py --root <immutable-candidate> --predecessor <active-predecessor> --lane staging [--expected-work <id>]` and the owning `verify_published_frontend_stage.py`. Require PASS on that exact source-bounded candidate before the native EstatePublisher activation; refuse a missing/failed result rather than asking the writer to notice stale collections. The current Essays collection entrance `/estate/essays/` must resolve to the same composed direct Essays Reader and source inventory as `/estate/books/essays/`, not an obsolete independently maintained static list. Preserve historical individual work routes. Re-run closure and independent HTTP/browser readback on the actual activated staging release. The 17 November negative witness is v219: the essay is in Reader and catalogue but the older Essays index omits it. The repaired overlay passed the preflight offline; this alone does not activate staging.
+
 ## Think like a deterministic CMS, not a carousel
 
 Existing Git/source admission, applicable Reframe/FountainStore editorial state and immutable published release records supply *data authority*. Fountain Press Linotype is the existing HTML/CSS/JavaScript frontend and compositor. Its Bookshelf is a derived **view** of admitted, published collections, not a hard-coded two-book or three-book navigation controller. A versioned immutable static HTML/JSON projection is sufficient for a public static site; do **not** require an always-on database API, another CMS, a new reader, or a second publisher.

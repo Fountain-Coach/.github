@@ -5,6 +5,8 @@
 Before engineering, routing, publication or repository maintenance, read
 [FCIS Goal Fidelity and Non-Invention](docs/FCIS-Non-Invention-and-Goal-Fidelity.md).
 
+**Mandatory Fountain Press publication closure (writer, 17 November 2026):** For every source-admitted book/essay/Reader/Bookshelf staging mutation, the existing Linotype composer and source-owned `scenarios/press-books/publication_closure.py` parity validator must execute before native EstatePublisher activation, including the historical `/estate/essays/` entrance, canonical Bookshelf, library, direct books, catalogue, media and metadata. A missing or failing proof refuses staging; independently verify the activated route inventory and preserve rollback. Do not hand-edit active staging, substitute a parallel CMS/publisher or count a direct essay HTTP 200 as integration. The existing `linotype-estate-template` and `estate-publisher-deployment` Skills maintain this obligation; source procedure is not proof of admitted publisher enforcement.
+
 **Mandatory:** keep the requested outcome fixed; inspect existing functioning
 capabilities first; distinguish observed/proven/documented/inferred/proposed;
 never add a prerequisite to the DoD without a reproduced failure and an
