@@ -17,3 +17,9 @@ Reject: unknown workflow or input key, wrong or dirty source revision, absent ca
 ## Acceptance boundary
 
 Local Go tests prove code behavior. Host admission requires registered IDL/Kit adapter, release digest, trusted policy and persistent Store correlation. Live acceptance requires a current independently witnessed owner-selected Host readback after service restart and lease renewal. Source promotion and ChatGPT plugin sync are separate operations, with canonical Git and the unchanged plugin identity.
+
+## Regression: do not repeat the 17 November three-hour escalation
+
+**Original goal:** a usable FCIS Go migration Skill plus deterministic Go Build instrument. **Observed:** Go worker, Linux sandbox and Swift Host adapter became SOURCE-TESTED (seven focused native tests), but a live `workstation.go.verify` grant, FountainStore terminal and ninth ChatGPT installed Skill were not established. Continuing into issuer redesign, repeated SwiftPM rebuilds and provider synchronization did not satisfy the live DoD.
+
+**Correct bounded response to the same facts:** inspect the installed registry and existing `host.describe`-only grant first. If `workstation.go.verify` is not admitted, report the exact missing authorization and **stop**; do not write another issuer/Host/Store adapter under a generic "proceed." If the task is explicitly *source implementation*, limit it to one tested candidate and one focused repair, separate Git proof from runtime admission, then stop at the 15-minute hard limit. A source-merged PR or compiler success is not a live grant or hosted plugin version. Do not trade another three-hour development loop for an unobserved acceptance predicate.
