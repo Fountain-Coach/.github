@@ -1,0 +1,3 @@
+interface:
+  display_name: "FCIS Go Runtime Migration"
+  short_description: "Migrate FCIS services to Go using bounded build instruments"

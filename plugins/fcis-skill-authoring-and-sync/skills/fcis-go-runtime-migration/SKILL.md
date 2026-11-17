@@ -1,0 +1,27 @@
+---
+name: fcis-go-runtime-migration
+description: Migrate Fountain Coach FCIS headless control-plane services from Swift to Go, or maintain, compile and test the Go FCIS runtime. Use for FCIS Go migration, Go Host agents, fleet enrollment and grant-renewal architecture, MCP services, replacing SwiftPM server builds, Go build/validation requests and deterministic release acceptance. Retain FountainStore, MIDI2 IDL, native Apple adapters and existing host lifecycle authority.
+---
+
+# FCIS Go Runtime Migration
+
+Use the existing `fountain-coach-instrument-creation` lifecycle for instrument implementation. This skill coordinates a bounded migration slice and selects an *admitted* deterministic Go build instrument; it grants no execution, deployment or Store authority.
+
+## First resolve, then act
+
+1. Read the current `Fountain-Coach/.github` goal-fidelity standard, the owning runtime repository's `AGENTS.md` and active `PLANS.md` phase, and the bounded `governance-read` result (07, 08, 91, 93 and 160 as applicable). Inspect live versions, grants, release paths and the existing Swift seam before planning a replacement. Keep the user-approved goal fixed: **Go-first FCIS control plane**, not Go-only Reframe or FountainStore.
+2. Name one component and its current Swift entrypoints, callers, Store effects, signed identity, grant checks, MIDI2 contract, scenario and acceptance authority. Do not start a wholesale rewrite or rewrite already proven native Apple capability adapters.
+3. Implement the same contract in a Go-owned candidate with explicit module and pinned source revision. Keep model/provider integration, owner policy, authorization, native MIDI2, secrets and FountainStore authority at existing admitted boundaries. No new API vocabulary, second Store, peer privilege or machine re-enrollment.
+4. For build/test, resolve the **live** FCIS instrument registry for `fountaincoach.go-build@0.1.0`, operation `workstation.go.verify`, through existing `reframe/capability.invoke` / `reframe/capability.event`. Select only an admitted workflow (`fcis.unit` or `fcis.verify`) and supply typed `action`, `workflow`, 40-character source revision, correlation and idempotency IDs. Never supply shell commands, paths, toolchain overrides, mount locations or credentials as model input.
+5. If the Go Build instrument is unadmitted, stop **operational dispatch** with `UNAVAILABLE — Go Build Instrument not admitted`. For *implementing the candidate*, use `fountain-coach-instrument-creation` and its isolated development tests; do not disguise local Go commands as an admitted FCIS execution, or fall back to Swift/Xcode/macOS build pollution.
+6. The native Host must attest the executable, trusted source revision, owner grant, approved isolated build filesystem, bounded timeout, exclusive lease, original source status and read-only Store binding before execution. The instrument executes only fixed Go commands. Source tests, compiler success, Host receipts and runtime acceptance are distinct evidence classes.
+7. Release/update remains with the existing `fountaincoach.host-lifecycle@0.1.0` instrument **only after it is itself admitted**; its deployment adapter owns immutable promotion, rollback and issuer/Host two-Store proof. A Go build receipt does not grant release authority. Use no manual SSH/Caddy/service replacement as a substitute.
+8. After each migrated component, verify API/IDL parity, negative grants/replay/refusal, persistence, start/restart, renewal across the 24-hour grant boundary and independent owner-selected Host readback where relevant. Name the actual source revision, executable digest, test result, Store receipt and unmet gates. Stop after the bounded accepted result; do not reopen the prior Swift cleanup loop.
+
+## Boundaries and current state
+
+The Go Build Instrument v0.1.0 is a **tested candidate**, not yet registered or callable from the production FCIS Host. Its Go library currently performs bounded local builds and emits a non-Store receipt when supplied with a host-validated authority object. That object is not a signature and must never be treated as standalone admission. See `Fountain-Coach/midi2-gpu-fabric/docs/fcis-go-build-instrument-v0.1.0.md` and `apps/estate-publisher/Scenarios/fcis-go-build-instrument-20261117.yaml`.
+
+The existing runtime repository's maintenance Kit currently declares Swift-only operation ownership. This is an **explicit migration boundary**: do not quietly change its existing behavior or claim a Go worker was admitted under that rule. The owner-approved Go-first direction authorizes developing a candidate and recording the contract change; a separate governed admission/release must reconcile the Kit/Host binding.
+
+Read [ownership-and-acceptance.md](references/ownership-and-acceptance.md) for component selection and finite proof. Do not create ZIP archives: canonical FCIS Skills are Git-owned in `Fountain-Coach/.github` and projected through the existing reviewed plugin.

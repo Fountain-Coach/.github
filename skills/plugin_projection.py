@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Project all eight source-admitted canonical FCIS Skills into one existing GitHub-backed plugin.
+"""Project all nine source-admitted canonical FCIS Skills into one existing GitHub-backed plugin.
 
 The plugin identity stays unchanged; this performs only derived Git file changes.
 It never installs or promotes a hosted ChatGPT version.
@@ -19,10 +19,12 @@ MIRROR_PATH = PLUGIN_PATH / "skills" / SKILL
 MARKETPLACE_PATH = Path(".agents/plugins/marketplace.json")
 WORKSPACE_PLUGIN_ID = "Plugin_fb9e0937c59c8191b9fa077fa5ea53ef"
 
-# Fixed reviewed inventory: the writer explicitly authorized the eighth
-# Swift Build caller skill on 16 November; further identities require separate admission.
+# Fixed reviewed inventory: the writer authorized eight canonical Skills through
+# 16 November and the ninth Go migration Skill on 17 November.
+# Further identities require separate review and admission.
 CANONICAL_SKILLS = (
     "estate-publisher-deployment",
+    "fcis-go-runtime-migration",
     "fcis-skill-authoring-and-sync",
     "fcis-owner-access",
     "fcis-swift-build",
@@ -89,7 +91,7 @@ def inspect(root=ROOT):
     if not interface.get("displayName"):
         raise ProjectionError("Plugin display name missing")
 
-    # One installed workspace plugin, not eight new installations.
+    # One installed workspace plugin, not nine new installations.
     if market.get("name") != "fountain-coach" or len(market.get("plugins", [])) != 1:
         raise ProjectionError("Marketplace must retain the single existing plugin")
     item = market["plugins"][0]
@@ -112,7 +114,7 @@ def inspect(root=ROOT):
         raise ProjectionError("Canonical Skill inventory has changed; explicit review required")
     records = {i["name"]: i for i in declared}
     if set(records) != set(CANONICAL_SKILLS):
-        raise ProjectionError("Canonical Skill inventory differs from reviewed eight")
+        raise ProjectionError("Canonical Skill inventory differs from reviewed nine")
 
     source, digests = {}, {}
     for name in CANONICAL_SKILLS:
