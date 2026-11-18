@@ -1,0 +1,4704 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Fountain Coach FCIS — Standalone Go HTTP API",
+    "version": "0.3.0",
+    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners.",
+    "contact": {
+      "name": "Fountain Coach FCIS",
+      "url": "https://github.com/Fountain-Coach/.github"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://fcis.fountain.coach",
+      "description": "Target production issuer origin. Current routing and Go acceptance are NOT_ESTABLISHED by this source."
+    }
+  ],
+  "tags": [
+    {
+      "name": "Discovery",
+      "description": "Public OAuth and protected-resource metadata; not grants."
+    },
+    {
+      "name": "OAuth",
+      "description": "OAuth client registration, consent, PKCE token and refresh lifecycle."
+    },
+    {
+      "name": "Passkeys",
+      "description": "Owner WebAuthn ceremony and session; restricted first-owner bootstrap is not a public registration endpoint."
+    },
+    {
+      "name": "MCP",
+      "description": "Authenticated MCP JSON-RPC transport, not independent tool admission."
+    },
+    {
+      "name": "Owner",
+      "description": "Owner inventory and scoped grant management. A signed enrolled machine is not necessarily online or authorized for instrument execution."
+    },
+    {
+      "name": "Pairing",
+      "description": "Explicit owner-controlled pairing transitions, distinct from final machine admission and operation grants."
+    },
+    {
+      "name": "Machine",
+      "description": "Machine-origin proof/activation with signed device messages and without browser Origin, Cookie or Authorization."
+    },
+    {
+      "name": "Reference",
+      "description": "Private, read-only HTTP contract for both human and machine reasoning; does not call an instrument."
+    },
+    {
+      "name": "Host Transport",
+      "description": "Machine-signed enrollment, renewal, discovery, channel probe and frame exchange."
+    },
+    {
+      "name": "Operations",
+      "description": "Private process health only, not a public execution admission."
+    }
+  ],
+  "x-fcis-exposure": "organization-canonical-source-target-contract",
+  "x-fcis-relationship": {
+    "issuer": "https://fcis.fountain.coach/",
+    "resource": "https://fcis.fountain.coach/mcp",
+    "ownerUI": "https://access.fountain.coach/manage/",
+    "persistence": "Fresh FCIS-owned Go-native FountainStore instance; on-disk schema and write protocol are external to OpenAPI",
+    "contractAuthority": "This document is the only canonical FCIS-owned HTTP OpenAPI. FCIS-STACK.md independently owns system architecture. Legacy domain OpenAPI becomes a checked projection or archived predecessor only.",
+    "notProductionProof": true
+  },
+  "x-fcis-adjacent-standards": {
+    "oauthMetadata": "RFC 8414",
+    "protectedResourceMetadata": "RFC 9728",
+    "oauthSecurity": "RFC 9700 and authorization code with PKCE S256",
+    "mcp": "Model Context Protocol Streamable HTTP and JSON-RPC 2.0 messages within /mcp",
+    "midi2": "Fountain-Coach/midi-backplane IDL and MIDI-CI, not OpenAPI",
+    "kit": "FCIS-KIT typed capabilities and mechanical constraints, not generated HTTP endpoints",
+    "store": "Fountain-Coach/Fountain-Store storage format, transactional record/evidence semantics",
+    "providerAdapters": "Official upstream OpenAPI pinned separately; Stripe not an FCIS core endpoint"
+  },
+  "x-fcis-not-admitted": [
+    "automatic online/health/last-seen monitoring",
+    "disconnect an enrolled Host",
+    "machine credential rotation and compromise recovery",
+    "invite/remove an additional human principal",
+    "new global administrative roles, generic machine administration",
+    "public self-provisioning or bypass of signed owner provision",
+    "claim that approved-pending-channel equals admitted/verified"
+  ],
+  "paths": {
+    "/oauth/owner/hosts": {
+      "get": {
+        "operationId": "readOwnerFleet",
+        "summary": "Discover issuer-enrolled Hosts and current grant status",
+        "tags": [
+          "Owner"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "description": "Use to identify signed issuer-known machines and the latest enrollment/admission states. This reads the issuer's FountainStore projection; it does not contact the Host, verify reachability, enumerate installed instruments, authorize an MCP client, or execute a tool. The configured issuer execution target is not a separately enrolled machine. An admission marked verified concerns the existing narrow Host grant, not per-client callability. Select describeSelectedHost for a separate, correlated read-only Host job.",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Browsers send an Origin from the issuer allowlist. An unknown Origin is refused; non-browser read clients may omit it on applicable paths."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fresh issuer Store projection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerFleetInventory"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query/body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Owner authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Endpoint or target unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Issuer/Host readback unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Identify issuer-known target IDs and current enrollment/admission before choosing a Host.",
+          "notFor": "Online status, complete instrument discovery, per-client tool callability or execution.",
+          "effect": "read-only",
+          "evidence": "Issuer Store observation time, not remote Host receipt."
+        },
+        "x-fcis-predecessor-operation": {
+          "implementation": "swift-handler-implemented",
+          "production": "deployed-https-auth-boundary-verified-owner-session-not-established",
+          "sourceOwner": "FountainHostMCPOAuthHandler",
+          "sourceConstant": "ownerHostsPath"
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed"
+      }
+    },
+    "/oauth/owner/host/describe": {
+      "get": {
+        "operationId": "describeSelectedHost",
+        "summary": "Inspect one selected admitted Host through host.describe",
+        "tags": [
+          "Owner"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "description": "Use to obtain an actual read-only Host description from the configured execution Host or one exact issuer-admitted opaque Host target. Owner authentication, target routing and current Host grant must all succeed. The result requires matching correlation, job identity and native Host/Store readback. Do not infer fleet-wide health or the ability to call any other instrument from a successful description.\nGo target removes the predecessor's legacy Basic fallback; passkey owner authentication required.",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Browsers send an Origin from the issuer allowlist. An unknown Origin is refused; non-browser read clients may omit it on applicable paths."
+          },
+          {
+            "name": "host",
+            "in": "query",
+            "required": false,
+            "description": "Exact opaque issuer-admitted target ID. Omit to inspect configured issuer execution Host; never accept a URL/port/IP or machine alias.",
+            "schema": {
+              "$ref": "#/components/schemas/HostTargetID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One verified, Store-backed Host job",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostObservation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query/body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Owner authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Endpoint or target unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Issuer/Host readback unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Verify the identity and bounded description of one selected Host.",
+          "notFor": "Arbitrary commands, fleet enumeration, all-tools discovery or persistent health.",
+          "effect": "read-only-host-operation",
+          "evidence": "Correlated Host job ID, terminal result and Store-backed evidence."
+        },
+        "x-fcis-predecessor-operation": {
+          "implementation": "swift-handler-implemented",
+          "production": "already-live-accepted",
+          "sourceOwner": "FountainHostMCPOAuthHandler",
+          "sourceConstant": "ownerHostDescribePath"
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed"
+      }
+    },
+    "/oauth/owner/hosts/pair/begin": {
+      "post": {
+        "operationId": "beginHostPair",
+        "summary": "Begin an owner-controlled Host pairing challenge",
+        "tags": [
+          "Pairing"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "description": "Use when the owner intends to pair a known machine with a pinned artifact digest. A verified passkey session and allowed browser Origin protect this mutation; it records a bounded challenge for subsequent device-signed proof. No Host is enrolled, contacted or granted executable permissions by creating this challenge.",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Exact browser Origin must be on the issuer allowlist. No Origin is a 403 on owner pairing routes."
+          }
+        ],
+        "x-fcis-owner-intent": "host.pair.begin",
+        "requestBody": {
+          "description": "JSON body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PairBeginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pairing request created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PairStart"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or non-exact request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Owner passkey required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Wrong Origin or refused proof",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pairing unavailable or unknown",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Pairing replay/conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Pairing expired",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Pairing capacity exhausted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Issuer pairing storage unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Start pairing for a selected machine and release artifact.",
+          "notFor": "Machine admission, Host liveness or capability authorization.",
+          "effect": "creates-pairing-challenge",
+          "evidence": "Issuer-stored request ID, target ID, challenge and expiry."
+        },
+        "x-fcis-predecessor-operation": {
+          "implementation": "swift-handler-implemented",
+          "production": "source-implemented-not-live-accepted",
+          "sourceOwner": "FountainHostMCPOAuthHandler",
+          "sourceConstant": "ownerHostPairBeginPath"
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed"
+      }
+    },
+    "/oauth/owner/hosts/pair/status": {
+      "get": {
+        "operationId": "readHostPairStatus",
+        "summary": "Inspect an existing owner-bound Host pairing request",
+        "tags": [
+          "Pairing"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "description": "Use with one exact issuer requestID to see whether a device proof or owner decision is still required. Awaiting proof, proved awaiting owner, approved pending channel, denied and expired are different states. Approved-pending-channel is not enrolled, reachable, per-client authorized or callable.",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Exact browser Origin must be on the issuer allowlist. No Origin is a 403 on owner pairing routes."
+          },
+          {
+            "name": "requestID",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Opaque issuer pairing request ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stored pairing decision status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PairStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or non-exact request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Owner passkey required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Wrong Origin or refused proof",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pairing unavailable or unknown",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Pairing replay/conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Pairing expired",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Pairing capacity exhausted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Issuer pairing storage unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Review progress and remaining requirements for a specific pairing.",
+          "notFor": "Implicit approval, Host connectivity, completed enrollment or tool discovery.",
+          "effect": "read-only",
+          "evidence": "Issuer pairing state and expiry."
+        },
+        "x-fcis-predecessor-operation": {
+          "implementation": "swift-handler-implemented",
+          "production": "source-implemented-not-live-accepted",
+          "sourceOwner": "FountainHostMCPOAuthHandler",
+          "sourceConstant": "ownerHostPairStatusPath"
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed"
+      }
+    },
+    "/oauth/owner/hosts/pair/decide": {
+      "post": {
+        "operationId": "decideHostPair",
+        "summary": "Approve or deny a verified machine fingerprint",
+        "tags": [
+          "Pairing"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "description": "Use only for an explicit owner decision on a fingerprint from independently verified machine proof. The passkey-authenticated request requires an allowlisted browser Origin, exact decision and owner intent header. Approving the fingerprint updates the decision state; separately signed machine-channel admission remains required.",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Exact browser Origin must be on the issuer allowlist. No Origin is a 403 on owner pairing routes."
+          }
+        ],
+        "x-fcis-owner-intent": "host.pair.decide",
+        "requestBody": {
+          "description": "JSON body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PairDecisionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verified pairing state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PairStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or non-exact request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Owner passkey required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Wrong Origin or refused proof",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pairing unavailable or unknown",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Pairing replay/conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Pairing expired",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Pairing capacity exhausted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Issuer pairing storage unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Record a deliberate owner approve/deny decision about one proven machine.",
+          "notFor": "Self-admission, skipping proof, issuing arbitrary tool grants or proving connectivity.",
+          "effect": "owner-decision",
+          "evidence": "Issuer-stored pairing decision; no Host job receipt."
+        },
+        "x-fcis-predecessor-operation": {
+          "implementation": "swift-handler-implemented",
+          "production": "source-implemented-not-live-accepted",
+          "sourceOwner": "FountainHostMCPOAuthHandler",
+          "sourceConstant": "ownerHostPairDecidePath"
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed"
+      }
+    },
+    "/oauth/host/enrollment/prove": {
+      "post": {
+        "operationId": "submitSignedMachinePairProof",
+        "summary": "Submit a device-signed response to a pairing challenge",
+        "tags": [
+          "Machine"
+        ],
+        "security": [],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "description": "Use from the machine that received the issuer challenge. Supply request ID, public key and signature; browser Origin, Cookie and Authorization must all be absent. The issuer verifies possession of the matching machine key. The machine cannot approve itself, create owner trust or grant its own operations.",
+        "requestBody": {
+          "description": "JSON body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PairProofRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Machine proof recorded, awaiting explicit owner decision",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PairStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or non-exact request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Owner passkey required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Wrong Origin or refused proof",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pairing unavailable or unknown",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Pairing replay/conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Pairing expired",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Pairing capacity exhausted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Issuer pairing storage unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Complete a previously initiated device-signature proof.",
+          "notFor": "Browser login, self-enrollment, automatic owner approval or capability admission.",
+          "effect": "records-machine-proof",
+          "evidence": "Issuer pairing state awaiting an owner decision."
+        },
+        "x-fcis-predecessor-operation": {
+          "implementation": "swift-handler-implemented",
+          "production": "source-implemented-not-live-accepted",
+          "sourceOwner": "FountainHostMCPOAuthHandler",
+          "sourceConstant": "hostPairProofPath"
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed"
+      }
+    },
+    "/oauth/host/enrollment/activate": {
+      "post": {
+        "operationId": "activatePretrustedMachine",
+        "summary": "Activate one previously owner-signed machine identity",
+        "tags": [
+          "Machine"
+        ],
+        "security": [],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "description": "Use from an authorized headless machine with an exact previously owner-signed issuer trust record and matching release artifact. The issuer verifies machine signature, nonce, timestamp, target, key and release identity. This signed-device route cannot receive browser Origin, Cookie or Authorization. A resulting admission does not prove reachability, MCP per-client scope or new tool callability.",
+        "requestBody": {
+          "description": "JSON body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MachineActivationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Issuer and Host admission receipt (NOT Host health)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineAdmissionReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request/body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Machine not trusted or mismatched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Enrollment handler unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Replayed/already admitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Provision expired",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Enrollment Store unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Activate a previously owner-approved device without an iPad browser ceremony.",
+          "notFor": "Creating owner pretrust, silently enlarging grants, probing health or self-authorization.",
+          "effect": "machine-admission",
+          "evidence": "Issuer and Host admission receipts; not an executed instrument job."
+        },
+        "x-fcis-predecessor-operation": {
+          "implementation": "swift-handler-implemented",
+          "production": "source-implemented-not-live-accepted",
+          "sourceOwner": "FountainHostMCPOAuthHandler",
+          "sourceConstant": "hostMachineActivatePath"
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed"
+      }
+    },
+    "/oauth/owner/grants": {
+      "get": {
+        "operationId": "readOwnerGrants",
+        "summary": "Inspect registered OAuth clients and their authorization states",
+        "tags": [
+          "Owner"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "description": "Use to audit issuer client registrations and resource-scoped OAuth authorization families. A registered client is not necessarily granted; active, expired and revoked are distinct. This endpoint does not enumerate a Host's installed instruments or prove a particular operation is callable. The response never includes access or refresh tokens.\nGo target removes the predecessor's legacy Basic fallback; passkey owner authentication required.",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Browsers send an Origin from the issuer allowlist. An unknown Origin is refused; non-browser read clients may omit it on applicable paths."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read-only FountainAuthKit issuer snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerGrantOverview"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query/body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Owner auth required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Reader not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Issuer Store snapshot unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Inspect which clients and resource grants exist and their current state.",
+          "notFor": "Instrument inventory, token retrieval, remote Host health or execution evidence.",
+          "effect": "read-only",
+          "evidence": "FountainAuthKit issuer snapshot and observation timestamp."
+        },
+        "x-fcis-predecessor-operation": {
+          "implementation": "swift-handler-implemented",
+          "production": "already-live-accepted",
+          "sourceOwner": "FountainHostMCPOAuthHandler",
+          "sourceConstant": "ownerGrantsPath"
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed"
+      }
+    },
+    "/oauth/owner/revoke": {
+      "post": {
+        "operationId": "revokeOwnerGrant",
+        "summary": "Revoke one precisely identified client/resource authorization",
+        "tags": [
+          "Owner"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "description": "Use for an explicitly owner-authorized revocation of a specific OAuth client, resource and authorization event with the native revoke instrument, reason, correlation, idempotency and intent header. The returned Store-backed revocation receipt records the issuer mutation but alone cannot prove that subsequent resource requests and refresh attempts are rejected; independently verify denial.\nGo target removes the predecessor's legacy Basic fallback; passkey owner authentication required.",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Browsers send an Origin from the issuer allowlist. An unknown Origin is refused; non-browser read clients may omit it on applicable paths."
+          }
+        ],
+        "x-fcis-owner-intent": "fountaincoach/authorization.revoke",
+        "requestBody": {
+          "description": "JSON body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerRevokeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Store-backed typed revocation receipt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerRevokeReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid binding, body or intent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Owner auth required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Owner refused/not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Revocation handler not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Revocation receipt not independently verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Withdraw one exact client grant with an auditable operation receipt.",
+          "notFor": "Machine unenrollment, broad account resets or asserting all downstream tool calls were denied without readback.",
+          "effect": "revokes-client-grant",
+          "evidence": "Typed Store receipt plus separately witnessed refresh and protected-resource refusal."
+        },
+        "x-fcis-predecessor-operation": {
+          "implementation": "swift-handler-implemented",
+          "production": "source-and-earlier-live-readback",
+          "sourceOwner": "FountainHostMCPOAuthHandler",
+          "sourceConstant": "ownerRevokePath"
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed"
+      }
+    },
+    "/oauth/owner/reference/openapi": {
+      "get": {
+        "operationId": "readOwnerOpenAPIReference",
+        "summary": "Read the private FCIS owner management OpenAPI contract",
+        "description": "Use after owner passkey sign-in to inspect versioned issuer HTTP management routes, operation intent, JSON Schema, authentication and error behavior. The issuer returns its source-embedded OpenAPI document with no-store privacy. This human/machine reference is not a public API, executable tool, live MCP tools/list, Host capability registry or permission grant.",
+        "tags": [
+          "Reference"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Allowlisted existing Access origin for browsers; never a public wildcard."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authenticated, source-verified current internal OpenAPI 3.1 document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerOpenAPIDocument"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected query/body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Existing owner passkey required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin refused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Reference not configured by issuer build",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Learn which documented issuer HTTP operation fits a task and inspect its typed contract.",
+          "notFor": "Executing instruments, fetching live MCP tool discovery, altering grants or proving runtime deployment.",
+          "effect": "read-only",
+          "evidence": "Source-embedded OpenAPI document; no Host terminal receipt."
+        },
+        "x-fcis-predecessor-operation": {
+          "implementation": "swift-handler-implemented",
+          "production": "source-implemented-release-verified-separately",
+          "sourceOwner": "FountainHostMCPOAuthHandler",
+          "sourceConstant": "ownerReferencePath"
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed"
+      }
+    },
+    "/.well-known/oauth-authorization-server": {
+      "get": {
+        "operationId": "readOAuthServerMetadata",
+        "summary": "Discover FCIS OAuth issuer and PKCE endpoints",
+        "tags": [
+          "Discovery"
+        ],
+        "description": "RFC 8414 public discovery. Does not authorize any client.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Issuer metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthServerMetadata"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "405 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Discover FCIS OAuth issuer and PKCE endpoints",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "read-only",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/.well-known/oauth-protected-resource": {
+      "get": {
+        "operationId": "readMCPProtectedResourceMetadata",
+        "summary": "Discover FCIS MCP resource and authorization servers",
+        "tags": [
+          "Discovery"
+        ],
+        "description": "RFC 9728 metadata for /mcp.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Resource metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProtectedResourceMetadata"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "405 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Discover FCIS MCP resource and authorization servers",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "read-only",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/.well-known/jwks.json": {
+      "get": {
+        "operationId": "readOAuthSigningPublicKeys",
+        "summary": "Read public OAuth verification keys",
+        "tags": [
+          "Discovery"
+        ],
+        "description": "Public keys only; excludes signing secrets.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Public JSON Web Key Set",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JSONWebKeySet"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "405 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Read public OAuth verification keys",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "read-only",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/register": {
+      "post": {
+        "operationId": "registerOAuthClient",
+        "summary": "Register a bounded OAuth client and exact redirect URIs",
+        "tags": [
+          "OAuth"
+        ],
+        "description": "Dynamic client registration; server validates exact redirect schemes/origins. Registration is not an execution grant.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "description": "Typed request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OAuthClientRegistration"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registered client, no grant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthClientRegistrationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "429 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Register a bounded OAuth client and exact redirect URIs",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "bounded HTTP effect per contract",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/authorize": {
+      "get": {
+        "operationId": "beginOAuthAuthorization",
+        "summary": "Start PKCE authorization and owner consent",
+        "tags": [
+          "OAuth"
+        ],
+        "description": "Browser authorization-code + S256 PKCE; requires a verified owner login and explicit client/resource scope approval. Returns HTML/redirect, not an API bearer grant.",
+        "security": [],
+        "parameters": [
+          {
+            "name": "response_type",
+            "in": "query",
+            "required": true,
+            "description": "Must be code",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "description": "Registered client ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "redirect_uri",
+            "in": "query",
+            "required": {
+              "type": "string"
+            },
+            "description": "Exact pre-registered redirect",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": true,
+            "description": "Requested scopes",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": true,
+            "description": "Client-generated CSRF state",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code_challenge",
+            "in": "query",
+            "required": true,
+            "description": "PKCE S256 verifier challenge",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code_challenge_method",
+            "in": "query",
+            "required": true,
+            "description": "S256 only",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "S256"
+              ]
+            }
+          },
+          {
+            "name": "resource",
+            "in": "query",
+            "required": false,
+            "description": "Exact FCIS MCP resource URL",
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML owner login/consent form",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Authorized redirect with code or refusal to pre-registered redirect URI"
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "429 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Start PKCE authorization and owner consent",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "read-only",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      },
+      "post": {
+        "operationId": "decideOAuthAuthorization",
+        "summary": "Submit owner-approved OAuth consent decision",
+        "tags": [
+          "OAuth"
+        ],
+        "description": "Consumes same-origin owner-authenticated consent; do not issue on inferred login or prefilled form alone.",
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "owner_passkey_consent": {
+                    "type": "string",
+                    "enum": [
+                      "approve",
+                      "deny"
+                    ]
+                  }
+                },
+                "required": [
+                  "owner_passkey_consent"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Exact redirect to pre-registered URI with code/state or OAuth error"
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Submit owner-approved OAuth consent decision",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "bounded HTTP effect per contract",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/token": {
+      "post": {
+        "operationId": "exchangeOrRefreshOAuthToken",
+        "summary": "Exchange PKCE authorization code or rotate refresh token",
+        "tags": [
+          "OAuth"
+        ],
+        "description": "Accept form-encoded authorization_code or refresh_token grant. Enforce client, exact redirect URI, PKCE verifier, audience and one-time rotation. All token-bearing responses are no-store.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "grant_type": {
+                    "type": "string",
+                    "enum": [
+                      "authorization_code",
+                      "refresh_token"
+                    ]
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  },
+                  "redirect_uri": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "code_verifier": {
+                    "type": "string"
+                  },
+                  "refresh_token": {
+                    "type": "string"
+                  },
+                  "resource": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "grant_type",
+                  "client_id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bearer and optional rotated refresh token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthTokenResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "429 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Exchange PKCE authorization code or rotate refresh token",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "bounded HTTP effect per contract",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/owner/passkeys/login": {
+      "get": {
+        "operationId": "readOwnerPasskeyLoginPage",
+        "summary": "Read origin-bound owner passkey login page",
+        "tags": [
+          "Passkeys"
+        ],
+        "description": "Untrusted public page only; no session is issued by GET. Do not expose security state or secrets.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "HTML sign-in page",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Read origin-bound owner passkey login page",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "read-only",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/owner/passkeys/login/options": {
+      "post": {
+        "operationId": "beginOwnerPasskeyLogin",
+        "summary": "Issue fresh bounded WebAuthn authentication challenge",
+        "tags": [
+          "Passkeys"
+        ],
+        "description": "No session yet; challenge and RP ID must match origin and expire.",
+        "security": [],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "WebAuthn challenge options",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasskeyOptions"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "429 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Issue fresh bounded WebAuthn authentication challenge",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "bounded HTTP effect per contract",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/owner/passkeys/enroll/options": {
+      "post": {
+        "operationId": "beginOwnerPasskeyEnrollment",
+        "summary": "Issue WebAuthn registration challenge after verified owner/bootstrap authority",
+        "tags": [
+          "Passkeys"
+        ],
+        "description": "Requires a recently authenticated owner or protected first-owner bootstrap; a public request alone cannot enroll a new owner.",
+        "security": [],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "WebAuthn challenge options",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasskeyOptions"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "429 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Issue WebAuthn registration challenge after verified owner/bootstrap authority",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "bounded HTTP effect per contract",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/owner/passkeys/login/verify": {
+      "post": {
+        "operationId": "verifyOwnerPasskeyLogin",
+        "summary": "Verify WebAuthn assertion and establish owner session",
+        "tags": [
+          "Passkeys"
+        ],
+        "description": "Verify correct origin, RP ID, challenge, public key signature, user verification, sign count, replay and bounded session or enrollment authority.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "description": "Typed request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasskeyCredentialAssertion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verified state, with Secure HttpOnly session cookie when logging in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerSessionResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "410 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "429 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Verify WebAuthn assertion and establish owner session",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "bounded HTTP effect per contract",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/owner/passkeys/enroll/verify": {
+      "post": {
+        "operationId": "verifyOwnerPasskeyEnrollment",
+        "summary": "Verify WebAuthn attestation and persist owner public credential",
+        "tags": [
+          "Passkeys"
+        ],
+        "description": "Verify correct origin, RP ID, challenge, public key signature, user verification, sign count, replay and bounded session or enrollment authority.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "description": "Typed request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasskeyCredentialAssertion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verified state, with Secure HttpOnly session cookie when logging in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerSessionResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "410 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "429 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Verify WebAuthn attestation and persist owner public credential",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "bounded HTTP effect per contract",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/owner/passkeys/logout": {
+      "post": {
+        "operationId": "logoutOwnerPasskeySession",
+        "summary": "Invalidate current owner browser session",
+        "tags": [
+          "Passkeys"
+        ],
+        "description": "Revokes current session; requires CSRF-resistant same-origin call. Does not revoke separate client OAuth grants.",
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Current browser session invalidated"
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Invalidate current owner browser session",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "bounded HTTP effect per contract",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/mcp": {
+      "post": {
+        "operationId": "invokeMCPProtocol",
+        "summary": "Exchange authenticated MCP JSON-RPC messages",
+        "tags": [
+          "MCP"
+        ],
+        "description": "JSON-RPC initialize, ping, tools/list and tools/call over MCP Streamable HTTP. Method-specific capability dispatch and typed instrument constraints are owned by admitted FCIS-KIT runtime, not this OpenAPI. Client bearer scope and current Host admission must be enforced.",
+        "security": [
+          {
+            "oauthBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Mcp-Session-Id",
+            "in": "header",
+            "required": false,
+            "description": "Optional MCP session identity when established by a compatible implementation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Typed request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MCPJSONRPCRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JSON-RPC envelope; a result alone is not an execution receipt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MCPJSONRPCResponse"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "MCP event stream if implemented; no stream support implied"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Accepted MCP notification without response body"
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "405 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "413 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "415 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "429 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Exchange authenticated MCP JSON-RPC messages",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "bounded HTTP effect per contract",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/healthz": {
+      "get": {
+        "operationId": "readFCISProcessHealth",
+        "summary": "Read Go FCIS process liveness on private listener",
+        "tags": [
+          "Operations"
+        ],
+        "description": "Private listener only; does not establish OAuth login, Host grant, FountainStore durability, public Caddy readiness or production cutover.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Process health, not capability proof",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "405 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-network-exposure": "private-loopback; MUST NOT add public Caddy route based solely on this operation",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Read Go FCIS process liveness on private listener",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "read-only",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/host/instruments/discover": {
+      "post": {
+        "operationId": "discoverMachineInstruments",
+        "summary": "Read owner-signed MIDI2 instrument identities from enrolled Host",
+        "tags": [
+          "Host Transport"
+        ],
+        "description": "Exact targetID, nonce, timestamp and machine signature. Read-only discovery; cannot assume every listed instrument is callable for this client.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "description": "Machine-signed JSON body; Origin, Cookie and Authorization MUST be absent",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MachineSignedRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated target result; execution and admission still separately verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostInstrumentDiscovery"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "410 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "429 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-machine-signed-body": true,
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Read owner-signed MIDI2 instrument identities from enrolled Host",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "bounded HTTP effect per contract",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/host/grants/renew": {
+      "post": {
+        "operationId": "renewMachineGrant",
+        "summary": "Renew a bounded owner-trusted machine admission",
+        "tags": [
+          "Host Transport"
+        ],
+        "description": "Only an already owner-trusted matching machine can renew its bounded grant. Refuse altered key, scope, replay, expiry and stale authority.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "description": "Machine-signed JSON body; Origin, Cookie and Authorization MUST be absent",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MachineSignedRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated target result; execution and admission still separately verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineGrantReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "410 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "429 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-machine-signed-body": true,
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Renew a bounded owner-trusted machine admission",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "bounded HTTP effect per contract",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/host/channel/probe": {
+      "post": {
+        "operationId": "probeEnrolledHostChannel",
+        "summary": "Submit signed machine-channel reachability probe",
+        "tags": [
+          "Host Transport"
+        ],
+        "description": "Machine signature and pairing identity required; channel observation is not capability admission or a direct SSH tunnel.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "description": "Machine-signed JSON body; Origin, Cookie and Authorization MUST be absent",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HostChannelProbe"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated target result; execution and admission still separately verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostObservation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "410 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "429 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-machine-signed-body": true,
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Submit signed machine-channel reachability probe",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "bounded HTTP effect per contract",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/host/session/frame": {
+      "post": {
+        "operationId": "exchangeAuthenticatedHostSessionFrame",
+        "summary": "Exchange an authenticated bounded Host session frame",
+        "tags": [
+          "Host Transport"
+        ],
+        "description": "Only admitted target and authenticated session/sequence/nonce permitted. Typed Host frame is not arbitrary remote shell, and response requires actual terminal evidence.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "description": "Machine-signed JSON body; Origin, Cookie and Authorization MUST be absent",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HostSessionFrame"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated target result; execution and admission still separately verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostObservation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "410 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "429 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-machine-signed-body": true,
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Exchange an authenticated bounded Host session frame",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "bounded HTTP effect per contract",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    },
+    "/oauth/owner/hosts/channel/status": {
+      "get": {
+        "operationId": "readOwnerHostChannelStatus",
+        "summary": "Read last verified channel witness for owner-selected pairing",
+        "tags": [
+          "Host Transport"
+        ],
+        "description": "Owner-passkey-protected readback of a real channel witness; no fabricated online indicators.",
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "requestID",
+            "in": "query",
+            "required": true,
+            "description": "Existing owner-bound pairing request ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Store-correlated last channel witness",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostObservation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "403 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "409 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "410 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Read last verified channel witness for owner-selected pairing",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "read-only",
+          "evidence": "Runtime/Store witness required independently"
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ownerPasskeySession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "fcis_owner_session",
+        "description": "Go-owned, scoped Secure HttpOnly SameSite owner session on issuer HTTPS origin. No JavaScript access or Basic fallback for privileged administration."
+      },
+      "oauthBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Scoped OAuth resource access token; presence alone does not authorize a Host operation."
+      },
+      "legacyOwnerBasic": {
+        "description": "Predecessor-only Swift Basic mechanism. NOT authorized as an alternative for any standalone Go target operation."
+      }
+    },
+    "schemas": {
+      "HostTargetID": {
+        "type": "string",
+        "description": "Opaque issuer-admitted machine target UUID, never hostname, address or URL",
+        "pattern": "^host-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+      },
+      "FoundationDateSeconds": {
+        "type": "number",
+        "description": "Default Swift JSONEncoder Date representation: seconds since 2001-01-01 UTC, not ISO 8601."
+      },
+      "OwnerError": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Exact non-sensitive refusal code, e.g. owner_authentication_required, origin_not_allowed, host_not_enrolled, host_observation_unverified or owner_host_inventory_unavailable"
+          }
+        }
+      },
+      "OwnerFleetHost": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "selector",
+          "machine",
+          "kind",
+          "enrollmentState",
+          "authorizationState",
+          "capabilities"
+        ],
+        "properties": {
+          "selector": {
+            "type": "string",
+            "description": "issuer or opaque enrolled Host target ID"
+          },
+          "machine": {
+            "type": "string",
+            "description": "Configured issuer execution label or signed machine identity, never a raw IP address"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "issuer_execution",
+              "enrolled_machine"
+            ],
+            "description": "Configured issuer execution context or independently owner-signed enrolled machine."
+          },
+          "enrollmentState": {
+            "type": "string",
+            "enum": [
+              "not_applicable",
+              "provisioned",
+              "admitted"
+            ],
+            "description": "Issuer machine lifecycle, not network status: not_applicable, provisioned, admitted."
+          },
+          "authorizationState": {
+            "type": "string",
+            "enum": [
+              "inspect_only",
+              "not_verified",
+              "verified"
+            ],
+            "description": "Issuer's current signed grant verification: inspect_only for the configured issuer execution target, not_verified without current grant proof, verified when current machine admission checks pass. Never interpret as authorization for the OAuth client making the HTTP request."
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Canonical Host capability identity obtained from the current issuer grant. This schema deliberately has no hardcoded enum; source implementation must derive values from actual signed admissions."
+            },
+            "uniqueItems": true,
+            "description": "Names of issuer-projected permitted Host operations for this machine, not necessarily installed, routable or client-authorized MCP tools. The current handler emits host.describe or [] according to current admission."
+          }
+        },
+        "description": "One signed issuer fleet inventory member; neither a live Host observation nor a complete MCP tool catalog. The current native issuer emits only host.describe for a verified current grant. Future admitted capability identifiers must not be blocked by a fixed OpenAPI enumeration, but may be advertised only when backed by issuer/Host authority."
+      },
+      "OwnerFleetInventory": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "issuer",
+          "observedAt",
+          "hosts"
+        ],
+        "properties": {
+          "issuer": {
+            "type": "string",
+            "description": "Existing OAuth issuer URL",
+            "format": "uri"
+          },
+          "observedAt": {
+            "type": "string",
+            "description": "Issuer Store read time, ISO 8601, not a machine heartbeat.",
+            "format": "date-time"
+          },
+          "hosts": {
+            "type": "array",
+            "maxItems": 65,
+            "items": {
+              "$ref": "#/components/schemas/OwnerFleetHost"
+            }
+          }
+        },
+        "description": "Owner-passkey-protected issuer snapshot of enrollment and narrow grant admission; not reachability, complete instrument registry, or operation callability."
+      },
+      "HostObservation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "operation",
+          "jobID",
+          "correlationID",
+          "state",
+          "stdout",
+          "observedAt",
+          "evidence"
+        ],
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": [
+              "host.describe"
+            ]
+          },
+          "jobID": {
+            "type": "string",
+            "description": "Computed Host job receipt ID"
+          },
+          "correlationID": {
+            "type": "string",
+            "description": "Distinct access- UUID"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "succeeded"
+            ]
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Read-only Host description, <=4096 bytes (native server limit)"
+          },
+          "observedAt": {
+            "type": "string",
+            "description": "Issuer response ISO 8601 timestamp",
+            "format": "date-time"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "description": "A bounded, correlated Host job from the dedicated host.describe operation. This operation remains specifically host.describe and is not a generic instrument execution method."
+      },
+      "PairBeginRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "machine",
+          "artifactDigest"
+        ],
+        "properties": {
+          "machine": {
+            "type": "string",
+            "description": "Declared machine label"
+          },
+          "artifactDigest": {
+            "type": "string",
+            "description": "Expected SHA-256 hex",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      },
+      "PairStart": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requestID",
+          "targetID",
+          "machine",
+          "signingMessage",
+          "expiresAt",
+          "state"
+        ],
+        "properties": {
+          "requestID": {
+            "type": "string"
+          },
+          "targetID": {
+            "$ref": "#/components/schemas/HostTargetID"
+          },
+          "machine": {
+            "type": "string"
+          },
+          "signingMessage": {
+            "type": "string",
+            "description": "Issuer-generated message the real device must sign"
+          },
+          "expiresAt": {
+            "$ref": "#/components/schemas/FoundationDateSeconds"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "awaiting-device-proof"
+            ]
+          }
+        }
+      },
+      "PairStatus": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requestID",
+          "targetID",
+          "machine",
+          "artifactDigest",
+          "state",
+          "expiresAt"
+        ],
+        "properties": {
+          "requestID": {
+            "type": "string"
+          },
+          "targetID": {
+            "$ref": "#/components/schemas/HostTargetID"
+          },
+          "machine": {
+            "type": "string"
+          },
+          "fingerprint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional until machine proof is recorded; absent rather than null under default Swift JSONEncoder for nil."
+          },
+          "artifactDigest": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "awaiting-device-proof",
+              "machine-proved-pending-owner",
+              "approved-pending-channel",
+              "denied",
+              "expired"
+            ]
+          },
+          "expiresAt": {
+            "$ref": "#/components/schemas/FoundationDateSeconds"
+          }
+        }
+      },
+      "PairDecisionRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requestID",
+          "fingerprint",
+          "decision"
+        ],
+        "properties": {
+          "requestID": {
+            "type": "string"
+          },
+          "fingerprint": {
+            "type": "string",
+            "description": "Exact fingerprint of independent device proof",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "approve",
+              "deny"
+            ]
+          }
+        }
+      },
+      "PairProofRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requestID",
+          "publicKey",
+          "signature"
+        ],
+        "properties": {
+          "requestID": {
+            "type": "string"
+          },
+          "publicKey": {
+            "type": "string",
+            "description": "Base64-encoded device Ed25519 public key"
+          },
+          "signature": {
+            "type": "string",
+            "description": "Base64 signature over canonical pairing message"
+          }
+        }
+      },
+      "MachineActivationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "targetID",
+          "machine",
+          "machinePublicKey",
+          "artifactSHA256",
+          "nonce",
+          "signedAtMilliseconds",
+          "signature"
+        ],
+        "properties": {
+          "targetID": {
+            "$ref": "#/components/schemas/HostTargetID"
+          },
+          "machine": {
+            "type": "string"
+          },
+          "machinePublicKey": {
+            "type": "string",
+            "description": "Base64 of 32-byte machine key"
+          },
+          "artifactSHA256": {
+            "type": "string",
+            "description": "SHA-256 hex"
+          },
+          "nonce": {
+            "type": "string",
+            "description": "Base64 nonce"
+          },
+          "signedAtMilliseconds": {
+            "type": "integer",
+            "description": "Unix epoch milliseconds"
+          },
+          "signature": {
+            "type": "string",
+            "description": "Base64 Ed25519 signature"
+          }
+        }
+      },
+      "MachineAdmissionReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "targetID",
+          "machine",
+          "machineKeyID",
+          "issuerKeyID",
+          "audience",
+          "hostAdmission",
+          "issuerAdmission",
+          "hostAdmissionID",
+          "expiresAtMilliseconds",
+          "state"
+        ],
+        "properties": {
+          "targetID": {
+            "$ref": "#/components/schemas/HostTargetID"
+          },
+          "machine": {
+            "type": "string"
+          },
+          "machineKeyID": {
+            "type": "string"
+          },
+          "issuerKeyID": {
+            "type": "string"
+          },
+          "audience": {
+            "type": "string"
+          },
+          "hostAdmission": {
+            "type": "object",
+            "description": "Existing FCISAdmission Codable projection; authoritative typed Kit owns its shape",
+            "additionalProperties": true
+          },
+          "issuerAdmission": {
+            "type": "object",
+            "description": "Existing FCISAdmission Codable projection; authoritative typed Kit owns its shape",
+            "additionalProperties": true
+          },
+          "hostAdmissionID": {
+            "type": "string"
+          },
+          "expiresAtMilliseconds": {
+            "type": "integer"
+          },
+          "state": {
+            "type": "string",
+            "description": "Verified issuer admission result"
+          }
+        }
+      },
+      "OwnerGrant": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "familyID",
+          "authorizationEventID",
+          "clientID",
+          "resource",
+          "scopes",
+          "authorizedAt",
+          "expiresAt",
+          "status"
+        ],
+        "properties": {
+          "familyID": {
+            "type": "string"
+          },
+          "authorizationEventID": {
+            "type": "string"
+          },
+          "clientID": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string",
+            "format": "uri"
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "authorizedAt": {
+            "$ref": "#/components/schemas/FoundationDateSeconds"
+          },
+          "expiresAt": {
+            "$ref": "#/components/schemas/FoundationDateSeconds"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "expired",
+              "revoked"
+            ]
+          }
+        }
+      },
+      "OwnerGrantOverview": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "issuer",
+          "clientIDs",
+          "grants",
+          "observedAt"
+        ],
+        "properties": {
+          "issuer": {
+            "type": "string",
+            "format": "uri"
+          },
+          "clientIDs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "grants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OwnerGrant"
+            }
+          },
+          "observedAt": {
+            "$ref": "#/components/schemas/FoundationDateSeconds"
+          }
+        }
+      },
+      "OwnerRevokeRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "operation",
+          "instrumentId",
+          "issuer",
+          "resource",
+          "clientId",
+          "authorizationEventId",
+          "reason",
+          "correlationId",
+          "idempotencyKey"
+        ],
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": [
+              "fountaincoach/authorization.revoke"
+            ]
+          },
+          "instrumentId": {
+            "type": "string",
+            "description": "Existing FountainAuthInstrument.identity"
+          },
+          "issuer": {
+            "type": "string",
+            "format": "uri"
+          },
+          "resource": {
+            "type": "string",
+            "format": "uri"
+          },
+          "clientId": {
+            "type": "string"
+          },
+          "authorizationEventId": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "correlationId": {
+            "type": "string"
+          },
+          "idempotencyKey": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerRevokeReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "operation",
+          "instrumentID",
+          "issuer",
+          "resource",
+          "clientID",
+          "authorizationEventID",
+          "ownerSubject",
+          "reason",
+          "correlationID",
+          "idempotencyKey",
+          "lifecycle",
+          "terminal",
+          "evidence",
+          "recordedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "instrumentID": {
+            "type": "string"
+          },
+          "issuer": {
+            "type": "string",
+            "format": "uri"
+          },
+          "resource": {
+            "type": "string",
+            "format": "uri"
+          },
+          "clientID": {
+            "type": "string"
+          },
+          "authorizationEventID": {
+            "type": "string"
+          },
+          "ownerSubject": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "correlationID": {
+            "type": "string"
+          },
+          "idempotencyKey": {
+            "type": "string"
+          },
+          "lifecycle": {
+            "type": "string"
+          },
+          "terminal": {
+            "type": "boolean"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recordedAt": {
+            "$ref": "#/components/schemas/FoundationDateSeconds"
+          }
+        }
+      },
+      "OwnerOpenAPIDocument": {
+        "type": "object",
+        "description": "Self-contained current OpenAPI 3.1 JSON; server document generated from canonical contract at build time; this schema is a descriptive projection, not independent authority.",
+        "required": [
+          "openapi",
+          "info",
+          "servers",
+          "paths",
+          "components"
+        ],
+        "properties": {
+          "openapi": {
+            "type": "string",
+            "enum": [
+              "3.1.0"
+            ]
+          },
+          "info": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "servers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "paths": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "components": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "OAuthServerMetadata": {
+        "type": "object",
+        "properties": {
+          "issuer": {
+            "type": "string",
+            "description": "Exact FCIS issuer HTTPS origin",
+            "format": "uri"
+          },
+          "authorization_endpoint": {
+            "type": "string",
+            "description": "PKCE authorization endpoint",
+            "format": "uri"
+          },
+          "token_endpoint": {
+            "type": "string",
+            "description": "Authorization code and refresh endpoint",
+            "format": "uri"
+          },
+          "jwks_uri": {
+            "type": "string",
+            "description": "Public JSON Web Key Set",
+            "format": "uri"
+          },
+          "registration_endpoint": {
+            "type": "string",
+            "description": "Dynamic client registration endpoint",
+            "format": "uri"
+          },
+          "code_challenge_methods_supported": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "S256"
+              ]
+            }
+          },
+          "response_types_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "grant_types_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "token_endpoint_auth_methods_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "issuer",
+          "authorization_endpoint",
+          "token_endpoint",
+          "jwks_uri",
+          "registration_endpoint",
+          "code_challenge_methods_supported"
+        ],
+        "additionalProperties": false
+      },
+      "ProtectedResourceMetadata": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "type": "string",
+            "description": "Exact FCIS protected MCP resource",
+            "format": "uri"
+          },
+          "authorization_servers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "scopes_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "resource",
+          "authorization_servers"
+        ],
+        "additionalProperties": false
+      },
+      "JSONWebKeySet": {
+        "type": "object",
+        "properties": {
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kty": {
+                  "type": "string",
+                  "enum": [
+                    "OKP"
+                  ]
+                },
+                "crv": {
+                  "type": "string",
+                  "enum": [
+                    "Ed25519"
+                  ]
+                },
+                "alg": {
+                  "type": "string",
+                  "enum": [
+                    "EdDSA"
+                  ]
+                },
+                "use": {
+                  "type": "string",
+                  "enum": [
+                    "sig"
+                  ]
+                },
+                "kid": {
+                  "type": "string"
+                },
+                "x": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "kty",
+                "crv",
+                "kid",
+                "x"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "keys"
+        ],
+        "additionalProperties": false
+      },
+      "OAuthClientRegistration": {
+        "type": "object",
+        "properties": {
+          "redirect_uris": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "client_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "redirect_uris"
+        ],
+        "additionalProperties": false
+      },
+      "OAuthClientRegistrationResult": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string"
+          },
+          "redirect_uris": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "token_endpoint_auth_method": {
+            "type": "string",
+            "enum": [
+              "none"
+            ]
+          }
+        },
+        "required": [
+          "client_id",
+          "redirect_uris"
+        ],
+        "additionalProperties": false
+      },
+      "OAuthTokenResult": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "token_type": {
+            "type": "string",
+            "enum": [
+              "Bearer"
+            ]
+          },
+          "expires_in": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "refresh_token": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "scope": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token",
+          "token_type",
+          "expires_in"
+        ],
+        "additionalProperties": false
+      },
+      "OAuthError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "error_description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false
+      },
+      "PasskeyOptions": {
+        "type": "object",
+        "properties": {
+          "challenge": {
+            "type": "string",
+            "description": "Fresh opaque base64url WebAuthn challenge"
+          },
+          "rp": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "displayName": {
+                "type": "string"
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "timeout": {
+            "type": "integer"
+          },
+          "allowCredentials": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "excludeCredentials": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "pubKeyCredParams": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "challenge"
+        ],
+        "additionalProperties": false
+      },
+      "PasskeyCredentialAssertion": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "rawId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "public-key"
+            ]
+          },
+          "response": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "response"
+        ],
+        "additionalProperties": false
+      },
+      "OwnerSessionResult": {
+        "type": "object",
+        "properties": {
+          "authenticated": {
+            "type": "boolean"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Opaque owner subject; not a secret"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "authenticated"
+        ],
+        "additionalProperties": false
+      },
+      "MCPJSONRPCRequest": {
+        "type": "object",
+        "properties": {
+          "jsonrpc": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          },
+          "id": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "method": {
+            "type": "string",
+            "description": "MCP method e.g. initialize, tools/list, tools/call, ping or notifications/initialized"
+          },
+          "params": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "jsonrpc",
+          "method"
+        ],
+        "additionalProperties": false
+      },
+      "MCPJSONRPCResponse": {
+        "type": "object",
+        "properties": {
+          "jsonrpc": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          },
+          "id": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "result": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer"
+              },
+              "message": {
+                "type": "string"
+              },
+              "data": {
+                "description": "JSON-RPC-compatible JSON value; precise tool arguments are validated against current admitted instrument schemas."
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "jsonrpc"
+        ],
+        "additionalProperties": false
+      },
+      "MachineSignedRequest": {
+        "type": "object",
+        "properties": {
+          "targetID": {
+            "$ref": "#/components/schemas/HostTargetID"
+          },
+          "nonce": {
+            "type": "string",
+            "minLength": 1
+          },
+          "signedAtMilliseconds": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "signature": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "targetID",
+          "nonce",
+          "signedAtMilliseconds",
+          "signature"
+        ],
+        "additionalProperties": false
+      },
+      "MachineGrantReceipt": {
+        "type": "object",
+        "properties": {
+          "targetID": {
+            "$ref": "#/components/schemas/HostTargetID"
+          },
+          "expiresAtMilliseconds": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "state": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "targetID",
+          "state"
+        ],
+        "additionalProperties": false
+      },
+      "HostInstrumentDiscovery": {
+        "type": "object",
+        "properties": {
+          "targetID": {
+            "$ref": "#/components/schemas/HostTargetID"
+          },
+          "instruments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "instrumentID": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "admission": {
+                  "type": "string"
+                },
+                "callable": {
+                  "type": "boolean",
+                  "description": "Never infer true without a current client-specific grant and channel."
+                }
+              },
+              "required": [
+                "instrumentID",
+                "version",
+                "admission"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "targetID",
+          "instruments"
+        ],
+        "additionalProperties": false
+      },
+      "HostChannelProbe": {
+        "type": "object",
+        "properties": {
+          "requestID": {
+            "type": "string"
+          },
+          "targetID": {
+            "$ref": "#/components/schemas/HostTargetID"
+          },
+          "machine": {
+            "type": "string"
+          },
+          "artifactDigest": {
+            "type": "string"
+          },
+          "nonce": {
+            "type": "string"
+          },
+          "signedAtSeconds": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "signature": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "requestID",
+          "targetID",
+          "machine",
+          "artifactDigest",
+          "nonce",
+          "signedAtSeconds",
+          "signature"
+        ],
+        "additionalProperties": false
+      },
+      "HostSessionFrame": {
+        "type": "object",
+        "properties": {
+          "sessionID": {
+            "type": "string"
+          },
+          "targetID": {
+            "$ref": "#/components/schemas/HostTargetID"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "host"
+            ]
+          },
+          "action": {
+            "type": "string"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "frame": {
+            "description": "JSON-RPC-compatible JSON value; precise tool arguments are validated against current admitted instrument schemas."
+          },
+          "nonce": {
+            "type": "string"
+          },
+          "signedAtMilliseconds": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "signature": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "sessionID",
+          "targetID",
+          "role",
+          "action",
+          "sequence",
+          "nonce",
+          "signedAtMilliseconds",
+          "signature"
+        ],
+        "additionalProperties": false
+      },
+      "HealthStatus": {
+        "type": "object",
+        "properties": {
+          "service": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "description": "Process health only; does not indicate usable OAuth, MCP or admitted Host operation."
+          }
+        },
+        "required": [
+          "service",
+          "state"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "x-fcis-adjacent-existing-routes": {
+    "description": "Historical routes migrated into canonical target path inventory. The older Swift issuer's served-route evidence remains in its source and release receipts, not in this Go target.",
+    "predecessor": {
+      "repository": "Fountain-Coach/midi2-gpu-fabric",
+      "ref": "fix/fcis-go-store-parity-witness-20261117",
+      "path": "apps/estate-publisher/contracts/fcis-owner.openapi.json",
+      "gitBlobSHA": "26fc8d6a6ead64576d0932d37f53f0d8213fec84",
+      "version": "0.2.1",
+      "operations": 10,
+      "authority": "historical Swift owner-management contract; retained as semantic/protocol input, no longer the writable Go target authority"
+    }
+  },
+  "x-fcis-capability-discovery": {
+    "description": "Source-only design for Host/MIDI2 capabilities, distinct from the HTTP route list and MCP-dispatched tools. Installed/declared/admitted/callable/live-accepted states must be evidenced by current Host+grant+Store rather than inferred from OpenAPI.",
+    "authority": {
+      "instrumentIdentities": "MIDI2 IDL and FCIS-KIT typed instrument contracts",
+      "machineAdmission": "Existing signed issuer/FountainStore admissions",
+      "execution": "Actual Host runtime with exact target, client and operation authorization",
+      "results": "Correlated Host terminal result and FountainStore evidence"
+    },
+    "fleetInventoryOperationId": "readOwnerFleet",
+    "currentInventoryScope": "issuer-signed-enrollment-and-current-machine-grants",
+    "currentAdmittedOperationName": "historical host.describe; do not impose fixed tool ceiling",
+    "completeInstalledCatalogEstablished": false,
+    "clientSpecificCallableCatalogEstablished": false,
+    "genericMCPDispatchEstablished": false,
+    "discoveryStatus": "NOT_ESTABLISHED_GO",
+    "states": {
+      "declared": "An operation has a typed instrument contract, not proof of Host installation.",
+      "installed": "The target Host has an executable/adapter, not proof of a current admission.",
+      "admitted": "Current issuer/Host signed policy permits the operation for the relevant relationship; does not grant every client.",
+      "routable": "The selected enrolled target is reachable through an admitted channel; cannot be inferred from enrollment.",
+      "authorizedForClient": "The exact current client relationship, scope and operation grant were independently checked.",
+      "callable": "Requires installed, admitted, routable and currently authorized for this specific client/target/release; revalidate at execution.",
+      "liveAccepted": "The actual invocation completed with correlated terminal Host/FountainStore evidence and required independent witness."
+    },
+    "boundary": "Never infer a new callable instrument from this document, a provisioned machine, an OAuth registration or a host.describe success. Native implementation, grants and evidence are separate.",
+    "sourceStatus": "GO_TARGET_SPECIFIED_ONLY"
+  },
+  "x-fcis-peer-spec": "FCIS-STACK.md",
+  "x-fcis-canonical-authority": "Fountain-Coach/.github/FCIS-OPENAPI.json",
+  "x-fcis-specification-state": "SOURCE_SPECIFIED_ONLY_GO_NOT_PRODUCTION_ACCEPTED",
+  "x-fcis-predecessor": {
+    "repository": "Fountain-Coach/midi2-gpu-fabric",
+    "ref": "fix/fcis-go-store-parity-witness-20261117",
+    "path": "apps/estate-publisher/contracts/fcis-owner.openapi.json",
+    "gitBlobSHA": "26fc8d6a6ead64576d0932d37f53f0d8213fec84",
+    "version": "0.2.1",
+    "operations": 10,
+    "authority": "historical Swift owner-management contract; retained as semantic/protocol input, no longer the writable Go target authority"
+  },
+  "x-fcis-not-a-gate": "This OpenAPI promotes API source ownership without expanding the existing Go production cutover DoD. Proposed operations are not grants, MCP tool admissions, or evidence of deployment.",
+  "x-fcis-non-http-contracts": {
+    "ownerBootstrap": "Restricted operator-installed first owner and WebAuthn trust binding. No unauthenticated global enrollment HTTP route.",
+    "fountainStore": "Dedicated native Go FountainStore bootstrap and atomic grant/revocation/execution receipt persistence; no made-up HTTP persistence endpoint.",
+    "midi2": "MIDI2 IDL/MIDI-CI instrument negotiation and Host envelopes belong to their owning contract.",
+    "instrument": "Admitted FCIS-KIT mechanical constraints and release proof are not defined by an HTTP path.",
+    "payment": "Second-priority provider-neutral FCIS payment instrument, Stripe adapter not yet specified/admitted as core FCIS HTTP paths."
+  }
+}
