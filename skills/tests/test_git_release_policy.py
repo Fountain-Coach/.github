@@ -21,15 +21,21 @@ class GitReleasePolicyTests(unittest.TestCase):
 
     def test_ci_requires_actual_seven_skill_package_parity(self):
         test = (ROOT / ".github/workflows/test.yml").read_text()
-        self.assertIn("python3 skills/skillctl.py check", test)
-        self.assertIn("python3 skills/plugin_projection.py check", test)
-        self.assertIn("python3 -m unittest discover -s skills/tests -v", test)
+        self.assertIn("sh scripts/fcis-ci.sh source", test)
+        self.assertIn("fetch-depth: 0", test)
+        self.assertIn("FCIS_CI_BASE:", test)
+        self.assertIn("FCIS_CI_HEAD:", test)
         self.assertIn("contents: read", test)
+        runner = (ROOT / "scripts/fcis-ci.sh").read_text()
+        self.assertIn("python3 skills/skillctl.py check", runner)
+        self.assertIn("python3 skills/plugin_projection.py check", runner)
+        self.assertIn("python3 -m unittest discover -s skills/tests -v", runner)
+        self.assertIn('git diff --check "$1...$2"', runner)
 
     def test_main_release_workflow_is_read_only(self):
         workflow = (ROOT / ".github/workflows/fcis-marketplace-sync.yml").read_text()
         self.assertIn("contents: read", workflow)
-        self.assertIn("python3 skills/plugin_projection.py check", workflow)
+        self.assertIn("sh scripts/fcis-ci.sh source", workflow)
         self.assertNotIn("python3 skills/plugin_projection.py sync", workflow)
         self.assertNotIn("python3 skills/marketplace_publish.py", workflow)
         self.assertNotIn("contents: write", workflow)
