@@ -1,4 +1,5 @@
 #!/bin/sh
 set -eu
 repo=$(git rev-parse --show-toplevel)
-python3 "$repo/skills/skillctl.py" check
+# Fast, source-owned advisory check on the staged index. Not server branch protection.
+sh "$repo/scripts/fcis-ci.sh" staged

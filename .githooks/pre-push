@@ -1,9 +1,31 @@
 #!/bin/sh
 set -eu
 repo=$(git rev-parse --show-toplevel)
-# Preserve existing mandatory canonical package integrity gate.
-python3 "$repo/skills/skillctl.py" check
-# Recovery is additive. An unplugged drive cannot turn a valid push into a blocker.
+# Same complete source gate as the owned Git runner and GitHub CI.
+sh "$repo/scripts/fcis-ci.sh" source
+zero40=0000000000000000000000000000000000000000
+zero64=0000000000000000000000000000000000000000000000000000000000000000
+while IFS=' ' read -r local_ref local_sha remote_ref remote_sha; do
+  [ -n "$local_sha" ] || continue
+  case "$local_sha" in "$zero40"|"$zero64") continue ;; esac
+  case "$remote_sha" in "$zero40"|"$zero64")
+    # New branch: check all changes since the shared local main ancestor.
+    if git -C "$repo" show-ref --verify --quiet refs/heads/main; then
+      base=$(git -C "$repo" merge-base refs/heads/main "$local_sha") ||
+        { printf 'FCIS CI REFUSED: new branch has no common main ancestor\n' >&2; exit 1; }
+    else
+      base=$(git -C "$repo" rev-list --max-parents=0 "$local_sha" | head -n 1) ||
+        { printf 'FCIS CI REFUSED: new branch has no root revision\n' >&2; exit 1; }
+      git -C "$repo" diff-tree --root --check -r "$base" ||
+        { printf 'FCIS CI REFUSED: root commit whitespace errors\n' >&2; exit 1; }
+    fi
+    ;;
+    *) base=$remote_sha ;;
+  esac
+  sh "$repo/scripts/fcis-ci.sh" diff "$base" "$local_sha"
+done
+# Independent, best-effort local recovery: missing removable disk is not a CI result.
 if [ -x "$repo/scripts/git-disaster-recovery.sh" ]; then
-  "$repo/scripts/git-disaster-recovery.sh" snapshot || printf 'FCIS recovery WARNING: backup degraded\n' >&2
+  "$repo/scripts/git-disaster-recovery.sh" snapshot ||
+    printf 'FCIS recovery WARNING: backup degraded\n' >&2
 fi

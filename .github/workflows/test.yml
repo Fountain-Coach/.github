@@ -9,14 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Validate all canonical FCIS Skill digests
-        run: python3 skills/skillctl.py check
-      - name: Verify all nine packaged GitHub marketplace Skills
-        run: python3 skills/plugin_projection.py check
-      - name: Run organization source, learning and projection tests
-        run: python3 -m unittest discover -s skills/tests -v
-      - name: Validate changed file formatting
-        run: git diff --check
+      - name: Run the same owner-maintained POSIX source CI as Git hooks
+        env:
+          FCIS_CI_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          FCIS_CI_HEAD: ${{ github.sha }}
+        run: sh scripts/fcis-ci.sh source

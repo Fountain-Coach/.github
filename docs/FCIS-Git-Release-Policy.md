@@ -5,6 +5,10 @@
 
 **Owner-controlled CI decision (18 November 2026):** the [dated source criticism](FCIS-Spec-OpenAPI-Critique-2026-11-18.md) and [maintenance/POSIX Git-hook CI plan](FCIS-Maintenance-Hook-CI-Plan.md) adopt reusable shell checks and future owner bare-Git enforcement. The **current** GitHub main ruleset still requires GitHub Actions `build`; this source policy does not silently replace that installed rule or prove an owner origin. Client hooks are bypassable. GitHub currently supplies a source verification witness, not native Go/runtime acceptance.
 
+## H2 source-owned Git CI (18 November 2026)
+
+`scripts/fcis-ci.sh` is the **shared POSIX shell entrypoint** for source/diff/staged checks across `.githooks/pre-commit`, `.githooks/pre-push` and the existing GitHub CI workflows. GitHub supplies an exact PR/push revision range; pre-push checks the actual outgoing range. The script is source-owned; the GitHub `build` job is one read-only consumer of it and remains required by the active hosted branch ruleset. Installation of an independent owner bare-repository `pre-receive` and admission/promotion receipt is **not established** until H3, per the [maintenance plan](FCIS-Maintenance-Hook-CI-Plan.md). Client hooks can be skipped; a green GitHub build does not prove independent protected Git or native Go production.
+
 ## One Git PR owns source and derived package
 
 1. The agent/maintainer changes a reviewed canonical FCIS Skill in
