@@ -1,6 +1,6 @@
 ---
 name: fcis-skill-authoring-and-sync
-description: Automatically elevate verified scenario lessons into canonical FCIS Skills and govern GitHub marketplace publication, existing ChatGPT workspace plugin adoption and Git-backed synchronization. Use for task closure learning, marketplace import and migration of historical standalone Skills to Git ownership, preservation of plugin identities, source drift and version verification.
+description: Automatically elevate verified scenario lessons into canonical FCIS Skills and govern GitHub marketplace publication, existing ChatGPT workspace plugin adoption and Git-backed synchronization, canonical FCIS maintenance planning, and owner-controlled portable Git-hook CI validation. Use for task closure learning, marketplace import and migration of historical standalone Skills to Git ownership, preservation of plugin identities, source drift and version verification.
 ---
 
 # FCIS Skill Authoring and Sync
@@ -10,6 +10,14 @@ description: Automatically elevate verified scenario lessons into canonical FCIS
 Design and validate skill packages using FCIS-owned conventions; OpenAI Skill Creator may be used as a non-authoritative formatting aid. Fountain Coach Governance Chapter 160 establishes that **`Fountain-Coach/.github` alone owns the canonical agent skill definition.** Every repository mirror, ChatGPT installation, or OpenAI project API version is a derived distribution. The source owner has delegated evidence-gated automatic updates to existing canonical FCIS Skills; downstream observations alone never amend canonical source.
 
 Runtime capability identities remain owned by their declared FCIS Swift Kits. An agent procedure does not become a new runtime instrument or acquire implementation authority by being installed.
+
+### Source-owned FCIS maintenance and POSIX Git-hook CI (18 November 2026)
+
+For work on the FCIS stack, root OpenAPI, Git hooks, CI runner or release policy, start with [the dated 18 November criticism](../../../docs/FCIS-Spec-OpenAPI-Critique-2026-11-18.md), [FCIS maintenance and POSIX hook CI plan](../../../docs/FCIS-Maintenance-Hook-CI-Plan.md), the canonical [stack](../../../FCIS-STACK.md), and the current owner [Git release policy](../../../docs/FCIS-Git-Release-Policy.md). This existing Skill owns **canonical instructions, digest verification and derived Git skill distribution**; the `fcis-go-runtime-migration` Skill owns Go migration slices, and `fcis-owner-access` owns root HTTP OpenAPI maintenance. Do not create another CI Skill, hosted plugin, grant issuer, execution service or arbitrary shell authority.
+
+**Implement one bounded H1–H6 slice.** Maintain the current `PLANS.md` entry, inspect which scripts/hooks actually exist and what Git main requires, and run exact source-addressed positive and negative acceptance. The approved design is a portable `/bin/sh` entrypoint invoked by the versioned Git hooks and optional GitHub mirror; only the **separately authorized owner bare Git origin's server-side `pre-receive`** can enforce receipt of candidate refs. Client hooks are bypassable; do not run incoming untrusted branch code as the privileged Git hook user. Promotion requires explicit owner authority, passing pinned checks, immutable evidence and compare-and-swap against the old main SHA. Until installed and exercised on the actual owner Git origin, this is **SOURCE-ONLY**, not sovereign CI acceptance.
+
+**Preserve exact Skill distribution:** There are **nine** canonical reviewed FCIS Skills, one existing `fcis-skill-authoring-and-sync` plugin and one unchanged workspace plugin ID. Updating one or more Skills requires canonical source bytes, manifest digest for **each** complete file tree, exactly matched derived mirrors, one plugin patch version increment, focused regressions and reviewed protected Git promotion. The local `post-commit` retains its separate derived-commit behavior and optional Git recovery; no GitHub bot push, Skill ZIP, new plugin ID or hosted account version change follows. `scripts/fcis-ci.sh` is an implementation target until independently committed/verified; a green GitHub `build` alone does not prove local or owner-server hook installation, Go runtime parity, Store receipts, public release or ChatGPT effective version.
 
 ### Binding distribution prohibition: NO ZIP
 

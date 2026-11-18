@@ -162,6 +162,14 @@ For the actual issuer/MCP/Host/FountainStore deployment, the responsible operato
 
 Review at minimum GDPR/ePrivacy, NIS2 and national implementation, Cyber Resilience Act, AI Act, EAA/national accessibility obligations, and eIDAS/DSA/consumer/copyright/payment duties **when product facts trigger them**. Do not assume every act applies to a private, single-owner Go service. A legal change proposal is not enacted law; a source test is not conformity evidence. An applicable binding obligation for the actual release must be addressed through its own proper acceptance, but an unproven compliance hypothesis does **not** silently expand the finite priority-one production cutover DoD below. The priority-two payment instrument requires its own applicability review when introduced.
 
+## 6.2 Git-hook continuous integration and maintenance ownership
+
+Fountain Coach selects **version-controlled, portable POSIX `/bin/sh` scripting** as FCIS CI orchestration. See the [dated criticism](docs/FCIS-Spec-OpenAPI-Critique-2026-11-18.md) and [maintenance and Git-hook CI plan](docs/FCIS-Maintenance-Hook-CI-Plan.md) for the phased implementation and independently testable acceptance. The organization owns the shared check entrypoint, actual tests and immutable source/release evidence; native Go checks and Go/FountainStore acceptance remain at their proper source owners.
+
+Existing local `.githooks` and GitHub workflows are **current source mechanisms**. They are not an independently accepted owner-controlled Git server. The owner-operated bare Git origin MUST enforce its own reviewed `pre-receive` rules and exact-revision promotion; bypassable client hooks alone cannot protect `main`. Execute incoming candidate tests under a separate unprivileged identity, never as the protected Git hook user with owner keys. Promotion must be explicitly authorized, source-pinned, fail-closed on failed checks and atomic with respect to the observed predecessor SHA. An accepted Git revision is **not** a production release or a legal-compliance certificate.
+
+Keep the existing GitHub `build` branch rule intact until a replacement owned-origin acceptance is independently demonstrated. GitHub Actions may re-run the **same source-owned scripts**, but must not remain the only place the organization can build, test and recover FCIS. Preserve offline Git bundle restore and distinct plugin-hosted version readback. No CI scheduler, public endpoint, background worker or new runtime instrument is created merely by adopting this specification.
+
 ## 7. Production deployment and finite DoD — **priority one**
 
 Deploy one Go-native FCIS on the existing Hetzner host, with Caddy retaining the existing `https://fcis.fountain.coach/` identity. Fresh owner bootstrap and client reauthorization are acceptable because the installation currently has only its owners/operators.
@@ -227,6 +235,8 @@ This is a **second-priority specification seam**, not permission to start or dep
 - [FCIS-KIT Standard](docs/FCIS-KIT-Standard.md)
 - [Official OpenAPI Dependency](docs/FCIS-Official-OpenAPI-Dependency.md)
 - [Git Release Policy](docs/FCIS-Git-Release-Policy.md)
+- [FCIS Source Critique, 18 November 2026](docs/FCIS-Spec-OpenAPI-Critique-2026-11-18.md)
+- [FCIS Maintenance and POSIX Git-Hook CI Plan](docs/FCIS-Maintenance-Hook-CI-Plan.md)
 - [FCIS European Regulatory Applicability and Change Maintenance](docs/FCIS-EU-Regulatory-Maintenance.md)
 - [Governance publication](https://governance.fountain.coach/) — independent public edition; no automatic publication from this Git file
 

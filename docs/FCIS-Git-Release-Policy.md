@@ -3,17 +3,19 @@
 **Canonical source:** `Fountain-Coach/.github`. Reviewed policy snapshot:
 `docs/FCIS-Main-Branch-Ruleset.json`.
 
+**Owner-controlled CI decision (18 November 2026):** the [dated source criticism](FCIS-Spec-OpenAPI-Critique-2026-11-18.md) and [maintenance/POSIX Git-hook CI plan](FCIS-Maintenance-Hook-CI-Plan.md) adopt reusable shell checks and future owner bare-Git enforcement. The **current** GitHub main ruleset still requires GitHub Actions `build`; this source policy does not silently replace that installed rule or prove an owner origin. Client hooks are bypassable. GitHub currently supplies a source verification witness, not native Go/runtime acceptance.
+
 ## One Git PR owns source and derived package
 
 1. The agent/maintainer changes a reviewed canonical FCIS Skill in
    `.codex/skills/<name>` and updates its full-tree digest.
 2. The normal Git `post-commit` hook makes a **distinct derived commit**
-   in the *same branch*, projecting the existing single plugin with five
+   in the *same branch*, projecting the existing single plugin with nine
    canonical SKILL packages and one incremented plugin patch version.
    If a clone lacks hooks, run `skills/plugin_projection.py sync`
    and `skills/marketplace_publish.py` explicitly before opening a PR.
-3. The existing `test.yml` validates all canonical digests, all five
-   derived trees, complete regression tests and formatting. GitHub's release
+3. The existing `test.yml` validates all canonical digests, all nine
+   derived trees, the organization Python source regression suite and formatting. It is not a Go build, runtime conformance, machine admission or live release gate. GitHub's release
    workflow is read-only, and a direct bot push is forbidden.
 4. A source PR is explicitly selected for auto-merge only when appropriate.
    GitHub `allow_auto_merge=true` merely enables opt-in per PR; it does
@@ -60,7 +62,8 @@ Canonical `main` ruleset **26748083** was installed from the reviewed JSON and i
 
 Git-only backups, verified bundles, and local validations continue to work.
 A bare Git origin can be substituted and the same source/derived commits
-moved without GitHub. Branch-protection rules and GitHub Actions are not
+moved without GitHub.
+That alone does not install an owner `pre-receive` gate or guarantee an independently verified CI result: those require explicit acceptance on the authorized bare origin. Branch-protection rules and GitHub Actions are not
 part of the Git object graph; the reviewed JSON policy and this procedure
 allow deliberate reconfiguration on a replacement host. Never infer that
 a new host has inherited GitHub's security settings.
