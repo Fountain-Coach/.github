@@ -1,3 +1,4 @@
 interface:
   display_name: "FCIS Go Runtime Migration"
-  short_description: "Migrate FCIS services to Go using bounded build instruments"
+  short_description: "Implement and verify root-canonical standalone Go FCIS OpenAPI with native FountainStore"
+  default_prompt: "Use Fountain-Coach/.github/FCIS-STACK.md and peer FCIS-OPENAPI.json as equal canonical architecture/HTTP API sources. Build a fresh standalone Go OAuth/passkey/MCP/Host issuer with dedicated native Go FountainStore, preserving the public origin and finite cutover DoD. Compare actual Go routes to the root OpenAPI and label specified-only vs tested vs deployed vs live-accepted; old Swift owner OpenAPI is predecessor-only. Use demonstrated signed release/SSH authority without invented prerequisites. Keep Stripe payment instrument separate as priority two."
