@@ -56,7 +56,10 @@ class FCISMaintenancePlanTests(unittest.TestCase):
         hooks = ROOT / ".githooks"
         pre_push = (hooks / "pre-push").read_text(encoding="utf-8")
         post_commit = (hooks / "post-commit").read_text(encoding="utf-8")
-        self.assertIn("skillctl.py", pre_push)
+        self.assertIn("scripts/fcis-ci.sh", pre_push)
+        runner = (ROOT / "scripts/fcis-ci.sh").read_text(encoding="utf-8")
+        self.assertIn("skills/skillctl.py", runner)
+        self.assertIn("skills/plugin_projection.py", runner)
         self.assertIn("git-disaster-recovery.sh", pre_push)
         self.assertIn("plugin_projection.py", post_commit)
         self.assertIn("marketplace_publish.py", post_commit)
