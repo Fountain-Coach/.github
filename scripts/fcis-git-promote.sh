@@ -14,11 +14,11 @@ case "$approval" in /*) ;; *) die 'signed approval path must be absolute' ;; esa
 [ "$(git --git-dir="$bare" rev-parse --is-bare-repository 2>/dev/null)" = true ] || die 'not a bare Git repository'
 case "$candidate" in refs/heads/candidates/*) ;; *) die 'only immutable candidate refs may be promoted' ;; esac
 case "$candidate" in refs/heads/candidates/*/*) die 'nested candidate refs forbidden' ;; esac
-case "\${candidate#refs/heads/candidates/}" in ''|*[!a-zA-Z0-9._-]*) die 'unsafe candidate ref' ;; esac
+case "${candidate#refs/heads/candidates/}" in ''|*[!a-zA-Z0-9._-]*) die 'unsafe candidate ref' ;; esac
 is_sha() { case "$1" in
     *[!0123456789abcdef]*|'') return 1 ;;
 esac
-case \${#1} in 40|64) return 0 ;; *) return 1 ;; esac
+case ${#1} in 40|64) return 0 ;; *) return 1 ;; esac
 }
 is_sha "$wanted" && is_sha "$old" || die 'expected full commit object IDs'
 git --git-dir="$bare" cat-file -e "$wanted^{commit}" 2>/dev/null || die 'candidate commit missing'
@@ -52,7 +52,7 @@ expires=$(sed -n '7s/^expires=//p' "$approval")
 case "$expires" in ''|*[!0-9]*) die 'invalid approval expiry' ;; esac
 now=$(date -u +%s)
 [ "$expires" -ge "$now" ] && [ "$expires" -le "$((now + 900))" ] || die 'expired or excessively long-lived approval'
-payload=$(mktemp "\${TMPDIR:-/tmp}/fcis-approved-payload.XXXXXXXX")
+payload=$(mktemp "${TMPDIR:-/tmp}/fcis-approved-payload.XXXXXXXX")
 tmp=''
 clean() { rm -f "$payload"; [ -z "$tmp" ] || rm -rf "$tmp"; }
 trap clean 0
@@ -64,7 +64,7 @@ ssh-keygen -Y verify -I owner -n fcis-git-promotion \
     -f "$policy/authorized_signers" -s "$approval.sig" < "$approval" >/dev/null 2>&1 ||
     die 'owner Ed25519 approval signature not valid'
 # Only files pinned by the preinstalled policy may be executed as CI code in the sandbox.
-tmp=$(mktemp -d "\${TMPDIR:-/tmp}/fcis-git-accept.XXXXXXXX") || die 'isolated temp directory failed'
+tmp=$(mktemp -d "${TMPDIR:-/tmp}/fcis-git-accept.XXXXXXXX") || die 'isolated temp directory failed'
 chmod 755 "$tmp"
 git -c protocol.file.allow=always clone --quiet --no-hardlinks --no-checkout "$bare" "$tmp/source" ||
     die 'independent Git checkout failed'
