@@ -1,6 +1,6 @@
 ---
 name: fcis-owner-access
-description: Govern Fountain Coach owner passkeys, OAuth/Host access, machine enrollment, and reasoning-expressive FCIS OpenAPI 3.1 and MCP capability discovery. Use for access.fountain.coach fleet management, fcis.fountain.coach APIs, human- and LLM-readable operation IDs/descriptions, callable instrument inventories, per-client authorization, conformance, or API maintenance and release. Reuse the existing owner-access Skill, current MIDI2/FCIS-KIT identities, Host registry, FountainAuthKit, FountainStore and contract tests. Never treat API documentation as a grant or build a second authority.
+description: Govern Fountain Coach owner passkeys, OAuth/Host access, machine enrollment, and reasoning-expressive FCIS OpenAPI 3.1 and MCP capability discovery. Use for access.fountain.coach fleet management, fcis.fountain.coach APIs, human- and LLM-readable operation IDs/descriptions, callable instrument inventories, per-client authorization, conformance, or API maintenance and release, dated contract criticism, and owner-controlled portable POSIX Git-hook CI. Reuse the existing owner-access Skill, current MIDI2/FCIS-KIT identities, Host registry, FountainAuthKit, FountainStore and contract tests. Never treat API documentation as a grant or build a second authority.
 ---
 
 # FCIS Owner Access — Passkeys and Recovery
@@ -40,6 +40,14 @@ The design anchor is `Fountain-Coach/fountain-press/docs/access-passkey-first-ow
 6. **Establish independent recovery.** Enroll a second usable authenticator with recent owner verification, revoke lost devices, prove second-device login and define a reviewed lost-all-device procedure. Keep existing Basic fallback controlled and audited during migration; retire it only after replacement and recovery are independently accepted. No unverified email/SMS shortcut.
 7. **Implement in bounded source-owning slices.** Host/Kit own the verifier and authority; Press owns the user interface; Host/Store own effect receipts. Do not invent a second service, new `mcp.fountain.coach` front end or dead UI controls.
 8. **Run the acceptance matrix.** Verify isolated WebAuthn wrong origin/RP/challenge/key/UV/replay denial, cookie/CSRF/logout/expiry tests, *physical* iPad Safari and Mac sign-in, accessibility, second-factor recovery, existing ChatGPT `host.describe`, and distinct disposable-client revoke -> refresh denied -> real MCP denied -> Store receipt. Simulated iPad viewports support but do not replace native testing.
+
+## Dated contract critique, maintenance and owner-controlled CI — 18 November 2026
+
+Read the [pinned source criticism](../../../docs/FCIS-Spec-OpenAPI-Critique-2026-11-18.md) (C01–C16) and [owner-operated POSIX Git-hook CI plan](../../../docs/FCIS-Maintenance-Hook-CI-Plan.md) **alongside the current canonical revision** before changing the FCIS Go HTTP surface. These are dated, reviewable implementation findings—not newly deployed endpoints or automatic expansion of the original Go cutover DoD. Resolve one demonstrated defect or tightly coupled contract family, preserve existing released client behavior, and attach method/path and typed positive/negative Go handler tests.
+
+**Contract priority:** separate WebAuthn registration attestation from login assertion; require the actual mutating bodies; correct token response property direction; describe device-signed requests with explicit key/nonce/replay semantics rather than mistaking `security: []` for public authority; enforce proper JSON-RPC result/error shapes; distinguish OAuth metadata and MCP negotiated protocol versions from the current admitted tool/Host registry. Review existing Go source (draft PR #145 and its dependent branches) for stale OpenAPI v0.2.1 and MCP `2025-03-26` lock before claiming root v0.3.1 compliance.
+
+**CI ownership:** the selected common `scripts/fcis-ci.sh` and reviewed Git hooks are a **planned owner-controlled implementation**, not presently verified installed server-side. Local `pre-commit`/`pre-push` remain bypassable; only a separately tested and installed bare-repository `pre-receive` plus owner-approved exact-revision promotion can constitute independent Git acceptance. Run current source tests where available and never claim Go/Store, production, hosted Skill or legal acceptance based solely on GitHub green checks. See the pinned maintenance plan's H1–H6 acceptance matrix.
 
 ## Internal FCIS OpenAPI maintenance
 
