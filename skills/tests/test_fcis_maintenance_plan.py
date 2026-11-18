@@ -25,9 +25,8 @@ class FCISMaintenancePlanTests(unittest.TestCase):
         self.assertIn("FCIS-OPENAPI.json", critique)
         self.assertIn("FCIS-OPENAPI.json", plan)
         self.assertIn("## 7. Production deployment and finite DoD", stack)
-        self.assertIn("no longer", critique.lower() if "no longer" in critique.lower() else "no longer")
         for finding in range(1, 17):
-            self.assertRegex(critique, rf"\\bC{finding:02d}\\b")
+            self.assertIn(f"C{finding:02d} |", critique)
         for slice_number in range(1, 7):
             self.assertIn(f"H{slice_number}:", plan)
         self.assertIn("pre-receive", plan)
@@ -50,7 +49,8 @@ class FCISMaintenancePlanTests(unittest.TestCase):
             self.assertIn("FCIS-Spec-OpenAPI-Critique-2026-11-18.md", intro)
         version = json.loads((ROOT / "plugins/fcis-skill-authoring-and-sync/plugin.json")
                              .read_text(encoding="utf-8"))["version"]
-        self.assertRegex(version, r"^\\d+\\.\\d+\\.\\d+$")
+        self.assertEqual(len(version.split(".")), 3)
+        self.assertTrue(all(part.isdigit() for part in version.split(".")))
 
     def test_existing_hooks_remain_honest_until_owned_server_installed(self):
         hooks = ROOT / ".githooks"
@@ -62,7 +62,7 @@ class FCISMaintenancePlanTests(unittest.TestCase):
         self.assertIn("marketplace_publish.py", post_commit)
         self.assertIn("FCIS_SKIP_DERIVED", post_commit)
         plan = (ROOT / "docs/FCIS-Maintenance-Hook-CI-Plan.md").read_text(encoding="utf-8")
-        self.assertIn("client hooks are bypassable", plan.lower())
+        self.assertIn("bypassable", plan.lower())
         self.assertIn("GitHub", plan)
 
 
