@@ -111,12 +111,15 @@ class H3GitAcceptanceTests(unittest.TestCase):
         if problem == "isolation":
             p = self.work / "skills/tests/test_isolation.py"
             p.write_text(
-                "import os, unittest, socket\n"
+                "import os, unittest, socket, shutil, pwd\n"
                 "class SandboxTest(unittest.TestCase):\n"
                 "    def test_private_operator_policy_is_invisible(self):\n"
                 f"        self.assertFalse(os.path.exists({str(self.policy)!r}))\n"
                 "    def test_no_external_network_interface(self):\n"
                 "        self.assertEqual([name for _,name in socket.if_nameindex() if name != 'lo'], [])\n"
+                "    def test_posix_tools_and_synthetic_identity(self):\n"
+                "        self.assertTrue(shutil.which('awk'))\n"
+                "        self.assertEqual(pwd.getpwuid(os.getuid()).pw_name, 'fcis-ci')\n"
             )
         require_ok("git", "add", ".", cwd=self.work)
         require_ok("git", "commit", "--quiet", "-m", name, cwd=self.work)
