@@ -9,7 +9,7 @@
 
 ---
 
-**Canonical runtime architecture:** [FCIS — Standalone Go Stack Specification](../FCIS-STACK.md) is the organization-owned architectural target for the Go FCIS service, native FountainStore authority, Host/MCP interfaces and priority-one cutover. Its separately scoped Stripe payment instrument is priority two. This RFC continues to own the four orthogonal instruction layers; the stack spec does not replace them.
+**Canonical runtime architecture and peer HTTP contract:** [FCIS — Standalone Go Stack Specification](../FCIS-STACK.md) and [FCIS HTTP OpenAPI 3.1](../FCIS-OPENAPI.json) is the organization-owned architectural target for the Go FCIS service, native FountainStore authority, Host/MCP interfaces and priority-one cutover. Its separately scoped Stripe payment instrument is priority two. This RFC continues to own the four orthogonal instruction layers; the stack spec does not replace them.
 
 ## Abstract
 
