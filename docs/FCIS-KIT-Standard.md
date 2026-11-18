@@ -1,5 +1,7 @@
 # FCIS-KIT Standard (Owned Kits, Factoring and Release)
 
+**Stack cross-reference:** [FCIS standalone Go stack](../FCIS-STACK.md) uses the admitted instrument plane and durable execution-evidence principles. This standard retains its declared owned Swift-package scope; linking the target Go service does **not** automatically establish a released Go kit or widen Swift-specific package rules to unverified Go implementations.
+
 **Status:** Adopted
 **Category:** Standards Track
 **Applies to:** Fountain Coach org repositories that publish or consume Fountain Coach Swift packages
