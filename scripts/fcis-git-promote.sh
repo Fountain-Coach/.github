@@ -31,7 +31,7 @@ repo=$(git --git-dir="$bare" config --local --get fcis.repositoryID) || die 'mis
 [ -n "$repo" ] || die 'empty owner repo identity'
 [ -f "$policy/repository-id" ] && [ -f "$policy/authorized_signers" ] &&
   [ -f "$policy/trusted-files.sha256" ] || die 'incomplete owner-controlled policy'
-[ ! -L "$policy/authorized_signers" ] && [ ! -L "$policy/trusted-files.sha256" ] || die 'policy symlinks forbidden'
+[ ! -L "$policy/repository-id" ] && [ ! -L "$policy/authorized_signers" ] && [ ! -L "$policy/trusted-files.sha256" ] || die 'policy symlinks forbidden'
 [ "$(cat "$policy/repository-id")" = "$repo" ] || die 'policy and origin repository identity differ'
 command -v ssh-keygen >/dev/null || die 'OpenSSH signer verifier unavailable'
 command -v bwrap >/dev/null || die 'Bubblewrap isolated runner unavailable'
@@ -66,9 +66,12 @@ ssh-keygen -Y verify -I owner -n fcis-git-promotion \
 # Only files pinned by the preinstalled policy may be executed as CI code in the sandbox.
 tmp=$(mktemp -d "${TMPDIR:-/tmp}/fcis-git-accept.XXXXXXXX") || die 'isolated temp directory failed'
 chmod 755 "$tmp"
-git -c protocol.file.allow=always clone --quiet --no-hardlinks --no-checkout "$bare" "$tmp/source" ||
+# No inherited Git configuration/filter or credential helper may execute during checkout.
+env -i PATH=/usr/bin:/bin HOME="$tmp" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null \
+    git -c core.hooksPath=/dev/null -c protocol.file.allow=always clone --quiet --no-hardlinks --no-checkout "$bare" "$tmp/source" ||
     die 'independent Git checkout failed'
-git -C "$tmp/source" checkout --quiet --detach "$wanted" || die 'candidate checkout failed'
+env -i PATH=/usr/bin:/bin HOME="$tmp" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null \
+    git -C "$tmp/source" -c core.hooksPath=/dev/null checkout --quiet --detach "$wanted" || die 'candidate checkout failed'
 [ "$(git -C "$tmp/source" rev-parse HEAD)" = "$wanted" ] || die 'candidate checkout digest mismatch'
 for rel in scripts/fcis-ci.sh skills/skillctl.py skills/plugin_projection.py skills/tests/test_fcis_posix_ci.py; do
     match=$(awk -v p="$rel" '$2 == p { print $1 }' "$policy/trusted-files.sha256")
@@ -91,7 +94,13 @@ set -- "$@" --proc /proc --dev /dev --tmpfs /tmp --dir /home \
     --setenv GIT_CONFIG_VALUE_0 /source \
     /bin/sh /source/scripts/fcis-ci.sh source "$old" "$wanted"
 say "Running pinned candidate $wanted under isolated, networkless H2 source CI"
-if ! env -i PATH=/usr/bin:/bin LANG=C LC_ALL=C timeout -s KILL 180 "$@" > "$tmp/source-ci.log" 2>&1; then
+# POSIX ulimits bound file descriptors, file sizes and CPU; timeout bounds elapsed time.
+if ! (
+    ulimit -n 256
+    ulimit -f 262144
+    ulimit -t 120
+    env -i PATH=/usr/bin:/bin LANG=C LC_ALL=C timeout -s KILL 180 "$@"
+) > "$tmp/source-ci.log" 2>&1; then
     tail -n 50 "$tmp/source-ci.log" >&2
     die 'sandboxed source CI failed or timed out'
 fi
