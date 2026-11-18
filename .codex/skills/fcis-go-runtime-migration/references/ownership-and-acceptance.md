@@ -1,14 +1,20 @@
 # FCIS Go ownership and acceptance
 
-## One-source migration order
+## Peer canonical API acceptance order
 
-- **First slice:** Go machine/Host lifecycle runtime and deterministic build/test adapter. Preserve existing issuer, owner enrollment, signing keys, revocation semantics and two separate Store views.
-- **Next:** FCIS MCP transport, instrument dispatch and machine inventory using exact existing authenticated messages. Preserve the versioned MIDI2 IDL and FCIS-KIT registry.
-- **Then:** other portable headless runtime modules. Native macOS/iOS capabilities, CoreMIDI and the current FountainStore engine remain adapters unless a separately scoped replacement has proof.
+The **single writable FCIS HTTP contract** is `Fountain-Coach/.github/FCIS-OPENAPI.json` at the same Git authority level as `FCIS-STACK.md`. Lock exact canonical revision before implementing. The 10 historical Swift owner/machine operations are predecessor input only. The root contract defines 30 HTTP operations and 36 JSON schemas as source-specified Go target, not a census of currently callable tools. Check actual Go route/auth/error parity and terminal evidence per operation; never mutate the old owner OpenAPI independently. Keep separate proof for OAuth WebAuthn, MCP, machine-signature calls and private native FountainStore transaction/recovery. The latter is not an OpenAPI path.
+
+The clean Go service may initialize its own **fresh dedicated FountainStore instance**, re-enroll its sole owner/clients/Hosts, and retire Swift FCIS runtime entirely. Never claim the old issuer's token continuity or Swift snapshot relocation is necessary. Payment/Stripe remains priority two, outside cutover.
+
+## Historical migration order (superseded by the standalone-Go owner decision)
+
+- **Historical first slice (not binding for clean cutover):** Go machine/Host lifecycle and deterministic build candidate originally expected the existing Swift issuer, keys and Store snapshots. This is **not** the current Go target.
+- **Current target:** Standalone Go OAuth/passkey/MCP + machine/Host transport in `FCIS-OPENAPI.json`, with fresh native FountainStore identity and persistence. Preserve the versioned MIDI2 IDL and FCIS-KIT registry.
+- **Outside FCIS Go cutover:** native macOS/iOS apps and CoreMIDI capabilities remain separately owned; FountainStore on-disk format remains source-owned by `Fountain-Coach/Fountain-Store`, not a requirement to keep a Swift daemon.
 
 ## Build Instrument input/output
 
-Input is only `action`, `workflow`, `sourceRevision`, `correlationID`, `idempotencyKey`. The Host selects working directories, signed release identity, toolchain and isolated cache on approved storage. Output is phase, bounded digests and run identities. `local-tested` never means a FountainStore terminal receipt. No arbitrary commands, ad-hoc `ssh`, environment or credentials.
+Input is only `action`, `workflow`, `sourceRevision`, `correlationID`, `idempotencyKey`. The Host selects working directories, signed release identity, toolchain and isolated cache on approved storage. Output is phase, bounded digests and run identities. `local-tested` never means a FountainStore terminal receipt. No arbitrary model-supplied commands, fabricated machine grants, environment or credentials. Actual owner-authorized existing SSH/systemd/Caddy release paths may be used when independently authenticated; do not treat one missing MCP release tool as proof of no SSH authority.
 
 ## Refusal proof
 
@@ -16,7 +22,7 @@ Reject: unknown workflow or input key, wrong or dirty source revision, absent ca
 
 ## Acceptance boundary
 
-Local Go tests prove code behavior. Host admission requires registered IDL/Kit adapter, release digest, trusted policy and persistent Store correlation. Live acceptance requires a current independently witnessed owner-selected Host readback after service restart and lease renewal. Source promotion and ChatGPT plugin sync are separate operations, with canonical Git and the unchanged plugin identity.
+Local Go tests prove code behavior. Host admission requires registered IDL/Kit adapter, release digest, trusted policy and persistent Store correlation. Live acceptance requires Go OAuth/MCP public route readback, owner passkey/client authorization, native Store restart readback, one admitted Host receipt and scoped revocation, each bound to the exact released build. Source promotion and ChatGPT plugin sync are separate operations, with canonical Git and the unchanged plugin identity.
 
 ## Regression: do not repeat the 17 November three-hour escalation
 
