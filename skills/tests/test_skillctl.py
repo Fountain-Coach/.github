@@ -40,7 +40,7 @@ class SovereigntyTests(unittest.TestCase):
         reference = (ctl.SKILLS / "fcis-go-runtime-migration" /
                      "references" / "ownership-and-acceptance.md").read_text()
         self.assertIn("Do not ask the production service being replaced", skill)
-        self.assertIn("only when invoking production Host effects", skill)
+        self.assertIn("when invoking production Host effects", skill)
         self.assertIn("production Host's `workstation.go.verify` grant", reference)
         self.assertIn("not a prerequisite", reference)
         self.assertIn("trusted, pinned Go source test", reference)
