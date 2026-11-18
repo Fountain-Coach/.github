@@ -15,17 +15,38 @@ class SovereigntyTests(unittest.TestCase):
                      "references" / "ownership-and-acceptance.md").read_text()
         for required in ("Mandatory finite execution contract",
                          "One slice, one Definition of Done",
-                         "Authority before compilation",
+                         "Choose the lane before execution",
                          "15-minute hard limit",
                          "one implementation attempt and one focused retry",
                          "at most one full native/SwiftPM rebuild",
                          "Freeze dependency scope",
                          "Stop on the first terminal condition",
-                         "first unmet acceptance predicate"):
+                         "first unmet acceptance predicate",
+                         "DEV-VERIFIED", "PRODUCTION lane",
+                         "scripts/fcis-ci.sh go", "GOPROXY=off",
+                         "does not require a live FCIS Host",
+                         "not a blocker to DEV verification"):
             self.assertIn(required, skill)
-        self.assertIn("three-hour escalation", reference)
-        self.assertIn("host.describe", reference)
-        self.assertIn("workstation.go.verify", reference)
+        for required in ("Independent Go development verification",
+                         "not Host-admitted", "owner-approved immutable Git commit",
+                         "HEAD", "GOPROXY=off", "DEV-FAILED",
+                         "source access issue", "Production admission and release",
+                         "three-hour escalation", "host.describe",
+                         "workstation.go.verify"):
+            self.assertIn(required, reference)
+
+    def test_go_dev_verification_does_not_require_production_issuer(self):
+        skill = (ctl.SKILLS / "fcis-go-runtime-migration" / "SKILL.md").read_text()
+        reference = (ctl.SKILLS / "fcis-go-runtime-migration" /
+                     "references" / "ownership-and-acceptance.md").read_text()
+        self.assertIn("Do not ask the production service being replaced", skill)
+        self.assertIn("only when invoking production Host effects", skill)
+        self.assertIn("production Host's `workstation.go.verify` grant", reference)
+        self.assertIn("not a prerequisite", reference)
+        self.assertIn("trusted Go source test", reference)
+        self.assertIn("Go version", reference)
+        self.assertIn("go test -race -count=1 ./...", reference)
+        self.assertIn("signed Host evidence", reference)
 
     def test_zip_delivery_is_disabled_at_cli_and_python_boundary(self):
         import subprocess
