@@ -154,6 +154,14 @@ FountainStore is the **owned storage technology**, not a requirement to keep an 
 - The release uses an immutable Go artifact and source digest; the predecessor remains recoverable while the new public service is verified.
 - Private configuration, database files, backups and rollback state stay outside public web roots.
 
+## 6.1 European regulatory maintenance — applicability before claims
+
+The standalone Go FCIS must be maintained against **applicable European Union and Member State law**, using the [FCIS European Regulatory Applicability and Change Maintenance procedure](docs/FCIS-EU-Regulatory-Maintenance.md). This is a continuing engineering and governance duty, **not** a new API authority, an instrument, a regulator, or a claim of legal certification. [Governance Chapter 118](https://governance.fountain.coach/chapters/118-european-cybersecurity-profile/) is the risk-based cybersecurity engineering profile, not a legal applicability ruling.
+
+For the actual issuer/MCP/Host/FountainStore deployment, the responsible operator must maintain a **source-versioned applicability register** containing official EU and relevant national sources, operator/product classification, affected functionality and processing, legal effective dates, reasoned `applicable` / `not_applicable` / `requires_review` decisions, reviewer, next review date, controls, release evidence and unresolved findings. Recheck at least **monthly** and immediately following relevant legal changes, new jurisdictions, customer-facing features, AI use, personal-data processing, payments, incidents or distribution changes. An agent/automation may collect source changes, but only recorded competent review determines legal applicability; a recurring schedule is not established merely by writing this policy.
+
+Review at minimum GDPR/ePrivacy, NIS2 and national implementation, Cyber Resilience Act, AI Act, EAA/national accessibility obligations, and eIDAS/DSA/consumer/copyright/payment duties **when product facts trigger them**. Do not assume every act applies to a private, single-owner Go service. A legal change proposal is not enacted law; a source test is not conformity evidence. An applicable binding obligation for the actual release must be addressed through its own proper acceptance, but an unproven compliance hypothesis does **not** silently expand the finite priority-one production cutover DoD below. The priority-two payment instrument requires its own applicability review when introduced.
+
 ## 7. Production deployment and finite DoD — **priority one**
 
 Deploy one Go-native FCIS on the existing Hetzner host, with Caddy retaining the existing `https://fcis.fountain.coach/` identity. Fresh owner bootstrap and client reauthorization are acceptable because the installation currently has only its owners/operators.
@@ -219,6 +227,7 @@ This is a **second-priority specification seam**, not permission to start or dep
 - [FCIS-KIT Standard](docs/FCIS-KIT-Standard.md)
 - [Official OpenAPI Dependency](docs/FCIS-Official-OpenAPI-Dependency.md)
 - [Git Release Policy](docs/FCIS-Git-Release-Policy.md)
+- [FCIS European Regulatory Applicability and Change Maintenance](docs/FCIS-EU-Regulatory-Maintenance.md)
 - [Governance publication](https://governance.fountain.coach/) — independent public edition; no automatic publication from this Git file
 
 **Single-source rule:** An update to an external provider adapter, instrument release or hosted FCIS service is not an amendment of this document unless it changes the adopted stack contract. Conversely, editing this file never deploys a service or authorizes an instrument.

@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners.",
     "contact": {
       "name": "Fountain Coach FCIS",
@@ -749,14 +749,15 @@
         "x-fcis-production-state": "NOT_ESTABLISHED_GO",
         "description": "Use from the machine that received the issuer challenge. Supply request ID, public key and signature; browser Origin, Cookie and Authorization must all be absent. The issuer verifies possession of the matching machine key. The machine cannot approve itself, create owner trust or grant its own operations.",
         "requestBody": {
-          "description": "JSON body",
+          "description": "Required signed machine JSON body. Browser Origin, Cookie and Authorization headers MUST be absent.",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PairProofRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -780,7 +781,7 @@
             }
           },
           "401": {
-            "description": "Owner passkey required",
+            "description": "Missing or unverifiable device-signed proof; owner passkeys are not accepted as substitute machine authorization",
             "content": {
               "application/json": {
                 "schema": {
@@ -790,7 +791,7 @@
             }
           },
           "403": {
-            "description": "Wrong Origin or refused proof",
+            "description": "Forbidden browser Origin/Cookie/Authorization headers or rejected/mismatched device-signed proof",
             "content": {
               "application/json": {
                 "schema": {
@@ -862,7 +863,8 @@
           "sourceOwner": "FountainHostMCPOAuthHandler",
           "sourceConstant": "hostPairProofPath"
         },
-        "x-fcis-go-target-state": "specified-only-not-deployed"
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-machine-signed-body": true
       }
     },
     "/oauth/host/enrollment/activate": {
@@ -877,14 +879,15 @@
         "x-fcis-production-state": "NOT_ESTABLISHED_GO",
         "description": "Use from an authorized headless machine with an exact previously owner-signed issuer trust record and matching release artifact. The issuer verifies machine signature, nonce, timestamp, target, key and release identity. This signed-device route cannot receive browser Origin, Cookie or Authorization. A resulting admission does not prove reachability, MCP per-client scope or new tool callability.",
         "requestBody": {
-          "description": "JSON body",
+          "description": "Required signed machine JSON body. Browser Origin, Cookie and Authorization headers MUST be absent.",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/MachineActivationRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -908,7 +911,7 @@
             }
           },
           "403": {
-            "description": "Machine not trusted or mismatched",
+            "description": "Untrusted or mismatched machine signature/trust record, or forbidden browser Origin/Cookie/Authorization headers",
             "content": {
               "application/json": {
                 "schema": {
@@ -970,7 +973,8 @@
           "sourceOwner": "FountainHostMCPOAuthHandler",
           "sourceConstant": "hostMachineActivatePath"
         },
-        "x-fcis-go-target-state": "specified-only-not-deployed"
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-machine-signed-body": true
       }
     },
     "/oauth/owner/grants": {
@@ -4695,6 +4699,15 @@
     "fountainStore": "Dedicated native Go FountainStore bootstrap and atomic grant/revocation/execution receipt persistence; no made-up HTTP persistence endpoint.",
     "midi2": "MIDI2 IDL/MIDI-CI instrument negotiation and Host envelopes belong to their owning contract.",
     "instrument": "Admitted FCIS-KIT mechanical constraints and release proof are not defined by an HTTP path.",
-    "payment": "Second-priority provider-neutral FCIS payment instrument, Stripe adapter not yet specified/admitted as core FCIS HTTP paths."
+    "payment": "Second-priority provider-neutral FCIS payment instrument, Stripe adapter not yet specified/admitted as core FCIS HTTP paths.",
+    "regulatoryMaintenance": "The organization FCIS-STACK.md section 6.1 and docs/FCIS-EU-Regulatory-Maintenance.md govern ongoing EU/German legal applicability and release evidence. No regulatory HTTP route, approval API, or legal certification is created by this metadata."
+  },
+  "x-fcis-regulatory-maintenance": {
+    "policy": "docs/FCIS-EU-Regulatory-Maintenance.md",
+    "architecture": "FCIS-STACK.md#61-european-regulatory-maintenance--applicability-before-claims",
+    "scope": "Source-only applicability and change-management procedure, not deployed capability, automatically operating monitor, or legal certification",
+    "cadence": "monthly and on applicable law/product/deployment changes",
+    "registerAuthority": "Per affected deployable product/service; an existing editorial-app register cannot certify the new Go issuer",
+    "doesNotExpandCutoverDoD": true
   }
 }
