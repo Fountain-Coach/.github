@@ -1,4 +1,4 @@
-**Canonical FCIS standalone Go stack:** [FCIS-STACK.md](FCIS-STACK.md) owns the reviewed service architecture, Go-native FountainStore persistence, public cutover DoD and priority-two payment instrument. Do not duplicate its normative stack decisions here or in domain repositories; keep instruction-layer rules in RFC 0001 and executable contracts in their source owners. Source documentation is not deployed evidence.
+**Canonical FCIS Go stack and HTTP API:** [FCIS-STACK.md](FCIS-STACK.md) and its equal-authority [FCIS-OPENAPI.json](FCIS-OPENAPI.json) owns the reviewed service architecture, Go-native FountainStore persistence, public cutover DoD and priority-two payment instrument. Do not duplicate its normative stack decisions here or in domain repositories; keep instruction-layer rules in RFC 0001 and executable contracts in their source owners. Source documentation is not deployed evidence.
 
 # Fountain Coach Organization — Founding Agent Conduct
 
