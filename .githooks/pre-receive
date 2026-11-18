@@ -1,0 +1,37 @@
+#!/bin/sh
+# FCIS H3 candidate ingress: install an immutable reviewed copy in a bare Git origin.
+# A Git client cannot opt out of this receive-pack check. Nothing runs from candidate source.
+set -eu
+fail() { printf 'FCIS Git REFUSED: %s\n' "$*" >&2; exit 1; }
+zero40=0000000000000000000000000000000000000000
+zero64=0000000000000000000000000000000000000000000000000000000000000000
+seen=0
+while IFS=' ' read -r old new ref extra; do
+    [ -n "$ref" ] || fail "missing ref"
+    [ -z "${extra:-}" ] || fail "malformed ref transaction"
+    seen=1
+    case "$ref" in
+        refs/heads/main)
+            fail "direct main push forbidden: only separately authorized promotion"
+            ;;
+        refs/heads/candidates/*)
+            case "$ref" in refs/heads/candidates/*/*) fail "nested candidate ref forbidden" ;; esac
+            case "${ref#refs/heads/candidates/}" in ''|*[!a-zA-Z0-9._-]*) fail "unsafe candidate ref" ;; esac
+            case "$old" in "$zero40"|"$zero64") : ;; *) fail "candidate ref is immutable: create a new candidate ID" ;; esac
+            case "$new" in "$zero40"|"$zero64") fail "candidate deletion forbidden" ;; esac
+            git cat-file -e "$new^{commit}" || fail "candidate is not a reachable commit"
+            ;;
+        refs/heads/work/*)
+            case "$ref" in refs/heads/work/*/*) fail "nested work ref forbidden" ;; esac
+            case "${ref#refs/heads/work/}" in ''|*[!a-zA-Z0-9._-]*) fail "unsafe work ref" ;; esac
+            case "$new" in "$zero40"|"$zero64") fail "work ref deletion forbidden" ;; esac
+            git cat-file -e "$new^{commit}" || fail "work ref is not a commit"
+            case "$old" in
+                "$zero40"|"$zero64") : ;;
+                *) git merge-base --is-ancestor "$old" "$new" || fail "non-fast-forward work ref" ;;
+            esac
+            ;;
+        *) fail "unapproved ref namespace: $ref" ;;
+    esac
+done
+[ "$seen" -eq 1 ] || fail "empty ref transaction"
