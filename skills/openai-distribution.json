@@ -104,7 +104,7 @@
       "name": "fcis-go-runtime-migration",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-go-runtime-migration",
-      "contentSHA256": "6a3c512d6256d5ad51f3bd5c39db0ce901c8a366805cf872bd77b5ef747ba3df",
+      "contentSHA256": "6bee087932f5ec61e456ec9a4a73dd01c59827bd520d494f9b18c09d1c31eccb",
       "provenance": {
         "sourceDocument": "Fountain-Coach/midi2-gpu-fabric/docs/fcis-go-build-instrument-v0.1.0.md",
         "sourceCommit": "a41166fea218741c502b1b17f3bb860c3f5e8e40",
