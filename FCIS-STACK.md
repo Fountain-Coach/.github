@@ -1,6 +1,6 @@
 # FCIS — Standalone Go Stack Specification
 
-**Owner:** Fountain Coach · **Canonical source:** [`Fountain-Coach/.github/FCIS-STACK.md`](https://github.com/Fountain-Coach/.github/blob/main/FCIS-STACK.md)  
+**Owner:** Fountain Coach · **Canonical architecture:** [`FCIS-STACK.md`](FCIS-STACK.md) · **Peer canonical HTTP API:** [`FCIS-OPENAPI.json`](FCIS-OPENAPI.json) (OpenAPI 3.1.0; equal organization source authority for HTTP wire contracts)  
 **Architecture version:** 1.0 · **Decision date:** 18 November 2026  
 **Decision status:** Owner-selected target; Git review/merge and deployed conformance remain separate  
 **Public service identity:** `https://fcis.fountain.coach/`  
@@ -45,6 +45,14 @@ The user-selected initial deployment is one owner-operated installation. There a
 
 No architectural choice can silently widen the original cutover DoD. New gates require a reproduced failure or an already-applicable binding contract; see [FCIS Goal Fidelity](docs/FCIS-Non-Invention-and-Goal-Fidelity.md).
 
+## 2.1 Peer canonical OpenAPI authority
+
+The architectural source and its executable HTTP contract are maintained **together and at equal organization authority** in this repository: **[`FCIS-STACK.md`](FCIS-STACK.md)** owns system topology, persistence, instruction/capability boundaries and fixed DoD; **[`FCIS-OPENAPI.json`](FCIS-OPENAPI.json)** owns the exact Go-target HTTP paths, operationIds, request/response schemas, authentication mechanisms and refusals. Neither file derives its authority from the old Swift domain OpenAPI. Update both in one reviewed change when HTTP and architectural decisions intersect.
+
+The former [`midi2-gpu-fabric/apps/estate-publisher/contracts/fcis-owner.openapi.json`](https://github.com/Fountain-Coach/midi2-gpu-fabric/blob/fix/fcis-go-store-parity-witness-20261117/apps/estate-publisher/contracts/fcis-owner.openapi.json) is a **pinned historical compatibility input**, not a second mutable Go-target contract. Existing Swift test fixtures and predecessor production evidence remain unchanged until their own owning migration. Any derived source-domain or Access UI copy must declare its exact canonical root revision and must never edit its own semantics independently.
+
+Canonical OpenAPI describes HTTP boundaries only. MCP JSON-RPC method and tool schemas, MIDI2 IDL / MIDI-CI, FCIS-KIT execution contracts, and FountainStore WAL/on-disk semantics keep their separate authoritative owners. An OpenAPI operation marked `specified-only-not-deployed` is *not* an admitted Host command, released instrument, tested Go endpoint, or production evidence.
+
 ## 3. Logical topology
 
 ```text
@@ -85,7 +93,7 @@ Register a stable owner identity through a restricted, explicit first-owner boot
 
 Implement OAuth discovery, client registration, authorization/consent, authorization-code + PKCE S256 exchange, refresh rotation, token audiences, expiry, revocation, and durable grant records. Preserve the public **issuer URL**, not historical refresh tokens. Clients such as ChatGPT may reauthorize after the clean cutover.
 
-Public protocol surface includes `/.well-known/oauth-authorization-server`, `/.well-known/jwks.json`, `/.well-known/oauth-protected-resource`, `/oauth/register`, `/oauth/authorize`, `/oauth/token`, owner/Host endpoints, and `/mcp`. The exact checked-in, versioned API contract owns endpoint shapes; this summary does not invent additional operations.
+Public protocol surface includes `/.well-known/oauth-authorization-server`, `/.well-known/jwks.json`, `/.well-known/oauth-protected-resource`, `/oauth/register`, `/oauth/authorize`, `/oauth/token`, owner/Host endpoints, and `/mcp`. The peer canonical [`FCIS-OPENAPI.json`](FCIS-OPENAPI.json) owns endpoint shapes. The HTTP operation inventory is source-declared there and may include unimplemented target operations, explicitly labeled as such; the operation list is not an inventory of callable MCP tools.
 
 ### 4.3 MCP interface
 
@@ -184,7 +192,7 @@ This is a **second-priority specification seam**, not permission to start or dep
 
 ## 10. Source ownership and top-down navigation
 
-**This file alone is canonical for the FCIS Go stack.** Other repository READMEs should link here and declare their own boundary, never copy normative stack prose. Update this file through reviewed changes in `Fountain-Coach/.github`; downstream links are projections, and historical source/production claims must be verified independently.
+**This file and the peer [`FCIS-OPENAPI.json`](FCIS-OPENAPI.json) are canonical at the organization root, each for its declared authority (architecture and HTTP wire contract respectively).** Other repository READMEs should link here and declare their own boundary, never copy normative stack prose. Update this file through reviewed changes in `Fountain-Coach/.github`; downstream links are projections, and historical source/production claims must be verified independently.
 
 | Source owner / consumer | Responsibility and relationship |
 | --- | --- |
