@@ -227,6 +227,7 @@ This is a **second-priority specification seam**, not permission to start or dep
 - [FCIS-KIT Standard](docs/FCIS-KIT-Standard.md)
 - [Official OpenAPI Dependency](docs/FCIS-Official-OpenAPI-Dependency.md)
 - [Git Release Policy](docs/FCIS-Git-Release-Policy.md)
+- [FCIS European Regulatory Applicability and Change Maintenance](docs/FCIS-EU-Regulatory-Maintenance.md)
 - [Governance publication](https://governance.fountain.coach/) — independent public edition; no automatic publication from this Git file
 
 **Single-source rule:** An update to an external provider adapter, instrument release or hosted FCIS service is not an amendment of this document unless it changes the adopted stack contract. Conversely, editing this file never deploys a service or authorizes an instrument.
