@@ -90,6 +90,13 @@ done
 # /etc/passwd or expose its account inventory to an untrusted candidate.
 printf 'fcis-ci:x:65534:65534:FCIS isolated CI:/tmp:/bin/sh\n' > "$tmp/passwd"
 printf 'fcis-ci:x:65534:\n' > "$tmp/group"
+# GNU/Linux /usr/bin/awk may resolve through /etc/alternatives. Provide only
+# that public executable symlink, not the host's unrelated /etc files.
+awk_real=$(readlink -f /usr/bin/awk) || die 'POSIX awk resolver unavailable'
+case "$awk_real" in /usr/bin/*) ;; *) die 'unexpected awk executable location' ;; esac
+[ -x "$awk_real" ] || die 'resolved awk executable missing'
+mkdir "$tmp/alternatives"
+ln -s "$awk_real" "$tmp/alternatives/awk"
 # Candidate tests run only inside a read-only checkout with no network, keys, owner
 # Git origin or production Store. Operator-side program is pinned outside the candidate.
 set -- bwrap --unshare-user --unshare-net --unshare-ipc --unshare-uts --unshare-pid \
@@ -99,6 +106,7 @@ for d in /bin /lib /lib64; do
 done
 set -- "$@" --proc /proc --dev /dev --tmpfs /tmp --dir /home --dir /etc \
     --ro-bind "$tmp/passwd" /etc/passwd --ro-bind "$tmp/group" /etc/group \
+    --ro-bind "$tmp/alternatives" /etc/alternatives \
     --ro-bind "$tmp/source" /source --chdir /source \
     --setenv HOME /tmp --setenv PYTHONDONTWRITEBYTECODE 1 \
     --setenv GIT_CONFIG_NOSYSTEM 1 --setenv GIT_CONFIG_GLOBAL /dev/null \
