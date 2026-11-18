@@ -136,10 +136,10 @@ class H3GitAcceptanceTests(unittest.TestCase):
         else:
             # An intentionally expired signed fixture is outside the helper's permitted operation.
             payload.write_text(
-                f"FCIS-OWNER-PROMOTION-v1\\nrepository=Fountain-Coach/.github\\n"
-                f"candidate_ref={ref}\\ncandidate_sha={commit}\\n"
-                f"expected_main={old}\\npolicy_sha256={policy_sha}\\n"
-                f"expires={expires}\\n"
+                f"FCIS-OWNER-PROMOTION-v1\nrepository=Fountain-Coach/.github\n"
+                f"candidate_ref={ref}\ncandidate_sha={commit}\n"
+                f"expected_main={old}\npolicy_sha256={policy_sha}\n"
+                f"expires={expires}\n"
             )
             require_ok("ssh-keygen", "-Y", "sign", "-f", self.key, "-n",
                        "fcis-git-promotion", payload)
@@ -243,7 +243,7 @@ class H3GitAcceptanceTests(unittest.TestCase):
         ref, commit = self.candidate()
         approval = self.approve(ref, commit)
         with (self.policy / "trusted-files.sha256").open("a") as out:
-            out.write("invalid-policy-update\\n")
+            out.write("invalid-policy-update\n")
         result = self.promote(ref, commit, approval)
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual(self.ref("refs/heads/main"), self.seed)
