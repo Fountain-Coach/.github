@@ -18,13 +18,13 @@ class SovereigntyTests(unittest.TestCase):
                          "Choose the lane before execution",
                          "15-minute hard limit",
                          "one implementation attempt and one focused retry",
-                         "at most one full native/SwiftPM rebuild",
+                         "At most one full native/SwiftPM rebuild",
                          "Freeze dependency scope",
                          "Stop on the first terminal condition",
                          "first unmet acceptance predicate",
                          "DEV-VERIFIED", "PRODUCTION lane",
                          "scripts/fcis-ci.sh go", "GOPROXY=off",
-                         "does not require a live FCIS Host",
+                         "Do not require a live FCIS Host",
                          "not a blocker to DEV verification"):
             self.assertIn(required, skill)
         for required in ("Independent Go development verification",
@@ -43,7 +43,7 @@ class SovereigntyTests(unittest.TestCase):
         self.assertIn("only when invoking production Host effects", skill)
         self.assertIn("production Host's `workstation.go.verify` grant", reference)
         self.assertIn("not a prerequisite", reference)
-        self.assertIn("trusted Go source test", reference)
+        self.assertIn("trusted, pinned Go source test", reference)
         self.assertIn("Go version", reference)
         self.assertIn("go test -race -count=1 ./...", reference)
         self.assertIn("signed Host evidence", reference)
