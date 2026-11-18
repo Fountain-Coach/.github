@@ -1,3 +1,5 @@
+**Canonical FCIS standalone Go stack:** [FCIS-STACK.md](FCIS-STACK.md) owns the reviewed service architecture, Go-native FountainStore persistence, public cutover DoD and priority-two payment instrument. Do not duplicate its normative stack decisions here or in domain repositories; keep instruction-layer rules in RFC 0001 and executable contracts in their source owners. Source documentation is not deployed evidence.
+
 # Fountain Coach Organization — Founding Agent Conduct
 
 **Provider-neutral FCIS authority:** RFC 0001 FCIS-MODEL-1 governs the four instruction layers across admitted runtimes. Neither Codex, ChatGPT, OpenAI, nor another model provider is a mandatory FCIS executor. Treat `.codex/skills/` as the retained canonical Git path and vendor-specific adapter paths as derived projections. Do not claim ownership of external model infrastructure, model entitlements, or equivalent runtime support from a source Skill alone. See [FCIS Name and Identity](docs/FCIS-Name-and-Identity.md).
