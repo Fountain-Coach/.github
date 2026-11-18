@@ -1,5 +1,7 @@
 # FCIS — Official OpenAPI dependency and transferable provider examples
 
+**Stack cross-reference:** [FCIS standalone Go stack](../FCIS-STACK.md) establishes a **second-priority** provider-neutral payment instrument, with Stripe as its first proposed adapter. Any future Stripe adapter is subject to this official upstream-schema policy; the target spec is neither a pinned Stripe OpenAPI artifact nor payment-provider acceptance.
+
 **Status:** organization-owned agent/engineering procedure, introduced 1 November 2026. **Authority boundary:** FCIS governs the *use* of an external API, not the vendor's schema, model catalogue or semantics. A vendor-specific adapter is dependent on its provider's **official** OpenAPI where one exists. Never turn OpenAI's specification into FCIS's own protocol.
 
 ## Required implementation contract
