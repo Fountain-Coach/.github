@@ -39,10 +39,11 @@ command -v timeout >/dev/null || die 'bounded timeout unavailable'
 command -v python3 >/dev/null || die 'Python source validator unavailable'
 sha_file() {
     if command -v sha256sum >/dev/null 2>&1; then
-        sha256sum "$1" | awk '{print $1}'
+        sumline=$(sha256sum "$1") || return 1
     else
-        shasum -a 256 "$1" | awk '{print $1}'
+        sumline=$(shasum -a 256 "$1") || return 1
     fi
+    printf '%s\n' "${sumline%% *}"
 }
 policy_sha=$(sha_file "$policy/trusted-files.sha256")
 [ -f "$approval" ] && [ -f "$approval.sig" ] || die 'missing owner approval and detached signature'
@@ -74,8 +75,14 @@ env -i PATH=/usr/bin:/bin HOME="$tmp" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/d
     git -C "$tmp/source" -c core.hooksPath=/dev/null checkout --quiet --detach "$wanted" || die 'candidate checkout failed'
 [ "$(git -C "$tmp/source" rev-parse HEAD)" = "$wanted" ] || die 'candidate checkout digest mismatch'
 for rel in scripts/fcis-ci.sh skills/skillctl.py skills/plugin_projection.py skills/tests/test_fcis_posix_ci.py; do
-    match=$(awk -v p="$rel" '$2 == p { print $1 }' "$policy/trusted-files.sha256")
-    is_sha "$match" || die "missing or duplicate trusted validator entry: $rel"
+    match=''
+    while IFS=' ' read -r hash file rest; do
+        if [ "$file" = "$rel" ]; then
+            [ -z "$match" ] || die "duplicate trusted validator entry: $rel"
+            match=$hash
+        fi
+    done < "$policy/trusted-files.sha256"
+    is_sha "$match" || die "missing trusted validator entry: $rel"
     [ -f "$tmp/source/$rel" ] && [ ! -L "$tmp/source/$rel" ] || die "missing trusted validator: $rel"
     [ "$(sha_file "$tmp/source/$rel")" = "$match" ] || die "candidate changes pinned CI authority: $rel"
 done
