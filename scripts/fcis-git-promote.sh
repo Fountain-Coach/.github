@@ -79,6 +79,10 @@ for rel in scripts/fcis-ci.sh skills/skillctl.py skills/plugin_projection.py ski
     [ -f "$tmp/source/$rel" ] && [ ! -L "$tmp/source/$rel" ] || die "missing trusted validator: $rel"
     [ "$(sha_file "$tmp/source/$rel")" = "$match" ] || die "candidate changes pinned CI authority: $rel"
 done
+# Provide a synthetic unprivileged passwd entry; never bind the owner host's
+# /etc/passwd or expose its account inventory to an untrusted candidate.
+printf 'fcis-ci:x:65534:65534:FCIS isolated CI:/tmp:/bin/sh\n' > "$tmp/passwd"
+printf 'fcis-ci:x:65534:\n' > "$tmp/group"
 # Candidate tests run only inside a read-only checkout with no network, keys, owner
 # Git origin or production Store. Operator-side program is pinned outside the candidate.
 set -- bwrap --unshare-user --unshare-net --unshare-ipc --unshare-uts --unshare-pid \
@@ -86,7 +90,8 @@ set -- bwrap --unshare-user --unshare-net --unshare-ipc --unshare-uts --unshare-
 for d in /bin /lib /lib64; do
     [ -d "$d" ] && set -- "$@" --ro-bind "$d" "$d"
 done
-set -- "$@" --proc /proc --dev /dev --tmpfs /tmp --dir /home \
+set -- "$@" --proc /proc --dev /dev --tmpfs /tmp --dir /home --dir /etc \
+    --ro-bind "$tmp/passwd" /etc/passwd --ro-bind "$tmp/group" /etc/group \
     --ro-bind "$tmp/source" /source --chdir /source \
     --setenv HOME /tmp --setenv PYTHONDONTWRITEBYTECODE 1 \
     --setenv GIT_CONFIG_NOSYSTEM 1 --setenv GIT_CONFIG_GLOBAL /dev/null \
