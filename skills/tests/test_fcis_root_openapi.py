@@ -153,6 +153,37 @@ class FCISRootOpenAPITests(unittest.TestCase):
                     "payment"):
             self.assertIn(tag, self.api["x-fcis-non-http-contracts"])
 
+    def test_machine_enrollment_uses_signed_body_not_owner_passkey(self):
+        for route in ("/oauth/host/enrollment/prove",
+                      "/oauth/host/enrollment/activate"):
+            op = self.api["paths"][route]["post"]
+            self.assertEqual(op["security"], [])
+            self.assertTrue(op["x-fcis-machine-signed-body"])
+            self.assertTrue(op["requestBody"]["required"])
+            self.assertIn("Origin", op["requestBody"]["description"])
+            self.assertIn("Cookie", op["requestBody"]["description"])
+            self.assertIn("Authorization", op["requestBody"]["description"])
+            self.assertNotIn("owner passkey required",
+                             " ".join(r["description"] for r in op["responses"].values()).lower())
+        proof = self.api["paths"]["/oauth/host/enrollment/prove"]["post"]
+        self.assertIn("device-signed proof",
+                      proof["responses"]["401"]["description"])
+
+    def test_european_regulatory_maintenance_is_non_http_and_evidence_scoped(self):
+        policy = ROOT / "docs/FCIS-EU-Regulatory-Maintenance.md"
+        self.assertTrue(policy.is_file())
+        body = policy.read_text(encoding="utf-8")
+        self.assertIn("FCIS-EU-Regulatory-Maintenance.md", self.stack)
+        extension = self.api["x-fcis-regulatory-maintenance"]
+        self.assertEqual(extension["policy"], "docs/FCIS-EU-Regulatory-Maintenance.md")
+        self.assertTrue(extension["doesNotExpandCutoverDoD"])
+        self.assertIn("regulatoryMaintenance", self.api["x-fcis-non-http-contracts"])
+        self.assertTrue({"GDPR", "ePrivacy", "NIS2", "AI Act", "Cyber Resilience Act", "eIDAS"}.issubset(set(re.findall(r"GDPR|ePrivacy|NIS2|AI Act|Cyber Resilience Act|eIDAS", body))))
+        self.assertIn("monthly", body.lower())
+        self.assertIn("requires_review", body)
+        self.assertNotIn("/regulation", self.api["paths"])
+        self.assertNotIn("/compliance", self.api["paths"])
+
     def test_skills_are_mirrored_in_single_existing_plugin(self):
         for name in ("fcis-owner-access", "fcis-go-runtime-migration"):
             canonical = ROOT / ".codex" / "skills" / name
