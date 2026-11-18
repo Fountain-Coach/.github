@@ -9,6 +9,8 @@
 
 ---
 
+**Canonical runtime architecture:** [FCIS — Standalone Go Stack Specification](../FCIS-STACK.md) is the organization-owned architectural target for the Go FCIS service, native FountainStore authority, Host/MCP interfaces and priority-one cutover. Its separately scoped Stripe payment instrument is priority two. This RFC continues to own the four orthogonal instruction layers; the stack spec does not replace them.
+
 ## Abstract
 
 This document defines the **Fountain Coach Instruction System (FCIS)**, a normative, organization-wide standard for governing instructions, plans, Skills, and tool-capability access across supported agent runtimes. It does not own or require a particular model provider.

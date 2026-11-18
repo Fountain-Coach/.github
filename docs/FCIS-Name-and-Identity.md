@@ -1,5 +1,7 @@
 # FCIS — Name and Identity
 
+**Runtime architecture reference:** [FCIS standalone Go stack](../FCIS-STACK.md). This identity document remains the authority for the FCIS name, provider boundaries and four-layer instruction model; the linked stack spec owns only the selected Go service target.
+
 **Status:** Adopted naming and runtime-independence clarification (12 November 2026)
 **Owner:** Fountain Coach
 **Canonical expansion:** Fountain Coach Instruction System

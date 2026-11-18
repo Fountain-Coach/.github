@@ -1,5 +1,7 @@
 # Fountain Coach Security Architecture — Mandatory Implementation Briefing
 
+**Target runtime:** [FCIS standalone Go stack](../FCIS-STACK.md), which reuses this security baseline for owner passkeys, OAuth/MCP, authenticated Hosts and durable FountainStore evidence. This briefing remains a security perspective; source text is not live acceptance.
+
 **Priority:** highest. This is the company-wide security architecture for
 Fountain Coach repositories and systems that can authorize, install, publish,
 or operate a remote capability.
