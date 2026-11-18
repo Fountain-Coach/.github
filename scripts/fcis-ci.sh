@@ -2,7 +2,7 @@
 # FCIS canonical source-owned CI. POSIX shell on macOS/Ubuntu; no hosted CI dependency.
 # This runner validates source/checkouts, not issuer/Host authority or a production release.
 set -eu
-ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd -P)
+ROOT=$(CDPATH= cd "$(dirname "$0")/.." && pwd -P)
 cd "$ROOT"
 fail() { printf 'FCIS CI REFUSED: %s\n' "$*" >&2; exit 1; }
 note() { printf 'FCIS CI: %s\n' "$*"; }
