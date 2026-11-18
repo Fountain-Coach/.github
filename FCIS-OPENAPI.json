@@ -1573,12 +1573,11 @@
           {
             "name": "redirect_uri",
             "in": "query",
-            "required": {
-              "type": "string"
-            },
+            "required": true,
             "description": "Exact pre-registered redirect",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uri"
             }
           },
           {
@@ -3353,9 +3352,6 @@
         "scheme": "bearer",
         "bearerFormat": "JWT",
         "description": "Scoped OAuth resource access token; presence alone does not authorize a Host operation."
-      },
-      "legacyOwnerBasic": {
-        "description": "Predecessor-only Swift Basic mechanism. NOT authorized as an alternative for any standalone Go target operation."
       }
     },
     "schemas": {
@@ -3438,7 +3434,7 @@
             "description": "Names of issuer-projected permitted Host operations for this machine, not necessarily installed, routable or client-authorized MCP tools. The current handler emits host.describe or [] according to current admission."
           }
         },
-        "description": "One signed issuer fleet inventory member; neither a live Host observation nor a complete MCP tool catalog. The current native issuer emits only host.describe for a verified current grant. Future admitted capability identifiers must not be blocked by a fixed OpenAPI enumeration, but may be advertised only when backed by issuer/Host authority."
+        "description": "One signed issuer fleet inventory member; neither a live Host observation nor a complete MCP tool catalog. The current native issuer emits only host.describe for a verified current grant. Future admitted capability identifiers must not be blocked by a fixed OpenAPI enumeration, but may be advertised only when backed by issuer/Host authority.\nRoot Go target must project actual admitted capability inventory; predecessor enum is historical and never the authorization ceiling."
       },
       "OwnerFleetInventory": {
         "type": "object",
