@@ -29,6 +29,8 @@ diff_range() {
 }
 default_diff() {
   require git
+  if [ -n "${FCIS_CI_BASE:-}" ] && [ -z "${FCIS_CI_HEAD:-}" ]; then fail "FCIS_CI_HEAD is missing for supplied base"; fi
+  if [ -n "${FCIS_CI_HEAD:-}" ] && [ -z "${FCIS_CI_BASE:-}" ]; then fail "FCIS_CI_BASE is missing for supplied head"; fi
   if [ -n "${FCIS_CI_BASE:-}" ] && [ -n "${FCIS_CI_HEAD:-}" ] && ! is_zero "$FCIS_CI_BASE"; then
     diff_range "$FCIS_CI_BASE" "$FCIS_CI_HEAD"
   elif git rev-parse --verify -q 'HEAD^' >/dev/null 2>&1; then
@@ -78,7 +80,8 @@ go_checks() {
   case "$FCIS_CI_GO_CACHE_ROOT" in /*) ;; *) fail "Go cache root must be an absolute isolated path" ;; esac
   [ -d "$FCIS_CI_GO_CACHE_ROOT" ] || fail "Isolated Go cache root is not mounted"
   [ -f "$FCIS_CI_GO_MODULE/go.mod" ] || fail "Go module go.mod is missing"
-  check_commit "$FCIS_CI_GO_SHA"
+  case "$FCIS_CI_GO_SHA" in ''|*[!0123456789abcdefABCDEF]*) fail "Invalid pinned Go revision" ;; esac
+  git -C "$FCIS_CI_GO_MODULE" cat-file -e "$FCIS_CI_GO_SHA^{commit}" 2>/dev/null || fail "Pinned Go commit missing in module checkout"
   actual=$(git -C "$FCIS_CI_GO_MODULE" rev-parse HEAD) || fail "Go module checkout is not Git"
   [ "$actual" = "$FCIS_CI_GO_SHA" ] || fail "Pinned Go commit does not match checkout"
   [ -z "$(git -C "$FCIS_CI_GO_MODULE" status --porcelain)" ] || fail "Go module checkout is dirty"
