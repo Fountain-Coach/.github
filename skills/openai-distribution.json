@@ -45,7 +45,7 @@
       "name": "fcis-owner-access",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-owner-access",
-      "contentSHA256": "597b4a6bee379df4b961f0208b019a07d218521388a9ffce5f2e402a3e12928f",
+      "contentSHA256": "7c33169d351ce34ee2ae41167724626c22d5684f30f488082aab02c4cdfdcb6c",
       "provenance": {
         "sourceDocument": "Fountain-Coach/fountain-press/docs/access-passkey-first-owner-signin-2026-11-12.md",
         "sourceCommit": "ef9226a2dc25106caffc0ef3e87a7e110a17aef4",
@@ -104,7 +104,7 @@
       "name": "fcis-go-runtime-migration",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-go-runtime-migration",
-      "contentSHA256": "fc05949e746c95f5040b8e615b1e1afce539069f3f712b4747120bc1693cfce2",
+      "contentSHA256": "5323d996de03ed8b57d16452755b7911fcace81c3d72b6bf5e997e6c008cab23",
       "provenance": {
         "sourceDocument": "Fountain-Coach/midi2-gpu-fabric/docs/fcis-go-build-instrument-v0.1.0.md",
         "sourceCommit": "a41166fea218741c502b1b17f3bb860c3f5e8e40",

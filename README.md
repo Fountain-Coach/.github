@@ -7,6 +7,7 @@ This repository is the **canonical Git owner of Fountain Coach's organization-wi
 | Authority | Canonical source | What it owns |
 | --- | --- | --- |
 | **FCIS standalone Go stack** | [FCIS-STACK.md](FCIS-STACK.md) | Owner-selected Go service, dedicated native FountainStore, OAuth/MCP, Host/instrument architecture, scaling and cutover DoD |
+| **FCIS canonical HTTP OpenAPI** | [FCIS-OPENAPI.json](FCIS-OPENAPI.json) | Peer normative HTTP operations and wire schemas for the standalone Go target; all implementation/production statuses separately verified |
 | **FCIS RFC 0001** | [Organization profile](profile/README.md) | The four independent layers: AGENTS, PLANS, Skills and MCP |
 | **Behavioral law** | [AGENTS.md](AGENTS.md) | Organization agent invariants and instruction routing |
 | **Active intents** | [PLANS.md](PLANS.md) | Source task history, actual state, evidence and next actions |
@@ -35,3 +36,5 @@ The stack specification [maps each source boundary](FCIS-STACK.md#10-source-owne
 4. Keep **priority two** external payment work distinct from the already accepted **priority one** Go cutover DoD.
 
 The organization's [canonical FCIS Skills](.codex/skills/) remain source-controlled in this repository. Their marketplace, agent or API projections are derived, not competing authorities.
+
+**Maintenance:** HTTP paths, authentication and response shapes are changed in the organization-root `FCIS-OPENAPI.json`; legacy domain OpenAPI is a pinned predecessor/projection, not another writable source. Canonical Skills `fcis-owner-access` and `fcis-go-runtime-migration` govern changes and verification.
