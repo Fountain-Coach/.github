@@ -15,6 +15,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 RECEIVE = ROOT / ".githooks" / "pre-receive"
 PROMOTE = ROOT / "scripts" / "fcis-git-promote.sh"
+APPROVE = ROOT / "scripts" / "fcis-git-approve.sh"
 RUNNER = ROOT / "scripts" / "fcis-ci.sh"
 REQUIRED = (
     "scripts/fcis-ci.sh",
@@ -107,6 +108,16 @@ class H3GitAcceptanceTests(unittest.TestCase):
             )
         if problem == "validator":
             (self.work / "skills/skillctl.py").write_text("raise SystemExit(22)\n")
+        if problem == "isolation":
+            p = self.work / "skills/tests/test_isolation.py"
+            p.write_text(
+                "import os, unittest, socket\n"
+                "class SandboxTest(unittest.TestCase):\n"
+                "    def test_private_operator_policy_is_invisible(self):\n"
+                f"        self.assertFalse(os.path.exists({str(self.policy)!r}))\n"
+                "    def test_no_external_network_interface(self):\n"
+                "        self.assertEqual([name for _,name in socket.if_nameindex() if name != 'lo'], [])\n"
+            )
         require_ok("git", "add", ".", cwd=self.work)
         require_ok("git", "commit", "--quiet", "-m", name, cwd=self.work)
         commit = require_ok("git", "rev-parse", "HEAD", cwd=self.work)
@@ -116,20 +127,22 @@ class H3GitAcceptanceTests(unittest.TestCase):
 
     def approve(self, ref, commit, *, old=None, expires=None):
         old = old or self.seed
-        expires = expires or int(time.time()) + 600
         payload = self.policy.parent / f"approval-{self.n}.txt"
         policy_sha = sha(self.policy / "trusted-files.sha256")
-        payload.write_text(
-            f"FCIS-OWNER-PROMOTION-v1\n"
-            f"repository=Fountain-Coach/.github\n"
-            f"candidate_ref={ref}\n"
-            f"candidate_sha={commit}\n"
-            f"expected_main={old}\n"
-            f"policy_sha256={policy_sha}\n"
-            f"expires={expires}\n"
-        )
-        require_ok("ssh-keygen", "-Y", "sign", "-f", self.key, "-n",
-                   "fcis-git-promotion", payload)
+        if expires is None:
+            # Test the same reviewed POSIX owner approval helper as production operators.
+            require_ok("sh", APPROVE, self.key, "Fountain-Coach/.github",
+                       ref, commit, old, policy_sha, payload)
+        else:
+            # An intentionally expired signed fixture is outside the helper's permitted operation.
+            payload.write_text(
+                f"FCIS-OWNER-PROMOTION-v1\\nrepository=Fountain-Coach/.github\\n"
+                f"candidate_ref={ref}\\ncandidate_sha={commit}\\n"
+                f"expected_main={old}\\npolicy_sha256={policy_sha}\\n"
+                f"expires={expires}\\n"
+            )
+            require_ok("ssh-keygen", "-Y", "sign", "-f", self.key, "-n",
+                       "fcis-git-promotion", payload)
         return payload
 
     def promote(self, ref, commit, approval, *, old=None):
@@ -137,7 +150,7 @@ class H3GitAcceptanceTests(unittest.TestCase):
                    old or self.seed, approval)
 
     def test_shell_parses_and_main_direct_push_denied(self):
-        for path in (RECEIVE, PROMOTE, RUNNER):
+        for path in (RECEIVE, PROMOTE, APPROVE, RUNNER):
             self.assertEqual(run("sh", "-n", path).returncode, 0)
         ref, commit = self.candidate()
         result = run("git", "push", self.bare, f"{commit}:refs/heads/main",
@@ -215,6 +228,25 @@ class H3GitAcceptanceTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0, result.stdout)
         self.assertEqual(self.ref("refs/heads/main"), self.seed)
         self.assertNotIn("ACCEPTED candidate=", result.stdout)
+
+    @unittest.skipUnless(shutil.which("ssh-keygen") and shutil.which("bwrap") and shutil.which("timeout"),
+                         "Real Bubblewrap/OpenSSH sandbox unavailable")
+    def test_sandbox_hides_operator_files_and_nonloopback_interfaces(self):
+        ref, commit = self.candidate(problem="isolation")
+        approval = self.approve(ref, commit)
+        result = self.promote(ref, commit, approval)
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertEqual(self.ref("refs/heads/main"), commit)
+
+    @unittest.skipUnless(shutil.which("ssh-keygen"), "OpenSSH is unavailable")
+    def test_changed_trusted_policy_after_signing_refused(self):
+        ref, commit = self.candidate()
+        approval = self.approve(ref, commit)
+        with (self.policy / "trusted-files.sha256").open("a") as out:
+            out.write("invalid-policy-update\\n")
+        result = self.promote(ref, commit, approval)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.ref("refs/heads/main"), self.seed)
 
     @unittest.skipUnless(shutil.which("ssh-keygen") and shutil.which("bwrap") and shutil.which("timeout"),
                          "Real Bubblewrap/OpenSSH sandbox unavailable")
