@@ -42,7 +42,7 @@ def load(path: Path) -> dict:
 
 def blob_sha(path: Path) -> str:
     content = path.read_bytes()
-    return hashlib.sha1(b"blob " + str(len(content)).encode() + b"\\x00" + content).hexdigest()
+    return hashlib.sha1(b"blob " + str(len(content)).encode() + b"\x00" + content).hexdigest()
 
 
 def schema_validate(value: object, rules: dict, schema: dict, at: str = "$") -> None:
@@ -187,7 +187,7 @@ def check(system: dict, api: dict) -> None:
     for transform in system["frontend"]["sourceBindingReconciliation"]["requiredTransformations"]:
         required_ids.add(transform["id"])
     for command in system["initialization"]["requiredCommands"]:
-        required_ids.add("CLI-" + re.sub(r"\\W+", "-", command["name"]))
+        required_ids.add("CLI-" + re.sub(r"\W+", "-", command["name"]))
     catalog = system["generation"]["requirementCatalog"]
     ids = [row["id"] for row in catalog]
     if len(ids) != len(set(ids)) or set(ids) != required_ids:
