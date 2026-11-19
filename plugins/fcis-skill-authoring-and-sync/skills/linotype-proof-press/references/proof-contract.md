@@ -11,6 +11,14 @@
 - **Accessibility and language:** reading order, headings, alt text, text enlargement, focus/AX; browser selectors do not replace real assistive-technology acceptance.
 - **Environmental identity:** browser engine/version, tested CSS viewport/DPR, loaded fonts, image digests, source revision, release identity, screenshot digest. An unpinned browser or missing image invalidates exact visual regression comparison.
 
+## Nested composition evidence: inside versus outside
+
+Proof text and illustration at **distinct semantic boundaries**, not as a single undifferentiated occupancy rectangle. Record (1) paragraph lineation/leading and exact source continuity; (2) each diagram label's visible ink relative to *its own intended inner frame*; (3) union of figure header, panels, annotations and key within the **outer plate**; (4) caption adjacency and the figure+caption group's separation from preceding and following prose; (5) group containment within the leaf's Satzspiegel and actual facing-page relation. Source text inside a deliberately failing **diagram specimen** is an exception for that marked negative panel only, never permission to render the outer plate outside its page or overlap the positive specimen.
+
+A reader's request for additional breathing space is a request to clarify **external relationships among semantic units**, not a request to enlarge every line gap. Verify that the revised group spacing clarifies the ownership of ink and caption. Record machine widths/gaps to support, not replace, editorial judgment. Increase page count only when the measured readable composition requires it; report orphaned trailing prose and caption separation for review rather than scoring density automatically.
+
+**Regression:** on *Before We Can Work Together*, reject “fixed” proofs that shift all lines apart or split semantic groups while leaving figure/caption boundaries ambiguous. Keep rejected screenshots as negative evidence, never as a passing baseline. Distinguish `PASS_MEASURED` for actual nonoverlap and `EDITORIAL_REVIEW_REQUIRED` for the author's qualitative finding of inappropriate internal/external rhythm.
+
 ## Classify defects
 
 | State | Meaning | Release implication |

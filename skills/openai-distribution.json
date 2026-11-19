@@ -22,7 +22,7 @@
       "name": "linotype-estate-template",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/linotype-estate-template",
-      "contentSHA256": "85445483f52d18ae06543a9cf3682b9b472e8355d3b08f79ad2b3113b47e0e9d",
+      "contentSHA256": "2e8e3c698feaf6e828df60780248d8b7d9bd6150e71959682815e4321c244c24",
       "provenance": {
         "importedFrom": "Fountain-Coach/estate",
         "sourcePath": ".codex/skills/linotype-estate-template",
@@ -81,7 +81,7 @@
       "name": "linotype-proof-press",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/linotype-proof-press",
-      "contentSHA256": "930b3c6b5f93c3c5d2b52266964f98c8e2f79b67ba35e9f6417aeb3dee1329ed",
+      "contentSHA256": "736e4f225d7bdc088cad841f6bb6e66da6ed0406ee8c91afda2d2d17479ba8ec",
       "provenance": {
         "sourceDocument": "Fountain-Coach/fountain.coach/site/essays/what-makes-a-page-modern/combined-essay.md",
         "sourceCommit": "17e32af5b875ec5356ddfa8a9680711d60aaa4eb",
