@@ -37,6 +37,16 @@ Every leaf must account for its source, text measure, margins, original artwork/
 
 Where geometry, pixels or heuristics cannot decide, record **EDITORIAL_REVIEW_REQUIRED** with the work/source address, folio/platform and screenshot. A word-spacing or lineation adjustment may fix a sheet but must not rewrite the author's text or alter a source address. An approved exception must cite the writer's specific decision and edition; the machine cannot self-approve visual beauty or claim full literary proofreading.
 
+## 4a. Inside/outside proof: grouping before whitespace
+
+**Required for a request such as “more air,” “too dense,” or “the illustration is cramped.”** Start by identifying the exact *semantic* containers on the affected leaf: continuous prose paragraph, line/specimen frame, complete figure (including title, panel labels and any legend), attached caption, following prose, and the outer folio's Satzspiegel. Measure each layer independently. Read `linotype-estate-template/references/page-is-the-frame.md` and `linotype-semantic-data-plates.md` for the governing relationship.
+
+- **Inner coherence:** paragraph leading and lineation should support a single thought; do not spread lines apart, insert extra paragraphs, or change author text as a shortcut to white space. A diagram's own labels and specimens need measured internal insets; a deliberate *negative specimen* may overrun its **illustrated internal frame** only, never the adjacent panel, figure, caption or page.
+- **External relationship:** distinguish paragraph-to-figure separation, plate-to-caption attachment and caption-to-next-paragraph separation. Preserve the figure+caption as one unit. An attached caption must not visually drift nearer to unrelated prose than to its own figure; consider an intentional figure break before reducing readable type.
+- **Print proof reality:** check the actual ink and measure at intended physical print size, including verso/recto when present. Compare the original and corrected full folios, not just crops; avoid numeric page-fill targets, blanket line-spacing increases or “we gained one more page” as success evidence.
+
+**Negative regression case:** the author rejected two versions of *Before We Can Work Together*: a dense pre-web plate, then a global-spacing revision that made the reading more fragmented while leaving the figure's inner/outer grouping concept unresolved. A future proof that solves this only by extra leading, scattered caption/notes, isolated paragraphs or unnecessary leaves requires `EDITORIAL_REVIEW_REQUIRED` and must not be reported as “airier” or “accepted”. A geometry-only scanner may record measured group distances; only the editor accepts rhythm and modernity.
+
 ## 5. Acceptance and provenance
 
 Separate four gates: (a) exact admitted source and complete work inventory; (b) machine folio coverage/structural geometry, with no blocking defects; (c) every indicated exception editorially approved or corrected with a before/after proof; (d) independently observed running-stage and physical-device result. Keep landscape spread relationships and portrait independent. Pin source Git, release, browser/font identity, viewport, screenshots, SHA-256 and source-addressed findings. Store private book page captures only in the private evidence volume; never push them to public Git or use them as social artwork.
