@@ -114,6 +114,153 @@ def operation_index(api: dict) -> dict[tuple[str, str], dict]:
     return idx
 
 
+
+def _slug(value: str) -> str:
+    return re.sub(r"[^A-Za-z0-9]+", "-", str(value)).strip("-").upper()
+
+
+def _escape_pointer(value: str) -> str:
+    return str(value).replace("~", "~0").replace("/", "~1")
+
+
+def pointer_value(system: dict, pointer: str) -> object:
+    if not pointer.startswith("/"):
+        reject(f"invalid source pointer {pointer}")
+    value = system
+    for piece in pointer[1:].split("/"):
+        key = piece.replace("~1", "/").replace("~0", "~")
+        if isinstance(value, dict):
+            if key not in value:
+                reject(f"missing atomic source target: {pointer}")
+            value = value[key]
+        elif isinstance(value, list):
+            if not key.isdigit() or int(key) >= len(value):
+                reject(f"atomic source index invalid: {pointer}")
+            value = value[int(key)]
+        else:
+            reject(f"atomic source pointer traverses a primitive: {pointer}")
+    return value
+
+
+def expected_atomic(system: dict) -> dict[str, dict[str, str]]:
+    """Derive every subordinate requirement from actual contract fields and steps.
+
+    A published catalog entry cannot manufacture an ungrounded pointer or drop
+    a state/field while claiming the old denominator. Neither this function
+    nor the catalog proves implementation; generation needs its own gate.
+    """
+    expected = {}
+
+    def record(ident: str, pointer: str, cls: str, name: str) -> None:
+        if ident in expected:
+            reject(f"duplicate derived atomic requirement {ident}")
+        pointer_value(system, pointer)
+        expected[ident] = {
+            "sourcePointer": pointer, "proofClass": cls, "name": name,
+        }
+
+    def array(stem: str, pointer: str, ident, label, cls: str) -> None:
+        values = pointer_value(system, pointer)
+        if not isinstance(values, list):
+            reject(f"{pointer} must be an array for atomic coverage")
+        for index, value in enumerate(values):
+            record(stem + ident(value, index), f"{pointer}/{index}",
+                   cls, label(value, index))
+
+    def fields(stem: str, pointer: str, cls: str) -> None:
+        value = pointer_value(system, pointer)
+        if not isinstance(value, dict):
+            reject(f"{pointer} must be an object for atomic coverage")
+        for field in value:
+            record(stem + _slug(field), f"{pointer}/{_escape_pointer(field)}",
+                   cls, f"{cls}: {field}")
+
+    two = lambda x, i: f"{i+1:02d}"
+    array("INIT-TRANSITION-", "/initialization/stateMachine",
+          two, lambda x, i: f"{x['state']} / {x['action']} -> {x['next']}", "state-machine")
+    array("ADMISSION-TRANSITION-", "/capabilitySystem/admissionStateMachine",
+          two, lambda x, i: f"{x['from']} / {x['event']} -> {x['to']}", "state-machine")
+    array("VAULT-OP-", "/secretStoreFormat/operations",
+          lambda x, i: _slug(x["id"]), lambda x, i: f"SecretStore operation {x['id']}", "custody-operation")
+    array("SKILL-STATE-", "/skillAndScenarioSystem/lifecycle",
+          lambda x, i: _slug(x), lambda x, i: f"Skill lifecycle: {x}", "skill-lifecycle")
+    array("PRINCIPAL-", "/ownerAndTenancy/principalTypes",
+          lambda x, i: _slug(x), lambda x, i: f"Authorization principal: {x}", "principal-type")
+    array("COLLECTION-", "/persistence/logicalCollections",
+          lambda x, i: _slug(x), lambda x, i: f"FountainStore collection {x}", "store-schema")
+    array("MCP-METHOD-", "/capabilitySystem/mcp/methods",
+          lambda x, i: _slug(x), lambda x, i: f"MCP method {x}", "mcp-transport")
+    array("HOST-CONTROL-", "/capabilitySystem/hostTransport/control/required",
+          lambda x, i: _slug(x), lambda x, i: f"Host signed request field {x}", "host-wire")
+    array("HOST-RECEIPT-", "/capabilitySystem/hostTransport/receipts/required",
+          lambda x, i: _slug(x), lambda x, i: f"Host terminal receipt field {x}", "host-receipt")
+    array("STORE-WAL-", "/persistentStoreFormat/wal/frame/layout",
+          two, lambda x, i: f"WAL physical field {x}", "store-wire")
+    array("VAULT-AAD-", "/secretStoreFormat/envelope/aad",
+          lambda x, i: _slug(x), lambda x, i: f"Vault authenticated data field {x}", "custody-wire")
+    array("UI-TAB-", "/frontend/tabs",
+          lambda x, i: _slug(x), lambda x, i: f"Frontend tab {x}", "frontend-bind")
+    array("ADOPT-STEP-", "/migration/steps",
+          two, lambda x, i: f"Optional migration operation {x}", "adoption")
+    array("OUTPUT-", "/generation/requiredArtifacts",
+          two, lambda x, i: f"Generated deliverable {x}", "generation")
+    fields("OWNER-POLICY-", "/ownerAndTenancy", "owner-policy")
+    fields("BOOTSTRAP-", "/initialization/setupTicket", "bootstrap")
+    return expected
+
+
+def check_atomic_coverage(system: dict, base_ids: set[str]) -> int:
+    derived = expected_atomic(system)
+    catalog = system["generation"]["requirementCatalog"]
+    ids = [row["id"] for row in catalog]
+    required_ids = base_ids | set(derived)
+    if len(ids) != len(set(ids)) or set(ids) != required_ids:
+        reject("coverage catalog mismatch: missing "
+               f"{sorted(required_ids - set(ids))}, unexpected {sorted(set(ids) - required_ids)}")
+    for row in catalog:
+        ident = row["id"]
+        if ident in derived:
+            for field, expected in derived[ident].items():
+                if row.get(field) != expected:
+                    reject(f"atomic {ident} {field} drift: {row.get(field)!r}")
+        if row.get("mandatory") is not True:
+            reject(f"non-mandatory requirement {ident}")
+    groups = {}
+    for row in derived.values():
+        cls = row["proofClass"]
+        groups[cls] = groups.get(cls, 0) + 1
+    actual = system["coverageBaseline"].get("atomicRequirementGroups")
+    if actual != groups:
+        reject(f"atomic coverage group mismatch: {actual} != {groups}")
+    count = len(catalog)
+    if count < 222:
+        reject(f"atomic coverage floor lost: {count} < 222")
+    for path, recorded in [
+        ("coverageBaseline.atomicRequirementCount",
+         system["coverageBaseline"].get("atomicRequirementCount")),
+        ("generation.requirementGate.expectedRequirementCount",
+         system["generation"]["requirementGate"].get("expectedRequirementCount")),
+        ("generation.requirementGate.minimumAtomicRequirementCount",
+         system["generation"]["requirementGate"].get("minimumAtomicRequirementCount"))
+    ]:
+        if recorded != count:
+            reject(f"{path} differs from derived atomic total {count}")
+    classes = system["generation"]["requirementGate"].get("atomicCoverageClasses")
+    if set(classes or []) != set(groups) or len(classes) != len(groups):
+        reject("atomic coverage class inventory drift")
+    receipt = system["generation"]["requirementGate"]["generatorReceipt"]
+    if receipt.get("initialStatus") != "INCOMPLETE":
+        reject("generation may not start COMPLETE")
+    if set(receipt.get("requiredMappingFields", [])) != {
+        "requirementID", "sourcePath", "symbol", "sourceSHA256",
+        "implementationKind", "refusalPath", "terminalProofWhereApplicable"
+    }:
+        reject("independent generation coverage receipt is not source-and-refusal bound")
+    if "INCOMPLETE" not in receipt.get("resumption", ""):
+        reject("generation resumption does not fail closed")
+    return count
+
+
 def check(system: dict, api: dict) -> None:
     if system["sourcePinPolicy"]["httpContractVersion"] != api["info"]["version"]:
         reject("source-pin contract version differs from canonical HTTP API")
@@ -188,18 +335,14 @@ def check(system: dict, api: dict) -> None:
         required_ids.add(transform["id"])
     for command in system["initialization"]["requiredCommands"]:
         required_ids.add("CLI-" + re.sub(r"\W+", "-", command["name"]))
+    count = check_atomic_coverage(system, required_ids)
     catalog = system["generation"]["requirementCatalog"]
-    ids = [row["id"] for row in catalog]
-    if len(ids) != len(set(ids)) or set(ids) != required_ids:
-        reject(f"coverage catalog mismatch: missing {sorted(required_ids-set(ids))}, unexpected {sorted(set(ids)-required_ids)}")
-    if len(catalog) != system["generation"]["requirementGate"]["expectedRequirementCount"]:
-        reject("generation coverage denominator mismatch")
     if system["generation"]["requirementGate"]["testsAllowedOnlyAfterGeneration"] is not True:
         reject("code generation and runtime tests are not separated")
     if system["designPrinciple"]["defaultProfile"] != "fresh-install":
         reject("default mode must be standalone, not migration")
     print(f"FCIS SPEC SOURCE PASS: schema, {len(sys_ops)} FCIS HTTP operations, "
-          f"{len(catalog)} mandatory requirements, {len(system['specificationSources'])} pinned sources")
+          f"{count} mandatory requirements, {len(system['specificationSources'])} pinned sources")
     print(f"  SYSTEM SHA-256 {hashlib.sha256(SYSTEM.read_bytes()).hexdigest()}")
     print(f"  OPENAPI SHA-256 {hashlib.sha256(OPENAPI.read_bytes()).hexdigest()}")
     print("  SOURCE ONLY: no Go generation, runtime tests, grants, deployment or production claim")
