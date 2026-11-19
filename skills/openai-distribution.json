@@ -45,7 +45,7 @@
       "name": "fcis-owner-access",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-owner-access",
-      "contentSHA256": "a818ff604f54354b660b81b7a272ed7330de13880a1ec8acbde3f9c28f854faa",
+      "contentSHA256": "b93310bb9be7ba0bbdeaf55d0d429b6af897c6a6f24b0d7b957655144a256e6b",
       "provenance": {
         "sourceDocument": "Fountain-Coach/fountain-press/docs/access-passkey-first-owner-signin-2026-11-12.md",
         "sourceCommit": "ef9226a2dc25106caffc0ef3e87a7e110a17aef4",
