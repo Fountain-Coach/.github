@@ -2,7 +2,7 @@
   "kind": "fountaincoach.fcis.system.composition",
   "schemaVersion": "1.0.0",
   "compositionId": "fountaincoach.fcis.whole-system",
-  "status": "NORMATIVE_SPECIFICATION_CANDIDATE__NOT_GENERATED",
+  "status": "SPEC_VALIDATED__NOT_GENERATED",
   "generatedAtUTC": "2026-11-19",
   "owner": "Fountain Coach",
   "architectureVersion": "1.2",
@@ -3553,7 +3553,7 @@
       }
     ],
     "architectureDecision": "All five are resolved by explicit source-independent design requirements, not by claiming the old live environments exist.",
-    "verificationStatus": "SOURCE_REVALIDATION_PENDING__NOT_GENERATED",
+    "verificationStatus": "SOURCE_CI_VALIDATED__NOT_GENERATED",
     "productionInstanceInventory": "OPTIONAL_NOT_A_GENERATION_GATE",
     "sourceAcceptance": {
       "reviewedPR": "https://github.com/Fountain-Coach/.github/pull/106",
@@ -3581,6 +3581,23 @@
         "19 immutable input Git source identities"
       ],
       "scopeOfAcceptance": "Only the organization-owned written specification and source checks. No generated Go system, no runtime tests, no verified deployed issuer, no existing-instance migration or production approval."
+    },
+    "validationReceipt": {
+      "scope": "source-only",
+      "witness": "https://github.com/Fountain-Coach/.github/actions/runs/44543853446",
+      "sourceCommit": "7a4f61dd9af5d58a374f8322768691d2144b18cc",
+      "sourceTests": 209,
+      "fcisHTTPOperations": 30,
+      "mandatoryRequirements": 222,
+      "pinnedSources": 19,
+      "negativeTests": [
+        "omitted requirement",
+        "altered source pointer",
+        "removed bootstrap transition",
+        "falsified denominator",
+        "premature COMPLETE receipt"
+      ],
+      "limitations": "No generated Go code, compile/test, live FCIS Host, server or production acceptance witnessed."
     }
   },
   "sourcePinPolicy": {
@@ -3592,5 +3609,5 @@
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },
   "documentSchema": "FCIS-SYSTEM.schema.json",
-  "authorityNotice": "Source CI has accepted structure, source revisions and cross-contract consistency. This is a prerequisite-free normative design, not evidence of a generated executable, formal security certification or deployed operation."
+  "authorityNotice": "Prerequisite-free FCIS normative source specification, validated by owner-owned CI at referenced commit; generated Go binaries, runtime tests and deployments are separately unverified."
 }
