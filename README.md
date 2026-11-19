@@ -23,7 +23,7 @@ This repository is the **canonical Git owner of Fountain Coach's organization-wi
 
 **Second:** A separately admitted provider-neutral payment instrument with **Stripe as the first adapter**. Payment integration does not block FCIS Go cutover.
 
-These are **architecture decisions**, not claims that the new Go service or payment instrument has been released. For authoritative whole-system scope and source coverage, read [FCIS-SYSTEM.json](FCIS-SYSTEM.json), then [FCIS-STACK.md](FCIS-STACK.md) and the peer [FCIS-OPENAPI.json](FCIS-OPENAPI.json). The JSON specification is still a normative candidate, not a generated binary, a passed test or a production release.
+These are **architecture decisions**, not claims that the new Go service or payment instrument has been released. For authoritative whole-system scope and source coverage, read [FCIS-SYSTEM.json](FCIS-SYSTEM.json), then [FCIS-STACK.md](FCIS-STACK.md) and the peer [FCIS-OPENAPI.json](FCIS-OPENAPI.json). The JSON specification has passed **source-only** validation on protected GitHub review; it is not a generated binary, Go runtime test, operator grant or production release.
 
 ## Source-owning and consuming repositories
 

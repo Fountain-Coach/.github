@@ -2,7 +2,7 @@
   "kind": "fountaincoach.fcis.system.composition",
   "schemaVersion": "1.0.0",
   "compositionId": "fountaincoach.fcis.whole-system",
-  "status": "NORMATIVE_SPECIFICATION_CANDIDATE__NOT_GENERATED",
+  "status": "SPEC_VALIDATED__NOT_GENERATED",
   "generatedAtUTC": "2026-11-19",
   "owner": "Fountain Coach",
   "architectureVersion": "1.2",
@@ -36,17 +36,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "549605b7ed0758ff1b6dd00826cd2abab392e8e7",
+      "ref": "a53efd6348919ebe80fcd92141613a064f0cb93c",
       "path": "FCIS-STACK.md",
       "blobSha": "ffec2078940348cf3199d64d76b47525674d9808",
-      "url": "https://github.com/Fountain-Coach/.github/blob/549605b7ed0758ff1b6dd00826cd2abab392e8e7/FCIS-STACK.md"
+      "url": "https://github.com/Fountain-Coach/.github/blob/a53efd6348919ebe80fcd92141613a064f0cb93c/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "ea53f405d73dda34ea198744f85b03e7f6cb45de",
+      "ref": "a53efd6348919ebe80fcd92141613a064f0cb93c",
       "path": "FCIS-OPENAPI.json",
       "blobSha": "82b904c09c2aad620b1f2d441a43ec4c4b5321f7",
-      "url": "https://github.com/Fountain-Coach/.github/blob/ea53f405d73dda34ea198744f85b03e7f6cb45de/FCIS-OPENAPI.json"
+      "url": "https://github.com/Fountain-Coach/.github/blob/a53efd6348919ebe80fcd92141613a064f0cb93c/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -2609,8 +2609,35 @@
       }
     ],
     "architectureDecision": "All five are resolved by explicit source-independent design requirements, not by claiming the old live environments exist.",
-    "verificationStatus": "CANDIDATE_AWAITING_INDEPENDENT_STRUCTURAL_AND_CONSISTENCY_VALIDATION",
-    "productionInstanceInventory": "OPTIONAL_NOT_A_GENERATION_GATE"
+    "verificationStatus": "SOURCE_CI_VALIDATED__NOT_GENERATED",
+    "productionInstanceInventory": "OPTIONAL_NOT_A_GENERATION_GATE",
+    "sourceAcceptance": {
+      "reviewedPR": "https://github.com/Fountain-Coach/.github/pull/106",
+      "protectedMainCommit": "a53efd6348919ebe80fcd92141613a064f0cb93c",
+      "candidateHead": "d61254176a8ffa3c9534d11fd27f88a592573b11",
+      "sourceCIRuns": [
+        {
+          "runID": 44540731432,
+          "conclusion": "success",
+          "testSuiteCount": 204
+        },
+        {
+          "runID": 44540749372,
+          "conclusion": "success",
+          "testSuiteCount": 204
+        }
+      ],
+      "checks": [
+        "JSON schema and required cross-component fields",
+        "canonical OpenAPI v0.4.0 method/security/schema concordance",
+        "Git blob digest and immutable source-reference binding",
+        "zero-state initialization semantics",
+        "optional adoption isolation",
+        "97 mandatory source coverage identifiers",
+        "19 immutable input Git source identities"
+      ],
+      "scopeOfAcceptance": "Only the organization-owned written specification and source checks. No generated Go system, no runtime tests, no verified deployed issuer, no existing-instance migration or production approval."
+    }
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
@@ -2621,5 +2648,5 @@
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },
   "documentSchema": "FCIS-SYSTEM.schema.json",
-  "authorityNotice": "This is a proposed complete normative target specification; content, coverage and source consistency must be independently validated before any Go generation. It is not evidence of existing product implementation, security certification or public release."
+  "authorityNotice": "Source CI has accepted structure, source revisions and cross-contract consistency. This is a prerequisite-free normative design, not evidence of a generated executable, formal security certification or deployed operation."
 }
