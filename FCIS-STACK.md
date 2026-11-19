@@ -1,8 +1,8 @@
 # FCIS — Standalone Go Stack Specification
 
 **Owner:** Fountain Coach · **Canonical architecture:** [`FCIS-STACK.md`](FCIS-STACK.md) · **Peer canonical HTTP API:** [`FCIS-OPENAPI.json`](FCIS-OPENAPI.json) (OpenAPI 3.1.0; equal organization source authority for HTTP wire contracts)  
-**Architecture version:** 1.0 · **Decision date:** 18 November 2026  
-**Decision status:** Owner-selected target; Git review/merge and deployed conformance remain separate  
+**Architecture version:** 1.1 · **Initial decision:** 18 November 2026 · **Owner continuity correction:** 19 November 2026  
+**Decision status:** Owner-selected target, now requiring Hetzner-first identity and grant continuity; Git review/merge and deployed conformance remain separate  
 **Public service identity:** `https://fcis.fountain.coach/`  
 **Immediate priority:** Go-native production cutover · **Second priority:** payment instrument with a Stripe provider adapter
 
@@ -34,14 +34,14 @@ The user-selected initial deployment is one owner-operated installation. There a
 | Runtime protocol | MCP for AI clients; authenticated typed Host/MIDI2 instrument interfaces |
 | Human authentication | WebAuthn/passkeys, bound to an explicitly authorized owner |
 | Client authorization | OAuth 2.0 authorization code + PKCE S256; scoped grants and revocation |
-| Persistence | Fresh dedicated **FountainStore**, accessed and managed natively by Go |
+| Persistence | New dedicated Go-native **FountainStore** root on Hetzner, populated by verified transfer of the existing FCIS identity, grants and revocations |
 | Git authority | `Fountain-Coach/.github` for instruction/Skill ownership; source-owning repositories retain their executable contracts |
 | Service deployment | Immutable source-bound Go artifact, service supervision and independently verified HTTPS release |
-| Initial operators | Fountain Coach owner(s); clients and machines may re-enroll |
+| Initial operators | Existing Fountain Coach owner and admitted Hosts retain identity and verified permissions; re-enrollment only if a specific credential cannot be transferred securely |
 | First production priority | Go issuer **and** MCP active on the existing production origin, with native persistent authorization |
 | Second priority | Provider-neutral payment instrument; Stripe is its first adapter |
 
-**Explicit non-dependencies for the initial FCIS cutover:** Swift OAuth issuer, a legacy Swift snapshot, migration of historical refresh families, PostgreSQL, SQLite, Kubernetes, distributed replication, hosted-model inference, Stripe, or migration of other Fountain Coach services.
+**Explicit non-dependencies for the initial FCIS cutover:** keeping a Swift OAuth issuer running after cutover, PostgreSQL, SQLite, Kubernetes, distributed replication, hosted-model inference, Stripe, or migration of unrelated Fountain Coach services. **Old-to-new FCIS FountainStore and SecretStore security-state continuity is required** under the [Migration Security Profile](docs/FCIS-Migration-Security-Profile.md). Historical raw bearer-token export is not required; valid consent/grant, refresh-family and revocation semantics must not be silently lost.
 
 No architectural choice can silently widen the original cutover DoD. New gates require a reproduced failure or an already-applicable binding contract; see [FCIS Goal Fidelity](docs/FCIS-Non-Invention-and-Goal-Fidelity.md).
 
@@ -87,11 +87,11 @@ These are **logical modules**, not a mandate for independent network microservic
 
 ### 4.1 Owner identity and WebAuthn
 
-Register a stable owner identity through a restricted, explicit first-owner bootstrap. Verify WebAuthn challenge, origin, relying-party ID, signature, user verification, expiration, replay resistance and credential state. Passkey identity is **not** blanket Host authorization. Never reinitialize the owner or generate a new authority silently on restart/corruption. Private signing material is kept in protected secret custody outside Git and public APIs.
+Preserve the **existing** authorized owner identity and its WebAuthn credential/public-key bindings in the old-to-new FCIS Store transfer. Verify WebAuthn challenge, origin, relying-party ID, signature, user verification, expiration, replay resistance and credential state. Passkey identity is **not** blanket Host authorization. First-owner bootstrap is permitted **only if an installation is independently verified to have no prior owner**; it is not the production migration path. Never reinitialize the owner or generate replacement authority silently on restart/corruption. Private signing material remains in protected SecretStore custody outside Git and public APIs; the headless Hetzner process must not depend on a Mac Keychain.
 
 ### 4.2 OAuth authority
 
-Implement OAuth discovery, client registration, authorization/consent, authorization-code + PKCE S256 exchange, refresh rotation, token audiences, expiry, revocation, and durable grant records. Preserve the public **issuer URL**, not historical refresh tokens. Clients such as ChatGPT may reauthorize after the clean cutover.
+Implement OAuth discovery, client registration, authorization/consent, authorization-code + PKCE S256 exchange, refresh rotation, token audiences, expiry, revocation, and durable grant records. Preserve the public **issuer URL** and independently verified active grants, rotation-family validity and revocation state. Never copy raw bearer tokens into an unprotected migration record; reauthorize a client (such as ChatGPT) **only** if the specific predecessor grant cannot be securely imported and verified. Never activate a grant from an unauthenticated database copy.
 
 Public protocol surface includes `/.well-known/oauth-authorization-server`, `/.well-known/jwks.json`, `/.well-known/oauth-protected-resource`, `/oauth/register`, `/oauth/authorize`, `/oauth/token`, owner/Host endpoints, and `/mcp`. The peer canonical [`FCIS-OPENAPI.json`](FCIS-OPENAPI.json) owns endpoint shapes. The HTTP operation inventory is source-declared there and may include unimplemented target operations, explicitly labeled as such; the operation list is not an inventory of callable MCP tools.
 
@@ -119,7 +119,7 @@ For a named run record request identity, idempotency identity, actor, resource, 
 
 ### 5.1 Ownership
 
-Use a **new, private FCIS FountainStore root**, initially on a persistent Hetzner volume. Implement native Go bootstrap from an empty root; no requirement for a Swift-generated manifest, historical Store relocation, or production Swift process.
+Use a **new, private FCIS FountainStore root** on a persistent Hetzner volume, controlled by the native Go writer. Initialize its empty physical storage, then import **verified existing FCIS logical authority** from the currently authoritative FountainStore on Hetzner. This is a logical security-state transfer, not a requirement to run a Swift process after cutover or copy an entire unrelated Store directory. Preserve original owner/passkeys, client/grant/rotation/revocation and signed Host identities with independent readback.
 
 The canonical FountainStore engine and on-disk format are owned by [`Fountain-Coach/Fountain-Store`](https://github.com/Fountain-Coach/Fountain-Store). Native Go support must be versioned, tested against that owning contract and must not become a silent incompatible fork.
 
@@ -142,11 +142,16 @@ The initial service uses one authoritative writer. Replicated high-availability 
 
 FountainStore is the **owned storage technology**, not a requirement to keep an unrelated Swift-based Store daemon alive. Other applications may use their own instances. The FCIS persistent root must not be concurrently writable by unrelated Hosts.
 
+### 5.5 Existing authority continuity and SecretStore custody
+
+The [FCIS Migration Security Profile](docs/FCIS-Migration-Security-Profile.md) governs the **Hetzner-initiated** old-to-new transfer. It requires source/target inventories, existing owner trust-root verification, source snapshot and verified restore, single-writer fencing, typed migration of security state, protected SecretStore custody, revocation-safe rollback and independently verified cutover. The existing Golden Key owner UX may approve a specific operation on any eligible enrolled device; a WebAuthn sign-in is not by itself a substitute for a separately required owner-root signature. The Mac is not a dependency or migration controller. The peer canonical OpenAPI needs no new HTTP method unless an existing public operation actually changes.
+
+
 ## 6. Security and operational invariants
 
 - TLS terminates at Caddy; Go listens on a private interface.
 - Signing keys, passkey secrets and service credentials are never committed to Git or rendered in diagnostic output.
-- Bootstrap creates an authorized owner rather than exposing a public unauthenticated enrollment endpoint.
+- On an existing deployment, migration preserves the current authorized owner and authenticators; no silent replacement bootstrap or unrestricted enrollment. A genuinely empty new installation remains a separate case.
 - Every client/Host grant is bounded to explicit scopes, audience, expiry, target and capability where applicable.
 - Refresh rotation, revocation, idempotency and denial remain effective after restart.
 - Provider/model availability, instrument execution admission and terminal evidence are independently represented.
@@ -172,18 +177,18 @@ Keep the existing GitHub `build` branch rule intact until a replacement owned-or
 
 ## 7. Production deployment and finite DoD — **priority one**
 
-Deploy one Go-native FCIS on the existing Hetzner host, with Caddy retaining the existing `https://fcis.fountain.coach/` identity. Fresh owner bootstrap and client reauthorization are acceptable because the installation currently has only its owners/operators.
+Deploy one Go-native FCIS on the existing **headless Hetzner** host, with Caddy retaining the existing `https://fcis.fountain.coach/` identity. The **Hetzner host initiates** the old-to-new FountainStore and SecretStore authority migration. Preserve verified existing owner and machine identities, credential public-key bindings, grants and revocations: the system has an existing owner, even if only one. No Mac-dependent operator ceremony or automatic mass client reauthorization.
 
 **Initial cutover succeeds exactly when:**
 
 1. Public OAuth **and** MCP are served by the standalone Go runtime, with no Swift FCIS service in the active request path.
-2. The FCIS-owned FountainStore initializes from empty storage; durable identity/grants and receipts survive restart.
-3. Owner passkey sign-in and scoped OAuth code/PKCE authorization function against the public issuer.
+2. The FCIS-owned Go FountainStore initializes an empty physical root and receives verified old-to-new security-state continuity; owner, grants, revoked permissions and Store receipts survive restart without widened authority.
+3. The existing owner passkey bindings and scoped OAuth code/PKCE authorization function against the public issuer, with key custody and any necessary owner approval remaining in the existing authorized Hetzner/Golden Key paths.
 4. One client (including ChatGPT when usable) authenticates and successfully invokes an admitted MCP operation.
 5. One enrolled Host authenticates and returns independently verifiable admitted-operation evidence.
-6. Grant revocation takes effect durably; the live release and rollback artifact are independently identified.
+6. Historical and new grant revocations take effect durably, original secret custody remains protected, and the live release and **revocation-safe** rollback artifact are independently identified.
 
-**Not part of this DoD:** historical Swift state/refresh-token migration, distributed replication, customer multi-tenancy, commercial billing, redesign of unrelated applications, a second publication domain, or a new instruction system.
+**Not part of this DoD:** copying a complete unrelated Swift Store directory or exporting raw bearer tokens; distributed replication, customer multi-tenancy, commercial billing, redesign of unrelated applications, a second publication domain, or a new instruction system. **Required within this DoD:** verified logical FCIS Store-to-Store state transfer and existing SecretStore custody continuity. Specific nontransferable credentials fail closed for controlled reauthorization; never silently manufacture a grant.
 
 **Observed predecessor (18 November 2026):** The Hetzner Go candidate was running read-only on localhost `18363`, while public OAuth/MCP Caddy routing still used Swift processes on `18361`/`18362`. That candidate used JSON authority state and a migration-dependent writable path. Its existence is implementation evidence **only**; it does not satisfy the clean target or production DoD.
 
