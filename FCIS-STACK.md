@@ -1,8 +1,8 @@
 # FCIS — Standalone Go Stack Specification
 
 **Owner:** Fountain Coach · **Canonical architecture:** [`FCIS-STACK.md`](FCIS-STACK.md) · **Peer canonical HTTP API:** [`FCIS-OPENAPI.json`](FCIS-OPENAPI.json) (OpenAPI 3.1.0; equal organization source authority for HTTP wire contracts)
-**Architecture version:** 1.1 · **Initial decision:** 18 November 2026 · **Owner continuity correction:** 19 November 2026
-**Decision status:** Owner-selected target, now requiring Hetzner-first identity and grant continuity; Git review/merge and deployed conformance remain separate
+**Architecture version:** 1.2 · **Initial decision:** 18 November 2026 · **Prerequisite-free system decision:** 19 November 2026
+**Decision status:** Standalone prerequisite-free Go system; optional existing-instance adoption preserves independently verified prior authority. Git source, generated implementation, test evidence and deployed state remain separate.
 **Public service identity:** `https://fcis.fountain.coach/`
 **Immediate priority:** Go-native production cutover · **Second priority:** payment instrument with a Stripe provider adapter
 
@@ -30,18 +30,18 @@ The user-selected initial deployment is one owner-operated installation. There a
 | Concern | Target decision |
 | --- | --- |
 | Runtime | Native, standalone **Go**, with no Swift FCIS runtime dependency |
-| Public ingress | Existing `fcis.fountain.coach` origin, HTTPS/Caddy |
+| Public ingress | Configurable issuer/RP origin; local loopback first installation or operator-controlled HTTPS. `fcis.fountain.coach` + Caddy is an optional deployed instance, not a prerequisite. |
 | Runtime protocol | MCP for AI clients; authenticated typed Host/MIDI2 instrument interfaces |
 | Human authentication | WebAuthn/passkeys, bound to an explicitly authorized owner |
 | Client authorization | OAuth 2.0 authorization code + PKCE S256; scoped grants and revocation |
-| Persistence | New dedicated Go-native **FountainStore** root on Hetzner, populated by verified transfer of the existing FCIS identity, grants and revocations |
+| Persistence | New self-initializing native Go **FountainStore** on private local persistent storage; optional separately approved logical import of verified existing FCIS authority |
 | Git authority | `Fountain-Coach/.github` for instruction/Skill ownership; source-owning repositories retain their executable contracts |
 | Service deployment | Immutable source-bound Go artifact, service supervision and independently verified HTTPS release |
-| Initial operators | Existing Fountain Coach owner and admitted Hosts retain identity and verified permissions; re-enrollment only if a specific credential cannot be transferred securely |
+| Initial operators | Fresh installation starts UNCLAIMED with zero owner/grants/remote Hosts; local single-use ticket enables first WebAuthn owner claim. Existing adoption preserves verified prior owner, grants and Hosts. |
 | First production priority | Go issuer **and** MCP active on the existing production origin, with native persistent authorization |
 | Second priority | Provider-neutral payment instrument; Stripe is its first adapter |
 
-**Explicit non-dependencies for the initial FCIS cutover:** keeping a Swift OAuth issuer running after cutover, PostgreSQL, SQLite, Kubernetes, distributed replication, hosted-model inference, Stripe, or migration of unrelated Fountain Coach services. **Old-to-new FCIS FountainStore and SecretStore security-state continuity is required** under the [Migration Security Profile](docs/FCIS-Migration-Security-Profile.md). Historical raw bearer-token export is not required; valid consent/grant, refresh-family and revocation semantics must not be silently lost.
+**Standalone prerequisites:** only a supported Linux OS, private writable filesystem, functioning cryptographic randomness, local operator access and WebAuthn-capable browser/authenticator. An existing FCIS instance, owner, Store, SecretStore, Host, MIDI2 device, GitHub service, Mac, Hetzner host, Caddy proxy, hosted AI model and Stripe account are **not** prerequisites. Historical security-state continuity is **required only when the separately selected adopt-existing profile is invoked**, and then must preserve verified grants, refresh-family and revocation semantics without exposing raw secrets.
 
 No architectural choice can silently widen the original cutover DoD. New gates require a reproduced failure or an already-applicable binding contract; see [FCIS Goal Fidelity](docs/FCIS-Non-Invention-and-Goal-Fidelity.md).
 
@@ -52,6 +52,18 @@ The architectural source and its executable HTTP contract are maintained **toget
 The former [`midi2-gpu-fabric/apps/estate-publisher/contracts/fcis-owner.openapi.json`](https://github.com/Fountain-Coach/midi2-gpu-fabric/blob/fix/fcis-go-store-parity-witness-20261117/apps/estate-publisher/contracts/fcis-owner.openapi.json) is a **pinned historical compatibility input**, not a second mutable Go-target contract. Existing Swift test fixtures and predecessor production evidence remain unchanged until their own owning migration. Any derived source-domain or Access UI copy must declare its exact canonical root revision and must never edit its own semantics independently.
 
 Canonical OpenAPI describes HTTP boundaries only. MCP JSON-RPC method and tool schemas, MIDI2 IDL / MIDI-CI, FCIS-KIT execution contracts, and FountainStore WAL/on-disk semantics keep their separate authoritative owners. An OpenAPI operation marked `specified-only-not-deployed` is *not* an admitted Host command, released instrument, tested Go endpoint, or production evidence.
+
+## 2.2 Prerequisite-free whole-system contract (*Voraussetzungslos*)
+
+[**FCIS-SYSTEM.json**](FCIS-SYSTEM.json) is the organization-root, machine-readable **whole-system composition**. It owns initialization, state transitions, Go-native Store/vault schema, Host/instrument/Skill/scenario lifecycle, tenant/provider boundaries, frontend binding, optional migration and acceptance. This architecture and its [peer HTTP OpenAPI](FCIS-OPENAPI.json) remain source contracts, not deployed evidence.
+
+**Fresh install has zero FCIS prerequisites.** `fcis init` creates a private native Go FountainStore v1, encrypted Go SecretStore v1, issuer Ed25519 key, tenant/instance identity and one-use owner setup ticket. The default service binds to localhost only and serves the existing Fountain Press owner UX at `/manage/` from the Go binary. A WebAuthn-capable browser claims the first owner with a locally delivered expiring ticket. The first credential and setup-token burn commit atomically. Once CLAIMED, no bootstrap ticket can alter the owner or issue a grant; additional credentials require authenticated owner policy. No imported state, GitHub, SSH, Caddy or historical Host is needed.
+
+A built-in read-only Go software Host provides local discovery and bounded receipts while the external instrument registry starts empty. Typed, versioned and signed external Host/MIDI2 instruments may be enrolled later with explicit owner authorization. The registry intersects per-client effective grants during MCP tools/list and revalidates on each tools/call; discovery alone cannot authorize execution. FCIS Skills and scenarios use bundled signed manifests and owner/tenant-controlled learning/promotion, not live Git as a mandatory database. Customers own their data and derived Skill rights, and may bring provider credentials only through scoped custody.
+
+**Optional adopt-existing** is a separate, explicit operation that imports verified owner/passkey, client/grant/revocation, Host and secret-custody state. The currently operating Fountain Coach Hetzner deployment belongs to this optional profile and must retain the existing issuer identity; it cannot be claimed by a new owner bootstrap. This optional migration cannot block, masquerade as or substitute for a prerequisite-free installation.
+
+**Generation order:** complete and validate this cross-component specification first; generate all Go/embedded frontend source next; execute tests only after source generation; release and live acceptance remain distinct owner-authorized phases.
 
 ## 3. Logical topology
 
@@ -87,11 +99,11 @@ These are **logical modules**, not a mandate for independent network microservic
 
 ### 4.1 Owner identity and WebAuthn
 
-Preserve the **existing** authorized owner identity and its WebAuthn credential/public-key bindings in the old-to-new FCIS Store transfer. Verify WebAuthn challenge, origin, relying-party ID, signature, user verification, expiration, replay resistance and credential state. Passkey identity is **not** blanket Host authorization. First-owner bootstrap is permitted **only if an installation is independently verified to have no prior owner**; it is not the production migration path. Never reinitialize the owner or generate replacement authority silently on restart/corruption. Private signing material remains in protected SecretStore custody outside Git and public APIs; the headless Hetzner process must not depend on a Mac Keychain.
+For a fresh instance, establish exactly one first owner using the time-limited local one-use setup ticket and verified WebAuthn registration. For optional adopt-existing, preserve the **existing** authorized owner identity and WebAuthn credential/public-key bindings. Verify WebAuthn challenge, origin, relying-party ID, signature, user verification, expiration, replay resistance and credential state. Passkey identity is **not** blanket Host authorization. First-owner bootstrap is permitted **only if an installation is independently verified to have no prior owner**; it is not the production migration path. Never reinitialize the owner or generate replacement authority silently on restart/corruption. Private signing material remains in protected SecretStore custody outside Git and public APIs; the headless Hetzner process must not depend on a Mac Keychain.
 
 ### 4.2 OAuth authority
 
-Implement OAuth discovery, client registration, authorization/consent, authorization-code + PKCE S256 exchange, refresh rotation, token audiences, expiry, revocation, and durable grant records. Preserve the public **issuer URL** and independently verified active grants, rotation-family validity and revocation state. Never copy raw bearer tokens into an unprotected migration record; reauthorize a client (such as ChatGPT) **only** if the specific predecessor grant cannot be securely imported and verified. Never activate a grant from an unauthenticated database copy.
+Implement OAuth discovery, client registration, authorization/consent, authorization-code + PKCE S256 exchange, refresh rotation, token audiences, expiry, revocation, and durable grant records. The fresh instance uses its configured issuer origin and begins without grants. When adopting an existing issuer, preserve its public **issuer URL** and independently verified active grants, rotation-family validity and revocation state. Never copy raw bearer tokens into an unprotected migration record; reauthorize a client (such as ChatGPT) **only** if the specific predecessor grant cannot be securely imported and verified. Never activate a grant from an unauthenticated database copy.
 
 Public protocol surface includes `/.well-known/oauth-authorization-server`, `/.well-known/jwks.json`, `/.well-known/oauth-protected-resource`, `/oauth/register`, `/oauth/authorize`, `/oauth/token`, owner/Host endpoints, and `/mcp`. The peer canonical [`FCIS-OPENAPI.json`](FCIS-OPENAPI.json) owns endpoint shapes. The HTTP operation inventory is source-declared there and may include unimplemented target operations, explicitly labeled as such; the operation list is not an inventory of callable MCP tools.
 
@@ -119,9 +131,9 @@ For a named run record request identity, idempotency identity, actor, resource, 
 
 ### 5.1 Ownership
 
-Use a **new, private FCIS FountainStore root** on a persistent Hetzner volume, controlled by the native Go writer. Initialize its empty physical storage, then import **verified existing FCIS logical authority** from the currently authoritative FountainStore on Hetzner. This is a logical security-state transfer, not a requirement to run a Swift process after cutover or copy an entire unrelated Store directory. Preserve original owner/passkeys, client/grant/rotation/revocation and signed Host identities with independent readback.
+Use a **new, private Go FountainStore root** on any supported Linux persistent filesystem. A fresh installation initializes its own Go-native v1 format, empty collections and first-owner state without predecessor or Swift runtime. The explicitly optional adopt-existing profile imports **verified existing FCIS logical authority** and preserves original owner/passkeys, client/grant/rotation/revocation and signed Host identities with independent readback. Import is not a prerequisite for the native Go Store.
 
-The canonical FountainStore engine and on-disk format are owned by [`Fountain-Coach/Fountain-Store`](https://github.com/Fountain-Coach/Fountain-Store). Native Go support must be versioned, tested against that owning contract and must not become a silent incompatible fork.
+The canonical FountainStore engine and on-disk format are owned by [`Fountain-Coach/Fountain-Store`](https://github.com/Fountain-Coach/Fountain-Store). The new native Go v1 physical format is defined explicitly in FCIS-SYSTEM.json and is not claimed byte-compatible with the Swift historical Store. Fountain-Store remains the storage semantics source owner; versioned source review and verified logical import prevent silent format divergence.
 
 ### 5.2 Logical collections (proposed schema)
 
@@ -144,12 +156,12 @@ FountainStore is the **owned storage technology**, not a requirement to keep an 
 
 ### 5.5 Existing authority continuity and SecretStore custody
 
-The [FCIS Migration Security Profile](docs/FCIS-Migration-Security-Profile.md) governs the **Hetzner-initiated** old-to-new transfer. It requires source/target inventories, existing owner trust-root verification, source snapshot and verified restore, single-writer fencing, typed migration of security state, protected SecretStore custody, revocation-safe rollback and independently verified cutover. The existing Golden Key owner UX may approve a specific operation on any eligible enrolled device; a WebAuthn sign-in is not by itself a substitute for a separately required owner-root signature. The Mac is not a dependency or migration controller. The peer canonical OpenAPI needs no new HTTP method unless an existing public operation actually changes.
+The [FCIS Migration Security Profile](docs/FCIS-Migration-Security-Profile.md) governs only the explicitly optional **adopt-existing** path, including the Hetzner-initiated old-to-new transfer for the current Fountain Coach instance. It is not a clean-install dependency. It requires source/target inventories, existing owner trust-root verification, source snapshot and verified restore, single-writer fencing, typed migration of security state, protected SecretStore custody, revocation-safe rollback and independently verified cutover. The existing Golden Key owner UX may approve a specific operation on any eligible enrolled device; a WebAuthn sign-in is not by itself a substitute for a separately required owner-root signature. The Mac is not a dependency or migration controller. The peer canonical OpenAPI needs no new HTTP method unless an existing public operation actually changes.
 
 
 ## 6. Security and operational invariants
 
-- TLS terminates at Caddy; Go listens on a private interface.
+- Fresh-install Go serves loopback only by default. Remote exposure requires explicit HTTPS/issuer/RP binding. Caddy is an optional deployment adapter, not a prerequisite.
 - Signing keys, passkey secrets and service credentials are never committed to Git or rendered in diagnostic output.
 - On an existing deployment, migration preserves the current authorized owner and authenticators; no silent replacement bootstrap or unrestricted enrollment. A genuinely empty new installation remains a separate case.
 - Every client/Host grant is bounded to explicit scopes, audience, expiry, target and capability where applicable.
@@ -177,9 +189,9 @@ Keep the existing GitHub `build` branch rule intact until a replacement owned-or
 
 ## 7. Production deployment and finite DoD — **priority one**
 
-Deploy one Go-native FCIS on the existing **headless Hetzner** host, with Caddy retaining the existing `https://fcis.fountain.coach/` identity. The **Hetzner host initiates** the old-to-new FountainStore and SecretStore authority migration. Preserve verified existing owner and machine identities, credential public-key bindings, grants and revocations: the system has an existing owner, even if only one. No Mac-dependent operator ceremony or automatic mass client reauthorization.
+**Fresh-install profile:** deploy the same generated native Go FCIS on any supported Linux host, initialize private Store/vault, claim its first owner with local WebAuthn, then optionally add HTTPS and enrolled Hosts. **Adopt-existing profile:** deploy onto the existing **headless Hetzner** host, retaining `https://fcis.fountain.coach/` behind Caddy; the host initiates independently authorized Store/SecretStore continuity and preserves verified prior owner/Host identities, public-key bindings, grants and revocations. No Mac-dependent ceremony or automatic mass reauthorization.
 
-**Initial cutover succeeds exactly when:**
+**The optional Fountain Coach existing-instance production cutover succeeds exactly when:**
 
 1. Public OAuth **and** MCP are served by the standalone Go runtime, with no Swift FCIS service in the active request path.
 2. The FCIS-owned Go FountainStore initializes an empty physical root and receives verified old-to-new security-state continuity; owner, grants, revoked permissions and Store receipts survive restart without widened authority.

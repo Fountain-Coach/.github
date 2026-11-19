@@ -53,6 +53,15 @@ source_checks() {
   [ -f FCIS-OPENAPI.json ] || fail "Missing canonical root OpenAPI"
   note "Validate canonical OpenAPI JSON"
   python3 -m json.tool FCIS-OPENAPI.json >/dev/null
+  # Minimal disposable H2/H3 Git-hook fixtures intentionally carry no system spec.
+  # If any system-spec artifact exists, require ALL artifacts and refuse drift.
+  if [ -e FCIS-SYSTEM.json ] || [ -e FCIS-SYSTEM.schema.json ] || [ -e scripts/verify_fcis_system_spec.py ]; then
+    [ -f FCIS-SYSTEM.json ] || fail "Missing whole-system FCIS composition"
+    [ -f FCIS-SYSTEM.schema.json ] || fail "Missing whole-system FCIS schema"
+    [ -f scripts/verify_fcis_system_spec.py ] || fail "Missing whole-system FCIS source validator"
+    note "Validate prerequisite-free whole-system FCIS composition and source bindings"
+    python3 scripts/verify_fcis_system_spec.py
+  fi
   note "Validate nine canonical Skill full-tree digests"
   python3 skills/skillctl.py check
   note "Validate the existing single-plugin mirror"

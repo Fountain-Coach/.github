@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.3.1",
-    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners.",
+    "version": "0.4.0",
+    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json.",
     "contact": {
       "name": "Fountain Coach FCIS",
       "url": "https://github.com/Fountain-Coach/.github"
@@ -12,7 +12,11 @@
   "servers": [
     {
       "url": "https://fcis.fountain.coach",
-      "description": "Target production issuer origin. Current routing and Go acceptance are NOT_ESTABLISHED by this source."
+      "description": "Fountain Coach deployed issuer example; optional adoption profile, not required for first install"
+    },
+    {
+      "url": "http://localhost:18443",
+      "description": "Loopback-only default fresh-install issuer; WebAuthn-capable localhost secure context; never exposed remotely"
     }
   ],
   "tags": [
@@ -2125,8 +2129,15 @@
         "tags": [
           "Passkeys"
         ],
-        "description": "Requires a recently authenticated owner or protected first-owner bootstrap; a public request alone cannot enroll a new owner.",
-        "security": [],
+        "description": "Requires a recently authenticated owner or protected first-owner bootstrap; a public request alone cannot enroll a new owner. Fresh-install owner enrollment has an exclusive UNCLAIMED state. The one-use local setup ticket is valid only before any owner exists; no prior owner, Store or FCIS Host is required. Once CLAIMED, only authenticated owner-session plus separately required owner approval may add a credential. Ticket challenge expires, is replay fenced and is consumed in the same durable transaction as the first public owner credential. Neither endpoint permits a second owner to claim an existing service.",
+        "security": [
+          {
+            "firstOwnerSetup": []
+          },
+          {
+            "ownerPasskeySession": []
+          }
+        ],
         "requestBody": {
           "required": false,
           "content": {
@@ -2221,6 +2232,19 @@
           "notFor": "Proof of execution, current grant or automatically callable instrument",
           "effect": "bounded HTTP effect per contract",
           "evidence": "Runtime/Store witness required independently"
+        },
+        "x-fcis-owner-bootstrap": {
+          "precondition": "fresh UNCLAIMED instance or existing authorized owner session",
+          "firstClaim": "setup ticket + valid WebAuthn registration; atomic Store owner creation and ticket burn",
+          "denials": [
+            "missing_or_expired_setup_ticket",
+            "already_claimed",
+            "replayed_challenge",
+            "wrong_origin_or_rp",
+            "attestation_refused",
+            "concurrent_claim_lost"
+          ],
+          "noModelOrHostAuthorization": true
         }
       }
     },
@@ -2345,15 +2369,22 @@
         "tags": [
           "Passkeys"
         ],
-        "description": "Verify correct origin, RP ID, challenge, public key signature, user verification, sign count, replay and bounded session or enrollment authority.",
-        "security": [],
+        "description": "Verify correct origin, RP ID, challenge, public key signature, user verification, sign count, replay and bounded session or enrollment authority. Fresh-install owner enrollment has an exclusive UNCLAIMED state. The one-use local setup ticket is valid only before any owner exists; no prior owner, Store or FCIS Host is required. Once CLAIMED, only authenticated owner-session plus separately required owner approval may add a credential. Ticket challenge expires, is replay fenced and is consumed in the same durable transaction as the first public owner credential. Neither endpoint permits a second owner to claim an existing service.",
+        "security": [
+          {
+            "firstOwnerSetup": []
+          },
+          {
+            "ownerPasskeySession": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "description": "Typed request",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PasskeyCredentialAssertion"
+                "$ref": "#/components/schemas/FirstOwnerPasskeyAttestation"
               }
             }
           }
@@ -2449,6 +2480,19 @@
           "notFor": "Proof of execution, current grant or automatically callable instrument",
           "effect": "bounded HTTP effect per contract",
           "evidence": "Runtime/Store witness required independently"
+        },
+        "x-fcis-owner-bootstrap": {
+          "precondition": "fresh UNCLAIMED instance or existing authorized owner session",
+          "firstClaim": "setup ticket + valid WebAuthn registration; atomic Store owner creation and ticket burn",
+          "denials": [
+            "missing_or_expired_setup_ticket",
+            "already_claimed",
+            "replayed_challenge",
+            "wrong_origin_or_rp",
+            "attestation_refused",
+            "concurrent_claim_lost"
+          ],
+          "noModelOrHostAuthorization": true
         }
       }
     },
@@ -3356,6 +3400,12 @@
         "scheme": "bearer",
         "bearerFormat": "JWT",
         "description": "Scoped OAuth resource access token; presence alone does not authorize a Host operation."
+      },
+      "firstOwnerSetup": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-FCIS-First-Owner-Setup",
+        "description": "Single-use 256-bit operator-local setup ticket used only when installation UNCLAIMED. Stored in Go vault only as SHA-256 digest, 10-minute expiry, max 5 attempts; consumed atomically on verified first owner WebAuthn attestation. Never an OAuth client credential or Host grant."
       }
     },
     "schemas": {
@@ -4639,6 +4689,97 @@
           "state"
         ],
         "additionalProperties": false
+      },
+      "FirstOwnerPasskeyAttestation": {
+        "type": "object",
+        "description": "WebAuthn registration credential returned by navigator.credentials.create, not an authentication assertion; binary fields base64url encoded; challenge and origin must match the one-use first-owner ceremony.",
+        "required": [
+          "id",
+          "rawId",
+          "type",
+          "response"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "rawId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "public-key"
+            ]
+          },
+          "response": {
+            "type": "object",
+            "required": [
+              "clientDataJSON",
+              "attestationObject"
+            ],
+            "properties": {
+              "clientDataJSON": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 65536
+              },
+              "attestationObject": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 262144
+              },
+              "transports": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "usb",
+                    "nfc",
+                    "ble",
+                    "internal",
+                    "hybrid"
+                  ]
+                },
+                "maxItems": 8
+              }
+            },
+            "additionalProperties": false
+          },
+          "clientExtensionResults": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FirstOwnerBootstrapPolicy": {
+        "type": "object",
+        "description": "Reference-only bootstrap state; never disclose setup ticket in a browser response",
+        "required": [
+          "phase",
+          "expiresAt"
+        ],
+        "properties": {
+          "phase": {
+            "type": "string",
+            "enum": [
+              "UNCLAIMED",
+              "CLAIM_CHALLENGE",
+              "CLAIMED",
+              "LOCKED"
+            ]
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
       }
     }
   },
@@ -4709,5 +4850,20 @@
     "cadence": "monthly and on applicable law/product/deployment changes",
     "registerAuthority": "Per affected deployable product/service; an existing editorial-app register cannot certify the new Go issuer",
     "doesNotExpandCutoverDoD": true
+  },
+  "x-fcis-prerequisite-free": {
+    "canonical": "FCIS-SYSTEM.json",
+    "defaultMode": "fresh-install",
+    "firstStart": {
+      "issuer": "http://localhost:18443",
+      "bind": "127.0.0.1:18443",
+      "state": "UNCLAIMED",
+      "ownerCount": 0,
+      "grantCount": 0,
+      "remoteHostCount": 0
+    },
+    "externalFCISDependencies": [],
+    "firstOwner": "local, one-use setup ticket and WebAuthn registration (not the deployed Golden Key)",
+    "optionalAdoption": "historical issuer, Store, vault, SSH, Host and grants are optional inputs only to explicitly requested adopt-existing"
   }
 }
