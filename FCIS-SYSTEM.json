@@ -1,0 +1,1318 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "kind": "fountaincoach.fcis.system.composition",
+  "schemaVersion": "0.1.0",
+  "compositionId": "fountaincoach.fcis.go-production",
+  "status": "generation-input-candidate-not-yet-fully-validated",
+  "generatedAtUTC": "2026-11-19",
+  "owner": "Fountain Coach",
+  "architectureVersion": "1.1",
+  "scope": {
+    "goal": "Generate all source for the existing FCIS owner frontend and a standalone, native Go FCIS issuer, MCP and Host orchestration with native Go FountainStore and protected SecretStore custody; then test separately and cut over headless Hetzner preserving existing owner authority",
+    "included": [
+      "FCIS Go HTTP OAuth WebAuthn MCP and Host API",
+      "FountainStore private Go persistence",
+      "SecretStore protected Go custody adapter",
+      "existing Fountain Press /manage/ frontend without redesign",
+      "issuer-hosted login and pairing UX",
+      "MIDI2 instrument discovery/admission and scoped execution",
+      "Hetzner-initiated old-to-new authority transfer and protected rollback",
+      "immutable Git-sourced release and independent evidence"
+    ],
+    "excludedFromFirstRelease": [
+      "Stripe billing",
+      "new owner bootstrap for existing issuer",
+      "new frontend design",
+      "MacBook/Ubuntu workstation production dependency",
+      "Swift runtime",
+      "unverified multi-writer replication",
+      "generic shell capability",
+      "new credential issuer"
+    ],
+    "developmentHost": "headless Ubuntu Mac mini isolated unprivileged workspace, no production credentials",
+    "productionHost": "existing headless Hetzner with private Go service behind Caddy",
+    "canonicalGit": "GitHub protected main in Fountain-Coach organization"
+  },
+  "specificationSources": {
+    "org": {
+      "repository": "Fountain-Coach/.github",
+      "ref": "88cc056adad959065009ef5d23df4e30d168693d",
+      "path": "FCIS-STACK.md",
+      "blobSha": "d32fc52f5a53b3444e45b2b0720671a77b152a5b",
+      "url": "https://github.com/Fountain-Coach/.github/blob/88cc056adad959065009ef5d23df4e30d168693d/FCIS-STACK.md"
+    },
+    "fcisHTTP": {
+      "repository": "Fountain-Coach/.github",
+      "ref": "88cc056adad959065009ef5d23df4e30d168693d",
+      "path": "FCIS-OPENAPI.json",
+      "blobSha": "97841e8ac8e0e1b24a064c2745152af6c08133de",
+      "url": "https://github.com/Fountain-Coach/.github/blob/88cc056adad959065009ef5d23df4e30d168693d/FCIS-OPENAPI.json"
+    },
+    "migration": {
+      "repository": "Fountain-Coach/.github",
+      "ref": "88cc056adad959065009ef5d23df4e30d168693d",
+      "path": "docs/FCIS-Migration-Security-Profile.md",
+      "blobSha": "f8e978803b3061065d75f3774e64048794b68441",
+      "url": "https://github.com/Fountain-Coach/.github/blob/88cc056adad959065009ef5d23df4e30d168693d/docs/FCIS-Migration-Security-Profile.md"
+    },
+    "fcisKit": {
+      "repository": "Fountain-Coach/.github",
+      "ref": "88cc056adad959065009ef5d23df4e30d168693d",
+      "path": "docs/FCIS-KIT-Standard.md",
+      "blobSha": "87099d0e5db3e7fdb1a9296be5700ee48584852c",
+      "url": "https://github.com/Fountain-Coach/.github/blob/88cc056adad959065009ef5d23df4e30d168693d/docs/FCIS-KIT-Standard.md"
+    },
+    "fountainStore": {
+      "repository": "Fountain-Coach/Fountain-Store",
+      "ref": "b73a2b95e19716fef58e6d5d63b2353d82602b4b",
+      "path": "docs/openapi-fountainstore.yaml",
+      "blobSha": "c7b6b5b1b89521aa4a36d1440481de393333ed32",
+      "url": "https://github.com/Fountain-Coach/Fountain-Store/blob/b73a2b95e19716fef58e6d5d63b2353d82602b4b/docs/openapi-fountainstore.yaml"
+    },
+    "secretStore": {
+      "repository": "Fountain-Coach/swift-secretstore",
+      "ref": "2e1ae7f88a470127453d05ff49f319cb76783229",
+      "path": "docs/openapi-secretstore-host.json",
+      "blobSha": "b2f97f7eced2f059b46dfdd593172ddc8e5bfcbb",
+      "url": "https://github.com/Fountain-Coach/swift-secretstore/blob/2e1ae7f88a470127453d05ff49f319cb76783229/docs/openapi-secretstore-host.json"
+    },
+    "accessHTML": {
+      "repository": "Fountain-Coach/fountain-press",
+      "ref": "93bad9d0785ec0d2c7bd62c5e367c6f321860092",
+      "path": "runtime/fcis-owner-access.html",
+      "blobSha": "8129162034b1226ec5da40d835c55792ac13de50",
+      "url": "https://github.com/Fountain-Coach/fountain-press/blob/93bad9d0785ec0d2c7bd62c5e367c6f321860092/runtime/fcis-owner-access.html"
+    },
+    "accessJS": {
+      "repository": "Fountain-Coach/fountain-press",
+      "ref": "93bad9d0785ec0d2c7bd62c5e367c6f321860092",
+      "path": "runtime/fcis-owner-access.mjs",
+      "blobSha": "cf874618f0dcb22290936860ef002c70f1d356ab",
+      "url": "https://github.com/Fountain-Coach/fountain-press/blob/93bad9d0785ec0d2c7bd62c5e367c6f321860092/runtime/fcis-owner-access.mjs"
+    },
+    "workspaceJS": {
+      "repository": "Fountain-Coach/fountain-press",
+      "ref": "93bad9d0785ec0d2c7bd62c5e367c6f321860092",
+      "path": "runtime/fcis-access-workspace.mjs",
+      "blobSha": "ef3820c4d418a295db0e0432e4f06fe1ccee8250",
+      "url": "https://github.com/Fountain-Coach/fountain-press/blob/93bad9d0785ec0d2c7bd62c5e367c6f321860092/runtime/fcis-access-workspace.mjs"
+    },
+    "referenceJS": {
+      "repository": "Fountain-Coach/fountain-press",
+      "ref": "93bad9d0785ec0d2c7bd62c5e367c6f321860092",
+      "path": "runtime/fcis-access-reference.mjs",
+      "blobSha": "b261f6b98473a78baaa28d2b4906392df71ecded",
+      "url": "https://github.com/Fountain-Coach/fountain-press/blob/93bad9d0785ec0d2c7bd62c5e367c6f321860092/runtime/fcis-access-reference.mjs"
+    },
+    "referenceGuide": {
+      "repository": "Fountain-Coach/fountain-press",
+      "ref": "93bad9d0785ec0d2c7bd62c5e367c6f321860092",
+      "path": "runtime/fcis-access-reference-guide.mjs",
+      "blobSha": "ea11098f2d3d8c665e12ac2f77a4829e27359e13",
+      "url": "https://github.com/Fountain-Coach/fountain-press/blob/93bad9d0785ec0d2c7bd62c5e367c6f321860092/runtime/fcis-access-reference-guide.mjs"
+    },
+    "accessCSS": {
+      "repository": "Fountain-Coach/fountain-press",
+      "ref": "93bad9d0785ec0d2c7bd62c5e367c6f321860092",
+      "path": "runtime/fcis-owner-access.css",
+      "blobSha": "bf429fbd4dfa099a616307e8ca309c9e91a0bb5d",
+      "url": "https://github.com/Fountain-Coach/fountain-press/blob/93bad9d0785ec0d2c7bd62c5e367c6f321860092/runtime/fcis-owner-access.css"
+    },
+    "workspaceCSS": {
+      "repository": "Fountain-Coach/fountain-press",
+      "ref": "93bad9d0785ec0d2c7bd62c5e367c6f321860092",
+      "path": "runtime/fcis-access-workspace.css",
+      "blobSha": "a70761e58c7c07a9c033804871b7329218aa9b14",
+      "url": "https://github.com/Fountain-Coach/fountain-press/blob/93bad9d0785ec0d2c7bd62c5e367c6f321860092/runtime/fcis-access-workspace.css"
+    },
+    "bookCSS": {
+      "repository": "Fountain-Coach/fountain-press",
+      "ref": "93bad9d0785ec0d2c7bd62c5e367c6f321860092",
+      "path": "runtime/book.css",
+      "blobSha": "286ecfcc68e7750d3ec327d155f6c619b4bd1f2d",
+      "url": "https://github.com/Fountain-Coach/fountain-press/blob/93bad9d0785ec0d2c7bd62c5e367c6f321860092/runtime/book.css"
+    },
+    "accessSession": {
+      "repository": "Fountain-Coach/fountain-press",
+      "ref": "93bad9d0785ec0d2c7bd62c5e367c6f321860092",
+      "path": "docs/access-passkey-session-integration-2026-11-12.md",
+      "blobSha": "3840eda6d46f05506ec1f365b7b5ee28fd124815",
+      "url": "https://github.com/Fountain-Coach/fountain-press/blob/93bad9d0785ec0d2c7bd62c5e367c6f321860092/docs/access-passkey-session-integration-2026-11-12.md"
+    },
+    "accessReference": {
+      "repository": "Fountain-Coach/fountain-press",
+      "ref": "93bad9d0785ec0d2c7bd62c5e367c6f321860092",
+      "path": "docs/access-management-reference-2026-11-15.md",
+      "blobSha": "d22067bac35297322feaeddef86a8cd57832ba86",
+      "url": "https://github.com/Fountain-Coach/fountain-press/blob/93bad9d0785ec0d2c7bd62c5e367c6f321860092/docs/access-management-reference-2026-11-15.md"
+    },
+    "midi2Peer": {
+      "repository": "Fountain-Coach/fountain-press",
+      "ref": "93bad9d0785ec0d2c7bd62c5e367c6f321860092",
+      "path": "docs/decisions/fcis-midi2-peer-fabric-2026-11-16.md",
+      "blobSha": "5547245190ecb5d5d0fa233bc73ba6f73d96a1c1",
+      "url": "https://github.com/Fountain-Coach/fountain-press/blob/93bad9d0785ec0d2c7bd62c5e367c6f321860092/docs/decisions/fcis-midi2-peer-fabric-2026-11-16.md"
+    },
+    "goREADME": {
+      "repository": "Fountain-Coach/midi2-gpu-fabric",
+      "ref": "feat/fcis-go-private-secretstore-custody-20261119",
+      "path": "apps/estate-publisher/fcis-go-native/README.md",
+      "blobSha": "c4ced8047c3d560b6028f61c4362243b311ec7c0",
+      "url": "https://github.com/Fountain-Coach/midi2-gpu-fabric/blob/feat/fcis-go-private-secretstore-custody-20261119/apps/estate-publisher/fcis-go-native/README.md"
+    },
+    "goSource": {
+      "repository": "Fountain-Coach/midi2-gpu-fabric",
+      "ref": "feat/fcis-go-private-secretstore-custody-20261119",
+      "path": "apps/estate-publisher/fcis-go-native/internal/native/server.go",
+      "blobSha": "5145791fae2b7e1efe9f8dfdf43d2de47692cc9d",
+      "url": "https://github.com/Fountain-Coach/midi2-gpu-fabric/blob/feat/fcis-go-private-secretstore-custody-20261119/apps/estate-publisher/fcis-go-native/internal/native/server.go"
+    }
+  },
+  "specificationPrecedence": {
+    "systemComposition": "This file defines the dependency graph, inclusion/coverage and generation constraints without redefining component wire contracts",
+    "architecture": "org FCIS-STACK.md owns topology, invariants and production DoD",
+    "fcisHTTP": "org FCIS-OPENAPI.json owns exact FCIS paths, schemas, request and auth semantics",
+    "storeHTTP": "Fountain-Store docs/openapi-fountainstore.yaml owns optional Store HTTP projection",
+    "secretCustody": "swift-secretstore docs/openapi-secretstore-host.json owns Host custody HTTP projection, but no Swift runtime dependency",
+    "ui": "fountain-press runtime assets own rendered management UX and browser event handling",
+    "migration": "org docs/FCIS-Migration-Security-Profile.md supersedes any earlier clean-owner bootstrap or grant-reset procedure",
+    "instruments": "FCIS-KIT standard and source-owned MIDI2 IDL define typed instrument identity, admission and effects"
+  },
+  "moduleGraph": [
+    {
+      "id": "frontend.access",
+      "language": "HTML/CSS/JavaScript",
+      "sourceIds": [
+        "accessHTML",
+        "accessJS",
+        "workspaceJS",
+        "referenceJS",
+        "referenceGuide",
+        "accessCSS",
+        "workspaceCSS",
+        "bookCSS"
+      ],
+      "servedAt": "https://access.fountain.coach/manage/",
+      "owns": [
+        "presentation",
+        "Clients, Hosts, Skills, Reference tabs",
+        "navigation and user confirmation"
+      ],
+      "consumes": [
+        "fcis.http"
+      ],
+      "mustNotOwn": [
+        "passkey secrets",
+        "owner grants",
+        "signing material",
+        "machine authority"
+      ]
+    },
+    {
+      "id": "frontend.issuer",
+      "language": "HTML/JavaScript served by Go",
+      "sourceIds": [
+        "goSource",
+        "goREADME"
+      ],
+      "servedAt": "https://fcis.fountain.coach/oauth/owner/passkeys/login",
+      "owns": [
+        "WebAuthn ceremony UI",
+        "owner pairing UI"
+      ],
+      "consumes": [
+        "fcis.http"
+      ],
+      "mustNotOwn": [
+        "owner-root credentials"
+      ]
+    },
+    {
+      "id": "fcis.http",
+      "language": "Go",
+      "sourceIds": [
+        "fcisHTTP",
+        "org"
+      ],
+      "serves": [
+        "https://fcis.fountain.coach"
+      ],
+      "owns": [
+        "issuer HTTP routing",
+        "OAuth 2.0",
+        "WebAuthn verification",
+        "MCP transport",
+        "authenticated owner management",
+        "signed Host coordination"
+      ],
+      "requires": [
+        "fountainstore.native",
+        "secretstore.custody",
+        "host.instrument"
+      ]
+    },
+    {
+      "id": "fountainstore.native",
+      "language": "Go",
+      "sourceIds": [
+        "fountainStore",
+        "org",
+        "migration"
+      ],
+      "owns": [
+        "single-writer transactional persistence",
+        "durable authorizations/revocations",
+        "WAL",
+        "snapshots",
+        "crash recovery",
+        "readback receipts"
+      ],
+      "requires": [],
+      "invariants": [
+        "durable commit before success",
+        "atomic grant revocation and token-family state",
+        "exclusive authoritative writer",
+        "encrypted immutable backup verified by restore"
+      ]
+    },
+    {
+      "id": "secretstore.custody",
+      "language": "Go protected adapter using existing Hetzner custodian",
+      "sourceIds": [
+        "secretStore",
+        "migration"
+      ],
+      "owns": [
+        "opaque secret references",
+        "bounded authorized key operations",
+        "approved custody transfer",
+        "same-custodian equivalence verification"
+      ],
+      "requires": [
+        "host.instrument",
+        "fountainstore.native"
+      ],
+      "invariants": [
+        "no raw secret bytes over public HTTP, MCP, MIDI2, logs, Git or ordinary Store",
+        "owner-signed approval where required",
+        "provider-supported export/import only",
+        "existing non-exportable keys stay in original custodian"
+      ]
+    },
+    {
+      "id": "host.instrument",
+      "language": "Go and admitted source-owned native Host adapters",
+      "sourceIds": [
+        "org",
+        "fcisKit",
+        "midi2Peer"
+      ],
+      "owns": [
+        "signed device enrollment",
+        "capability inventory",
+        "MIDI2/FCIS-KIT typed calls",
+        "per-client grant enforcement",
+        "Host result evidence"
+      ],
+      "requires": [
+        "fountainstore.native",
+        "fcis.http"
+      ],
+      "invariants": [
+        "host.describe is discovery not a grant",
+        "machine enrollment is not arbitrary execution authorization",
+        "every capability requires admitted identity/version/scope and signed execution receipt"
+      ]
+    },
+    {
+      "id": "release.hetzner",
+      "language": "Caddy/systemd/immutable Go artifacts",
+      "sourceIds": [
+        "org",
+        "migration"
+      ],
+      "owns": [
+        "single active issuer origin",
+        "release installation",
+        "rollback",
+        "service readiness and independent live readback"
+      ],
+      "requires": [
+        "fcis.http",
+        "fountainstore.native",
+        "secretstore.custody",
+        "host.instrument"
+      ],
+      "invariants": [
+        "no Swift FCIS active path",
+        "no fresh owner on existing issuer",
+        "old writer fenced before activation",
+        "rollback may not resurrect revoked grants"
+      ]
+    }
+  ],
+  "frontend": {
+    "origin": "https://access.fountain.coach",
+    "managementPath": "/manage/",
+    "tabs": [
+      "clients",
+      "hosts",
+      "skills",
+      "reference"
+    ],
+    "otherIssuerSurfaces": [
+      "/oauth/owner/passkeys/login",
+      "/oauth/owner/hosts/pair"
+    ],
+    "assets": [
+      "accessHTML",
+      "accessJS",
+      "workspaceJS",
+      "referenceJS",
+      "referenceGuide",
+      "accessCSS",
+      "workspaceCSS",
+      "bookCSS"
+    ],
+    "authentication": {
+      "issuer": "https://fcis.fountain.coach/",
+      "ownerCookie": "fcis_owner_session",
+      "cookieFlags": [
+        "Secure",
+        "HttpOnly",
+        "SameSite=Lax"
+      ],
+      "cookiePath": "/oauth",
+      "sessionMaxSeconds": 600,
+      "frontendFetchCredentials": "include",
+      "allowedCredentialedCORSOrigin": "https://access.fountain.coach",
+      "foreignOriginDecision": "deny"
+    },
+    "behavioralInvariants": [
+      "No UI redesign or second login authority",
+      "Clients, Hosts, Skills, Reference remain a single Fountain Press workspace",
+      "401 or 403 invalidates stale browser inventory",
+      "logout clears session",
+      "explicit scope/resource/intent confirmation before revoke",
+      "a revoke success requires independently fresh issuer inventory and terminal Store evidence",
+      "static frontend must not persist access tokens, grants or credentials",
+      "Golden Key uses existing authorized owner; separate owner-root signature is verified when required"
+    ],
+    "apiBindings": {
+      "clients": [
+        "/oauth/owner/grants",
+        "/oauth/owner/revoke"
+      ],
+      "hosts": [
+        "/oauth/owner/hosts",
+        "/oauth/owner/host/describe",
+        "/oauth/owner/hosts/channel/status"
+      ],
+      "skills": [
+        "/oauth/owner/host/describe"
+      ],
+      "reference": [
+        "/oauth/owner/reference/openapi"
+      ],
+      "signIn": [
+        "/oauth/owner/passkeys/login",
+        "/oauth/owner/passkeys/login/options",
+        "/oauth/owner/passkeys/login/verify"
+      ],
+      "pairing": [
+        "/oauth/owner/hosts/pair/begin",
+        "/oauth/owner/hosts/pair/status",
+        "/oauth/owner/hosts/pair/decide",
+        "/oauth/host/enrollment/prove"
+      ]
+    }
+  },
+  "apis": {
+    "fcis": {
+      "sourceId": "fcisHTTP",
+      "openapiVersion": "3.1.0",
+      "version": "0.3.1",
+      "operations": [
+        {
+          "id": "readOwnerFleet",
+          "method": "GET",
+          "path": "/oauth/owner/hosts",
+          "summary": "Discover issuer-enrolled Hosts and current grant status",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1hosts/get"
+        },
+        {
+          "id": "describeSelectedHost",
+          "method": "GET",
+          "path": "/oauth/owner/host/describe",
+          "summary": "Inspect one selected admitted Host through host.describe",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1host~1describe/get"
+        },
+        {
+          "id": "beginHostPair",
+          "method": "POST",
+          "path": "/oauth/owner/hosts/pair/begin",
+          "summary": "Begin an owner-controlled Host pairing challenge",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1hosts~1pair~1begin/post"
+        },
+        {
+          "id": "readHostPairStatus",
+          "method": "GET",
+          "path": "/oauth/owner/hosts/pair/status",
+          "summary": "Inspect an existing owner-bound Host pairing request",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1hosts~1pair~1status/get"
+        },
+        {
+          "id": "decideHostPair",
+          "method": "POST",
+          "path": "/oauth/owner/hosts/pair/decide",
+          "summary": "Approve or deny a verified machine fingerprint",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1hosts~1pair~1decide/post"
+        },
+        {
+          "id": "submitSignedMachinePairProof",
+          "method": "POST",
+          "path": "/oauth/host/enrollment/prove",
+          "summary": "Submit a device-signed response to a pairing challenge",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1host~1enrollment~1prove/post"
+        },
+        {
+          "id": "activatePretrustedMachine",
+          "method": "POST",
+          "path": "/oauth/host/enrollment/activate",
+          "summary": "Activate one previously owner-signed machine identity",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1host~1enrollment~1activate/post"
+        },
+        {
+          "id": "readOwnerGrants",
+          "method": "GET",
+          "path": "/oauth/owner/grants",
+          "summary": "Inspect registered OAuth clients and their authorization states",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1grants/get"
+        },
+        {
+          "id": "revokeOwnerGrant",
+          "method": "POST",
+          "path": "/oauth/owner/revoke",
+          "summary": "Revoke one precisely identified client/resource authorization",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1revoke/post"
+        },
+        {
+          "id": "readOwnerOpenAPIReference",
+          "method": "GET",
+          "path": "/oauth/owner/reference/openapi",
+          "summary": "Read the private FCIS owner management OpenAPI contract",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1reference~1openapi/get"
+        },
+        {
+          "id": "readOAuthServerMetadata",
+          "method": "GET",
+          "path": "/.well-known/oauth-authorization-server",
+          "summary": "Discover FCIS OAuth issuer and PKCE endpoints",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1.well-known~1oauth-authorization-server/get"
+        },
+        {
+          "id": "readMCPProtectedResourceMetadata",
+          "method": "GET",
+          "path": "/.well-known/oauth-protected-resource",
+          "summary": "Discover FCIS MCP resource and authorization servers",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1.well-known~1oauth-protected-resource/get"
+        },
+        {
+          "id": "readOAuthSigningPublicKeys",
+          "method": "GET",
+          "path": "/.well-known/jwks.json",
+          "summary": "Read public OAuth verification keys",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1.well-known~1jwks.json/get"
+        },
+        {
+          "id": "registerOAuthClient",
+          "method": "POST",
+          "path": "/oauth/register",
+          "summary": "Register a bounded OAuth client and exact redirect URIs",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1register/post"
+        },
+        {
+          "id": "beginOAuthAuthorization",
+          "method": "GET",
+          "path": "/oauth/authorize",
+          "summary": "Start PKCE authorization and owner consent",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1authorize/get"
+        },
+        {
+          "id": "decideOAuthAuthorization",
+          "method": "POST",
+          "path": "/oauth/authorize",
+          "summary": "Submit owner-approved OAuth consent decision",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1authorize/post"
+        },
+        {
+          "id": "exchangeOrRefreshOAuthToken",
+          "method": "POST",
+          "path": "/oauth/token",
+          "summary": "Exchange PKCE authorization code or rotate refresh token",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1token/post"
+        },
+        {
+          "id": "readOwnerPasskeyLoginPage",
+          "method": "GET",
+          "path": "/oauth/owner/passkeys/login",
+          "summary": "Read origin-bound owner passkey login page",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1passkeys~1login/get"
+        },
+        {
+          "id": "beginOwnerPasskeyLogin",
+          "method": "POST",
+          "path": "/oauth/owner/passkeys/login/options",
+          "summary": "Issue fresh bounded WebAuthn authentication challenge",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1passkeys~1login~1options/post"
+        },
+        {
+          "id": "beginOwnerPasskeyEnrollment",
+          "method": "POST",
+          "path": "/oauth/owner/passkeys/enroll/options",
+          "summary": "Issue WebAuthn registration challenge after verified owner/bootstrap authority",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1passkeys~1enroll~1options/post"
+        },
+        {
+          "id": "verifyOwnerPasskeyLogin",
+          "method": "POST",
+          "path": "/oauth/owner/passkeys/login/verify",
+          "summary": "Verify WebAuthn assertion and establish owner session",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1passkeys~1login~1verify/post"
+        },
+        {
+          "id": "verifyOwnerPasskeyEnrollment",
+          "method": "POST",
+          "path": "/oauth/owner/passkeys/enroll/verify",
+          "summary": "Verify WebAuthn attestation and persist owner public credential",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1passkeys~1enroll~1verify/post"
+        },
+        {
+          "id": "logoutOwnerPasskeySession",
+          "method": "POST",
+          "path": "/oauth/owner/passkeys/logout",
+          "summary": "Invalidate current owner browser session",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1passkeys~1logout/post"
+        },
+        {
+          "id": "invokeMCPProtocol",
+          "method": "POST",
+          "path": "/mcp",
+          "summary": "Exchange authenticated MCP JSON-RPC messages",
+          "security": [
+            {
+              "oauthBearer": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1mcp/post"
+        },
+        {
+          "id": "readFCISProcessHealth",
+          "method": "GET",
+          "path": "/healthz",
+          "summary": "Read Go FCIS process liveness on private listener",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1healthz/get"
+        },
+        {
+          "id": "discoverMachineInstruments",
+          "method": "POST",
+          "path": "/oauth/host/instruments/discover",
+          "summary": "Read owner-signed MIDI2 instrument identities from enrolled Host",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1host~1instruments~1discover/post"
+        },
+        {
+          "id": "renewMachineGrant",
+          "method": "POST",
+          "path": "/oauth/host/grants/renew",
+          "summary": "Renew a bounded owner-trusted machine admission",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1host~1grants~1renew/post"
+        },
+        {
+          "id": "probeEnrolledHostChannel",
+          "method": "POST",
+          "path": "/oauth/host/channel/probe",
+          "summary": "Submit signed machine-channel reachability probe",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1host~1channel~1probe/post"
+        },
+        {
+          "id": "exchangeAuthenticatedHostSessionFrame",
+          "method": "POST",
+          "path": "/oauth/host/session/frame",
+          "summary": "Exchange an authenticated bounded Host session frame",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1host~1session~1frame/post"
+        },
+        {
+          "id": "readOwnerHostChannelStatus",
+          "method": "GET",
+          "path": "/oauth/owner/hosts/channel/status",
+          "summary": "Read last verified channel witness for owner-selected pairing",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1hosts~1channel~1status/get"
+        }
+      ],
+      "schemas": [
+        "HostTargetID",
+        "FoundationDateSeconds",
+        "OwnerError",
+        "OwnerFleetHost",
+        "OwnerFleetInventory",
+        "HostObservation",
+        "PairBeginRequest",
+        "PairStart",
+        "PairStatus",
+        "PairDecisionRequest",
+        "PairProofRequest",
+        "MachineActivationRequest",
+        "MachineAdmissionReceipt",
+        "OwnerGrant",
+        "OwnerGrantOverview",
+        "OwnerRevokeRequest",
+        "OwnerRevokeReceipt",
+        "OwnerOpenAPIDocument",
+        "OAuthServerMetadata",
+        "ProtectedResourceMetadata",
+        "JSONWebKeySet",
+        "OAuthClientRegistration",
+        "OAuthClientRegistrationResult",
+        "OAuthTokenResult",
+        "OAuthError",
+        "PasskeyOptions",
+        "PasskeyCredentialAssertion",
+        "OwnerSessionResult",
+        "MCPJSONRPCRequest",
+        "MCPJSONRPCResponse",
+        "MachineSignedRequest",
+        "MachineGrantReceipt",
+        "HostInstrumentDiscovery",
+        "HostChannelProbe",
+        "HostSessionFrame",
+        "HealthStatus"
+      ],
+      "securitySchemes": [
+        "ownerPasskeySession",
+        "oauthBearer"
+      ],
+      "defaultExposure": "issuer-protected HTTP; public discovery/authorization only where explicitly specified"
+    },
+    "fountainstore": {
+      "sourceId": "fountainStore",
+      "openapiVersion": "3.1.0",
+      "version": "0.1.0",
+      "operations": [
+        {
+          "id": "get__health_live",
+          "method": "GET",
+          "path": "/health/live",
+          "summary": "Liveness probe",
+          "status": "specified",
+          "sourcePointer": "/paths//health/live/get"
+        },
+        {
+          "id": "get__health_ready",
+          "method": "GET",
+          "path": "/health/ready",
+          "summary": "Readiness probe",
+          "status": "specified",
+          "sourcePointer": "/paths//health/ready/get"
+        },
+        {
+          "id": "get__health",
+          "method": "GET",
+          "path": "/health",
+          "summary": "Backward-compatible engine health",
+          "status": "specified",
+          "sourcePointer": "/paths//health/get"
+        },
+        {
+          "id": "get__status",
+          "method": "GET",
+          "path": "/status",
+          "summary": "Store status overview",
+          "status": "specified",
+          "sourcePointer": "/paths//status/get"
+        },
+        {
+          "id": "put__estate_publication_routes__host_",
+          "method": "PUT",
+          "path": "/estate/publication/routes/{host}",
+          "summary": "Atomically merge selected publication paths into the current estate",
+          "status": "specified",
+          "sourcePointer": "/paths//estate/publication/routes/{host}/put"
+        },
+        {
+          "id": "get__collections",
+          "method": "GET",
+          "path": "/collections",
+          "summary": "List collections",
+          "status": "specified",
+          "sourcePointer": "/paths//collections/get"
+        },
+        {
+          "id": "post__collections",
+          "method": "POST",
+          "path": "/collections",
+          "summary": "Create a collection",
+          "status": "specified",
+          "sourcePointer": "/paths//collections/post"
+        },
+        {
+          "id": "get__collections__collection_",
+          "method": "GET",
+          "path": "/collections/{collection}",
+          "summary": "Get collection details",
+          "status": "specified",
+          "sourcePointer": "/paths//collections/{collection}/get"
+        },
+        {
+          "id": "delete__collections__collection_",
+          "method": "DELETE",
+          "path": "/collections/{collection}",
+          "summary": "Drop a collection",
+          "status": "specified",
+          "sourcePointer": "/paths//collections/{collection}/delete"
+        },
+        {
+          "id": "get__collections__collection__indexes",
+          "method": "GET",
+          "path": "/collections/{collection}/indexes",
+          "summary": "List indexes on a collection",
+          "status": "specified",
+          "sourcePointer": "/paths//collections/{collection}/indexes/get"
+        },
+        {
+          "id": "post__collections__collection__indexes",
+          "method": "POST",
+          "path": "/collections/{collection}/indexes",
+          "summary": "Define an index on a collection",
+          "status": "specified",
+          "sourcePointer": "/paths//collections/{collection}/indexes/post"
+        },
+        {
+          "id": "put__collections__collection__records__id_",
+          "method": "PUT",
+          "path": "/collections/{collection}/records/{id}",
+          "summary": "Upsert a record by ID",
+          "status": "specified",
+          "sourcePointer": "/paths//collections/{collection}/records/{id}/put"
+        },
+        {
+          "id": "get__collections__collection__records__id_",
+          "method": "GET",
+          "path": "/collections/{collection}/records/{id}",
+          "summary": "Fetch a record by ID",
+          "status": "specified",
+          "sourcePointer": "/paths//collections/{collection}/records/{id}/get"
+        },
+        {
+          "id": "delete__collections__collection__records__id_",
+          "method": "DELETE",
+          "path": "/collections/{collection}/records/{id}",
+          "summary": "Delete a record by ID",
+          "status": "specified",
+          "sourcePointer": "/paths//collections/{collection}/records/{id}/delete"
+        },
+        {
+          "id": "post__collections__collection__query",
+          "method": "POST",
+          "path": "/collections/{collection}/query",
+          "summary": "Query a collection (byId, index, prefix/range scan)",
+          "status": "specified",
+          "sourcePointer": "/paths//collections/{collection}/query/post"
+        },
+        {
+          "id": "post__transactions",
+          "method": "POST",
+          "path": "/transactions",
+          "summary": "Commit an atomic batch of operations",
+          "status": "specified",
+          "sourcePointer": "/paths//transactions/post"
+        },
+        {
+          "id": "post__snapshots",
+          "method": "POST",
+          "path": "/snapshots",
+          "summary": "Create a read snapshot",
+          "status": "specified",
+          "sourcePointer": "/paths//snapshots/post"
+        },
+        {
+          "id": "delete__snapshots__snapshotId_",
+          "method": "DELETE",
+          "path": "/snapshots/{snapshotId}",
+          "summary": "Release a snapshot",
+          "status": "specified",
+          "sourcePointer": "/paths//snapshots/{snapshotId}/delete"
+        },
+        {
+          "id": "get__compaction_status",
+          "method": "GET",
+          "path": "/compaction/status",
+          "summary": "Compaction status",
+          "status": "specified",
+          "sourcePointer": "/paths//compaction/status/get"
+        },
+        {
+          "id": "post__compaction_run",
+          "method": "POST",
+          "path": "/compaction/run",
+          "summary": "Trigger a compaction tick or full compaction",
+          "status": "specified",
+          "sourcePointer": "/paths//compaction/run/post"
+        },
+        {
+          "id": "get__backups",
+          "method": "GET",
+          "path": "/backups",
+          "summary": "List backups",
+          "status": "specified",
+          "sourcePointer": "/paths//backups/get"
+        },
+        {
+          "id": "post__backups",
+          "method": "POST",
+          "path": "/backups",
+          "summary": "Create a backup",
+          "status": "specified",
+          "sourcePointer": "/paths//backups/post"
+        },
+        {
+          "id": "post__backups__backupId__restore",
+          "method": "POST",
+          "path": "/backups/{backupId}/restore",
+          "summary": "Restore from a backup",
+          "status": "specified",
+          "sourcePointer": "/paths//backups/{backupId}/restore/post"
+        },
+        {
+          "id": "get__metrics",
+          "method": "GET",
+          "path": "/metrics",
+          "summary": "Export counters and gauges",
+          "status": "specified",
+          "sourcePointer": "/paths//metrics/get"
+        }
+      ],
+      "exposure": "internal/optional only; FCIS embeds native writer and does not require Store HTTP endpoint in public cutover"
+    },
+    "secretstore": {
+      "sourceId": "secretStore",
+      "openapiVersion": "3.1.0",
+      "version": "0.1.0",
+      "operations": [
+        {
+          "id": "inspectSecretCustody",
+          "method": "GET",
+          "path": "/custody/v1/status",
+          "summary": "Inspect redacted SecretStore readiness",
+          "security": [
+            {
+              "hostAdmission": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1custody~1v1~1status/get"
+        },
+        {
+          "id": "executeBoundCustodyOperation",
+          "method": "POST",
+          "path": "/custody/v1/operations",
+          "summary": "Use one owner-approved secret within an admitted Host operation",
+          "security": [
+            {
+              "hostAdmission": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1custody~1v1~1operations/post"
+        },
+        {
+          "id": "transferSecretCustodyWithinHost",
+          "method": "POST",
+          "path": "/custody/v1/migrations/transfer",
+          "summary": "Maintain or move a bounded custody reference set under Hetzner Host",
+          "security": [
+            {
+              "hostAdmission": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1custody~1v1~1migrations~1transfer/post"
+        },
+        {
+          "id": "verifySecretCustodyContinuity",
+          "method": "POST",
+          "path": "/custody/v1/migrations/verify",
+          "summary": "Verify old and new SecretStore continuity without revealing keys",
+          "security": [
+            {
+              "hostAdmission": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1custody~1v1~1migrations~1verify/post"
+        }
+      ],
+      "schemas": [
+        "CustodyStatus",
+        "OwnerApproval",
+        "BoundOperationRequest",
+        "CustodyReceipt",
+        "MigrationTransferRequest",
+        "MigrationVerifyRequest",
+        "MigrationReferenceResult",
+        "MigrationReceipt",
+        "CustodyError"
+      ],
+      "securitySchemes": [
+        "hostAdmission"
+      ],
+      "exposure": "private Host only, no new public SecretStore server"
+    }
+  },
+  "authorityAndIdentity": {
+    "trustRoot": "existing production owner public trust set and explicit owner-signed authority, never guessed from SSH or a row name",
+    "ownerSubject": "stable existing owner subject retained during old-to-new transfer",
+    "webauthn": {
+      "preserve": [
+        "RP ID",
+        "user handle",
+        "credential ID",
+        "public keys",
+        "counters",
+        "backup state",
+        "revoked state"
+      ],
+      "verification": [
+        "unique fresh challenge",
+        "origin/RP exact",
+        "signature",
+        "user verification",
+        "expiry",
+        "replay and counter rollback"
+      ],
+      "privateAuthenticatorKeys": "never export or transfer"
+    },
+    "oauth": {
+      "protocol": [
+        "RFC 9700",
+        "RFC 8414",
+        "RFC 8707",
+        "RFC 9728",
+        "authorization code PKCE S256"
+      ],
+      "preserve": [
+        "clients",
+        "redirect URIs",
+        "registered resources",
+        "scoped grants",
+        "revocations",
+        "refresh-token-family state",
+        "issuer identity"
+      ],
+      "mustDeny": [
+        "redirect mismatch",
+        "wrong audience",
+        "expired consent",
+        "revoked grant",
+        "refresh replay",
+        "unadmitted Host operation"
+      ]
+    },
+    "hosts": {
+      "preserve": [
+        "machine public identities",
+        "signed admissions",
+        "leases",
+        "instrument versions",
+        "revocations",
+        "scope-target resource bindings"
+      ],
+      "capabilityAvailability": [
+        "declared",
+        "installed",
+        "admitted",
+        "routable",
+        "authorized-for-client",
+        "callable",
+        "live-accepted"
+      ],
+      "discoveryDerivedFrom": "admitted typed Host registry intersecting requesting client's scopes, not handwritten static host.describe inventory"
+    },
+    "evidence": {
+      "sourceOfTruth": "FountainStore append-only events and signed native Host receipts, not UI status or chat transcript",
+      "executionStates": [
+        "requested",
+        "admitted",
+        "executing",
+        "succeeded",
+        "failed",
+        "refused",
+        "unverified"
+      ]
+    }
+  },
+  "persistence": {
+    "namespace": "dedicated FCIS native Go FountainStore private persistent root",
+    "logicalCollections": [
+      "fcis.owners",
+      "fcis.passkeys",
+      "fcis.oauth.clients",
+      "fcis.oauth.grants",
+      "fcis.oauth.revocations",
+      "fcis.hosts",
+      "fcis.admissions",
+      "fcis.instruments",
+      "fcis.executions",
+      "fcis.receipts",
+      "fcis.audit"
+    ],
+    "correctness": [
+      "single writer with fencing",
+      "monotonic commit/watermark",
+      "write ahead log with crash replay",
+      "atomic grant rotation/revocation",
+      "snapshot+restore",
+      "compaction without authorization rollback",
+      "verified data readback"
+    ],
+    "secretExclusion": "no raw key, token or private credential in ordinary records, logs, receipts or generation source",
+    "formatOwnership": "source-owned FountainStore engine contract, with Go implementation independent of Swift at runtime"
+  },
+  "custody": {
+    "backend": "existing Hetzner trusted secret custodian through Go private Host adapter",
+    "capabilities": [
+      "status",
+      "approved operation",
+      "migration transfer",
+      "migration verification"
+    ],
+    "separation": "SecretStore public HTTP is forbidden; protected Host projection only; owner authorization distinct from Host admission",
+    "nonExportable": "retain keys in existing authorized custodian and prove equivalence with bounded signing challenge",
+    "migrationTransport": "admitted encrypted host-internal operation, no secret material in model input"
+  },
+  "migration": {
+    "initiator": "existing headless Hetzner Host/operator authority",
+    "approval": "existing Golden Key/owner trust; explicit signed action where policy requires",
+    "preconditions": [
+      "source and destination read-only inventory",
+      "source owner trust fingerprint",
+      "issuer/client identity baselines",
+      "source Store and SecretStore provenance",
+      "Go artifact and intended release SHA"
+    ],
+    "steps": [
+      "read-only source authority census",
+      "verify exact owner/Host operation approval",
+      "fence old writer and obtain consistent WAL snapshot",
+      "create encrypted immutable backups and independently restore",
+      "import verified typed owner/passkey/OAuth/Host/audit records into dedicated Go Store",
+      "retain existing non-exportable SecretStore keys in their custodian",
+      "quarantine unverifiable records as inactive with reason codes",
+      "prove ID/fingerprint/client-grant/revocation/custody parity and restart",
+      "activate immutable Go release at existing fcis.fountain.coach behind Caddy",
+      "independent public OAuth+MCP and Store/Host terminal readback"
+    ],
+    "rollback": "reconcile all post-cutover revocations/rotations; do not reactivate predecessor if permission state cannot be kept monotonic",
+    "forbidden": [
+      "new owner enrollment",
+      "mass client reauthorization",
+      "Mac operator/Keychain as required step",
+      "raw secret export",
+      "unfenced concurrent old/new writes"
+    ]
+  },
+  "generation": {
+    "stage": "code-first-before-tests-per-owner",
+    "buildHost": "Ubuntu Mac mini (unprivileged isolated workspace)",
+    "inputMode": "pinned Git SHA and blob digests, not mutable main at generation time",
+    "primaryLanguage": "Go",
+    "targetSourceRepository": "Fountain-Coach/midi2-gpu-fabric",
+    "targetBaseDir": "apps/estate-publisher/fcis-go-native",
+    "reusableSourceBranch": "feat/fcis-go-private-secretstore-custody-20261119",
+    "strategy": [
+      "generate typed HTTP server/client contracts from root OpenAPI",
+      "generate native Go FountainStore storage+admin projection",
+      "generate protected custody interfaces+adapters from SecretStore OpenAPI",
+      "bind preserved frontend assets to Go HTTP surface without redesign",
+      "complete MCP and admitted Host transport from existing typed contracts",
+      "implement Hetzner-only migration+release orchestration, excluding production secrets"
+    ],
+    "requiredArtifacts": [
+      "complete Go sources for FCIS/Store/Custody/Host",
+      "existing frontend assets pinned and integrated",
+      "all API operation mapping",
+      "pinned dependency manifest",
+      "coverage ledger requirement-to-source",
+      "reproducible generation receipt"
+    ],
+    "completionSemantics": "INCOMPLETE until all required spec operation/behavior IDs have actual source mapping and all deliverables exist; no generated stub counts as implemented",
+    "testingPhase": "explicitly after code generation, no tests in this phase"
+  },
+  "acceptance": {
+    "generation": [
+      "all three API operation inventories covered",
+      "frontend source assets included or linked with exact revision",
+      "no unsupported operation silently reported implemented",
+      "every requirement has source address and generation output",
+      "no unsafe secrets/credentials in sources",
+      "immutable source commit and coverage manifest"
+    ],
+    "postGenerationTesting": [
+      "compile and static checks",
+      "negative WebAuthn/OAuth/Host and custody refusal tests",
+      "Store commit/restart/snapshot/rollback",
+      "end-to-end existing frontend and owner passkey",
+      "OAuth/MCP and Host signed receipts"
+    ],
+    "production": [
+      "existing origin serves Go OAuth and MCP without Swift runtime",
+      "existing owner/public-key, grants, revocations, Host identities retained",
+      "SecretStore custody remains authorized",
+      "verified immutable backup/restore and non-resurrecting rollback",
+      "independent Hetzner and public HTTPS witnesses"
+    ],
+    "proofPolicy": "source existence, successful build/test, Git merge and production terminal state are independent claims"
+  },
+  "knownSpecificationLimitations": [
+    {
+      "id": "SPEC-GAP-STORE-FORMAT",
+      "area": "fountainstore.native",
+      "details": "The published FountainStore HTTP OpenAPI describes admin/queries; it does not independently define a complete on-disk format or logical import mapping. Implementation must derive from the source-owned engine contract/Go writer and cannot invent compatible persisted data."
+    },
+    {
+      "id": "SPEC-GAP-CUSTODIAN",
+      "area": "secretstore.custody",
+      "details": "OpenAPI specifies a protected Host projection but not the actual Hetzner key provider or its non-exportability/export semantics. Do not generate or use a substitute root signer."
+    },
+    {
+      "id": "SPEC-GAP-MIDI2-REGISTRY",
+      "area": "host.instrument",
+      "details": "The actual admitted MIDI2 instrument registry and signed Host transport must be resolved from source-owned IDL/instruments; HTTP operation descriptions do not confer Host grants."
+    },
+    {
+      "id": "SPEC-GAP-LIVE-PRODUCTION",
+      "area": "migration",
+      "details": "Exact running old Store roots, signer/Host authority, Caddy unit and custody backend require Hetzner read-only inspection and must not be guessed from source documentation."
+    },
+    {
+      "id": "SPEC-GAP-FRONTEND-DRIFT",
+      "area": "frontend.access",
+      "details": "Some existing JS validates a historical owner OpenAPI shape, requiring source-derived compatibility handling against canonical v0.3.1 before UI generation is labeled complete."
+    }
+  ],
+  "coverageBaseline": {
+    "fcisHTTP": 30,
+    "fountainStoreHTTP": 24,
+    "secretStoreHTTP": 4,
+    "frontendFiles": 8,
+    "requiredAreas": 7
+  },
+  "nonClaims": [
+    "This composition is not a fully closed executable spec",
+    "Generation of an API route does not imply authorization or secret custodian support",
+    "The branch is not a production release",
+    "Do not treat missing provider, signing or historical Store evidence as a success"
+  ]
+}
