@@ -155,17 +155,17 @@
     },
     "goREADME": {
       "repository": "Fountain-Coach/midi2-gpu-fabric",
-      "ref": "feat/fcis-go-private-secretstore-custody-20261119",
+      "ref": "3f0b3d1e4c14723be496fc72f1c5681dadba37ae",
       "path": "apps/estate-publisher/fcis-go-native/README.md",
       "blobSha": "c4ced8047c3d560b6028f61c4362243b311ec7c0",
-      "url": "https://github.com/Fountain-Coach/midi2-gpu-fabric/blob/feat/fcis-go-private-secretstore-custody-20261119/apps/estate-publisher/fcis-go-native/README.md"
+      "url": "https://github.com/Fountain-Coach/midi2-gpu-fabric/blob/3f0b3d1e4c14723be496fc72f1c5681dadba37ae/apps/estate-publisher/fcis-go-native/README.md"
     },
     "goSource": {
       "repository": "Fountain-Coach/midi2-gpu-fabric",
-      "ref": "feat/fcis-go-private-secretstore-custody-20261119",
+      "ref": "3f0b3d1e4c14723be496fc72f1c5681dadba37ae",
       "path": "apps/estate-publisher/fcis-go-native/internal/native/server.go",
       "blobSha": "5145791fae2b7e1efe9f8dfdf43d2de47692cc9d",
-      "url": "https://github.com/Fountain-Coach/midi2-gpu-fabric/blob/feat/fcis-go-private-secretstore-custody-20261119/apps/estate-publisher/fcis-go-native/internal/native/server.go"
+      "url": "https://github.com/Fountain-Coach/midi2-gpu-fabric/blob/3f0b3d1e4c14723be496fc72f1c5681dadba37ae/apps/estate-publisher/fcis-go-native/internal/native/server.go"
     }
   },
   "specificationPrecedence": {
@@ -1404,7 +1404,8 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 97
+      "expectedRequirementCount": 97,
+      "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used."
     },
     "inputContractDigests": {
       "fcisOpenAPI": "0.4.0",
@@ -2608,7 +2609,7 @@
       }
     ],
     "architectureDecision": "All five are resolved by explicit source-independent design requirements, not by claiming the old live environments exist.",
-    "verificationStatus": "NORMATIVE_DRAFT_NOT_YET_STRUCTURALLY_VALIDATED",
+    "verificationStatus": "CANDIDATE_AWAITING_INDEPENDENT_STRUCTURAL_AND_CONSISTENCY_VALIDATION",
     "productionInstanceInventory": "OPTIONAL_NOT_A_GENERATION_GATE"
   },
   "sourcePinPolicy": {
