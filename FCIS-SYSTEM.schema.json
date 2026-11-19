@@ -576,7 +576,7 @@
         },
         "requirementCatalog": {
           "type": "array",
-          "minItems": 90,
+          "minItems": 222,
           "items": {
             "$ref": "#/$defs/requirement"
           }
@@ -587,18 +587,77 @@
             "expectedRequirementCount",
             "method",
             "unmapped",
-            "testsAllowedOnlyAfterGeneration"
+            "testsAllowedOnlyAfterGeneration",
+            "minimumAtomicRequirementCount",
+            "atomicCoverageClasses",
+            "generatorReceipt"
           ],
           "properties": {
             "expectedRequirementCount": {
               "type": "integer",
-              "minimum": 90
+              "minimum": 222
             },
             "unmapped": {
               "const": "INCOMPLETE"
             },
             "testsAllowedOnlyAfterGeneration": {
               "const": true
+            },
+            "minimumAtomicRequirementCount": {
+              "type": "integer",
+              "minimum": 222
+            },
+            "atomicCoverageClasses": {
+              "type": "array",
+              "minItems": 15,
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "generatorReceipt": {
+              "type": "object",
+              "required": [
+                "artifact",
+                "initialStatus",
+                "sourcePins",
+                "requiredMappingFields",
+                "accept",
+                "refuse",
+                "resumption",
+                "completion"
+              ],
+              "properties": {
+                "artifact": {
+                  "const": "generation-coverage.json"
+                },
+                "initialStatus": {
+                  "const": "INCOMPLETE"
+                },
+                "sourcePins": {
+                  "type": "array",
+                  "minItems": 5,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "requiredMappingFields": {
+                  "type": "array",
+                  "minItems": 7,
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                },
+                "refuse": {
+                  "type": "array",
+                  "minItems": 7,
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                }
+              }
             }
           }
         }
@@ -642,7 +701,9 @@
         "fountainStoreHTTP",
         "secretStoreHTTP",
         "frontendFiles",
-        "domains"
+        "domains",
+        "atomicRequirementCount",
+        "atomicRequirementGroups"
       ],
       "properties": {
         "fcisHTTP": {
@@ -667,6 +728,18 @@
           "uniqueItems": true,
           "items": {
             "type": "string"
+          }
+        },
+        "atomicRequirementCount": {
+          "type": "integer",
+          "minimum": 222
+        },
+        "atomicRequirementGroups": {
+          "type": "object",
+          "minProperties": 15,
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 1
           }
         }
       }
@@ -725,6 +798,14 @@
         },
         "mandatory": {
           "const": true
+        },
+        "sourcePointer": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "proofClass": {
+          "type": "string",
+          "minLength": 3
         }
       }
     },
