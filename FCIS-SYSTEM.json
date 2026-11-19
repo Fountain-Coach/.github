@@ -1,37 +1,38 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "kind": "fountaincoach.fcis.system.composition",
-  "schemaVersion": "0.1.0",
-  "compositionId": "fountaincoach.fcis.go-production",
-  "status": "generation-input-candidate-not-yet-fully-validated",
+  "schemaVersion": "1.0.0",
+  "compositionId": "fountaincoach.fcis.whole-system",
+  "status": "NORMATIVE_SPECIFICATION_CANDIDATE__NOT_GENERATED",
   "generatedAtUTC": "2026-11-19",
   "owner": "Fountain Coach",
-  "architectureVersion": "1.1",
+  "architectureVersion": "1.2",
   "scope": {
-    "goal": "Generate all source for the existing FCIS owner frontend and a standalone, native Go FCIS issuer, MCP and Host orchestration with native Go FountainStore and protected SecretStore custody; then test separately and cut over headless Hetzner preserving existing owner authority",
+    "goal": "Specify, generate and independently install the entire native-Go FCIS Instruction System with no preexisting Fountain Coach runtime, including secure first-owner bootstrap, native FountainStore and SecretStore, OAuth/WebAuthn, MCP, typed Host/MIDI2 instrument registry, FCIS Skills/scenario learning, existing Fountain Press Access UX and independent release lifecycle. Optionally adopt an existing installation with separate continuity verification.",
     "included": [
-      "FCIS Go HTTP OAuth WebAuthn MCP and Host API",
-      "FountainStore private Go persistence",
-      "SecretStore protected Go custody adapter",
-      "existing Fountain Press /manage/ frontend without redesign",
-      "issuer-hosted login and pairing UX",
-      "MIDI2 instrument discovery/admission and scoped execution",
-      "Hetzner-initiated old-to-new authority transfer and protected rollback",
-      "immutable Git-sourced release and independent evidence"
+      "Native-Go issuer, OAuth, WebAuthn, MCP and owner/Host wire surfaces",
+      "Self-contained Go-native FountainStore and Go-native encrypted SecretStore",
+      "Fresh-install initialization, first-owner bootstrap, recovery and upgrade lifecycle",
+      "Existing Fountain Press owner UI and issuer login/pairing UX as bundled frontend",
+      "Native software Host with read-only capability and optional external MIDI2 adapters",
+      "Versioned capability inventory, instrument admissions, client-scoped grants and terminal receipts",
+      "FCIS-KIT skills, scenarios, learning, version promotion and customer-owned derived work",
+      "Provider-neutral model adapters and customer-supplied provider accounts",
+      "One-instance customer/owner model with tenant-ready namespaces and portable Store export",
+      "Reproducible immutable generation, offline CI, release, backup/restore and rollback",
+      "Optional source-bound legacy migration including the existing Hetzner instance"
     ],
     "excludedFromFirstRelease": [
-      "Stripe billing",
-      "new owner bootstrap for existing issuer",
-      "new frontend design",
-      "MacBook/Ubuntu workstation production dependency",
-      "Swift runtime",
-      "unverified multi-writer replication",
-      "generic shell capability",
-      "new credential issuer"
+      "commercial Stripe billing adapter (versioned optional integration only)",
+      "external hardware conformance claim",
+      "production deployment or migration automatically implied by a source commit",
+      "any universal external provider grant"
     ],
     "developmentHost": "headless Ubuntu Mac mini isolated unprivileged workspace, no production credentials",
-    "productionHost": "existing headless Hetzner with private Go service behind Caddy",
-    "canonicalGit": "GitHub protected main in Fountain-Coach organization"
+    "productionHost": "Deployment adapter selected by operator; Hetzner + Caddy is one optional profile, not an environment dependency",
+    "canonicalGit": "GitHub protected main in Fountain-Coach organization",
+    "defaultInstallation": "Any supported Linux host (amd64 or arm64); process may serve loopback without DNS, SSH or reverse proxy",
+    "currentFountainCoachMigration": "Optional adopt-existing production instance at fcis.fountain.coach; preserve prior identities/grants only in that profile"
   },
   "specificationSources": {
     "org": {
@@ -169,7 +170,7 @@
     }
   },
   "specificationPrecedence": {
-    "systemComposition": "This file defines the dependency graph, inclusion/coverage and generation constraints without redefining component wire contracts",
+    "systemComposition": "FCIS-SYSTEM.json owns normative entire-system composition and all mandatory implementation/lifecycle invariants. FCIS-OPENAPI.json owns HTTP method/path and schema. FCIS-STACK.md is the human-readable architecture counterpart. Source-governed MIDI2 and FCIS-KIT contracts are referenced without granting runtime admission.",
     "architecture": "org FCIS-STACK.md owns topology, invariants and production DoD",
     "fcisHTTP": "org FCIS-OPENAPI.json owns exact FCIS paths, schemas, request and auth semantics",
     "storeHTTP": "Fountain-Store docs/openapi-fountainstore.yaml owns optional Store HTTP projection",
@@ -192,7 +193,7 @@
         "workspaceCSS",
         "bookCSS"
       ],
-      "servedAt": "https://access.fountain.coach/manage/",
+      "servedAt": "same-origin /manage/ on newly installed issuer; optional external access.fountain.coach static instance",
       "owns": [
         "presentation",
         "Clients, Hosts, Skills, Reference tabs",
@@ -206,7 +207,9 @@
         "owner grants",
         "signing material",
         "machine authority"
-      ]
+      ],
+      "requiresExistingFrontendServer": false,
+      "requiresExternalDomain": false
     },
     {
       "id": "frontend.issuer",
@@ -215,7 +218,7 @@
         "goSource",
         "goREADME"
       ],
-      "servedAt": "https://fcis.fountain.coach/oauth/owner/passkeys/login",
+      "servedAt": "same-origin /oauth/owner/passkeys/login and /oauth/owner/hosts/pair",
       "owns": [
         "WebAuthn ceremony UI",
         "owner pairing UI"
@@ -235,7 +238,8 @@
         "org"
       ],
       "serves": [
-        "https://fcis.fountain.coach"
+        "configured issuer origin (localhost loopback by default)",
+        "optional HTTPS origin"
       ],
       "owns": [
         "issuer HTTP routing",
@@ -249,15 +253,15 @@
         "fountainstore.native",
         "secretstore.custody",
         "host.instrument"
-      ]
+      ],
+      "issuerAuthority": "one first owner claim per fresh instance; protected on existing instance"
     },
     {
       "id": "fountainstore.native",
       "language": "Go",
       "sourceIds": [
         "fountainStore",
-        "org",
-        "migration"
+        "org"
       ],
       "owns": [
         "single-writer transactional persistence",
@@ -273,23 +277,23 @@
         "atomic grant revocation and token-family state",
         "exclusive authoritative writer",
         "encrypted immutable backup verified by restore"
-      ]
+      ],
+      "mode": "new native Go v1 format, no prior Swift Store"
     },
     {
       "id": "secretstore.custody",
-      "language": "Go protected adapter using existing Hetzner custodian",
+      "language": "Go",
       "sourceIds": [
         "secretStore",
-        "migration"
+        "org"
       ],
       "owns": [
-        "opaque secret references",
-        "bounded authorized key operations",
-        "approved custody transfer",
-        "same-custodian equivalence verification"
+        "native initial key custody",
+        "encrypted secret references",
+        "bounded authorized signing",
+        "optional separately approved legacy migration"
       ],
       "requires": [
-        "host.instrument",
         "fountainstore.native"
       ],
       "invariants": [
@@ -297,22 +301,24 @@
         "owner-signed approval where required",
         "provider-supported export/import only",
         "existing non-exportable keys stay in original custodian"
-      ]
+      ],
+      "execution": "bundled sealed local vault private to issuer process; optional separately admitted external custodian",
+      "mustNotDependOn": "existing Hetzner custodian"
     },
     {
       "id": "host.instrument",
-      "language": "Go and admitted source-owned native Host adapters",
+      "language": "Go software Host + optional transport adapters",
       "sourceIds": [
         "org",
         "fcisKit",
         "midi2Peer"
       ],
       "owns": [
-        "signed device enrollment",
-        "capability inventory",
-        "MIDI2/FCIS-KIT typed calls",
-        "per-client grant enforcement",
-        "Host result evidence"
+        "versioned capability inventory",
+        "first-party software Host",
+        "owner-approved machine enrollment",
+        "per-client grants",
+        "typed receipts"
       ],
       "requires": [
         "fountainstore.native",
@@ -322,20 +328,22 @@
         "host.describe is discovery not a grant",
         "machine enrollment is not arbitrary execution authorization",
         "every capability requires admitted identity/version/scope and signed execution receipt"
-      ]
+      ],
+      "execution": "built-in no-effect/read-only local Host present; optional external machine/MIDI2 adapters"
     },
     {
-      "id": "release.hetzner",
-      "language": "Caddy/systemd/immutable Go artifacts",
+      "id": "release.linux",
+      "language": "Go service binary and optional systemd/Caddy adapters",
       "sourceIds": [
         "org",
         "migration"
       ],
       "owns": [
-        "single active issuer origin",
-        "release installation",
-        "rollback",
-        "service readiness and independent live readback"
+        "package installation",
+        "initialization",
+        "service supervision",
+        "backup and rollback",
+        "optional migration"
       ],
       "requires": [
         "fcis.http",
@@ -348,11 +356,61 @@
         "no fresh owner on existing issuer",
         "old writer fenced before activation",
         "rollback may not resurrect revoked grants"
-      ]
+      ],
+      "execution": "operator-selected Linux host with loopback service by default; optional HTTPS/Caddy/Hetzner"
+    },
+    {
+      "id": "fcis.skills",
+      "language": "source manifests + Go validation",
+      "execution": "bundled local read-only skill catalog and owner-authorized proposal/promotion",
+      "owns": [
+        "skill revisions",
+        "scenario definitions",
+        "version/digest identity",
+        "derived-work attribution and licensing"
+      ],
+      "requires": [
+        "fountainstore.native",
+        "host.instrument"
+      ],
+      "externalGit": "optional source synchronizer, never runtime start dependency"
+    },
+    {
+      "id": "fcis.tenancy",
+      "language": "Go",
+      "execution": "tenant-scoped Store namespaces and authorization",
+      "owns": [
+        "owner/customer memberships",
+        "tenant identity",
+        "tenant-owned Store snapshots",
+        "per-tenant grants",
+        "BYO provider bindings"
+      ],
+      "requires": [
+        "fountainstore.native",
+        "secretstore.custody"
+      ],
+      "commercial": "optional payment module, never required for owner/local operation"
+    },
+    {
+      "id": "fcis.providers",
+      "language": "Go provider interfaces",
+      "execution": "unconfigured by default; configured adapter only with owner-approved credential custody",
+      "owns": [
+        "provider adapter registration",
+        "budget/consent checks",
+        "provider refusals",
+        "usage receipts"
+      ],
+      "requires": [
+        "secretstore.custody",
+        "fountainstore.native"
+      ],
+      "defaultBehavior": "no external provider; FCIS native deterministic tools function without LLM access"
     }
   ],
   "frontend": {
-    "origin": "https://access.fountain.coach",
+    "origin": "same-origin bundled frontend; deployment adapter may serve https://access.fountain.coach",
     "managementPath": "/manage/",
     "tabs": [
       "clients",
@@ -375,17 +433,17 @@
       "bookCSS"
     ],
     "authentication": {
-      "issuer": "https://fcis.fountain.coach/",
+      "issuer": "installation-bound origin, not hard-coded fcis.fountain.coach",
       "ownerCookie": "fcis_owner_session",
       "cookieFlags": [
-        "Secure",
         "HttpOnly",
-        "SameSite=Lax"
+        "SameSite=Lax",
+        "Secure on HTTPS; localhost secure-context exception only"
       ],
       "cookiePath": "/oauth",
       "sessionMaxSeconds": 600,
       "frontendFetchCredentials": "include",
-      "allowedCredentialedCORSOrigin": "https://access.fountain.coach",
+      "allowedCredentialedCORSOrigin": "none in bundled same-origin mode; optional pinned external Access origin",
       "foreignOriginDecision": "deny"
     },
     "behavioralInvariants": [
@@ -396,7 +454,8 @@
       "explicit scope/resource/intent confirmation before revoke",
       "a revoke success requires independently fresh issuer inventory and terminal Store evidence",
       "static frontend must not persist access tokens, grants or credentials",
-      "Golden Key uses existing authorized owner; separate owner-root signature is verified when required"
+      "Golden Key uses existing authorized owner; separate owner-root signature is verified when required",
+      "Fresh installation owner setup uses existing UI presentation and the one-use bootstrap without prior Golden Key; Gold Key is an optional physical owner authorizer after claim"
     ],
     "apiBindings": {
       "clients": [
@@ -425,6 +484,15 @@
         "/oauth/owner/hosts/pair/decide",
         "/oauth/host/enrollment/prove"
       ]
+    },
+    "selfHosting": {
+      "default": "Go binary embeds pinned existing Fountain Press owner UX source assets, serving /manage/ and owner passkey/pairing pages with CSP and no external CMS",
+      "assetMode": "compile-time content digests checked against pinned upstream source",
+      "urlBinding": "replace only hardcoded issuer/access origins with generated same-origin config in a structured build transform; no new layout, tabs, CSS, workflow or second permission store",
+      "sourceCompatibility": "historic Swift-only OpenAPI reference validator must validate current standalone Go title, version, source owner, security and implementation-state without claiming Go is deployed",
+      "cors": "same origin default: no CORS; optional external Access origin explicitly listed with credentials, deny unknown origins",
+      "login": "owner WebAuthn registration when UNCLAIMED, existing passkey login once CLAIMED, preserve original navigation",
+      "failure": "401/403 clears protected DOM inventory, 503 does not create phantom permission or success"
     }
   },
   "apis": {
@@ -1193,9 +1261,10 @@
     "migrationTransport": "admitted encrypted host-internal operation, no secret material in model input"
   },
   "migration": {
-    "initiator": "existing headless Hetzner Host/operator authority",
+    "initiator": "source-owner-approved operator on existing deployment; headless Hetzner if source is current fcis.fountain.coach",
     "approval": "existing Golden Key/owner trust; explicit signed action where policy requires",
     "preconditions": [
+      "adopt-existing expressly selected; refuse automatic discovery, copy or overwrite of any pre-existing authority",
       "source and destination read-only inventory",
       "source owner trust fingerprint",
       "issuer/client identity baselines",
@@ -1220,11 +1289,14 @@
       "mass client reauthorization",
       "Mac operator/Keychain as required step",
       "raw secret export",
-      "unfenced concurrent old/new writes"
-    ]
+      "unfenced concurrent old/new writes",
+      "implicit migration on fresh install"
+    ],
+    "mode": "OPTIONAL_ADOPT_EXISTING_ONLY",
+    "requiredForFreshInstall": false
   },
   "generation": {
-    "stage": "code-first-before-tests-per-owner",
+    "stage": "specification-first, then complete code generation, then independent tests",
     "buildHost": "Ubuntu Mac mini (unprivileged isolated workspace)",
     "inputMode": "pinned Git SHA and blob digests, not mutable main at generation time",
     "primaryLanguage": "Go",
@@ -1232,12 +1304,13 @@
     "targetBaseDir": "apps/estate-publisher/fcis-go-native",
     "reusableSourceBranch": "feat/fcis-go-private-secretstore-custody-20261119",
     "strategy": [
-      "generate typed HTTP server/client contracts from root OpenAPI",
-      "generate native Go FountainStore storage+admin projection",
-      "generate protected custody interfaces+adapters from SecretStore OpenAPI",
-      "bind preserved frontend assets to Go HTTP surface without redesign",
-      "complete MCP and admitted Host transport from existing typed contracts",
-      "implement Hetzner-only migration+release orchestration, excluding production secrets"
+      "generate from prerequisite-free FCIS-SYSTEM.json + pinned canonical OpenAPI and source-owned protocol contracts",
+      "implement new native Go Store format and vault format exactly as specified",
+      "implement initial setup, local WebAuthn, OAuth/MCP and software Host without network dependencies",
+      "embed and bind pinned existing Access frontend without redesign",
+      "implement typed Host/MIDI2 admission, grants, Skills/scenarios and tenant-owned data",
+      "ship CLI init/serve/status/backup/restore/adopt/upgrade/doctor",
+      "implement optional migration and Hetzner/Caddy adapters without making them dependencies"
     ],
     "requiredArtifacts": [
       "complete Go sources for FCIS/Store/Custody/Host",
@@ -1245,13 +1318,23 @@
       "all API operation mapping",
       "pinned dependency manifest",
       "coverage ledger requirement-to-source",
-      "reproducible generation receipt"
+      "reproducible generation receipt",
+      "self-contained first-run Go binary and embedded Access assets",
+      "source-bound implementation of every invariant in this file"
     ],
     "completionSemantics": "INCOMPLETE until all required spec operation/behavior IDs have actual source mapping and all deliverables exist; no generated stub counts as implemented",
-    "testingPhase": "explicitly after code generation, no tests in this phase"
+    "testingPhase": "explicitly after code generation, no tests in this phase",
+    "requirementGate": {
+      "version": 1,
+      "method": "stable requirement IDs map to source addresses and generated source; no operations, states, transitions, schemas or required artifacts may remain unmapped",
+      "unmapped": "INCOMPLETE",
+      "testsAllowedOnlyAfterGeneration": true,
+      "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs"
+    }
   },
   "acceptance": {
     "generation": [
+      "from an empty filesystem with no FCIS credential, service, Store, SecretStore, Host or external domain, all required code paths and source resources generated",
       "all three API operation inventories covered",
       "frontend source assets included or linked with exact revision",
       "no unsupported operation silently reported implemented",
@@ -1260,6 +1343,7 @@
       "immutable source commit and coverage manifest"
     ],
     "postGenerationTesting": [
+      "fresh offline initialization, first-owner claim, restart, OAuth client and built-in Host proof with no Hetzner/Git/MIDI2 hardware/provider",
       "compile and static checks",
       "negative WebAuthn/OAuth/Host and custody refusal tests",
       "Store commit/restart/snapshot/rollback",
@@ -1267,6 +1351,7 @@
       "OAuth/MCP and Host signed receipts"
     ],
     "production": [
+      "fresh-install may be deployed independently on any supported Linux host; optional current Hetzner migration is a distinct deployment profile",
       "existing origin serves Go OAuth and MCP without Swift runtime",
       "existing owner/public-key, grants, revocations, Host identities retained",
       "SecretStore custody remains authorized",
@@ -1275,44 +1360,570 @@
     ],
     "proofPolicy": "source existence, successful build/test, Git merge and production terminal state are independent claims"
   },
-  "knownSpecificationLimitations": [
-    {
-      "id": "SPEC-GAP-STORE-FORMAT",
-      "area": "fountainstore.native",
-      "details": "The published FountainStore HTTP OpenAPI describes admin/queries; it does not independently define a complete on-disk format or logical import mapping. Implementation must derive from the source-owned engine contract/Go writer and cannot invent compatible persisted data."
-    },
-    {
-      "id": "SPEC-GAP-CUSTODIAN",
-      "area": "secretstore.custody",
-      "details": "OpenAPI specifies a protected Host projection but not the actual Hetzner key provider or its non-exportability/export semantics. Do not generate or use a substitute root signer."
-    },
-    {
-      "id": "SPEC-GAP-MIDI2-REGISTRY",
-      "area": "host.instrument",
-      "details": "The actual admitted MIDI2 instrument registry and signed Host transport must be resolved from source-owned IDL/instruments; HTTP operation descriptions do not confer Host grants."
-    },
-    {
-      "id": "SPEC-GAP-LIVE-PRODUCTION",
-      "area": "migration",
-      "details": "Exact running old Store roots, signer/Host authority, Caddy unit and custody backend require Hetzner read-only inspection and must not be guessed from source documentation."
-    },
-    {
-      "id": "SPEC-GAP-FRONTEND-DRIFT",
-      "area": "frontend.access",
-      "details": "Some existing JS validates a historical owner OpenAPI shape, requiring source-derived compatibility handling against canonical v0.3.1 before UI generation is labeled complete."
-    }
-  ],
+  "knownSpecificationLimitations": [],
   "coverageBaseline": {
     "fcisHTTP": 30,
     "fountainStoreHTTP": 24,
     "secretStoreHTTP": 4,
     "frontendFiles": 8,
-    "requiredAreas": 7
+    "requiredAreas": 7,
+    "domains": [
+      "bootstrap",
+      "identity",
+      "OAuth",
+      "MCP",
+      "nativeStore",
+      "nativeVault",
+      "frontend",
+      "hosts",
+      "MIDI2",
+      "skills",
+      "scenarios",
+      "tenants",
+      "providerAdapters",
+      "deployment",
+      "legacyAdoption"
+    ]
   },
   "nonClaims": [
-    "This composition is not a fully closed executable spec",
-    "Generation of an API route does not imply authorization or secret custodian support",
-    "The branch is not a production release",
-    "Do not treat missing provider, signing or historical Store evidence as a success"
-  ]
+    "Normative design and source inventory are not evidence of generated source, tests or deployed services",
+    "Existing owner, keys and grants require separately approved adopt-existing migration; a fresh install does not inherit them",
+    "A bundled software Host does not prove physical MIDI2 hardware interoperability"
+  ],
+  "designPrinciple": {
+    "name": "Voraussetzungslos",
+    "rule": "The FCIS system must be fully specified and reproducibly generated from this composition without requiring any preexisting FCIS instance, owner, Host, Keychain, FountainStore, SecretStore, Go service, GitHub connection, MIDI2 device, Hetzner machine, reverse proxy or AI-provider account.",
+    "resourcesAllowedForInstall": [
+      "supported Linux operating system",
+      "private writable disk",
+      "cryptographic random source",
+      "local operator console",
+      "WebAuthn-capable browser and authenticator for first owner"
+    ],
+    "profiles": [
+      "fresh-install",
+      "adopt-existing"
+    ],
+    "defaultProfile": "fresh-install",
+    "externalProviderPolicy": "external models, payment providers, MIDI2 hardware, Git servers and deployment targets are optional adapters; unavailable adapters cannot prevent the core system starting",
+    "nonAssumption": "Any name, address, credential, grant, source repository or hostname discovered in an existing installation is instance input, not an architectural precondition",
+    "securityBoundary": "Voraussetzungslos does NOT permit self-authorizing an already claimed owner, bypassing WebAuthn, manufacturing grants or escaping verified custody during optional migration"
+  },
+  "initialization": {
+    "binary": "fcis",
+    "requiredCommands": [
+      {
+        "name": "fcis init",
+        "effect": "atomic first instance creation and one-time claim ticket; no existing owner required"
+      },
+      {
+        "name": "fcis serve",
+        "effect": "start local issuer, MCP and bundled Access UI using existing initialized instance"
+      },
+      {
+        "name": "fcis status",
+        "effect": "redacted local status and version; never print keys"
+      },
+      {
+        "name": "fcis backup",
+        "effect": "authenticated encrypted full consistent Store plus vault reference backup"
+      },
+      {
+        "name": "fcis restore",
+        "effect": "offline verified restore to a new private root with key custody check; refuse existing active writer"
+      },
+      {
+        "name": "fcis adopt",
+        "effect": "optional independently authorized legacy logical import; never silently run on fresh instance"
+      },
+      {
+        "name": "fcis upgrade",
+        "effect": "immutable artifact switch with schema checks and safe rollback"
+      },
+      {
+        "name": "fcis doctor",
+        "effect": "read-only startup and source/schema health summary"
+      }
+    ],
+    "installInput": {
+      "required": [
+        "--root absolute-private-path"
+      ],
+      "optional": [
+        "--issuer-origin",
+        "--bind-loopback-address",
+        "--tls-cert-path",
+        "--tls-key-ref",
+        "--external-custodian",
+        "--import-source"
+      ],
+      "defaultBind": "127.0.0.1:18443",
+      "defaultOrigin": "http://localhost:18443",
+      "defaultRPID": "localhost",
+      "defaultOwnerUI": "/manage/",
+      "defaultMCP": "/mcp"
+    },
+    "fileLayout": {
+      "rootMode": "0700",
+      "contents": {
+        "config.json": "nonsecret instance/issuer configuration; mode 0600",
+        "state/": "private Go FountainStore; mode 0700",
+        "vault/": "encrypted secret envelopes and local unwrap key file; mode 0700; key file 0600",
+        "releases/": "immutable versioned Go binaries and asset digests",
+        "backup/": "encrypted checkpoint copies, no public web root",
+        "run/": "instance writer lock and owner-bootstrap digest record; mode 0700"
+      }
+    },
+    "atomicInit": "Create root with O_EXCL and private permissions; ensure non-symlink target; use temporary init state + fsync files, fsync parent and atomic rename; on crash refuse partial claim until deterministic recovery completes",
+    "initialState": {
+      "ownerCount": 0,
+      "credentialCount": 0,
+      "clientCount": 0,
+      "grants": 0,
+      "admittedRemoteHosts": 0,
+      "executions": 0,
+      "phase": "UNCLAIMED"
+    },
+    "setupTicket": {
+      "algorithm": "256-bit CSPRNG random opaque token, displayed once only to local operator",
+      "transport": "operator console or restricted AF_UNIX socket; never Git or remote HTTP logs",
+      "storage": "SHA-256 digest + issuedAt + expiresAt, not plaintext",
+      "expiresAfterSeconds": 600,
+      "attempts": 5,
+      "singleUse": true,
+      "concurrentClaim": "exactly one compare-and-swap transaction; loser receives 409",
+      "scope": [
+        "first-owner-passkey-register"
+      ],
+      "consumption": "atomic with first owner public credential and trust-root publication",
+      "onExpiry": "owner can issue a new ticket only via local operator command while ownerCount=0 and no credential exists"
+    },
+    "stateMachine": [
+      {
+        "state": "ABSENT",
+        "action": "fcis init",
+        "next": "UNCLAIMED",
+        "guard": "private filesystem and randomness available"
+      },
+      {
+        "state": "UNCLAIMED",
+        "action": "begin owner WebAuthn enrollment",
+        "next": "CLAIM_CHALLENGE",
+        "guard": "valid unspent local setup ticket"
+      },
+      {
+        "state": "CLAIM_CHALLENGE",
+        "action": "verify first WebAuthn registration",
+        "next": "CLAIMED",
+        "guard": "matching RP ID/origin/challenge, user verification, verified attestation policy, atomic credential/owner creation and ticket burn"
+      },
+      {
+        "state": "CLAIM_CHALLENGE",
+        "action": "expiry/refusal",
+        "next": "UNCLAIMED",
+        "guard": "no owner/grant write"
+      },
+      {
+        "state": "CLAIMED",
+        "action": "new owner credential",
+        "next": "CLAIMED",
+        "guard": "existing owner authentication and explicit applicable approval"
+      },
+      {
+        "state": "CLAIMED",
+        "action": "re-init or untrusted recovery",
+        "next": "REFUSED",
+        "guard": "never silently replace owner or reset grants"
+      },
+      {
+        "state": "ANY",
+        "action": "persistent Store corruption or vault mismatch",
+        "next": "LOCKED",
+        "guard": "refuse all grants and external calls, allow read-only diagnostics / separately authorized restore"
+      }
+    ],
+    "selfHostedFrontend": "bundle original Fountain Press Access HTML/CSS/JS and issuer-hosted owner/passkey pages into Go executable; dynamically inject same-origin base URLs only, no UX redesign",
+    "externalDependenciesForFirstStart": []
+  },
+  "persistentStoreFormat": {
+    "id": "fountainstore.go.v1",
+    "scope": "new Go-native FCIS Store; this is an explicit format version, NOT a claim of Swift FountainStore byte compatibility",
+    "root": "state/",
+    "permissions": {
+      "directory": "0700",
+      "files": "0600"
+    },
+    "sourceFormat": "existing Swift WAL/SSTables are optional read-only import source only",
+    "records": {
+      "encoding": "UTF-8 JSON, versioned typed record for each collection",
+      "keyEncoding": "tenantID + NUL + collection + NUL + canonical opaque id",
+      "maximumRecordBytes": 1048576,
+      "minimumSemanticFields": [
+        "id",
+        "tenantID",
+        "revision",
+        "createdAt",
+        "updatedAt"
+      ],
+      "unknownFields": "reject unless record type explicitly declares extensions",
+      "schemaEvolution": "pure versioned migration functions, backups and old snapshot readback before activation"
+    },
+    "wal": {
+      "file": "wal-0000000000000001.log with monotonically numbered rotated segments",
+      "frame": {
+        "layout": [
+          "magic ASCII FCISFS01 (8 bytes)",
+          "version uint16 big endian (value 1)",
+          "frameLength uint32 big endian",
+          "sequence uint64 big endian",
+          "payload JSON bytes",
+          "payloadCRC32C uint32 big endian"
+        ],
+        "payload": {
+          "schema": [
+            "transactionID",
+            "previousSequence",
+            "operations",
+            "committedAt"
+          ],
+          "operations": "bounded array of typed put/delete; one entire transaction per durable frame",
+          "canonicalization": "keys sorted by tenant, collection and id and stable JSON encoder; duplicate key in same transaction rejected"
+        },
+        "maxPayloadBytes": 4194304,
+        "checks": "version, sequence continuity, payload bounds, CRC32C; missing/truncated final frame ignored only if uncommitted, corruption in complete/middle frame LOCKED"
+      },
+      "commit": "serialize transactions under exclusive writer lock; append full frame, fsync WAL, update memory and only then acknowledge success",
+      "replay": "load verified immutable snapshot then replay complete frames with sequence > snapshot sequence, preserving deduplication via transactionID",
+      "rotation": "cut only after fsynced snapshot and manifest commit"
+    },
+    "snapshot": {
+      "format": "versioned canonical JSON map of collection/key/value, gzip optional",
+      "filePattern": "snapshot-<sequence>-<sha256>.json",
+      "commit": "write file+fsync, atomic rename, fsync parent; then atomic manifest update",
+      "hash": "SHA-256 of exact snapshot bytes",
+      "corruption": "LOCKED, refuse authority reads rather than fall back to empty"
+    },
+    "manifest": {
+      "file": "MANIFEST.json",
+      "fields": [
+        "formatVersion",
+        "instanceID",
+        "lastCommittedSequence",
+        "snapshotFile",
+        "snapshotSHA256",
+        "lastWalSegment",
+        "storeGeneration"
+      ],
+      "atomicReplace": "write temp, fsync temp, rename, fsync parent directory",
+      "backup": "use verified manifest plus all referenced snapshot and WAL files; never copy inconsistent live directories"
+    },
+    "transactions": {
+      "isolation": "serialized single writer; consistent snapshot readers pinned to sequence",
+      "cas": "expected revision/sequence required for owner changes, grants, revocations and refresh rotation",
+      "refusal": "no partial security effects or positive HTTP response on WAL fsync failure"
+    },
+    "recovery": {
+      "startup": "verify root owner/mode, manifest/hash, WAL and vault binding before serving protected routes",
+      "corrupt": "LOCKED until separately authorized restore",
+      "rollback": "never lose or resurrect a previously committed revocation or refresh-family spend",
+      "compaction": "may remove WAL segments only when covered by verified snapshot and recovery/backup retention boundaries"
+    },
+    "sourceOwner": "Fountain-Coach/Fountain-Store; new native Go format requires review as a versioned extension, no claim of existing Swift wire compatibility"
+  },
+  "secretStoreFormat": {
+    "id": "secretstore.go.v1",
+    "scope": "bundled, self-initializing first-party Go secret custody",
+    "paths": {
+      "root": "vault/",
+      "masterKey": "vault/master.key (0600)",
+      "envelopes": "vault/entries/*.json (0600)",
+      "journal": "vault/receipts.log (0600, redacted)"
+    },
+    "rootKey": {
+      "generation": "random 256-bit AES key from CSPRNG at first init",
+      "storage": "0600 filesystem master key owned by service user, outside Store state directory",
+      "threatModel": "filesystem ownership/host OS enforces confidentiality, NOT protection against compromised root or unencrypted disk theft",
+      "productionUpgrade": "operator may select TPM/HSM/OS keystore or external KMS without changing FCIS protocol"
+    },
+    "envelope": {
+      "version": 1,
+      "algorithm": "AES-256-GCM",
+      "nonceBytes": 12,
+      "tagBytes": 16,
+      "nonceUniqueness": "fresh CSPRNG nonce on every write",
+      "aad": [
+        "instanceID",
+        "tenantID",
+        "secretID",
+        "version",
+        "purpose"
+      ],
+      "plaintext": "bounded private service credentials, issuer signing material or private Host signer",
+      "encoding": {
+        "version": "integer",
+        "id": "opaque",
+        "keyVersion": "integer",
+        "nonce": "base64url",
+        "ciphertextAndTag": "base64url",
+        "purpose": "string"
+      }
+    },
+    "operations": [
+      {
+        "id": "create",
+        "authorization": "new installation initialization or existing owner-approved key issuance",
+        "effect": "generate/inject secret into encrypted entry, return opaque reference only"
+      },
+      {
+        "id": "sign",
+        "authorization": "exact owner/Host operation and target-bound grant",
+        "effect": "Sign bounded typed digest with preexisting key; no raw key export"
+      },
+      {
+        "id": "resolve",
+        "authorization": "internal Go process only; never an MCP, browser or public route",
+        "effect": "Use key bytes within controlled closure then zeroize temporary buffers when practical"
+      },
+      {
+        "id": "rotate",
+        "authorization": "owner approval with atomic reference/version update and old-key retirement rules",
+        "effect": "New key version; preserve old verify key/JWKS for bounded outstanding tokens"
+      },
+      {
+        "id": "delete",
+        "authorization": "owner-approved lifecycle and backup retention",
+        "effect": "Tombstone reference atomically; no future resolution"
+      },
+      {
+        "id": "status",
+        "authorization": "local operator or owner session",
+        "effect": "redacted provider capability/health"
+      },
+      {
+        "id": "backup",
+        "authorization": "owner/operator authorized",
+        "effect": "encrypted or otherwise protected vault backup; no plaintext into Store or logs"
+      }
+    ],
+    "issuerSigning": {
+      "algorithm": "Ed25519",
+      "privateKey": "one sealed vault entry referenced as issuer-signing-key",
+      "publicKey": "JWKS with explicit kid, no secret output",
+      "rotation": "announce new JWKS key and retain old verification key for max token lifetime; refuse if custody continuity cannot be verified"
+    },
+    "serviceBinding": "instanceID/tenantID and private Store nonce-borne reference; startup refuses wrong vault/store pairing",
+    "providerInterface": "Go native provider with exact typed operations; optional SecretService, Keychain, hardware or remote custodian adapters are opt-in, not first-start prerequisites",
+    "importExisting": "only adopt-existing, bound to independently approved custodian transfer or retained same-custodian reference; non-exportable key cannot be magically copied",
+    "security": "never expose private keys, bearer leases, vault password, raw signing material or plaintext across HTTP/MCP/MIDI2/telemetry"
+  },
+  "ownerAndTenancy": {
+    "initialMode": "one unclaimed installation, one initial owner, single default tenant created at claim",
+    "principalTypes": [
+      "installationOwner",
+      "tenantOwner",
+      "tenantMember",
+      "oauthClient",
+      "registeredHost",
+      "providerAdapter"
+    ],
+    "tenantIsolation": "tenant ID is mandatory in every effective grant, Store key, audit record, SecretStore AAD and Host invocation; cross-tenant effect denied by default",
+    "ownerRights": "installation owner controls initial trusted policy and service administration; customer owns data, tenant-derived Skills and serialized Store",
+    "customerAdmission": "owner-approved issuance of a tenant identity and private default Store namespace; no billing provider required",
+    "providerBudgets": "provider credentials and billing remain customer-held; adapter calls require explicit per-tenant consent, budget ceiling and allowance; native deterministic tasks require no model account",
+    "learningRights": "source Skill licensing unchanged; tenant-authored scenario evidence, extensions and new Skills belong to the author/tenant unless an explicit license transfers rights; no silent transfer of customer IP to FCIS operator",
+    "portability": "versioned encrypted tenant Store snapshot and Skill/scenario provenance can be exported via owner-authenticated operation; import validates schema and rights; export never includes third-party credentials or raw keys",
+    "sharing": "tenant explicitly publishes signed skill revisions under a chosen license; private tenant skills are not promoted to global catalog by default",
+    "billing": "a provider-neutral payment instrument is optional phase-two; startup and core usage never require Stripe"
+  },
+  "capabilitySystem": {
+    "registry": {
+      "initialRemoteHostCount": 0,
+      "initialExternalInstrumentCount": 0,
+      "builtinSoftwareHost": "local read-only Host with host.describe and health proof; no shell/file write effect",
+      "identity": [
+        "tenantID",
+        "hostID",
+        "instrumentID",
+        "semanticVersion",
+        "manifestSHA256",
+        "sourceRevision",
+        "declaredOperations",
+        "requiredScopes",
+        "evidenceSchema"
+      ],
+      "publication": "reproducibly derived from signed/versioned manifest, not manually hard-coded tool list"
+    },
+    "admissionStateMachine": [
+      {
+        "from": "ABSENT",
+        "event": "install signed manifest",
+        "to": "DECLARED",
+        "guard": "version, manifest digest and source trusted"
+      },
+      {
+        "from": "DECLARED",
+        "event": "prove Host challenge and pin machine key",
+        "to": "ENROLLED",
+        "guard": "owner-authorized, unique nonce, signed device identity, explicit resource"
+      },
+      {
+        "from": "ENROLLED",
+        "event": "run compatible capability/transport negotiation",
+        "to": "ADMITTED",
+        "guard": "typed instrument/Host implementation and version supported, verified consent"
+      },
+      {
+        "from": "ADMITTED",
+        "event": "owner grant",
+        "to": "AUTHORIZED",
+        "guard": "tenant/client/audience/scope/target/time bounded, durable Store receipt"
+      },
+      {
+        "from": "AUTHORIZED",
+        "event": "client tools/list",
+        "to": "DISCOVERABLE",
+        "guard": "current per-client effective grant and live Host capability intersection"
+      },
+      {
+        "from": "DISCOVERABLE",
+        "event": "client tools/call",
+        "to": "EXECUTING",
+        "guard": "renewed grant, replay/idempotency guard, Host attestation, typed input"
+      },
+      {
+        "from": "EXECUTING",
+        "event": "verified signed terminal receipt",
+        "to": "SUCCEEDED_OR_FAILED",
+        "guard": "receipt persisted and correlation matches"
+      },
+      {
+        "from": "ANY",
+        "event": "expiry/revocation/Host mismatch",
+        "to": "REFUSED",
+        "guard": "fail closed and hide from tools/list"
+      }
+    ],
+    "mcp": {
+      "protocol": "MCP JSON-RPC over HTTP streamable /mcp",
+      "methods": [
+        "initialize",
+        "notifications/initialized",
+        "tools/list",
+        "tools/call"
+      ],
+      "toolList": "admitted registry intersected with tenant, client, token audience and current effective grants; no static host.describe capability ceiling",
+      "calls": "typed instrument names with revision and bounded arguments; caller identity never inferred from a model's prose",
+      "result": "structured terminal receipt or typed refusal; pending job cannot be called success",
+      "versionNegotiation": "must explicitly validate negotiated protocol version; refuse unsupported version, no silent protocol downgrade"
+    },
+    "hostTransport": {
+      "default": "same-process in-memory typed software Host; no MIDI2 hardware required",
+      "external": "opt-in MIDI2/UMP SysEx8/property-exchange transport using source-owned MIDI2 normative specification",
+      "control": {
+        "required": [
+          "correlationID",
+          "idempotencyKey",
+          "tenantID",
+          "clientID",
+          "hostID",
+          "instrumentID",
+          "instrumentVersion",
+          "capabilityID",
+          "grantID",
+          "target",
+          "issuedAt",
+          "expiresAt",
+          "requestDigest"
+        ],
+        "signing": "ed25519 sign canonical request digest; Host independently verifies binding and replay before effects"
+      },
+      "receipts": {
+        "required": [
+          "jobID",
+          "correlationID",
+          "capabilityID",
+          "sourceDigest",
+          "hostID",
+          "state",
+          "terminalKind",
+          "effectsDigest",
+          "signedAt",
+          "signature"
+        ],
+        "verifiedBy": "issuer and admitted Host separately, persisted FountainStore; HTTP 200 alone is never proof"
+      }
+    },
+    "machineAdmission": {
+      "firstMachine": "optional, not required to claim owner or use software Host",
+      "enrollment": "owner creates short-lived pairing challenge, device creates key locally, submits signed trust proof, owner separately authorizes exact machine",
+      "grant": "admission never grants arbitrary execution; each client and capability must be separately authorized",
+      "renewal": "explicit bounded lease with replay protection, no fixed 24h reconnect assumption"
+    }
+  },
+  "skillAndScenarioSystem": {
+    "bundledCatalog": "read-only signed/versioned canonical FCIS-KIT metadata is shipped in executable; a live Git connection is optional",
+    "skillIdentity": [
+      "owner",
+      "name",
+      "semver",
+      "sourceSHA256",
+      "instructionsRevision",
+      "license",
+      "visibility"
+    ],
+    "scenarioIdentity": [
+      "scenarioID",
+      "inputRevision",
+      "instrumentIdentity",
+      "expectedEffects",
+      "expectedRefusals",
+      "evidenceAssertions",
+      "sourceDigest"
+    ],
+    "lifecycle": [
+      "DRAFT",
+      "SCENARIO_VERIFIED",
+      "REVIEWED",
+      "ADMITTED",
+      "RELEASED",
+      "RETIRED"
+    ],
+    "learning": "A scenario may propose a new Skill revision or instrument extension. It must record input source, observed outcome, executable constraints and bounded counterexamples; proposals have no execution grant until reviewed and admitted.",
+    "promotion": "owner/tenant policy controls explicit signed version promotion, immutable release manifest and independent terminal evidence; a model cannot self-admit a proposed Skill",
+    "recovery": "Skill revision and scenario provenance persist in tenant Store and signed export; Git is a synchronized publication copy, not a required operational database",
+    "privacy": "tenant scenario data never becomes shared training or globally published Skill automatically",
+    "rights": "tenant/user-authored derived skills retain their chosen rights; source owner's existing license is not overwritten"
+  },
+  "specificationClosure": {
+    "namedGaps": [
+      {
+        "id": "SPEC-GAP-STORE-FORMAT",
+        "resolution": "new deterministic FountainStore Go v1 physical/WAL/snapshot schema and logical types; historical Swift format only an optional migration input",
+        "source": "persistentStoreFormat"
+      },
+      {
+        "id": "SPEC-GAP-CUSTODIAN",
+        "resolution": "new self-hosted native Go vault with AES-256-GCM, local root key and bounded signing; external provider optional",
+        "source": "secretStoreFormat"
+      },
+      {
+        "id": "SPEC-GAP-MIDI2-REGISTRY",
+        "resolution": "self-hosted software Host, typed signed manifests, state machines, scope checks and optional MIDI2 transport",
+        "source": "capabilitySystem"
+      },
+      {
+        "id": "SPEC-GAP-LIVE-PRODUCTION",
+        "resolution": "deployment-neutral Linux fresh-install, optional separately authorized Hetzner adoption; no live deployment fact in normative system",
+        "source": "initialization"
+      },
+      {
+        "id": "SPEC-GAP-FRONTEND-DRIFT",
+        "resolution": "bundled exact Fountain Press source, same-origin build-time URL binding, canonical Go reference validation while preserving UX",
+        "source": "frontend.selfHosting"
+      }
+    ],
+    "architectureDecision": "All five are resolved by explicit source-independent design requirements, not by claiming the old live environments exist.",
+    "verificationStatus": "SPECIFIED_NOT_YET_INDEPENDENTLY_VALIDATED",
+    "productionInstanceInventory": "OPTIONAL_NOT_A_GENERATION_GATE"
+  }
 }
