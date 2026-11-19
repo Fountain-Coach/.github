@@ -14,7 +14,7 @@
 | Recovery | Second authenticator logs in, lost device is revoked, lost-all procedure approved | Server password file as routine UX |
 | Authorization | Existing OAuth PKCE/scopes and real per-effect Host enforcement | Successful person authentication implying client authority |
 | Grant revocation | Disposable-client revoked grant, denied refresh and MCP execution, durable Store receipt | Badge, mock, inventory alone |
-| Actual devices | Physical iPad Safari and Mac with accessibility and interrupted-network acceptance | Simulated Chromium viewport |
+| Actual devices | An eligible physical enrolled device such as iPad Safari, with accessibility and interrupted-network acceptance; Mac only for separately scoped Mac-client acceptance, never the Hetzner migration controller | Simulated Chromium viewport |
 | Continuity | Existing ChatGPT Host grant works, no extra issuer/Host, rollback available | Tests of newly invented infrastructure |
 | Canonical Go OpenAPI source | Root `Fountain-Coach/.github/FCIS-OPENAPI.json` at the same architecture source authority as `FCIS-STACK.md`; operationId/summary/description, security schemes, exact typed methods, `$ref`, explicit specified/Go-implemented/deployed/accepted status | A domain-maintained second OpenAPI, inferred executable Go route or a Swagger page claiming deployment |
 | Semantic operation discovery | Existing OpenAPI `operationId`/`summary`/`description` explain intent, non-use, authorization, effect and typed results; compare actual native route schemas | A vague tool name, HTTP status, prompt-only instructions or a generated operation unsupported by a handler |
