@@ -1,9 +1,9 @@
 # FCIS — Standalone Go Stack Specification
 
-**Owner:** Fountain Coach · **Canonical architecture:** [`FCIS-STACK.md`](FCIS-STACK.md) · **Peer canonical HTTP API:** [`FCIS-OPENAPI.json`](FCIS-OPENAPI.json) (OpenAPI 3.1.0; equal organization source authority for HTTP wire contracts)  
-**Architecture version:** 1.1 · **Initial decision:** 18 November 2026 · **Owner continuity correction:** 19 November 2026  
-**Decision status:** Owner-selected target, now requiring Hetzner-first identity and grant continuity; Git review/merge and deployed conformance remain separate  
-**Public service identity:** `https://fcis.fountain.coach/`  
+**Owner:** Fountain Coach · **Canonical architecture:** [`FCIS-STACK.md`](FCIS-STACK.md) · **Peer canonical HTTP API:** [`FCIS-OPENAPI.json`](FCIS-OPENAPI.json) (OpenAPI 3.1.0; equal organization source authority for HTTP wire contracts)
+**Architecture version:** 1.1 · **Initial decision:** 18 November 2026 · **Owner continuity correction:** 19 November 2026
+**Decision status:** Owner-selected target, now requiring Hetzner-first identity and grant continuity; Git review/merge and deployed conformance remain separate
+**Public service identity:** `https://fcis.fountain.coach/`
 **Immediate priority:** Go-native production cutover · **Second priority:** payment instrument with a Stripe provider adapter
 
 > **Claim boundary:** This specification is the canonical *target architecture*, not evidence of a running production release. A Git commit, source test, process, staging URL or a public status badge cannot replace runtime acceptance.
@@ -194,9 +194,9 @@ Deploy one Go-native FCIS on the existing **headless Hetzner** host, with Caddy 
 
 ## 8. Scale without inventing a second stack
 
-**Initial:** single Go process, dedicated Store, one owner/tenant, small fleet.  
-**Growing fleet:** bounded concurrent sessions, indexed Store access, execution queues, resource controls and predictable retention.  
-**Multiple organizations:** explicit tenant-scoped identity and permission/data isolation; no GUI-only filter.  
+**Initial:** single Go process, dedicated Store, one owner/tenant, small fleet.
+**Growing fleet:** bounded concurrent sessions, indexed Store access, execution queues, resource controls and predictable retention.
+**Multiple organizations:** explicit tenant-scoped identity and permission/data isolation; no GUI-only filter.
 **High availability:** multiple stateless Go frontends and verified replicated/failover storage; requires a proven coordinated writer or equivalent Store contract.
 
 Scale is achieved by evolving FountainStore's measured concurrency, replication and recovery capacity. Neither SQL databases nor an unproven multiwriter design is a mandatory initial cutover dependency.
