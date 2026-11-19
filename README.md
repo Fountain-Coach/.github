@@ -6,7 +6,8 @@ This repository is the **canonical Git owner of Fountain Coach's organization-wi
 
 | Authority | Canonical source | What it owns |
 | --- | --- | --- |
-| **FCIS standalone Go stack** | [FCIS-STACK.md](FCIS-STACK.md) | Owner-selected Go service, dedicated native FountainStore, OAuth/MCP, Host/instrument architecture, scaling and cutover DoD |
+| **FCIS whole-system specification** | [FCIS-SYSTEM.json](FCIS-SYSTEM.json) · [validation schema](FCIS-SYSTEM.schema.json) | Prerequisite-free FCIS composition: bootstrap, Go Store/vault, owner/customer, OAuth/MCP, Host/MIDI2, Skills/scenarios, frontend, generation coverage and deployment profiles |
+| **FCIS standalone Go stack** | [FCIS-STACK.md](FCIS-STACK.md) | Architecture companion and security invariants; fresh-install independence and optional existing-instance adoption |
 | **FCIS canonical HTTP OpenAPI** | [FCIS-OPENAPI.json](FCIS-OPENAPI.json) | Peer normative HTTP operations and wire schemas for the standalone Go target; all implementation/production statuses separately verified |
 | **FCIS RFC 0001** | [Organization profile](profile/README.md) | The four independent layers: AGENTS, PLANS, Skills and MCP |
 | **Behavioral law** | [AGENTS.md](AGENTS.md) | Organization agent invariants and instruction routing |
@@ -18,11 +19,11 @@ This repository is the **canonical Git owner of Fountain Coach's organization-wi
 
 ### Current architecture priorities
 
-**First:** Standalone Go FCIS at `fcis.fountain.coach`, using a **fresh dedicated Go-native FountainStore**, passkey owner access, OAuth, MCP, and independently admitted Host operations. No permanent Swift FCIS dependency or historical grant migration.
+**First:** Prerequisite-free standalone Go FCIS as defined in [FCIS-SYSTEM.json](FCIS-SYSTEM.json): zero prior FCIS state, private native Store/vault, single-use first-owner WebAuthn claim, OAuth/MCP, bundled Access UX, software Host and optional admitted machine/MIDI2 instruments. **Separately**, the existing `fcis.fountain.coach` installation may be adopted with identity, grants and custody preserved; this is not a first-install prerequisite.
 
 **Second:** A separately admitted provider-neutral payment instrument with **Stripe as the first adapter**. Payment integration does not block FCIS Go cutover.
 
-These are **architecture decisions**, not claims that the new Go service or payment instrument has been released. For authoritative scope and finite acceptance, read [FCIS-STACK.md](FCIS-STACK.md).
+These are **architecture decisions**, not claims that the new Go service or payment instrument has been released. For authoritative whole-system scope and source coverage, read [FCIS-SYSTEM.json](FCIS-SYSTEM.json), then [FCIS-STACK.md](FCIS-STACK.md) and the peer [FCIS-OPENAPI.json](FCIS-OPENAPI.json). The JSON specification is still a normative candidate, not a generated binary, a passed test or a production release.
 
 ## Source-owning and consuming repositories
 
