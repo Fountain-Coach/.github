@@ -1,9 +1,9 @@
 # FCIS Migration Security Profile — Hetzner-Initiated Store and SecretStore Continuity
 
-**Owner decision:** 19 November 2026  
-**Authority:** `Fountain-Coach/.github`, subordinate to the peer canonical [FCIS stack](../FCIS-STACK.md) and [FCIS HTTP OpenAPI](../FCIS-OPENAPI.json); FountainStore's engine/format and the host's secret provider keep their separate source owners.  
-**Status:** Binding target contract; **not evidence that the transfer or production cutover ran**.  
-**Execution origin:** The **existing headless Hetzner server**, through its admitted service and operator authority.  
+**Owner decision:** 19 November 2026
+**Authority:** `Fountain-Coach/.github`, subordinate to the peer canonical [FCIS stack](../FCIS-STACK.md) and [FCIS HTTP OpenAPI](../FCIS-OPENAPI.json); FountainStore's engine/format and the host's secret provider keep their separate source owners.
+**Status:** Binding target contract; **not evidence that the transfer or production cutover ran**.
+**Execution origin:** The **existing headless Hetzner server**, through its admitted service and operator authority.
 **Destination:** A standalone Go FCIS service and dedicated Go-native FountainStore instance on Hetzner, retaining the existing `https://fcis.fountain.coach/` issuer.
 
 ## Owner-selected invariant
