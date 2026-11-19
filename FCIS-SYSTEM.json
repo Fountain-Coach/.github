@@ -1,5 +1,4 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "kind": "fountaincoach.fcis.system.composition",
   "schemaVersion": "1.0.0",
   "compositionId": "fountaincoach.fcis.whole-system",
@@ -37,17 +36,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "88cc056adad959065009ef5d23df4e30d168693d",
+      "ref": "549605b7ed0758ff1b6dd00826cd2abab392e8e7",
       "path": "FCIS-STACK.md",
-      "blobSha": "d32fc52f5a53b3444e45b2b0720671a77b152a5b",
-      "url": "https://github.com/Fountain-Coach/.github/blob/88cc056adad959065009ef5d23df4e30d168693d/FCIS-STACK.md"
+      "blobSha": "ffec2078940348cf3199d64d76b47525674d9808",
+      "url": "https://github.com/Fountain-Coach/.github/blob/549605b7ed0758ff1b6dd00826cd2abab392e8e7/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "88cc056adad959065009ef5d23df4e30d168693d",
+      "ref": "ea53f405d73dda34ea198744f85b03e7f6cb45de",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "97841e8ac8e0e1b24a064c2745152af6c08133de",
-      "url": "https://github.com/Fountain-Coach/.github/blob/88cc056adad959065009ef5d23df4e30d168693d/FCIS-OPENAPI.json"
+      "blobSha": "82b904c09c2aad620b1f2d441a43ec4c4b5321f7",
+      "url": "https://github.com/Fountain-Coach/.github/blob/ea53f405d73dda34ea198744f85b03e7f6cb45de/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -493,13 +492,67 @@
       "cors": "same origin default: no CORS; optional external Access origin explicitly listed with credentials, deny unknown origins",
       "login": "owner WebAuthn registration when UNCLAIMED, existing passkey login once CLAIMED, preserve original navigation",
       "failure": "401/403 clears protected DOM inventory, 503 does not create phantom permission or success"
+    },
+    "sourceBindingReconciliation": {
+      "originalReferenceJS": "runtime/fcis-access-reference.mjs at pinned Fountain Press blob b261f6b98473a78baaa28d2b4906392df71ecded",
+      "detectedPriorAssumptions": [
+        "hard-coded fcis.fountain.coach and access.fountain.coach URLs",
+        "reference title fixed to Fountain Coach FCIS — Owner and Machine Administration",
+        "source-owner fixed to FountainHostMCPOAuthHandler and Swift implementation-state",
+        "single server assumed; only /oauth paths accepted",
+        "source-implemented operation count displayed regardless of actual runtime status"
+      ],
+      "requiredTransformations": [
+        {
+          "id": "UI-BIND-01",
+          "kind": "url",
+          "effect": "Build-time replace issuer/access URL literals with one Go-injected origin config; preserve location and navigation semantics"
+        },
+        {
+          "id": "UI-BIND-02",
+          "kind": "reference",
+          "effect": "Validate Go canonical OpenAPI title, version, issuer/server origin and signed source digest, expected canonical owner source marker; do not require Swift handler implemented"
+        },
+        {
+          "id": "UI-BIND-03",
+          "kind": "reference",
+          "effect": "Allow root OpenAPI paths beyond /oauth while preserving authenticated owner-only disclosure; never execute reference operations by viewing them"
+        },
+        {
+          "id": "UI-BIND-04",
+          "kind": "status",
+          "effect": "Label source-specified operations as specified-only unless independently runtime witnessed; never claim all are live from source"
+        },
+        {
+          "id": "UI-BIND-05",
+          "kind": "firstOwner",
+          "effect": "Render first-owner local setup-ticket and passkey registration through existing issuer UX semantics only while UNCLAIMED; never expose ticket in served HTML"
+        },
+        {
+          "id": "UI-BIND-06",
+          "kind": "origin",
+          "effect": "Bundled same-origin requests use credentials include and strict CSP; separate external Access origin requires explicit allowlist and credentialed origin checks"
+        },
+        {
+          "id": "UI-BIND-07",
+          "kind": "session",
+          "effect": "On 401 or 403 clear cached protected views and require new sign-in; no localStorage grant/token authority"
+        },
+        {
+          "id": "UI-BIND-08",
+          "kind": "inventory",
+          "effect": "Host/Skills inventory is derived from admitted registry and signed versioned catalog; Git URL fetch optional and not required to render local catalog"
+        }
+      ],
+      "visualParity": "For existing pages and their selectors/nav/tab semantics, DOM/CSS markup must remain source-derived; only contract-compatible data binding, issuer origin and first-owner mode added",
+      "noLegacyServerDependence": true
     }
   },
   "apis": {
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.3.1",
+      "version": "0.4.0",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -713,7 +766,14 @@
           "method": "POST",
           "path": "/oauth/owner/passkeys/enroll/options",
           "summary": "Issue WebAuthn registration challenge after verified owner/bootstrap authority",
-          "security": [],
+          "security": [
+            {
+              "firstOwnerSetup": []
+            },
+            {
+              "ownerPasskeySession": []
+            }
+          ],
           "status": "specified",
           "sourcePointer": "/paths/~1oauth~1owner~1passkeys~1enroll~1options/post"
         },
@@ -731,7 +791,14 @@
           "method": "POST",
           "path": "/oauth/owner/passkeys/enroll/verify",
           "summary": "Verify WebAuthn attestation and persist owner public credential",
-          "security": [],
+          "security": [
+            {
+              "firstOwnerSetup": []
+            },
+            {
+              "ownerPasskeySession": []
+            }
+          ],
           "status": "specified",
           "sourcePointer": "/paths/~1oauth~1owner~1passkeys~1enroll~1verify/post"
         },
@@ -856,13 +923,20 @@
         "HostInstrumentDiscovery",
         "HostChannelProbe",
         "HostSessionFrame",
-        "HealthStatus"
+        "HealthStatus",
+        "FirstOwnerPasskeyAttestation",
+        "FirstOwnerBootstrapPolicy"
       ],
       "securitySchemes": [
         "ownerPasskeySession",
-        "oauthBearer"
+        "oauthBearer",
+        "firstOwnerSetup"
       ],
-      "defaultExposure": "issuer-protected HTTP; public discovery/authorization only where explicitly specified"
+      "defaultExposure": "issuer-protected HTTP; public discovery/authorization only where explicitly specified",
+      "servers": [
+        "https://fcis.fountain.coach",
+        "http://localhost:18443"
+      ]
     },
     "fountainstore": {
       "sourceId": "fountainStore",
@@ -1329,8 +1403,614 @@
       "method": "stable requirement IDs map to source addresses and generated source; no operations, states, transitions, schemas or required artifacts may remain unmapped",
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
-      "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs"
-    }
+      "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
+      "expectedRequirementCount": 97
+    },
+    "inputContractDigests": {
+      "fcisOpenAPI": "0.4.0",
+      "fcisOpenAPIBlob": "82b904c09c2aad620b1f2d441a43ec4c4b5321f7",
+      "architectureBlob": "ffec2078940348cf3199d64d76b47525674d9808",
+      "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
+    },
+    "requirementCatalog": [
+      {
+        "id": "FCIS-DOMAIN-01",
+        "name": "bootstrap",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-02",
+        "name": "identity",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-03",
+        "name": "OAuth",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-04",
+        "name": "MCP",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-05",
+        "name": "nativeStore",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-06",
+        "name": "nativeVault",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-07",
+        "name": "frontend",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-08",
+        "name": "hosts",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-09",
+        "name": "MIDI2",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-10",
+        "name": "skills",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-11",
+        "name": "scenarios",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-12",
+        "name": "tenants",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-13",
+        "name": "providerAdapters",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-14",
+        "name": "deployment",
+        "mandatory": true
+      },
+      {
+        "id": "FCIS-DOMAIN-15",
+        "name": "legacyAdoption",
+        "mandatory": true
+      },
+      {
+        "id": "HTTP-readOwnerFleet",
+        "name": "/oauth/owner/hosts GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1hosts/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-describeSelectedHost",
+        "name": "/oauth/owner/host/describe GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1host~1describe/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-beginHostPair",
+        "name": "/oauth/owner/hosts/pair/begin POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1hosts~1pair~1begin/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readHostPairStatus",
+        "name": "/oauth/owner/hosts/pair/status GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1hosts~1pair~1status/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-decideHostPair",
+        "name": "/oauth/owner/hosts/pair/decide POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1hosts~1pair~1decide/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-submitSignedMachinePairProof",
+        "name": "/oauth/host/enrollment/prove POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1host~1enrollment~1prove/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-activatePretrustedMachine",
+        "name": "/oauth/host/enrollment/activate POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1host~1enrollment~1activate/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOwnerGrants",
+        "name": "/oauth/owner/grants GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1grants/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-revokeOwnerGrant",
+        "name": "/oauth/owner/revoke POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1revoke/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOwnerOpenAPIReference",
+        "name": "/oauth/owner/reference/openapi GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1reference~1openapi/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOAuthServerMetadata",
+        "name": "/.well-known/oauth-authorization-server GET",
+        "mandatory": true,
+        "pointer": "/paths/~1.well-known~1oauth-authorization-server/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readMCPProtectedResourceMetadata",
+        "name": "/.well-known/oauth-protected-resource GET",
+        "mandatory": true,
+        "pointer": "/paths/~1.well-known~1oauth-protected-resource/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOAuthSigningPublicKeys",
+        "name": "/.well-known/jwks.json GET",
+        "mandatory": true,
+        "pointer": "/paths/~1.well-known~1jwks.json/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-registerOAuthClient",
+        "name": "/oauth/register POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1register/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-beginOAuthAuthorization",
+        "name": "/oauth/authorize GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1authorize/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-decideOAuthAuthorization",
+        "name": "/oauth/authorize POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1authorize/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-exchangeOrRefreshOAuthToken",
+        "name": "/oauth/token POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1token/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOwnerPasskeyLoginPage",
+        "name": "/oauth/owner/passkeys/login GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1passkeys~1login/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-beginOwnerPasskeyLogin",
+        "name": "/oauth/owner/passkeys/login/options POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1passkeys~1login~1options/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-beginOwnerPasskeyEnrollment",
+        "name": "/oauth/owner/passkeys/enroll/options POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1passkeys~1enroll~1options/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-verifyOwnerPasskeyLogin",
+        "name": "/oauth/owner/passkeys/login/verify POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1passkeys~1login~1verify/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-verifyOwnerPasskeyEnrollment",
+        "name": "/oauth/owner/passkeys/enroll/verify POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1passkeys~1enroll~1verify/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-logoutOwnerPasskeySession",
+        "name": "/oauth/owner/passkeys/logout POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1passkeys~1logout/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-invokeMCPProtocol",
+        "name": "/mcp POST",
+        "mandatory": true,
+        "pointer": "/paths/~1mcp/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readFCISProcessHealth",
+        "name": "/healthz GET",
+        "mandatory": true,
+        "pointer": "/paths/~1healthz/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-discoverMachineInstruments",
+        "name": "/oauth/host/instruments/discover POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1host~1instruments~1discover/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-renewMachineGrant",
+        "name": "/oauth/host/grants/renew POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1host~1grants~1renew/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-probeEnrolledHostChannel",
+        "name": "/oauth/host/channel/probe POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1host~1channel~1probe/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-exchangeAuthenticatedHostSessionFrame",
+        "name": "/oauth/host/session/frame POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1host~1session~1frame/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOwnerHostChannelStatus",
+        "name": "/oauth/owner/hosts/channel/status GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1hosts~1channel~1status/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "STOREHTTP-get__health_live",
+        "name": "/health/live GET",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-get__health_ready",
+        "name": "/health/ready GET",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-get__health",
+        "name": "/health GET",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-get__status",
+        "name": "/status GET",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-put__estate_publication_routes__host_",
+        "name": "/estate/publication/routes/{host} PUT",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-get__collections",
+        "name": "/collections GET",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-post__collections",
+        "name": "/collections POST",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-get__collections__collection_",
+        "name": "/collections/{collection} GET",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-delete__collections__collection_",
+        "name": "/collections/{collection} DELETE",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-get__collections__collection__indexes",
+        "name": "/collections/{collection}/indexes GET",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-post__collections__collection__indexes",
+        "name": "/collections/{collection}/indexes POST",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-put__collections__collection__records__id_",
+        "name": "/collections/{collection}/records/{id} PUT",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-get__collections__collection__records__id_",
+        "name": "/collections/{collection}/records/{id} GET",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-delete__collections__collection__records__id_",
+        "name": "/collections/{collection}/records/{id} DELETE",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-post__collections__collection__query",
+        "name": "/collections/{collection}/query POST",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-post__transactions",
+        "name": "/transactions POST",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-post__snapshots",
+        "name": "/snapshots POST",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-delete__snapshots__snapshotId_",
+        "name": "/snapshots/{snapshotId} DELETE",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-get__compaction_status",
+        "name": "/compaction/status GET",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-post__compaction_run",
+        "name": "/compaction/run POST",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-get__backups",
+        "name": "/backups GET",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-post__backups",
+        "name": "/backups POST",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-post__backups__backupId__restore",
+        "name": "/backups/{backupId}/restore POST",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "STOREHTTP-get__metrics",
+        "name": "/metrics GET",
+        "mandatory": true,
+        "source": "FountainStore.yaml"
+      },
+      {
+        "id": "CUSTODYHTTP-inspectSecretCustody",
+        "name": "/custody/v1/status GET",
+        "mandatory": true,
+        "source": "SecretStore.json"
+      },
+      {
+        "id": "CUSTODYHTTP-executeBoundCustodyOperation",
+        "name": "/custody/v1/operations POST",
+        "mandatory": true,
+        "source": "SecretStore.json"
+      },
+      {
+        "id": "CUSTODYHTTP-transferSecretCustodyWithinHost",
+        "name": "/custody/v1/migrations/transfer POST",
+        "mandatory": true,
+        "source": "SecretStore.json"
+      },
+      {
+        "id": "CUSTODYHTTP-verifySecretCustodyContinuity",
+        "name": "/custody/v1/migrations/verify POST",
+        "mandatory": true,
+        "source": "SecretStore.json"
+      },
+      {
+        "id": "UI-ASSET-accessHTML",
+        "name": "accessHTML",
+        "mandatory": true,
+        "source": "runtime/fcis-owner-access.html"
+      },
+      {
+        "id": "UI-ASSET-accessJS",
+        "name": "accessJS",
+        "mandatory": true,
+        "source": "runtime/fcis-owner-access.mjs"
+      },
+      {
+        "id": "UI-ASSET-workspaceJS",
+        "name": "workspaceJS",
+        "mandatory": true,
+        "source": "runtime/fcis-access-workspace.mjs"
+      },
+      {
+        "id": "UI-ASSET-referenceJS",
+        "name": "referenceJS",
+        "mandatory": true,
+        "source": "runtime/fcis-access-reference.mjs"
+      },
+      {
+        "id": "UI-ASSET-referenceGuide",
+        "name": "referenceGuide",
+        "mandatory": true,
+        "source": "runtime/fcis-access-reference-guide.mjs"
+      },
+      {
+        "id": "UI-ASSET-accessCSS",
+        "name": "accessCSS",
+        "mandatory": true,
+        "source": "runtime/fcis-owner-access.css"
+      },
+      {
+        "id": "UI-ASSET-workspaceCSS",
+        "name": "workspaceCSS",
+        "mandatory": true,
+        "source": "runtime/fcis-access-workspace.css"
+      },
+      {
+        "id": "UI-ASSET-bookCSS",
+        "name": "bookCSS",
+        "mandatory": true,
+        "source": "runtime/book.css"
+      },
+      {
+        "id": "UI-BIND-01",
+        "name": "Build-time replace issuer/access URL literals with one Go-injected origin config; preserve location and navigation semantics",
+        "mandatory": true,
+        "source": "frontend.sourceBindingReconciliation"
+      },
+      {
+        "id": "UI-BIND-02",
+        "name": "Validate Go canonical OpenAPI title, version, issuer/server origin and signed source digest, expected canonical owner source marker; do not require Swift handler implemented",
+        "mandatory": true,
+        "source": "frontend.sourceBindingReconciliation"
+      },
+      {
+        "id": "UI-BIND-03",
+        "name": "Allow root OpenAPI paths beyond /oauth while preserving authenticated owner-only disclosure; never execute reference operations by viewing them",
+        "mandatory": true,
+        "source": "frontend.sourceBindingReconciliation"
+      },
+      {
+        "id": "UI-BIND-04",
+        "name": "Label source-specified operations as specified-only unless independently runtime witnessed; never claim all are live from source",
+        "mandatory": true,
+        "source": "frontend.sourceBindingReconciliation"
+      },
+      {
+        "id": "UI-BIND-05",
+        "name": "Render first-owner local setup-ticket and passkey registration through existing issuer UX semantics only while UNCLAIMED; never expose ticket in served HTML",
+        "mandatory": true,
+        "source": "frontend.sourceBindingReconciliation"
+      },
+      {
+        "id": "UI-BIND-06",
+        "name": "Bundled same-origin requests use credentials include and strict CSP; separate external Access origin requires explicit allowlist and credentialed origin checks",
+        "mandatory": true,
+        "source": "frontend.sourceBindingReconciliation"
+      },
+      {
+        "id": "UI-BIND-07",
+        "name": "On 401 or 403 clear cached protected views and require new sign-in; no localStorage grant/token authority",
+        "mandatory": true,
+        "source": "frontend.sourceBindingReconciliation"
+      },
+      {
+        "id": "UI-BIND-08",
+        "name": "Host/Skills inventory is derived from admitted registry and signed versioned catalog; Git URL fetch optional and not required to render local catalog",
+        "mandatory": true,
+        "source": "frontend.sourceBindingReconciliation"
+      },
+      {
+        "id": "CLI-fcis-init",
+        "name": "atomic first instance creation and one-time claim ticket; no existing owner required",
+        "mandatory": true,
+        "source": "initialization"
+      },
+      {
+        "id": "CLI-fcis-serve",
+        "name": "start local issuer, MCP and bundled Access UI using existing initialized instance",
+        "mandatory": true,
+        "source": "initialization"
+      },
+      {
+        "id": "CLI-fcis-status",
+        "name": "redacted local status and version; never print keys",
+        "mandatory": true,
+        "source": "initialization"
+      },
+      {
+        "id": "CLI-fcis-backup",
+        "name": "authenticated encrypted full consistent Store plus vault reference backup Requires an interactive operator-chosen passphrase or recipient public key at backup time, not at first startup; refuse unsafe unencrypted export.",
+        "mandatory": true,
+        "source": "initialization"
+      },
+      {
+        "id": "CLI-fcis-restore",
+        "name": "offline verified restore to a new private root with key custody check; refuse existing active writer",
+        "mandatory": true,
+        "source": "initialization"
+      },
+      {
+        "id": "CLI-fcis-adopt",
+        "name": "optional independently authorized legacy logical import; never silently run on fresh instance",
+        "mandatory": true,
+        "source": "initialization"
+      },
+      {
+        "id": "CLI-fcis-upgrade",
+        "name": "immutable artifact switch with schema checks and safe rollback",
+        "mandatory": true,
+        "source": "initialization"
+      },
+      {
+        "id": "CLI-fcis-doctor",
+        "name": "read-only startup and source/schema health summary",
+        "mandatory": true,
+        "source": "initialization"
+      }
+    ]
   },
   "acceptance": {
     "generation": [
@@ -1426,7 +2106,7 @@
       },
       {
         "name": "fcis backup",
-        "effect": "authenticated encrypted full consistent Store plus vault reference backup"
+        "effect": "authenticated encrypted full consistent Store plus vault reference backup Requires an interactive operator-chosen passphrase or recipient public key at backup time, not at first startup; refuse unsafe unencrypted export."
       },
       {
         "name": "fcis restore",
@@ -1714,7 +2394,12 @@
     "serviceBinding": "instanceID/tenantID and private Store nonce-borne reference; startup refuses wrong vault/store pairing",
     "providerInterface": "Go native provider with exact typed operations; optional SecretService, Keychain, hardware or remote custodian adapters are opt-in, not first-start prerequisites",
     "importExisting": "only adopt-existing, bound to independently approved custodian transfer or retained same-custodian reference; non-exportable key cannot be magically copied",
-    "security": "never expose private keys, bearer leases, vault password, raw signing material or plaintext across HTTP/MCP/MIDI2/telemetry"
+    "security": "never expose private keys, bearer leases, vault password, raw signing material or plaintext across HTTP/MCP/MIDI2/telemetry",
+    "backupPolicy": {
+      "algorithm": "XChaCha20-Poly1305 or AES-256-GCM plus per-backup random key; key wrapped by operator passphrase KDF or public recipient key",
+      "identity": "bind installation ID, schema version, manifest and snapshot digest",
+      "refusal": "fail if no encryption recipient/passphrase or consistent Store/vault snapshot, never record plaintext in logs"
+    }
   },
   "ownerAndTenancy": {
     "initialMode": "one unclaimed installation, one initial owner, single default tenant created at claim",
@@ -1918,12 +2603,22 @@
       },
       {
         "id": "SPEC-GAP-FRONTEND-DRIFT",
-        "resolution": "bundled exact Fountain Press source, same-origin build-time URL binding, canonical Go reference validation while preserving UX",
+        "resolution": "explicit 8-constraint transformation manifest linked to pinned original frontend and Go canonical reference validator",
         "source": "frontend.selfHosting"
       }
     ],
     "architectureDecision": "All five are resolved by explicit source-independent design requirements, not by claiming the old live environments exist.",
-    "verificationStatus": "SPECIFIED_NOT_YET_INDEPENDENTLY_VALIDATED",
+    "verificationStatus": "NORMATIVE_DRAFT_NOT_YET_STRUCTURALLY_VALIDATED",
     "productionInstanceInventory": "OPTIONAL_NOT_A_GENERATION_GATE"
-  }
+  },
+  "sourcePinPolicy": {
+    "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
+    "httpContractVersion": "0.4.0",
+    "apiBlobSha": "82b904c09c2aad620b1f2d441a43ec4c4b5321f7",
+    "stackBlobSha": "ffec2078940348cf3199d64d76b47525674d9808",
+    "frontendPolicy": "Original pinned Fountain Press UX assets are inputs; adapt only bindings, owner-mode transitions, and legacy Swift-only reference validation; do not redesign it",
+    "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
+  },
+  "documentSchema": "FCIS-SYSTEM.schema.json",
+  "authorityNotice": "This is a proposed complete normative target specification; content, coverage and source consistency must be independently validated before any Go generation. It is not evidence of existing product implementation, security certification or public release."
 }
