@@ -10,6 +10,16 @@ A decorative picture of printing machinery or a page-shaped raster of arbitrary 
 
 **The editorial rule:** Intelligibility comes from continuity of thought, precise syntax and proportionate paragraphs, not increased whitespace. Do not invent frequent paragraph breaks, isolate lines as a substitute for explanation, or use diagrams as filler.
 
+## LINOTYPE-DATA-02 — semantic containment, not inflated whitespace
+
+**Writer correction, 19 November 2026.** The rejected *Before We Can Work Together* pre-web proofs demonstrated that generous line spacing, increased page count and isolated captions are not evidence of intelligibility. Treat prose, ink diagram, legend and caption as **nested semantic compositions**, each with an inside and an outside. Apply [the page-as-frame hierarchy](page-is-the-frame.md) before moving any element.
+
+The **inside** of the plate belongs to its data: rectangles contain specimen type, internal rules relate meaningful entities, and text must be measured against the specific rectangle it represents. The **outside** of the plate belongs to the essay: a figure and its caption form one group, attached at its authored source location and separated from adjacent prose as a group. Keep caption adjacent to the figure and avoid duplicating source measurements both inside the plate and in the caption. Do not expand every gap independently or make labels into floating ornaments.
+
+For a negative/positive comparison, test **four separate regions**: the intentionally failed *inner* test frame (overflow can be portrayed there and must be labelled as a negative), the *outer* illustrated plate (no ink may escape), the comparison panel next door (no collision), and the full folio type area (all figure ink and caption in measure). Reproduce a small, intelligible overflow specimen rather than letting the error contaminate the caption or the adjacent positive panel. Use one concise caption to state the actual measured evidence; keep the diagram conceptual/schematic where its geometry is not the actual measured source.
+
+**Before claiming editorial correction:** compare original and revised *full-size* folio renders, verify unchanged paragraph boundaries and text, inspect inside/outside distances and caption attachment, and record that the editor's marked error is actually remedied. A mechanically valid PDF is not editorial acceptance, and a proof rejected by the writer does not become an accepted baseline.
+
 ## The reproducible procedure
 
 1. **State the data question.** Describe the *one* relationship the plate must clarify, and identify the paragraph after which it belongs. Distinguish concept/specification, observed system status, and measured execution evidence. Do not translate proposals into apparently real receipts.
