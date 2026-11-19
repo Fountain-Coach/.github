@@ -31,6 +31,19 @@ Treat the available reading area as a measured frame.
 
 The page count is a projection of source + viewport + typography. Never make it the durable identity of the text.
 
+## 2a. Inside and outside are different kinds of white space
+
+**Governing sentence:** *Internal spacing establishes coherence; external spacing establishes relationships.* This is a Domain Reasoning rule about nested semantic containment, not a universal demand for larger or smaller gaps. Intelligibility arises from continuity of thought, precise syntax and proportionate paragraphs, not from multiplying line endings and empty space.
+
+Compose a nested hierarchy: **glyphs and lines belong to the paragraph**; **specimens, notes and labels belong to the figure**; **the caption belongs to its figure**; **the figure-with-caption is one semantic unit in the prose sequence**; **all such units belong to the folio's Satzspiegel**. Identify the owner of each margin before modifying it. The page margin cannot repair a crowded label inside a specimen, and raising paragraph leading cannot repair a figure pushed too close to its neighboring prose.
+
+- **Inside a paragraph:** keep a continuous text measure and natural line leading; preserve the author's syntax and meaningful paragraph boundaries. Do not inject hard line endings, blank paragraphs, enlarged leading or fragments merely to make the page feel less dense.
+- **Inside a figure:** give the genuine data, labels, connections and intentional internal frames enough room *within their own bounds*. Labels must meet measured internal insets. A deliberately illustrated **negative overflow specimen** may cross *its depicted semantic rectangle*, but must remain within the **outer figure composition**, avoid collisions with adjacent panels, labels and captions, and clearly identify itself as negative/example data.
+- **Outside a figure:** keep title, ink plate, explanations/legend and caption in an intelligible hierarchy. The caption must read as attached to the figure, closer to it than to unrelated prose. Give the entire figure-and-caption group an editorial separation from the paragraph before and after, without padding every individual line or splitting the group across leaves.
+- **Across leaves and spreads:** preserve sensible reading continuity without filling a percentage of the page; a deliberate end-leaf can be spacious, but a large gap caused by avoidable splitting of a semantic group is not automatically a success. Increase page count only when composition and real readable size require it.
+
+Before changing a proof, outline the actual component boxes and their containment, compare the **relative spacing ratios** inside and between groups at the intended physical output size, and make the smallest correction on the appropriate level. Do not turn “more breath” into a global margin/leading multiplier; inspect the complete facing or single-leaf rhythm and the author's marked specimen before claiming an improvement. Geometry is a measurement, not an editorial acceptance.
+
 ## 3. Preserve semantic position across reflow
 
 Address the source by stable work/revision/passage identity and source offset where applicable.
