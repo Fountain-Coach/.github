@@ -9,8 +9,8 @@ HOST='root@65.109.14.71'
 SSH_KEY="$HOME/.ssh/id_rsa"
 SIGNER_KEY="$HOME/.ssh/fcis_owner_git_ed25519"
 # Immutable source, reviewed in Fountain-Coach/.github PR #109.
-SOURCE_COMMIT='5a6204d9b1363e57e99fab7a504bac73c2d074be'
-SOURCE_SHA256='049f8d49c1ce92cc6cac211bcc6e36285ad62d2b9d44f5eff6bea8389da66095'
+SOURCE_COMMIT='9cd32e13b6acc2cac1ed014bc872355f08deddb6'
+SOURCE_SHA256='506a5154b39e7bf0918df80d427e2fda254ffc3f64909e62ae940f9289913888'
 PINNED_ORG_MAIN='be5a12b295d8ff7cfd40fd1c3e756698580bd2e9'
 FILENAME='fcis-h3-hetzner-bootstrap.sh'
 SSH_OPTS=(-o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -i "$SSH_KEY")
