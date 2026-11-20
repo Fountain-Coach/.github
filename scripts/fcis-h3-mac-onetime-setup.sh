@@ -3,6 +3,7 @@
 # Runs on an owner's Mac. Sends only PUBLIC keys and a pinned, reviewed script.
 # All host changes go through the exact-SHA, refusal-gated H3 installer.
 set -euo pipefail
+[[ "${1:-}" == --apply && "$#" -eq 1 ]] || { echo 'H3 OWNER SETUP REFUSED: explicit --apply required' >&2; exit 2; }
 umask 077
 HOST='root@65.109.14.71'
 SSH_KEY="$HOME/.ssh/id_rsa"
