@@ -44,6 +44,10 @@ Compose a nested hierarchy: **glyphs and lines belong to the paragraph**; **spec
 
 Before changing a proof, outline the actual component boxes and their containment, compare the **relative spacing ratios** inside and between groups at the intended physical output size, and make the smallest correction on the appropriate level. Do not turn “more breath” into a global margin/leading multiplier; inspect the complete facing or single-leaf rhythm and the author's marked specimen before claiming an improvement. Geometry is a measurement, not an editorial acceptance.
 
+## 2b. Break pages between semantic arguments, not arbitrary blocks
+
+**Writer correction, 20 November 2026:** For source-anchored diagrams, identify the preceding illustrated argument, the indivisible figure-plus-caption, and the following argument **before** choosing the leaf boundary. A figure may *conclude* the preceding argument and the leaf; it does not need to leave room for an unrelated prose paragraph. Distinguish this role from a genuinely unbreakable group that does not fit. Do not use whitespace thresholds to infer rhetorical relations or move a figure ahead of its authored anchor. Read [semantic illustration folio relations](semantic-illustration-folio-relations.md) for the actual source example, refusal cases and measured acceptance; retain the iPad portrait golden leaf and the independent Proof Press.
+
 ## 3. Preserve semantic position across reflow
 
 Address the source by stable work/revision/passage identity and source offset where applicable.
