@@ -20,6 +20,8 @@ For a negative/positive comparison, test **four separate regions**: the intentio
 
 **Before claiming editorial correction:** compare original and revised *full-size* folio renders, verify unchanged paragraph boundaries and text, inspect inside/outside distances and caption attachment, and record that the editor's marked error is actually remedied. A mechanically valid PDF is not editorial acceptance, and a proof rejected by the writer does not become an accepted baseline.
 
+**Semantic folio relation — LINOTYPE-FOLIO-01 (20 November).** Figure placement is not only a pixel-fit operation: a source-authored diagram may illustrate and *close* its preceding argument, while the following paragraph begins a distinct example. Keep figure+caption indivisible, allow them to conclude a folio without reserving the next paragraph's lines, and never move the figure ahead of its source anchor. Read [semantic illustration folio relations](semantic-illustration-folio-relations.md). Measured whitespace is proof data, not an editorial occupancy quota; the v228 one-essay correction does not establish generalized runtime semantic grouping.
+
 ## The reproducible procedure
 
 1. **State the data question.** Describe the *one* relationship the plate must clarify, and identify the paragraph after which it belongs. Distinguish concept/specification, observed system status, and measured execution evidence. Do not translate proposals into apparently real receipts.
