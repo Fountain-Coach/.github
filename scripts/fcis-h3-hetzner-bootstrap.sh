@@ -7,6 +7,7 @@ ROOT=/srv/fcis-owner-git
 BARE=$ROOT/origin.git
 POLICY=/var/lib/fcis-owner-git-policy
 RECEIVER_HOME=/var/lib/fcis-owner-git-receiver
+OPERATOR_HOME=/var/lib/fcis-owner-git-operator
 OPERATOR_BIN=/usr/local/libexec/fcis-owner-git
 REPO=https://github.com/Fountain-Coach/.github.git
 REPO_ID=Fountain-Coach/.github
@@ -31,7 +32,7 @@ if [ "${1:-}" = --inspect ] && [ "$#" -eq 1 ]; then
   for tool in git git-shell python3 ssh-keygen sha256sum awk bwrap timeout getent groupadd useradd runuser; do
     if command -v "$tool" >/dev/null 2>&1; then report "tool available: $tool"; else report "tool MISSING: $tool"; fi
   done
-  for path in "$ROOT" "$POLICY" "$RECEIVER_HOME" "$OPERATOR_BIN"; do
+  for path in "$ROOT" "$POLICY" "$RECEIVER_HOME" "$OPERATOR_HOME" "$OPERATOR_BIN"; do
     [ ! -e "$path" ] && [ ! -L "$path" ] && report "absent: $path" || report "present: $path"
   done
   for name in fcis-git fcis-operator; do
@@ -59,13 +60,14 @@ for tool in git git-shell python3 ssh-keygen sha256sum awk bwrap timeout getent 
 signer=$(validate_key "$signer_file" signer)
 receiver=$(validate_key "$receiver_file" receiver)
 # Immutable, new-install-only target; no repairing or overwriting an unknown host.
-for path in "$ROOT" "$POLICY" "$RECEIVER_HOME" "$OPERATOR_BIN"; do
+for path in "$ROOT" "$POLICY" "$RECEIVER_HOME" "$OPERATOR_HOME" "$OPERATOR_BIN"; do
   [ ! -e "$path" ] && [ ! -L "$path" ] || refuse "existing installation target: $path"
 done
 for name in fcis-git fcis-operator; do
   getent passwd "$name" >/dev/null 2>&1 && refuse "existing OS identity: $name" || :
 done
 getent group fcis-git >/dev/null 2>&1 && refuse 'existing fcis-git group' || :
+getent group fcis-operator >/dev/null 2>&1 && refuse 'existing fcis-operator group' || :
 # Do network retrieval and independent Git provenance checks BEFORE OS mutation.
 tmp=$(mktemp -d /tmp/fcis-h3-bootstrap.XXXXXXXX) || refuse 'cannot create isolated scratch'
 trap 'rm -rf "$tmp"' 0
@@ -94,35 +96,53 @@ git --git-dir="$tmp/origin.git" config fcis.repositoryID "$REPO_ID"
 git --git-dir="$tmp/origin.git" config core.sharedRepository group
 report "source verified: $pin; creating dedicated Git identities"
 groupadd --system fcis-git
+groupadd --system fcis-operator
 useradd --system --gid fcis-git --home "$RECEIVER_HOME" --shell "$(command -v git-shell)" --no-create-home fcis-git
-useradd --system --gid fcis-git --home /var/lib/fcis-owner-git-operator --shell /usr/sbin/nologin --no-create-home fcis-operator
-mkdir -p "$ROOT" "$POLICY" "$RECEIVER_HOME/.ssh" "$OPERATOR_BIN"
+useradd --system --gid fcis-operator --groups fcis-git --home "$OPERATOR_HOME" --shell /usr/sbin/nologin --no-create-home fcis-operator
+mkdir -p "$ROOT" "$POLICY" "$RECEIVER_HOME/.ssh" "$OPERATOR_HOME" "$OPERATOR_BIN"
 cp -a "$tmp/origin.git" "$BARE"
-chown -R fcis-git:fcis-git "$ROOT"
+chown -R fcis-git:fcis-git "$BARE"
 chmod -R g+rwX "$BARE"
-# Incoming Git receiver must NEVER be able to replace its own hook/config.
+# A writable bare repo root would let the receiver unlink/replace root-owned
+# config or hooks. Keep the parent and repo root ROOT-OWNED and non-writable
+# to both unprivileged identities; allow writes only under objects and refs.
+chown root:fcis-git "$ROOT" "$BARE"
+chmod 2750 "$ROOT" "$BARE"
 rm -rf "$BARE/hooks"
 mkdir "$BARE/hooks"
 cp "$tmp/pre-receive" "$BARE/hooks/pre-receive"
 chown root:root "$BARE/config" "$BARE/hooks" "$BARE/hooks/pre-receive"
 chmod 0644 "$BARE/config"
 chmod 0755 "$BARE/hooks" "$BARE/hooks/pre-receive"
-chmod 2770 "$ROOT" "$BARE"
 printf 'command="git-receive-pack '\''%s'\''",restrict %s\n' "$BARE" "$receiver" > "$RECEIVER_HOME/.ssh/authorized_keys"
-chown -R root:root "$RECEIVER_HOME"
-chmod 0755 "$RECEIVER_HOME"
-chmod 0700 "$RECEIVER_HOME/.ssh"
-chmod 0600 "$RECEIVER_HOME/.ssh/authorized_keys"
+# Git's trusted safe.directory must be explicit because the bare repo root
+# is owned by root and neither unprivileged account owns that directory.
+# Both global Git configurations are immutable to their respective users.
+printf '[safe]\n\tdirectory = %s\n' "$BARE" > "$RECEIVER_HOME/.gitconfig"
+printf '[safe]\n\tdirectory = %s\n' "$BARE" > "$OPERATOR_HOME/.gitconfig"
+chown -R root:root "$RECEIVER_HOME" "$OPERATOR_HOME"
+chmod 0755 "$RECEIVER_HOME" "$RECEIVER_HOME/.ssh" "$OPERATOR_HOME"
+chmod 0644 "$RECEIVER_HOME/.ssh/authorized_keys" "$RECEIVER_HOME/.gitconfig" "$OPERATOR_HOME/.gitconfig"
 cp "$tmp/policy/"* "$POLICY/"
 mkdir "$POLICY/receipts"
-chown -R fcis-operator:fcis-git "$POLICY"
-chmod 0700 "$POLICY" "$POLICY/receipts"
-chmod 0600 "$POLICY/repository-id" "$POLICY/authorized_signers" "$POLICY/trusted-files.sha256"
+# Root owns the signer allowlist and validator policy. Only the operator's
+# separate OS group can READ them. The receiver cannot enter the policy dir.
+chown root:fcis-operator "$POLICY" "$POLICY/repository-id" "$POLICY/authorized_signers" "$POLICY/trusted-files.sha256"
+chmod 0750 "$POLICY"
+chmod 0640 "$POLICY/repository-id" "$POLICY/authorized_signers" "$POLICY/trusted-files.sha256"
+chown fcis-operator:fcis-operator "$POLICY/receipts"
+chmod 0700 "$POLICY/receipts"
 cp "$tmp/operator/fcis-git-promote.sh" "$OPERATOR_BIN/fcis-git-promote.sh"
 chown -R root:root "$OPERATOR_BIN"
 chmod 0755 "$OPERATOR_BIN" "$OPERATOR_BIN/fcis-git-promote.sh"
-# Positive readback via separate operator identity, not via root alone.
-runuser -u fcis-operator -- git --git-dir="$BARE" rev-parse refs/heads/main | grep -Fx "$pin" >/dev/null || refuse 'operator Git readback failed'
+# Distinct identity readback; both Git users need permission to access the
+# pinned origin, but neither may rewrite top-level Git config or hooks.
+runuser -u fcis-git -- env HOME="$RECEIVER_HOME" git --git-dir="$BARE" rev-parse refs/heads/main | grep -Fx "$pin" >/dev/null || refuse 'receiver Git readback failed'
+runuser -u fcis-operator -- env HOME="$OPERATOR_HOME" git --git-dir="$BARE" rev-parse refs/heads/main | grep -Fx "$pin" >/dev/null || refuse 'operator Git readback failed'
+runuser -u fcis-git -- test ! -w "$BARE" || refuse 'receiver can replace Git config/hook'
+runuser -u fcis-operator -- test ! -w "$BARE" || refuse 'operator can replace Git config/hook'
+runuser -u fcis-git -- test ! -r "$POLICY/authorized_signers" || refuse 'receiver can read owner signer policy'
+[ "$(stat -c %U "$POLICY/authorized_signers")" = root ] || refuse 'signer policy owner is not root'
 git --git-dir="$BARE" fsck --full --no-reflogs >/dev/null 2>&1 || refuse 'installed Git integrity failed'
 [ "$(sha256 "$BARE/hooks/pre-receive")" = "$(sha256 "$tmp/pre-receive")" ] || refuse 'installed hook digest mismatch'
 [ "$(sha256 "$OPERATOR_BIN/fcis-git-promote.sh")" = "$(sha256 "$tmp/operator/fcis-git-promote.sh")" ] || refuse 'installed promotion script digest mismatch'
