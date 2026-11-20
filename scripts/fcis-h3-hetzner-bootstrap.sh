@@ -29,7 +29,7 @@ validate_key() {
 }
 if [ "${1:-}" = --inspect ] && [ "$#" -eq 1 ]; then
   report "mode=inspect host=$(hostname)"
-  for tool in git git-shell python3 ssh-keygen sha256sum awk bwrap timeout getent groupadd useradd runuser; do
+  for tool in git git-shell python3 ssh-keygen sha256sum awk bwrap timeout getent groupadd useradd runuser setfacl getfacl; do
     if command -v "$tool" >/dev/null 2>&1; then report "tool available: $tool"; else report "tool MISSING: $tool"; fi
   done
   for path in "$ROOT" "$POLICY" "$RECEIVER_HOME" "$OPERATOR_HOME" "$OPERATOR_BIN"; do
@@ -55,7 +55,7 @@ fi
 pin=$2; signer_file=$3; receiver_file=$4
 case "$pin" in ''|*[!0123456789abcdef]*) refuse 'malformed pinned Git SHA' ;; esac
 [ "${#pin}" -eq 40 ] || refuse 'pinned Git SHA must contain exactly 40 lowercase hexadecimal characters'
-for tool in git git-shell python3 ssh-keygen sha256sum awk bwrap timeout getent groupadd useradd runuser; do need "$tool"; done
+for tool in git git-shell python3 ssh-keygen sha256sum awk bwrap timeout getent groupadd useradd runuser setfacl getfacl; do need "$tool"; done
 [ -x /usr/sbin/nologin ] || refuse 'missing /usr/sbin/nologin'
 signer=$(validate_key "$signer_file" signer)
 receiver=$(validate_key "$receiver_file" receiver)
@@ -103,17 +103,21 @@ mkdir -p "$ROOT" "$POLICY" "$RECEIVER_HOME/.ssh" "$OPERATOR_HOME" "$OPERATOR_BIN
 cp -a "$tmp/origin.git" "$BARE"
 chown -R fcis-git:fcis-git "$BARE"
 chmod -R g+rwX "$BARE"
-# A writable bare repo root would let the receiver unlink/replace root-owned
-# config or hooks. Keep the parent and repo root ROOT-OWNED and non-writable
-# to both unprivileged identities; allow writes only under objects and refs.
+# Root owns both the Git parent and bare origin. The receiver cannot create
+# top-level locks. The separate signed-promotion operator needs HEAD.lock for
+# Git atomic compare-and-swap, so it receives an exact named ACL on the bare
+# root with sticky deletion protection of root-owned config, HEAD and hooks.
+# Other users have no access and the Git receiver remains read/traverse only.
 chown root:fcis-git "$ROOT" "$BARE"
 chmod 2750 "$ROOT" "$BARE"
 rm -rf "$BARE/hooks"
 mkdir "$BARE/hooks"
 cp "$tmp/pre-receive" "$BARE/hooks/pre-receive"
-chown root:root "$BARE/config" "$BARE/hooks" "$BARE/hooks/pre-receive"
-chmod 0644 "$BARE/config"
+chown root:root "$BARE/config" "$BARE/HEAD" "$BARE/hooks" "$BARE/hooks/pre-receive"
+chmod 0644 "$BARE/config" "$BARE/HEAD"
 chmod 0755 "$BARE/hooks" "$BARE/hooks/pre-receive"
+chmod +t "$BARE"
+setfacl -m 'u:fcis-operator:rwx,g::r-x,o::---' "$BARE"
 printf 'command="git-receive-pack '\''%s'\''",restrict %s\n' "$BARE" "$receiver" > "$RECEIVER_HOME/.ssh/authorized_keys"
 # Git's trusted safe.directory must be explicit because the bare repo root
 # is owned by root and neither unprivileged account owns that directory.
@@ -140,7 +144,14 @@ chmod 0755 "$OPERATOR_BIN" "$OPERATOR_BIN/fcis-git-promote.sh"
 runuser -u fcis-git -- env HOME="$RECEIVER_HOME" git --git-dir="$BARE" rev-parse refs/heads/main | grep -Fx "$pin" >/dev/null || refuse 'receiver Git readback failed'
 runuser -u fcis-operator -- env HOME="$OPERATOR_HOME" git --git-dir="$BARE" rev-parse refs/heads/main | grep -Fx "$pin" >/dev/null || refuse 'operator Git readback failed'
 runuser -u fcis-git -- test ! -w "$BARE" || refuse 'receiver can replace Git config/hook'
-runuser -u fcis-operator -- test ! -w "$BARE" || refuse 'operator can replace Git config/hook'
+runuser -u fcis-operator -- test -w "$BARE" || refuse 'operator cannot create Git HEAD.lock'
+runuser -u fcis-operator -- test ! -w "$BARE/config" || refuse 'operator can write Git config'
+runuser -u fcis-operator -- test ! -w "$BARE/HEAD" || refuse 'operator can write Git HEAD'
+runuser -u fcis-operator -- test ! -w "$BARE/hooks" || refuse 'operator can write Git hooks'
+[ -k "$BARE" ] || refuse 'Git root sticky protection absent'
+getfacl -cp "$BARE" | grep -Fx 'user:fcis-operator:rwx' >/dev/null || refuse 'operator named ACL missing'
+getfacl -cp "$BARE" | grep -Fx 'group::r-x' >/dev/null || refuse 'receiver group permissions widened'
+getfacl -cp "$BARE" | grep -Fx 'other::---' >/dev/null || refuse 'world permissions widened'
 runuser -u fcis-git -- test ! -r "$POLICY/authorized_signers" || refuse 'receiver can read owner signer policy'
 [ "$(stat -c %U "$POLICY/authorized_signers")" = root ] || refuse 'signer policy owner is not root'
 git --git-dir="$BARE" fsck --full --no-reflogs >/dev/null 2>&1 || refuse 'installed Git integrity failed'
