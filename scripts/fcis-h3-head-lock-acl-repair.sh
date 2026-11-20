@@ -93,6 +93,11 @@ FIXTURE="$TMP/fixture.git"
 [[ $(git --git-dir="$FIXTURE" rev-parse refs/heads/main) == "$OLD" ]] || refuse 'fixture main differs'
 git --git-dir="$FIXTURE" cat-file -e "$STALE^{commit}" || refuse 'fixture candidate object missing'
 chown -R fcis-git:fcis-git "$FIXTURE"
+# A bare clone created with umask 077 can leave top-level packed-refs at
+# mode 0600. The operator is a supplementary member of fcis-git and must
+# READ packed-refs to resolve HEAD during a genuine update-ref. Give group
+# read/traverse access to the disposable fixture only, not the live origin.
+chmod -R g+rX "$FIXTURE"
 for sub in refs objects logs; do
   [[ ! -d $FIXTURE/$sub ]] || chmod -R g+rwX "$FIXTURE/$sub"
 done
