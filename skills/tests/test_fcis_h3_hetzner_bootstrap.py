@@ -119,13 +119,29 @@ class H3BootstrapTests(unittest.TestCase):
             'getent passwd "$name"',
             'command="git-receive-pack',
             'chown root:root "$BARE/config" "$BARE/hooks" "$BARE/hooks/pre-receive"',
-            'chown -R fcis-operator:fcis-git "$POLICY"',
+            'chown root:fcis-operator "$POLICY" "$POLICY/repository-id" "$POLICY/authorized_signers" "$POLICY/trusted-files.sha256"',
+            'chown root:fcis-git "$ROOT" "$BARE"',
+            'chmod 2750 "$ROOT" "$BARE"',
+            'chmod 0750 "$POLICY"',
+            'chmod 0640 "$POLICY/repository-id" "$POLICY/authorized_signers" "$POLICY/trusted-files.sha256"',
+            'groupadd --system fcis-operator',
+            '--gid fcis-operator --groups fcis-git',
+            'runuser -u fcis-git -- test ! -w "$BARE"',
+            'runuser -u fcis-operator -- test ! -w "$BARE"',
+            'runuser -u fcis-git -- test ! -r "$POLICY/authorized_signers"',
+            'printf \'[safe]\\n\\tdirectory = %s\\n\'',
             'runuser -u fcis-operator',
         ]:
             self.assertIn(fragment, source)
         self.assertNotIn("systemctl", source)
         self.assertNotIn("/etc/caddy", source)
         self.assertNotIn("curl | sh", source)
+        self.assertNotIn('chmod 2770 "$ROOT" "$BARE"', source)
+        self.assertNotIn('chown -R fcis-git:fcis-git "$ROOT"', source)
+        self.assertNotIn('chown -R fcis-operator:fcis-git "$POLICY"', source)
+        self.assertIn('RECEIVER_HOME=/var/lib/fcis-owner-git-receiver', source)
+        self.assertIn('OPERATOR_HOME=/var/lib/fcis-owner-git-operator', source)
+
 
 
 if __name__ == "__main__":
