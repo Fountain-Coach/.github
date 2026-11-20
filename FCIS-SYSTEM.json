@@ -925,7 +925,8 @@
         "HostSessionFrame",
         "HealthStatus",
         "FirstOwnerPasskeyAttestation",
-        "FirstOwnerBootstrapPolicy"
+        "FirstOwnerBootstrapPolicy",
+        "HostSessionFrameReply"
       ],
       "securitySchemes": [
         "ownerPasskeySession",
