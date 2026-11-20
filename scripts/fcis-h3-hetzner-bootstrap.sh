@@ -89,7 +89,7 @@ mkdir -p "$tmp/operator"
 git --git-dir="$tmp/origin.git" show refs/heads/main:.githooks/pre-receive > "$tmp/pre-receive"
 git --git-dir="$tmp/origin.git" show refs/heads/main:scripts/fcis-git-promote.sh > "$tmp/operator/fcis-git-promote.sh"
 [ -s "$tmp/pre-receive" ] && [ -s "$tmp/operator/fcis-git-promote.sh" ] || refuse 'trusted scripts missing'
-sh -n "$tmp/pre-receive" "$tmp/operator/fcis-git-promote.sh" || refuse 'reviewed POSIX script syntax failed'
+sh -n "$tmp/pre-receive" && sh -n "$tmp/operator/fcis-git-promote.sh" || refuse 'reviewed POSIX script syntax failed'
 git --git-dir="$tmp/origin.git" config fcis.repositoryID "$REPO_ID"
 git --git-dir="$tmp/origin.git" config core.sharedRepository group
 report "source verified: $pin; creating dedicated Git identities"
