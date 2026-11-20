@@ -3,7 +3,10 @@
 Never execute --apply, install OS packages, or change running origin.
 """
 from pathlib import Path
+import os
+import stat
 import subprocess
+import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -54,9 +57,43 @@ class H3HeadLockACLTests(unittest.TestCase):
         s = SCRIPT.read_text()
         self.assertIn('git clone --quiet --bare --no-hardlinks "$BARE" "$TMP/fixture.git"', s)
         self.assertIn('git --git-dir="$FIXTURE" update-ref refs/heads/main "$STALE" "$OLD"', s)
+        self.assertLess(s.index('chown -R fcis-git:fcis-git "$FIXTURE"'), s.index('chmod -R g+rX "$FIXTURE"'))
+        self.assertLess(s.index('chmod -R g+rX "$FIXTURE"'), s.index('chown root:fcis-git "$FIXTURE"'))
         self.assertNotIn('git --git-dir="$BARE" update-ref', s)
         self.assertIn("H3_DISPOSABLE_ATOMIC_CAS_VERIFIED", s)
         self.assertIn('actual Git main changed by fixture test', s)
+
+    def test_umask_077_bare_clone_packed_refs_exposes_original_bug(self):
+        """Real Git fixture: a bare clone can contain group-unreadable packed refs."""
+        with tempfile.TemporaryDirectory(prefix="fcis-h3-packed-refs-") as root:
+            base = Path(root)
+            work, origin, fixture = (base / k for k in ("work", "origin.git", "fixture.git"))
+            for argv in (
+                ("git", "init", "-q", "-b", "main", str(work)),
+                ("git", "-C", str(work), "-c", "user.name=H3 Test",
+                 "-c", "user.email=h3@example.invalid", "commit", "-qm", "base", "--allow-empty"),
+                ("git", "init", "--bare", "-q", str(origin)),
+                ("git", "-C", str(work), "push", "-q", str(origin), "HEAD:refs/heads/main"),
+            ):
+                subprocess.run(argv, check=True, capture_output=True, timeout=10)
+            old_mask = os.umask(0o077)
+            try:
+                subprocess.run(("git", "clone", "--quiet", "--bare", "--no-hardlinks",
+                                str(origin), str(fixture)),
+                               check=True, capture_output=True, timeout=10)
+            finally:
+                os.umask(old_mask)
+            packed = fixture / "packed-refs"
+            self.assertTrue(packed.is_file(), "Git clone must exercise packed-refs")
+            before = stat.S_IMODE(packed.stat().st_mode)
+            self.assertEqual(before & stat.S_IRGRP, 0,
+                             "must reproduce restrictive clone file permissions")
+            subprocess.run(("chmod", "-R", "g+rX", str(fixture)),
+                           check=True, capture_output=True, timeout=10)
+            after = stat.S_IMODE(packed.stat().st_mode)
+            self.assertNotEqual(after & stat.S_IRGRP, 0)
+            self.assertEqual(after & stat.S_IWGRP, 0,
+                             "packed-refs must become group-readable, not writable")
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
