@@ -31,7 +31,7 @@ REQUIRED = (
 # network access, or report nested integration tests as passed. Only skip those
 # two tests when this source process is positively inside the exact already
 # networkless, read-only, synthetic-UID H3 outer CI configuration.
-_OUTER_PASSWD = "fcis-ci:x:65534:65534:FCIS isolated CI:/tmp:/bin/sh\\n"
+_OUTER_PASSWD = "fcis-ci:x:65534:65534:FCIS isolated CI:/tmp:/bin/sh\n"
 _OUTER_H3_SKIP_REASON = (
     "nested userns intentionally denied by Ubuntu AppArmor inside positively "
     "verified outer H3 CI; run real positive H3 sandbox tests on unprivileged host"
@@ -212,7 +212,7 @@ class H3GitAcceptanceTests(unittest.TestCase):
             "root": "/tmp",
             "uid": 1000,
             "home": "/home/owner",
-            "passwd": "owner:x:1000:1000:owner:/home/owner:/bin/sh\\n",
+            "passwd": "owner:x:1000:1000:owner:/home/owner:/bin/sh\n",
             "apparmor": "unconfined",
             "interfaces": ("lo", "eth0"),
             "source_writable": True,
