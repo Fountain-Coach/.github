@@ -67,8 +67,19 @@ ssh-keygen -Y verify -I owner -n fcis-git-promotion \
 # Only files pinned by the preinstalled policy may be executed as CI code in the sandbox.
 tmp=$(mktemp -d "${TMPDIR:-/tmp}/fcis-git-accept.XXXXXXXX") || die 'isolated temp directory failed'
 chmod 755 "$tmp"
-# No inherited Git configuration/filter or credential helper may execute during checkout.
-env -i PATH=/usr/bin:/bin HOME="$tmp" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null \
+# The trusted bare Git origin has a root-owned top-level directory, but this
+# operator is deliberately unprivileged. Git's ownership guard must not be
+# disabled globally. During local clone, Git starts a separate upload-pack
+# process which does NOT reliably inherit command-line -c safe.directory.
+# Supply only the exact currently authorized bare origin via a temporary
+# global config that is visible to both clone and its Git subprocess.
+# Forbid control characters/config injection in the operator-selected path.
+case "$bare" in *[!a-zA-Z0-9_./-]*) die 'unsupported bare origin path for safe Git clone' ;; esac
+printf '[safe]\n\tdirectory = %s\n' "$bare" > "$tmp/clone-safe.gitconfig"
+chmod 0600 "$tmp/clone-safe.gitconfig"
+# No inherited Git configuration/filter or credential helper may execute;
+# the temporary config has only one explicit safe.directory and no credential.
+env -i PATH=/usr/bin:/bin HOME="$tmp" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL="$tmp/clone-safe.gitconfig" \
     git -c core.hooksPath=/dev/null -c protocol.file.allow=always clone --quiet --no-hardlinks --no-checkout "$bare" "$tmp/source" ||
     die 'independent Git checkout failed'
 env -i PATH=/usr/bin:/bin HOME="$tmp" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null \
