@@ -3150,7 +3150,7 @@
         "tags": [
           "Host Transport"
         ],
-        "description": "Only admitted target and authenticated session/sequence/nonce permitted. Typed Host frame is not arbitrary remote shell, and response requires actual terminal evidence.",
+        "description": "Machine-signed, exactly bound Host session frame using existing FCISHTTPSFrameCarrier.swift wire. Every request requires independently imported, owner-signed Host trust, current bilateral revocable admissions and exact source/release identity; HTTPS frame delivery does not establish execution or Store terminal evidence.",
         "security": [],
         "requestBody": {
           "required": true,
@@ -3165,11 +3165,11 @@
         },
         "responses": {
           "200": {
-            "description": "Authenticated target result; execution and admission still separately verified",
+            "description": "Verified Host packet submission/poll response, not an FCIS execution receipt",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HostObservation"
+                  "$ref": "#/components/schemas/HostSessionFrameReply"
                 }
               }
             }
@@ -4629,7 +4629,9 @@
         "type": "object",
         "properties": {
           "sessionID": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
           },
           "targetID": {
             "$ref": "#/components/schemas/HostTargetID"
@@ -4641,24 +4643,40 @@
             ]
           },
           "action": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "send",
+              "poll"
+            ]
           },
           "sequence": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Unsigned per-direction monotonic frame sequence; polls acknowledge previously delivered frame"
           },
           "frame": {
-            "description": "JSON-RPC-compatible JSON value; precise tool arguments are validated against current admitted instrument schemas."
+            "type": "string",
+            "contentEncoding": "base64",
+            "description": "Opaque encrypted FCIS session bytes, standard base64. Required on send (1–32768 decoded bytes), absent on poll."
           },
           "nonce": {
-            "type": "string"
+            "type": "string",
+            "contentEncoding": "base64",
+            "minLength": 44,
+            "maxLength": 44,
+            "description": "Exactly 32 nonce bytes in standard base64. SEND requires durable replay claim."
           },
           "signedAtMilliseconds": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "minimum": 1
           },
           "signature": {
-            "type": "string"
+            "type": "string",
+            "contentEncoding": "base64",
+            "minLength": 88,
+            "maxLength": 88,
+            "description": "64-byte Ed25519 signature in standard base64 over canonical fcis-https-frame/1 bytes"
           }
         },
         "required": [
@@ -4671,7 +4689,8 @@
           "signedAtMilliseconds",
           "signature"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Existing Swift FCISHTTPSFrameRequest JSON wire. Public HTTPS permits only machine-signed host role; Foundation.Data fields are standard-base64 opaque bytes. Frame acceptance never implies Go execution or a native Store terminal."
       },
       "HealthStatus": {
         "type": "object",
@@ -4779,6 +4798,35 @@
             "format": "date-time"
           }
         },
+        "additionalProperties": false
+      },
+      "HostSessionFrameReply": {
+        "type": "object",
+        "description": "FCISHTTPSFrameReply: bounded encrypted transport delivery, never a Host execution terminal",
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "accepted",
+              "frame",
+              "empty",
+              "closed"
+            ]
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "frame": {
+            "type": "string",
+            "contentEncoding": "base64",
+            "description": "Encrypted packet on state=frame; absent otherwise"
+          }
+        },
+        "required": [
+          "state",
+          "sequence"
+        ],
         "additionalProperties": false
       }
     }
