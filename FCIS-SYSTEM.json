@@ -2,8 +2,8 @@
   "kind": "fountaincoach.fcis.system.composition",
   "schemaVersion": "1.0.0",
   "compositionId": "fountaincoach.fcis.whole-system",
-  "status": "SPEC_VALIDATED__NOT_GENERATED",
-  "generatedAtUTC": "2026-11-19",
+  "status": "NORMATIVE_SPECIFICATION_CANDIDATE__NOT_GENERATED",
+  "generatedAtUTC": "2026-11-22",
   "owner": "Fountain Coach",
   "architectureVersion": "1.2",
   "scope": {
@@ -36,9 +36,9 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "a53efd6348919ebe80fcd92141613a064f0cb93c",
+      "ref": "ae513bf41ddacb1110525e4994be98a6d9051bd0",
       "path": "FCIS-STACK.md",
-      "blobSha": "ffec2078940348cf3199d64d76b47525674d9808",
+      "blobSha": "bf969dceb0240b95977831449b532a4f985cf633",
       "url": "https://github.com/Fountain-Coach/.github/blob/a53efd6348919ebe80fcd92141613a064f0cb93c/FCIS-STACK.md"
     },
     "fcisHTTP": {
@@ -1404,9 +1404,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 222,
+      "expectedRequirementCount": 293,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 222,
+      "minimumAtomicRequirementCount": 293,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -1422,7 +1422,14 @@
         "adoption",
         "generation",
         "owner-policy",
-        "bootstrap"
+        "bootstrap",
+        "instrument-observability",
+        "instrument-identity",
+        "instrument-event",
+        "instrument-phase",
+        "instrument-evidence",
+        "instrument-privacy",
+        "instrument-acceptance"
       ],
       "generatorReceipt": {
         "artifact": "generation-coverage.json",
@@ -2936,6 +2943,503 @@
         "mandatory": true,
         "sourcePointer": "/initialization/setupTicket/onExpiry",
         "proofClass": "bootstrap"
+      },
+      {
+        "id": "INSTRUMENT-OBS-CONTRACTVERSION",
+        "name": "instrument-observability: contractVersion",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/contractVersion",
+        "proofClass": "instrument-observability"
+      },
+      {
+        "id": "INSTRUMENT-OBS-SCOPE",
+        "name": "instrument-observability: scope",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/scope",
+        "proofClass": "instrument-observability"
+      },
+      {
+        "id": "INSTRUMENT-OBS-IDENTITY",
+        "name": "instrument-observability: identity",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity",
+        "proofClass": "instrument-observability"
+      },
+      {
+        "id": "INSTRUMENT-OBS-LIFECYCLE",
+        "name": "instrument-observability: lifecycle",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle",
+        "proofClass": "instrument-observability"
+      },
+      {
+        "id": "INSTRUMENT-OBS-STOREEVIDENCE",
+        "name": "instrument-observability: storeEvidence",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/storeEvidence",
+        "proofClass": "instrument-observability"
+      },
+      {
+        "id": "INSTRUMENT-OBS-DELIVERY",
+        "name": "instrument-observability: delivery",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/delivery",
+        "proofClass": "instrument-observability"
+      },
+      {
+        "id": "INSTRUMENT-OBS-PRIVACY",
+        "name": "instrument-observability: privacy",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/privacy",
+        "proofClass": "instrument-observability"
+      },
+      {
+        "id": "INSTRUMENT-OBS-ACCEPTANCE",
+        "name": "instrument-observability: acceptance",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/acceptance",
+        "proofClass": "instrument-observability"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-TENANTID",
+        "name": "Instrument identity: tenantID",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/0",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-HOSTID",
+        "name": "Instrument identity: hostID",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/1",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-INSTRUMENTID",
+        "name": "Instrument identity: instrumentID",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/2",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-SEMANTICVERSION",
+        "name": "Instrument identity: semanticVersion",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/3",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-OWNER",
+        "name": "Instrument identity: owner",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/4",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-SOURCEREPOSITORY",
+        "name": "Instrument identity: sourceRepository",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/5",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-SOURCEREVISION",
+        "name": "Instrument identity: sourceRevision",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/6",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-BUILDSHA256",
+        "name": "Instrument identity: buildSHA256",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/7",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-MANIFESTSHA256",
+        "name": "Instrument identity: manifestSHA256",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/8",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-DECLAREDOPERATIONS",
+        "name": "Instrument identity: declaredOperations",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/9",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-REQUIREDSCOPES",
+        "name": "Instrument identity: requiredScopes",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/10",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-EXECUTIONTOPOLOGY",
+        "name": "Instrument identity: executionTopology",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/11",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-EVIDENCEAUTHORITIES",
+        "name": "Instrument identity: evidenceAuthorities",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/12",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-TELEMETRYTOPICS",
+        "name": "Instrument identity: telemetryTopics",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/13",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-IDENTITY-ADMISSIONSTATE",
+        "name": "Instrument identity: admissionState",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/identity/declaredFields/14",
+        "proofClass": "instrument-identity"
+      },
+      {
+        "id": "INSTRUMENT-EVENT-INSTRUMENTID",
+        "name": "Instrument event: instrumentID",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/requiredEventFields/0",
+        "proofClass": "instrument-event"
+      },
+      {
+        "id": "INSTRUMENT-EVENT-INSTRUMENTVERSION",
+        "name": "Instrument event: instrumentVersion",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/requiredEventFields/1",
+        "proofClass": "instrument-event"
+      },
+      {
+        "id": "INSTRUMENT-EVENT-HOSTID",
+        "name": "Instrument event: hostID",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/requiredEventFields/2",
+        "proofClass": "instrument-event"
+      },
+      {
+        "id": "INSTRUMENT-EVENT-SOURCEREVISION",
+        "name": "Instrument event: sourceRevision",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/requiredEventFields/3",
+        "proofClass": "instrument-event"
+      },
+      {
+        "id": "INSTRUMENT-EVENT-BUILDSHA256",
+        "name": "Instrument event: buildSHA256",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/requiredEventFields/4",
+        "proofClass": "instrument-event"
+      },
+      {
+        "id": "INSTRUMENT-EVENT-CORRELATIONID",
+        "name": "Instrument event: correlationID",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/requiredEventFields/5",
+        "proofClass": "instrument-event"
+      },
+      {
+        "id": "INSTRUMENT-EVENT-SEQUENCE",
+        "name": "Instrument event: sequence",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/requiredEventFields/6",
+        "proofClass": "instrument-event"
+      },
+      {
+        "id": "INSTRUMENT-EVENT-PHASE",
+        "name": "Instrument event: phase",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/requiredEventFields/7",
+        "proofClass": "instrument-event"
+      },
+      {
+        "id": "INSTRUMENT-EVENT-OUTCOME",
+        "name": "Instrument event: outcome",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/requiredEventFields/8",
+        "proofClass": "instrument-event"
+      },
+      {
+        "id": "INSTRUMENT-EVENT-OBSERVEDAT",
+        "name": "Instrument event: observedAt",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/requiredEventFields/9",
+        "proofClass": "instrument-event"
+      },
+      {
+        "id": "INSTRUMENT-EVENT-EVIDENCECLASS",
+        "name": "Instrument event: evidenceClass",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/requiredEventFields/10",
+        "proofClass": "instrument-event"
+      },
+      {
+        "id": "INSTRUMENT-EVENT-REASONCODE",
+        "name": "Instrument event: reasonCode",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/requiredEventFields/11",
+        "proofClass": "instrument-event"
+      },
+      {
+        "id": "INSTRUMENT-PHASE-RECEIVED",
+        "name": "Instrument phase: received",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/phases/0",
+        "proofClass": "instrument-phase"
+      },
+      {
+        "id": "INSTRUMENT-PHASE-ADMITTED",
+        "name": "Instrument phase: admitted",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/phases/1",
+        "proofClass": "instrument-phase"
+      },
+      {
+        "id": "INSTRUMENT-PHASE-EXECUTING",
+        "name": "Instrument phase: executing",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/phases/2",
+        "proofClass": "instrument-phase"
+      },
+      {
+        "id": "INSTRUMENT-PHASE-SUCCEEDED",
+        "name": "Instrument phase: succeeded",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/phases/3",
+        "proofClass": "instrument-phase"
+      },
+      {
+        "id": "INSTRUMENT-PHASE-REFUSED",
+        "name": "Instrument phase: refused",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/phases/4",
+        "proofClass": "instrument-phase"
+      },
+      {
+        "id": "INSTRUMENT-PHASE-FAILED",
+        "name": "Instrument phase: failed",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/phases/5",
+        "proofClass": "instrument-phase"
+      },
+      {
+        "id": "INSTRUMENT-PHASE-CANCELLED",
+        "name": "Instrument phase: cancelled",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/phases/6",
+        "proofClass": "instrument-phase"
+      },
+      {
+        "id": "INSTRUMENT-PHASE-TIMED-OUT",
+        "name": "Instrument phase: timed-out",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/phases/7",
+        "proofClass": "instrument-phase"
+      },
+      {
+        "id": "INSTRUMENT-EVIDENCE-STORE-COMMITTED",
+        "name": "Instrument evidence class: store-committed",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/evidenceClasses/0",
+        "proofClass": "instrument-evidence"
+      },
+      {
+        "id": "INSTRUMENT-EVIDENCE-TRANSPORT-OBSERVED",
+        "name": "Instrument evidence class: transport-observed",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/evidenceClasses/1",
+        "proofClass": "instrument-evidence"
+      },
+      {
+        "id": "INSTRUMENT-EVIDENCE-CLIENT-REPORTED",
+        "name": "Instrument evidence class: client-reported",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/evidenceClasses/2",
+        "proofClass": "instrument-evidence"
+      },
+      {
+        "id": "INSTRUMENT-EVIDENCE-INFERRED",
+        "name": "Instrument evidence class: inferred",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/evidenceClasses/3",
+        "proofClass": "instrument-evidence"
+      },
+      {
+        "id": "INSTRUMENT-EVIDENCE-NOT-ESTABLISHED",
+        "name": "Instrument evidence class: not-established",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/lifecycle/evidenceClasses/4",
+        "proofClass": "instrument-evidence"
+      },
+      {
+        "id": "INSTRUMENT-REDACT-RAWPASSKEYASSERTION",
+        "name": "Excluded telemetry: rawPasskeyAssertion",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/privacy/forbiddenFields/0",
+        "proofClass": "instrument-privacy"
+      },
+      {
+        "id": "INSTRUMENT-REDACT-CREDENTIALIDENTIFIER",
+        "name": "Excluded telemetry: credentialIdentifier",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/privacy/forbiddenFields/1",
+        "proofClass": "instrument-privacy"
+      },
+      {
+        "id": "INSTRUMENT-REDACT-WEBAUTHNCHALLENGE",
+        "name": "Excluded telemetry: webauthnChallenge",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/privacy/forbiddenFields/2",
+        "proofClass": "instrument-privacy"
+      },
+      {
+        "id": "INSTRUMENT-REDACT-OWNERSUBJECT",
+        "name": "Excluded telemetry: ownerSubject",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/privacy/forbiddenFields/3",
+        "proofClass": "instrument-privacy"
+      },
+      {
+        "id": "INSTRUMENT-REDACT-SESSIONCOOKIE",
+        "name": "Excluded telemetry: sessionCookie",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/privacy/forbiddenFields/4",
+        "proofClass": "instrument-privacy"
+      },
+      {
+        "id": "INSTRUMENT-REDACT-BEARERTOKEN",
+        "name": "Excluded telemetry: bearerToken",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/privacy/forbiddenFields/5",
+        "proofClass": "instrument-privacy"
+      },
+      {
+        "id": "INSTRUMENT-REDACT-SIGNINGPRIVATEKEY",
+        "name": "Excluded telemetry: signingPrivateKey",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/privacy/forbiddenFields/6",
+        "proofClass": "instrument-privacy"
+      },
+      {
+        "id": "INSTRUMENT-REDACT-RAWHTTPHEADERS",
+        "name": "Excluded telemetry: rawHTTPHeaders",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/privacy/forbiddenFields/7",
+        "proofClass": "instrument-privacy"
+      },
+      {
+        "id": "INSTRUMENT-REDACT-UNREDACTEDPROVIDERERROR",
+        "name": "Excluded telemetry: unredactedProviderError",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/privacy/forbiddenFields/8",
+        "proofClass": "instrument-privacy"
+      },
+      {
+        "id": "INSTRUMENT-REDACT-PRIVATESOURCEDOCUMENT",
+        "name": "Excluded telemetry: privateSourceDocument",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/privacy/forbiddenFields/9",
+        "proofClass": "instrument-privacy"
+      },
+      {
+        "id": "INSTRUMENT-REDACT-NETWORKLOCATION",
+        "name": "Excluded telemetry: networkLocation",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/privacy/forbiddenFields/10",
+        "proofClass": "instrument-privacy"
+      },
+      {
+        "id": "INSTRUMENT-SCENARIO-01",
+        "name": "Instrument negative/positive proof: Unknown or source-digest-mismatched peer is refused without a new grant",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/acceptance/scenarios/0",
+        "proofClass": "instrument-acceptance"
+      },
+      {
+        "id": "INSTRUMENT-SCENARIO-02",
+        "name": "Instrument negative/positive proof: Declared properties are read and independently verified against the signed admitted manifest",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/acceptance/scenarios/1",
+        "proofClass": "instrument-acceptance"
+      },
+      {
+        "id": "INSTRUMENT-SCENARIO-03",
+        "name": "Instrument negative/positive proof: Server challenge issued but no verify POST: record only observed steps and no success",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/acceptance/scenarios/2",
+        "proofClass": "instrument-acceptance"
+      },
+      {
+        "id": "INSTRUMENT-SCENARIO-04",
+        "name": "Instrument negative/positive proof: Invalid WebAuthn verification: bounded refusal and no owner session",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/acceptance/scenarios/3",
+        "proofClass": "instrument-acceptance"
+      },
+      {
+        "id": "INSTRUMENT-SCENARIO-05",
+        "name": "Instrument negative/positive proof: Server-issued session without authenticated protected use: browser receipt not established",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/acceptance/scenarios/4",
+        "proofClass": "instrument-acceptance"
+      },
+      {
+        "id": "INSTRUMENT-SCENARIO-06",
+        "name": "Instrument negative/positive proof: Authenticated protected endpoint succeeds: committed first-use Store event correlates to the session",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/acceptance/scenarios/5",
+        "proofClass": "instrument-acceptance"
+      },
+      {
+        "id": "INSTRUMENT-SCENARIO-07",
+        "name": "Instrument negative/positive proof: Protected endpoint 401 or 403: refused status and no fabricated first-use receipt",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/acceptance/scenarios/6",
+        "proofClass": "instrument-acceptance"
+      },
+      {
+        "id": "INSTRUMENT-SCENARIO-08",
+        "name": "Instrument negative/positive proof: Duplicate or out-of-order MIDI2 lifecycle message is deduplicated or refused",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/acceptance/scenarios/7",
+        "proofClass": "instrument-acceptance"
+      },
+      {
+        "id": "INSTRUMENT-SCENARIO-09",
+        "name": "Instrument negative/positive proof: MIDI2 monitor disconnect or replay leaves Store authentication truth unchanged and marks delivery degraded",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/acceptance/scenarios/8",
+        "proofClass": "instrument-acceptance"
+      },
+      {
+        "id": "INSTRUMENT-SCENARIO-10",
+        "name": "Instrument negative/positive proof: Forbidden credential, cookie or private-key telemetry payload is rejected without egress",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/acceptance/scenarios/9",
+        "proofClass": "instrument-acceptance"
+      },
+      {
+        "id": "INSTRUMENT-SCENARIO-11",
+        "name": "Instrument negative/positive proof: Standalone Go first-owner flow works with no external MIDI2 device, remote peer or Swift runtime",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/acceptance/scenarios/10",
+        "proofClass": "instrument-acceptance"
+      },
+      {
+        "id": "INSTRUMENT-SCENARIO-12",
+        "name": "Instrument negative/positive proof: Agent-held signing key cannot claim independently approved owner release or broaden a machine grant",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/instrumentObservability/acceptance/scenarios/11",
+        "proofClass": "instrument-acceptance"
       }
     ]
   },
@@ -2991,7 +3495,7 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 222,
+    "atomicRequirementCount": 293,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
@@ -3007,7 +3511,14 @@
       "adoption": 10,
       "generation": 8,
       "owner-policy": 10,
-      "bootstrap": 10
+      "bootstrap": 10,
+      "instrument-observability": 8,
+      "instrument-identity": 15,
+      "instrument-event": 12,
+      "instrument-phase": 8,
+      "instrument-evidence": 5,
+      "instrument-privacy": 11,
+      "instrument-acceptance": 12
     }
   },
   "nonClaims": [
@@ -3488,6 +3999,112 @@
       "enrollment": "owner creates short-lived pairing challenge, device creates key locally, submits signed trust proof, owner separately authorizes exact machine",
       "grant": "admission never grants arbitrary execution; each client and capability must be separately authorized",
       "renewal": "explicit bounded lease with replay protection, no fixed 24h reconnect assumption"
+    },
+    "instrumentObservability": {
+      "contractVersion": "1.0.0",
+      "scope": "All built-in FCIS software Hosts and every admitted external instrument MUST disclose verifiable identity and report bounded lifecycle evidence; an external MIDI2 device, remote machine or Swift runtime is never required for fresh native Go installation.",
+      "identity": {
+        "midiCI": "For MIDI2 peers reuse standard MIDI-CI Discovery, Profile Inquiry and Property Exchange; Fountain Coach-specific Property Exchange resource data is a declared private namespaced extension, not MIDI Association normative fields.",
+        "declaredFields": [
+          "tenantID",
+          "hostID",
+          "instrumentID",
+          "semanticVersion",
+          "owner",
+          "sourceRepository",
+          "sourceRevision",
+          "buildSHA256",
+          "manifestSHA256",
+          "declaredOperations",
+          "requiredScopes",
+          "executionTopology",
+          "evidenceAuthorities",
+          "telemetryTopics",
+          "admissionState"
+        ],
+        "verifyBeforeUse": "The admitting Host MUST independently bind the claimed version/build/digest and owner to its signed manifest, persisted admitted registry and effective client-operation grant; neither a discovered peer nor host.describe self-assertion grants execution or subscription."
+      },
+      "lifecycle": {
+        "topicOwnership": "Existing source-owned MIDI2 IDL owns all operation/topic wire shapes, QoS, profiles and capability masks. telemetry/errors, telemetry/jitter and telemetry/resource-usage retain their documented meaning; source-owned FCIS-specific lifecycle topics require separate IDL generation and admission before use.",
+        "requiredEventFields": [
+          "instrumentID",
+          "instrumentVersion",
+          "hostID",
+          "sourceRevision",
+          "buildSHA256",
+          "correlationID",
+          "sequence",
+          "phase",
+          "outcome",
+          "observedAt",
+          "evidenceClass",
+          "reasonCode"
+        ],
+        "phases": [
+          "received",
+          "admitted",
+          "executing",
+          "succeeded",
+          "refused",
+          "failed",
+          "cancelled",
+          "timed-out"
+        ],
+        "evidenceClasses": [
+          "store-committed",
+          "transport-observed",
+          "client-reported",
+          "inferred",
+          "not-established"
+        ],
+        "absencePolicy": "An absent Store or MIDI2 event establishes only that the event was not recorded by the observed authority; it does not establish browser failure, platform WebAuthn success, or the unobserved stage. Only source-received HTTP/Host events can claim the server observed a stage. Fixed reason codes must not contain raw exception or sensitive request data."
+      },
+      "storeEvidence": {
+        "authority": "Native Go FountainStore is the durable authority for session/security audit, authorization, receipts and effects; MIDI2 Monitor is a time-ordered projection only. Every independently observed owner-auth attempt stage, including pre-verification refusal, requires a bounded native audit record or explicit Store-unavailable refusal.",
+        "commitBeforeVerifiedClaim": true,
+        "firstUseRequiresReadback": "A successful owner session is distinct from a verified WebAuthn assertion and server-issued cookie: first authenticated protected use must be independently read from the current Store; platform passkey sheet, UI status, transport ACK and HTTP 200 do not prove browser receipt."
+      },
+      "delivery": {
+        "qos": "at-least-once",
+        "sourceSequence": "Assign fresh opaque correlations and monotonically increasing event sequence; deduplicate/replay by verified instrument identity, source revision, correlation and sequence, never by browser credential or token.",
+        "observerHealth": "Projection must report unavailable, degraded, observed and not-established states truthfully and allow bounded replay/recovery; a lost MIDI2 observer cannot be represented as a completed auth event.",
+        "transportIndependence": "A fresh standalone Go install supplies a typed in-process software-Host observation path using the same semantics; optional external MIDI2 UMP SysEx8 transport and Reframe MIDI2 Monitor are adapters, never initialization, owner-login or production dependencies.",
+        "degradeNeverAuthorizes": true
+      },
+      "privacy": {
+        "forbiddenFields": [
+          "rawPasskeyAssertion",
+          "credentialIdentifier",
+          "webauthnChallenge",
+          "ownerSubject",
+          "sessionCookie",
+          "bearerToken",
+          "signingPrivateKey",
+          "rawHTTPHeaders",
+          "unredactedProviderError",
+          "privateSourceDocument",
+          "networkLocation"
+        ],
+        "subscription": "Telemetry read access is a separately admitted, scoped and revocable reader grant; a readable MIDI2 capability declaration, discovery packet or Host enrollment cannot grant authorization or expose private FountainStore records.",
+        "ownerSignatures": "Release approval and machine enrollment require independently attributable owner authorization; a cryptographic signature produced under an agent-accessible private key without independent owner confirmation is not to be described as separate owner consent."
+      },
+      "acceptance": {
+        "scenarios": [
+          "Unknown or source-digest-mismatched peer is refused without a new grant",
+          "Declared properties are read and independently verified against the signed admitted manifest",
+          "Server challenge issued but no verify POST: record only observed steps and no success",
+          "Invalid WebAuthn verification: bounded refusal and no owner session",
+          "Server-issued session without authenticated protected use: browser receipt not established",
+          "Authenticated protected endpoint succeeds: committed first-use Store event correlates to the session",
+          "Protected endpoint 401 or 403: refused status and no fabricated first-use receipt",
+          "Duplicate or out-of-order MIDI2 lifecycle message is deduplicated or refused",
+          "MIDI2 monitor disconnect or replay leaves Store authentication truth unchanged and marks delivery degraded",
+          "Forbidden credential, cookie or private-key telemetry payload is rejected without egress",
+          "Standalone Go first-owner flow works with no external MIDI2 device, remote peer or Swift runtime",
+          "Agent-held signing key cannot claim independently approved owner release or broaden a machine grant"
+        ],
+        "claimBoundary": "Positive/negative tests validate source and local behavior only; a real signed release, admitted peer, live browser cookie acceptance, successful Host execution, durable Store effect and hardware interoperability each require their separately named independent evidence."
+      }
     }
   },
   "skillAndScenarioSystem": {
@@ -3553,7 +4170,7 @@
       }
     ],
     "architectureDecision": "All five are resolved by explicit source-independent design requirements, not by claiming the old live environments exist.",
-    "verificationStatus": "SOURCE_CI_VALIDATED__NOT_GENERATED",
+    "verificationStatus": "SOURCE_REVISION_PENDING_CI__NOT_GENERATED",
     "productionInstanceInventory": "OPTIONAL_NOT_A_GENERATION_GATE",
     "sourceAcceptance": {
       "reviewedPR": "https://github.com/Fountain-Coach/.github/pull/106",
@@ -3597,14 +4214,14 @@
         "falsified denominator",
         "premature COMPLETE receipt"
       ],
-      "limitations": "No generated Go code, compile/test, live FCIS Host, server or production acceptance witnessed."
+      "limitations": "Historical source-only validation of the preceding protected-main baseline; this branch's new instrument observability contract requires its own source gate/CI. No Go runtime, deployed observer, live owner authentication, MIDI2 subscription or production acceptance is witnessed."
     }
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
     "httpContractVersion": "0.4.0",
     "apiBlobSha": "82b904c09c2aad620b1f2d441a43ec4c4b5321f7",
-    "stackBlobSha": "ffec2078940348cf3199d64d76b47525674d9808",
+    "stackBlobSha": "bf969dceb0240b95977831449b532a4f985cf633",
     "frontendPolicy": "Original pinned Fountain Press UX assets are inputs; adapt only bindings, owner-mode transitions, and legacy Swift-only reference validation; do not redesign it",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },
