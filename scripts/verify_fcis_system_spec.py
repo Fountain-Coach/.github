@@ -261,7 +261,69 @@ def check_atomic_coverage(system: dict, base_ids: set[str]) -> int:
     return count
 
 
+
+def check_owner_audit_contract(system: dict) -> None:
+    """Refuse a misleading 'audited' source contract without event provenance."""
+    audit = system.get("persistence", {}).get("ownerAudit")
+    if not isinstance(audit, dict):
+        reject("native owner audit contract is absent")
+    if audit.get("collection") != "fcis.audit" or "fcis.audit" not in system["persistence"]["logicalCollections"]:
+        reject("owner audit must use existing canonical FountainStore collection")
+    if audit.get("schemaVersion") != "1.0.0" or audit.get("recordType") != "fountaincoach.fcis.owner-auth-audit.v1":
+        reject("owner audit version/type is not source-bound")
+    if audit.get("implementationState") != "SPECIFIED_ONLY_NOT_IMPLEMENTED_OR_DEPLOYED":
+        reject("source contract falsely claims deployed audit implementation")
+    events = audit.get("eventTypes", [])
+    expected = {
+        "owner.passkey.assertion.verified", "owner.passkey.assertion.refused",
+        "owner.session.issued", "owner.session.first_protected_use",
+        "owner.session.logout", "owner.session.expiry_observed",
+        "owner.fleet.inventory_observed",
+    }
+    if len(events) != len(expected) or set(events) != expected:
+        reject("owner audit event vocabulary is missing, widened or duplicated")
+    required = audit.get("requiredRecordFields", {})
+    names = {"id", "type", "issuer", "sourceRevision", "ownerSubjectReference",
+             "correlationId", "outcome", "reasonCode", "occurredAt", "authMechanism", "recordedAt"}
+    if not isinstance(required, dict) or set(required) != names:
+        reject("owner audit event fields lack canonical proof/correlation")
+    for field, description in required.items():
+        if not isinstance(description, str) or len(description) < 12:
+            reject(f"owner audit {field} lacks meaningful field semantics")
+    if set(audit.get("optionalRecordFields", {})) != {"rpId", "sessionReference", "credentialReference"}:
+        reject("owner audit optional proof fields are ambiguous")
+    if set(audit.get("independentReadbackFields", {})) != {"storeSequence", "storedRecordDigest", "storeCollection"}:
+        reject("owner audit lacks independent Store sequence/digest readback")
+    forbidden = " ".join(audit.get("forbiddenRecordedValues", [])).lower()
+    for secret in ("cookie", "challenge", "signature", "oauth", "ip address", "secretstore"):
+        if secret not in forbidden:
+            reject("owner audit lost a private-material exclusion: " + secret)
+    transactions = " ".join(audit.get("transactionRules", [])).lower()
+    for invariant in ("atomically", "readback", "session cookie", "no active session",
+                      "refusal", "logout", "append-only", "restart"):
+        if invariant not in transactions:
+            reject("owner audit is missing a durable/fail-closed transaction guard: " + invariant)
+    sessions = audit.get("sessionRules", {})
+    if (sessions.get("lifetimeSeconds") != 600 or
+            sessions.get("proofLevels") != ["assertion-verified", "session-issued", "first-authenticated-use", "browser-accepted"] or
+            "distinct" not in sessions.get("crossIssuer", "") or
+            "at most one" not in sessions.get("firstUse", "")):
+        reject("owner audit conflates issued session, Swift issuer or browser acceptance")
+    fleet = audit.get("fleetRules", {})
+    if ("Store" not in fleet.get("source", "") or
+            "distinct" not in fleet.get("issuerExecution", "") or
+            "not revoked" not in fleet.get("noInventedStatus", "")):
+        reject("owner fleet projection invents machine admission or revocation")
+    readback = audit.get("readback", {})
+    if ("read-only operator" not in readback.get("initialAccess", "") or
+            "separate reviewed canonical OpenAPI change" not in readback.get("futureHTTP", "")):
+        reject("owner audit cannot create a public read route from source prose")
+    if len(audit.get("acceptance", [])) < 6:
+        reject("owner audit lacks WebAuthn, Store, restart and fleet negative gates")
+
+
 def check(system: dict, api: dict) -> None:
+    check_owner_audit_contract(system)
     if system["sourcePinPolicy"]["httpContractVersion"] != api["info"]["version"]:
         reject("source-pin contract version differs from canonical HTTP API")
     if system["apis"]["fcis"]["version"] != api["info"]["version"]:

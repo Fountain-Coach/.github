@@ -80,6 +80,32 @@ class FCISWholeSystemContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "may not start COMPLETE"):
             verifier.check_atomic_coverage(copy_b, base)
 
+    def test_owner_audit_has_exact_durable_auth_and_fleet_contract(self):
+        verifier, doc, _ = self._atomic_fixture()
+        verifier.check_owner_audit_contract(doc)
+        audit = doc["persistence"]["ownerAudit"]
+        self.assertEqual(audit["collection"], "fcis.audit")
+        self.assertEqual(audit["implementationState"], "SPECIFIED_ONLY_NOT_IMPLEMENTED_OR_DEPLOYED")
+        self.assertIn("owner.session.first_protected_use", audit["eventTypes"])
+        self.assertIn("owner.fleet.inventory_observed", audit["eventTypes"])
+
+    def test_unwitnessed_owner_audit_claims_are_refused(self):
+        verifier, doc, _ = self._atomic_fixture()
+        for mutate in (
+            lambda d: d["persistence"].pop("ownerAudit"),
+            lambda d: d["persistence"]["ownerAudit"]["eventTypes"].remove("owner.session.first_protected_use"),
+            lambda d: d["persistence"]["ownerAudit"]["requiredRecordFields"].pop("sourceRevision"),
+            lambda d: d["persistence"]["ownerAudit"].update(implementationState="LIVE_ACCEPTED"),
+            lambda d: d["persistence"]["ownerAudit"]["transactionRules"].clear(),
+            lambda d: d["persistence"]["ownerAudit"]["sessionRules"].update(proofLevels=["browser-accepted"]),
+            lambda d: d["persistence"]["ownerAudit"]["readback"].update(initialAccess="public unauthenticated GET endpoint"),
+        ):
+            changed = copy.deepcopy(doc)
+            mutate(changed)
+            with self.subTest(changed=changed["persistence"].get("ownerAudit",{}).get("implementationState")):
+                with self.assertRaises(ValueError):
+                    verifier.check_owner_audit_contract(changed)
+
     def test_exact_spec_and_http_contract_consistency(self):
         completed = subprocess.run(
             [sys.executable, str(ROOT / "scripts/verify_fcis_system_spec.py")],
