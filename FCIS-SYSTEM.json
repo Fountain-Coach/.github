@@ -1320,7 +1320,105 @@
       "verified data readback"
     ],
     "secretExclusion": "no raw key, token or private credential in ordinary records, logs, receipts or generation source",
-    "formatOwnership": "source-owned FountainStore engine contract, with Go implementation independent of Swift at runtime"
+    "formatOwnership": "source-owned FountainStore engine contract, with Go implementation independent of Swift at runtime",
+    "ownerAudit": {
+      "schemaVersion": "1.0.0",
+      "sourceOwner": "fcis.go.native.issuer",
+      "authority": "same single-writer native FountainStore as owner credential and OAuth authority, not Access UI, SSH host, static logs or a second session authority",
+      "collection": "fcis.audit",
+      "recordType": "fountaincoach.fcis.owner-auth-audit.v1",
+      "recordMode": "append-only immutable event ID; no overwrites or mutable success badges",
+      "eventTypes": [
+        "owner.passkey.assertion.verified",
+        "owner.passkey.assertion.refused",
+        "owner.session.issued",
+        "owner.session.first_protected_use",
+        "owner.session.logout",
+        "owner.session.expiry_observed",
+        "owner.fleet.inventory_observed"
+      ],
+      "requiredRecordFields": {
+        "id": "random opaque independent event identity; not a credential or challenge",
+        "type": "one exact eventTypes member",
+        "issuer": "verified issuer identity; test-host and canonical production distinguished",
+        "sourceRevision": "release/source revision identifying runtime that performed verification",
+        "ownerSubjectReference": "stable opaque owner subject binding; not username or passkey bytes",
+        "correlationId": "random event/ceremony lineage independent of WebAuthn challenge and session token",
+        "outcome": "verified, refused, issued, observed, signed_out, expiry_observed",
+        "reasonCode": "fixed bounded public-safe code, not raw exception, request body or error",
+        "occurredAt": "UTC event instant (RFC3339); not inference from file mtime",
+        "authMechanism": "webauthn-passkey for owner assertion/session evidence",
+        "recordedAt": "UTC event serialization instant before the WAL commit; durability is established only by the independent Store sequence and exact document readback, never inferred from file mtime or HTTP page load",
+        "servedOrigin": "exact HTTPS/WebAuthn serving origin observed by issuer; distinguish go.fcis.fountain.coach staging from the canonical Swift issuer; not a second issuer or a grant"
+      },
+      "forbiddenRecordedValues": [
+        "credential raw ID/public key/signature/authenticatorData/clientDataJSON",
+        "WebAuthn challenge, ceremony id, userHandle and registration attestation",
+        "session cookie or hash, session token, OAuth bearer/refresh tokens, client secrets, authorization headers",
+        "raw IP address, arbitrary URL query, browser request body, free-form exception or device location",
+        "SecretStore keys or signing seed and any unredacted owner password"
+      ],
+      "transactionRules": [
+        "successful verified WebAuthn credential-counter/backup-state update and assertion result commit atomically with one immutable audit event in the existing native Store WAL; readback precedes an HTTP success",
+        "a session-issued event is bound to the verified assertion and committed before a session cookie is returned; an event proves server issuance, not that the browser received or used the cookie",
+        "no active session or successful HTTP authentication if required audit write, fsync or readback is uncertain; poison authority and refuse until restart/recovery when WAL outcome is ambiguous",
+        "refusal events for consumed one-use challenges are bounded and best-effort; a failed audit write never changes a denied assertion into success, and public unauthenticated events cannot flood the Store",
+        "logout revokes the in-memory session even when audit persistence fails; no durable signed-out claim until its event is committed; session expiry is recorded only when actually observed by the server",
+        "audit events remain append-only across restart, compaction, snapshot/restore and failed release rollback; no duplicate terminal event for a retried identical ceremony"
+      ],
+      "sessionRules": {
+        "lifetimeSeconds": 600,
+        "cookie": "existing fcis_owner_session Secure HttpOnly SameSite=Lax Path=/oauth; never a Store value",
+        "crossIssuer": "test Go and Swift production sessions are distinct; do not infer Go assertion from successful Swift Access Hosts inventory",
+        "proofLevels": [
+          "assertion-verified",
+          "session-issued",
+          "first-authenticated-use",
+          "browser-accepted"
+        ],
+        "browserAccepted": "requires a real browser sign-in and independent matched protected action; Store source test or 200 page is insufficient",
+        "firstUse": "at most one durable first-protected-use event per session, linking the same server-generated sessionReference and endpoint class, never the token"
+      },
+      "fleetRules": {
+        "source": "issuer-owned FountainStore machine-enrollment/admission collection; signed pretrust is a separate input, not enrollment or current Host grant",
+        "states": [
+          "pretrusted-only",
+          "provisioned",
+          "admitted",
+          "authorization-verified",
+          "routable",
+          "not-established"
+        ],
+        "issuerExecution": "explicitly distinct from any separately enrolled machine",
+        "sourceEvidence": "record target ID/issuer/observed-at/store sequence plus the admitting source/operation; a visible selection is not reachability",
+        "noInventedStatus": "absence of Store enrollment is NOT_ESTABLISHED for admission, not revoked, disconnected or not signed"
+      },
+      "readback": {
+        "initialAccess": "owner-authorized local read-only operator Store snapshot, with source revision and exact sequence; no public or unauthenticated audit endpoint invented",
+        "futureHTTP": "separate reviewed canonical OpenAPI change required before exposing owner-authenticated readback over HTTP; no new endpoint admitted here",
+        "privacy": "return bounded typed event summaries/evidence identities, not raw Store contents, cookies or credential material",
+        "diagnosticResult": "distinguish passkey verification, session issuance, subsequent protected use, which issuer served fleet, and whether each requested target was merely pretrusted or admitted"
+      },
+      "acceptance": [
+        "positive Ed25519 and ES256 WebAuthn, wrong origin/RP/UV/signature/counter/replay refusal with no unearned success receipt",
+        "FountainStore atomic credential-and-audit write, independent readback, WAL fsync/crash/restart and exactly-once result for a consumed challenge",
+        "session issuance, first authenticated read, logout, expiry-observed and restart evidence without persisted session token or retroactive false live session",
+        "denied Store write or poisoned authority fails closed; logout still invalidates in-memory session even if audit unavailable",
+        "different Swift and Go issuer identities never merge owner-session evidence; physical iPad Safari proof separately observed",
+        "fleet observation compares issuer Store admission and owner-signed pretrust without rewriting existing grants or manufacturing machine availability"
+      ],
+      "implementationState": "SPECIFIED_ONLY_NOT_IMPLEMENTED_OR_DEPLOYED",
+      "optionalRecordFields": {
+        "rpId": "actual verified relying party id for passkey events",
+        "sessionReference": "optional newly generated random correlation handle; never cookie, cookie digest, bearer or token family",
+        "credentialReference": "optional fixed-length digest of admitted public credential ID; never raw ID, public key or assertion"
+      },
+      "independentReadbackFields": {
+        "storeSequence": "native FountainStore committed WAL sequence reported by independent readback, not a self-declared success field",
+        "storedRecordDigest": "cryptographic digest of the immutable actual readback record; never claimed solely by an HTTP response",
+        "storeCollection": "fcis.audit only, from single-writer Store"
+      }
+    }
   },
   "custody": {
     "backend": "existing Hetzner trusted secret custodian through Go private Host adapter",
