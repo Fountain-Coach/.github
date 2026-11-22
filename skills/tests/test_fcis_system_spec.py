@@ -95,6 +95,7 @@ class FCISWholeSystemContractTests(unittest.TestCase):
             lambda d: d["persistence"].pop("ownerAudit"),
             lambda d: d["persistence"]["ownerAudit"]["eventTypes"].remove("owner.session.first_protected_use"),
             lambda d: d["persistence"]["ownerAudit"]["requiredRecordFields"].pop("sourceRevision"),
+            lambda d: d["persistence"]["ownerAudit"]["requiredRecordFields"].pop("servedOrigin"),
             lambda d: d["persistence"]["ownerAudit"].update(implementationState="LIVE_ACCEPTED"),
             lambda d: d["persistence"]["ownerAudit"]["transactionRules"].clear(),
             lambda d: d["persistence"]["ownerAudit"]["sessionRules"].update(proofLevels=["browser-accepted"]),

@@ -283,7 +283,7 @@ def check_owner_audit_contract(system: dict) -> None:
     if len(events) != len(expected) or set(events) != expected:
         reject("owner audit event vocabulary is missing, widened or duplicated")
     required = audit.get("requiredRecordFields", {})
-    names = {"id", "type", "issuer", "sourceRevision", "ownerSubjectReference",
+    names = {"id", "type", "issuer", "servedOrigin", "sourceRevision", "ownerSubjectReference",
              "correlationId", "outcome", "reasonCode", "occurredAt", "authMechanism", "recordedAt"}
     if not isinstance(required, dict) or set(required) != names:
         reject("owner audit event fields lack canonical proof/correlation")
