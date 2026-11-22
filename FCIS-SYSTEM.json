@@ -1348,7 +1348,7 @@
         "reasonCode": "fixed bounded public-safe code, not raw exception, request body or error",
         "occurredAt": "UTC event instant (RFC3339); not inference from file mtime",
         "authMechanism": "webauthn-passkey for owner assertion/session evidence",
-        "recordedAt": "UTC commit instant; MUST NOT be inferred from file mtime or HTTP page load",
+        "recordedAt": "UTC event serialization instant before the WAL commit; durability is established only by the independent Store sequence and exact document readback, never inferred from file mtime or HTTP page load",
         "servedOrigin": "exact HTTPS/WebAuthn serving origin observed by issuer; distinguish go.fcis.fountain.coach staging from the canonical Swift issuer; not a second issuer or a grant"
       },
       "forbiddenRecordedValues": [
