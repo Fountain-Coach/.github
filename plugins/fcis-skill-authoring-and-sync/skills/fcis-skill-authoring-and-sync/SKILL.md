@@ -5,6 +5,18 @@ description: Automatically elevate verified scenario lessons into canonical FCIS
 
 # FCIS Skill Authoring and Sync
 
+## First operational gate — stop the Invented-Prerequisite Loop
+
+**Apply FIRST when creating, revising, learning, synchronizing or troubleshooting a Skill, before proposals, planning, tests or packaging.** FCIS forbids **goal substitution → speculative prerequisite → implementation → test-based legitimization → new dependency → moving Definition of Done**. An invented mechanism does not become necessary because its tests pass.
+
+1. Preserve the **original goal** and existing accepted DoD. An explicit owner request to create a new Skill is a legitimate outcome; do not require a fictional prior failure. Otherwise, do not transform a working task into a Skill, infrastructure, admission or distribution project.
+2. Inspect the existing skill, owner and working path first. Before adding any prerequisite, answer the four FCIS questions: what the user actually requested; which operation has an **observed failure** (or what explicit change the owner selected); which binding source makes the existing path insufficient; and the **smallest correction** with observable acceptance.
+3. If evidence is missing, classify the proposed prerequisite **PROPOSED / non-blocking**. Preserve authentic security checks, but do not add a speculative blocker, a new permission ceremony, a second Skill, a test harness or a new DoD.
+4. Treat a source test as evidence of implemented behavior, **not proof of necessity** or live acceptance. Stop at the original terminal condition. On drift, enforce **reversal** of unjustified changes without deleting legitimate evidence, rather than elaborating the new mechanism.
+
+This is the first decision of Skill Creator usage for FCIS. Read the existing [Founding Rule](../../../docs/FCIS-Non-Invention-and-Goal-Fidelity.md) and [named loop](../linotype-estate-template/references/invented-prerequisite-loop.md); do not create an additional gate service, second authority or packaged Skill. The generic platform skill-creator is provider-owned and is not changed by this Git source.
+
+
 ## Purpose
 
 Design and validate skill packages using FCIS-owned conventions; OpenAI Skill Creator may be used as a non-authoritative formatting aid. Fountain Coach Governance Chapter 160 establishes that **`Fountain-Coach/.github` alone owns the canonical agent skill definition.** Every repository mirror, ChatGPT installation, or OpenAI project API version is a derived distribution. The source owner has delegated evidence-gated automatic updates to existing canonical FCIS Skills; downstream observations alone never amend canonical source.

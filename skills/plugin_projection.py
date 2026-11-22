@@ -35,8 +35,31 @@ CANONICAL_SKILLS = (
 )
 
 
+ANTI_LOOP_GATED_SKILLS = frozenset({
+    "fcis-skill-authoring-and-sync",
+    "fcis-go-runtime-migration",
+    "fcis-owner-access",
+})
+ANTI_LOOP_FIRST_HEADING = "## First operational gate — stop the Invented-Prerequisite Loop"
+
+
 class ProjectionError(ValueError):
     pass
+
+
+def validate_first_anti_loop_gate(name, files):
+    """Reject a canonical FCIS execution Skill whose first action can bypass Goal Fidelity."""
+    if name not in ANTI_LOOP_GATED_SKILLS:
+        return
+    source = files["SKILL.md"].decode("utf-8")
+    match = re.match(r"\A---\n.*?\n---\n\s*# [^\n]+\n\n", source, re.S)
+    if match is None or not source[match.end():].startswith(ANTI_LOOP_FIRST_HEADING + "\n"):
+        raise ProjectionError(f"{name}: first operational gate missing or displaced")
+    gate = source[match.end():].split("\n## ", 2)[0]
+    for term in ("original goal", "observed failure", "smallest correction",
+                 "non-blocking", "reversal", "Definition of Done"):
+        if term.lower() not in gate.lower():
+            raise ProjectionError(f"{name}: incomplete first operational anti-loop gate: {term}")
 
 
 def _read_json(path):
@@ -127,6 +150,7 @@ def inspect(root=ROOT):
         if "agents/openai.yaml" not in files:
             raise ProjectionError(f"Missing OpenAI metadata for {name}")
         validate_skill_host_metadata(name, files)
+        validate_first_anti_loop_gate(name, files)
         source[name], digests[name] = files, h
 
     website = records[SKILL].get("marketplaceWebsiteURL")

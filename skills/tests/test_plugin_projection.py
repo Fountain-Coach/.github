@@ -18,7 +18,11 @@ class MarketplaceProjectionTests(unittest.TestCase):
         self.canonical = self.root / ".codex/skills" / projection.SKILL
         self.canonical.mkdir(parents=True)
         self.canonical.joinpath("SKILL.md").write_text(
-            "---\nname: fcis-skill-authoring-and-sync\ndescription: FCIS\n---\n\nEvidence first.\n"
+            "---\nname: fcis-skill-authoring-and-sync\ndescription: FCIS\n---\n\n"
+            "# FCIS Skill Authoring\n\n"
+            "## First operational gate — stop the Invented-Prerequisite Loop\n"
+            "Preserve original goal; demand observed failure, smallest correction; "
+            "PROPOSED / non-blocking; use reversal before a moving Definition of Done.\n"
         )
         self.canonical.joinpath("agents").mkdir()
         self.canonical.joinpath("agents/openai.yaml").write_text(
@@ -32,9 +36,13 @@ class MarketplaceProjectionTests(unittest.TestCase):
             folder.mkdir(parents=True, exist_ok=True)
             (folder / "agents").mkdir(exist_ok=True)
             if name != projection.SKILL:
-                (folder / "SKILL.md").write_text(
-                    "---\nname: " + name + "\ndescription: Reviewed\n---\n# " + name + "\n"
-                )
+                sample = ("---\nname: " + name + "\ndescription: Reviewed\n---\n"
+                          "# " + name + "\n")
+                if name in projection.ANTI_LOOP_GATED_SKILLS:
+                    sample += ("\n## First operational gate — stop the Invented-Prerequisite Loop\n"
+                               "Preserve original goal; demand observed failure, smallest correction; "
+                               "PROPOSED / non-blocking; use reversal before a moving Definition of Done.\n")
+                (folder / "SKILL.md").write_text(sample)
                 (folder / "agents/openai.yaml").write_text(
                     "interface:\n  display_name: " + name + "\n"
                 )
@@ -151,6 +159,38 @@ class MarketplaceProjectionTests(unittest.TestCase):
         self.assertEqual(result["changedSkills"], [other])
         self.assertEqual(result["version"], "0.1.1")
         self.assertEqual(projection.sync(self.root)["state"], "MATCHED")
+
+    def test_refuses_displaced_creator_first_gate(self):
+        projection.sync(self.root)
+        path = self.canonical / "SKILL.md"
+        contents = path.read_text()
+        contents = contents.replace(
+            "# FCIS Skill Authoring\n\n## First operational gate",
+            "# FCIS Skill Authoring\n\n## Unrelated work first\n\n## First operational gate",
+            1,
+        )
+        path.write_text(contents)
+        catalog = self.root / "skills/openai-distribution.json"
+        data = json.loads(catalog.read_text())
+        next(item for item in data["skills"] if item["name"] == projection.SKILL)[
+            "contentSHA256"
+        ] = digest(entries(self.canonical))
+        catalog.write_text(json.dumps(data))
+        with self.assertRaisesRegex(projection.ProjectionError, "first operational gate"):
+            projection.sync(self.root)
+
+    def test_refuses_synthetic_gate_with_no_observed_failure(self):
+        projection.sync(self.root)
+        path = self.root / ".codex/skills/fcis-owner-access/SKILL.md"
+        path.write_text(path.read_text().replace("observed failure", "plausible concern"))
+        catalog = self.root / "skills/openai-distribution.json"
+        data = json.loads(catalog.read_text())
+        next(item for item in data["skills"] if item["name"] == "fcis-owner-access")[
+            "contentSHA256"
+        ] = digest(entries(path.parent))
+        catalog.write_text(json.dumps(data))
+        with self.assertRaisesRegex(projection.ProjectionError, "incomplete first operational anti-loop gate"):
+            projection.sync(self.root)
 
     def test_rejects_unreviewed_tenth_skill(self):
         projection.sync(self.root)
