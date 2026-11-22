@@ -206,6 +206,30 @@ def expected_atomic(system: dict) -> dict[str, dict[str, str]]:
           two, lambda x, i: f"Generated deliverable {x}", "generation")
     fields("OWNER-POLICY-", "/ownerAndTenancy", "owner-policy")
     fields("BOOTSTRAP-", "/initialization/setupTicket", "bootstrap")
+    # Bind every declared identity, lifecycle, redaction and negative
+    # scenario to a distinct mandatory generated-source/evidence mapping.
+    # These IDs are derived from the source object, not a second hand-written
+    # inventory of instruments, endpoints or runtime profiles.
+    obs = "/capabilitySystem/instrumentObservability"
+    fields("INSTRUMENT-OBS-", obs, "instrument-observability")
+    array("INSTRUMENT-IDENTITY-", obs + "/identity/declaredFields",
+          lambda x, i: _slug(x), lambda x, i: "Instrument identity: " + x,
+          "instrument-identity")
+    array("INSTRUMENT-EVENT-", obs + "/lifecycle/requiredEventFields",
+          lambda x, i: _slug(x), lambda x, i: "Instrument event: " + x,
+          "instrument-event")
+    array("INSTRUMENT-PHASE-", obs + "/lifecycle/phases",
+          lambda x, i: _slug(x), lambda x, i: "Instrument phase: " + x,
+          "instrument-phase")
+    array("INSTRUMENT-EVIDENCE-", obs + "/lifecycle/evidenceClasses",
+          lambda x, i: _slug(x), lambda x, i: "Instrument evidence class: " + x,
+          "instrument-evidence")
+    array("INSTRUMENT-REDACT-", obs + "/privacy/forbiddenFields",
+          lambda x, i: _slug(x), lambda x, i: "Excluded telemetry: " + x,
+          "instrument-privacy")
+    array("INSTRUMENT-SCENARIO-", obs + "/acceptance/scenarios",
+          two, lambda x, i: "Instrument negative/positive proof: " + x,
+          "instrument-acceptance")
     return expected
 
 

@@ -45,9 +45,55 @@ class FCISWholeSystemContractTests(unittest.TestCase):
 
     def test_exact_atomic_coverage_is_derived_from_source(self):
         verifier, doc, base = self._atomic_fixture()
-        self.assertEqual(len(doc["generation"]["requirementCatalog"]), 222)
-        self.assertEqual(verifier.check_atomic_coverage(doc, base), 222)
+        self.assertEqual(len(doc["generation"]["requirementCatalog"]), 293)
+        self.assertEqual(verifier.check_atomic_coverage(doc, base), 293)
         self.assertEqual(doc["generation"]["requirementGate"]["generatorReceipt"]["initialStatus"], "INCOMPLETE")
+        self.assertEqual(doc["status"], "NORMATIVE_SPECIFICATION_CANDIDATE__NOT_GENERATED")
+
+    def test_instrument_observability_has_separate_evidence_and_safe_transport(self):
+        _, doc, _ = self._atomic_fixture()
+        obs = doc["capabilitySystem"]["instrumentObservability"]
+        self.assertTrue(obs["storeEvidence"]["commitBeforeVerifiedClaim"])
+        self.assertTrue(obs["delivery"]["degradeNeverAuthorizes"])
+        self.assertIn("not-established", obs["lifecycle"]["evidenceClasses"])
+        self.assertIn("store-committed", obs["lifecycle"]["evidenceClasses"])
+        self.assertIn("sessionCookie", obs["privacy"]["forbiddenFields"])
+        self.assertIn("signingPrivateKey", obs["privacy"]["forbiddenFields"])
+        self.assertIn("buildSHA256", obs["identity"]["declaredFields"])
+        self.assertIn("reasonCode", obs["lifecycle"]["requiredEventFields"])
+        self.assertIn("Standalone Go first-owner flow works with no external MIDI2 device, remote peer or Swift runtime",
+                      obs["acceptance"]["scenarios"])
+
+    def test_identity_field_removed_must_fail_generated_coverage(self):
+        verifier, doc, base = self._atomic_fixture()
+        doc["capabilitySystem"]["instrumentObservability"]["identity"]["declaredFields"].remove("buildSHA256")
+        with self.assertRaisesRegex(ValueError, "coverage catalog mismatch"):
+            verifier.check_atomic_coverage(doc, base)
+
+    def test_authentication_lifecycle_stage_removed_must_fail_coverage(self):
+        verifier, doc, base = self._atomic_fixture()
+        doc["capabilitySystem"]["instrumentObservability"]["lifecycle"]["phases"].remove("refused")
+        with self.assertRaisesRegex(ValueError, "coverage catalog mismatch"):
+            verifier.check_atomic_coverage(doc, base)
+
+    def test_secret_redaction_requirement_removed_must_fail_coverage(self):
+        verifier, doc, base = self._atomic_fixture()
+        doc["capabilitySystem"]["instrumentObservability"]["privacy"]["forbiddenFields"].remove("sessionCookie")
+        with self.assertRaisesRegex(ValueError, "coverage catalog mismatch"):
+            verifier.check_atomic_coverage(doc, base)
+
+    def test_observability_scenario_removed_must_fail_coverage(self):
+        verifier, doc, base = self._atomic_fixture()
+        doc["capabilitySystem"]["instrumentObservability"]["acceptance"]["scenarios"].pop()
+        with self.assertRaisesRegex(ValueError, "coverage catalog mismatch"):
+            verifier.check_atomic_coverage(doc, base)
+
+    def test_observability_cannot_authorize_from_transport(self):
+        verifier, doc, _ = self._atomic_fixture()
+        schema = json.loads((ROOT / "FCIS-SYSTEM.schema.json").read_text(encoding="utf-8"))
+        doc["capabilitySystem"]["instrumentObservability"]["delivery"]["degradeNeverAuthorizes"] = False
+        with self.assertRaisesRegex(ValueError, "expected fixed value True"):
+            verifier.schema_validate(doc, schema, schema)
 
     def test_missing_atomic_requirement_fails_closed(self):
         verifier, doc, base = self._atomic_fixture()

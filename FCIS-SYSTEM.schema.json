@@ -495,7 +495,8 @@
         "admissionStateMachine",
         "mcp",
         "hostTransport",
-        "machineAdmission"
+        "machineAdmission",
+        "instrumentObservability"
       ],
       "properties": {
         "admissionStateMachine": {
@@ -520,6 +521,209 @@
             "calls",
             "result"
           ]
+        },
+        "instrumentObservability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "contractVersion",
+            "scope",
+            "identity",
+            "lifecycle",
+            "storeEvidence",
+            "delivery",
+            "privacy",
+            "acceptance"
+          ],
+          "properties": {
+            "contractVersion": {
+              "const": "1.0.0"
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 30
+            },
+            "identity": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "midiCI",
+                "declaredFields",
+                "verifyBeforeUse"
+              ],
+              "properties": {
+                "midiCI": {
+                  "type": "string",
+                  "minLength": 30
+                },
+                "declaredFields": {
+                  "type": "array",
+                  "minItems": 12,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 3
+                  }
+                },
+                "verifyBeforeUse": {
+                  "type": "string",
+                  "minLength": 30
+                }
+              }
+            },
+            "lifecycle": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "topicOwnership",
+                "requiredEventFields",
+                "phases",
+                "evidenceClasses",
+                "absencePolicy"
+              ],
+              "properties": {
+                "topicOwnership": {
+                  "type": "string",
+                  "minLength": 30
+                },
+                "requiredEventFields": {
+                  "type": "array",
+                  "minItems": 10,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 3
+                  }
+                },
+                "phases": {
+                  "type": "array",
+                  "minItems": 7,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 3
+                  }
+                },
+                "evidenceClasses": {
+                  "type": "array",
+                  "minItems": 4,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 3
+                  }
+                },
+                "absencePolicy": {
+                  "type": "string",
+                  "minLength": 30
+                }
+              }
+            },
+            "storeEvidence": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "authority",
+                "commitBeforeVerifiedClaim",
+                "firstUseRequiresReadback"
+              ],
+              "properties": {
+                "authority": {
+                  "type": "string",
+                  "minLength": 30
+                },
+                "commitBeforeVerifiedClaim": {
+                  "const": true
+                },
+                "firstUseRequiresReadback": {
+                  "type": "string",
+                  "minLength": 30
+                }
+              }
+            },
+            "delivery": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "qos",
+                "sourceSequence",
+                "observerHealth",
+                "transportIndependence",
+                "degradeNeverAuthorizes"
+              ],
+              "properties": {
+                "qos": {
+                  "const": "at-least-once"
+                },
+                "sourceSequence": {
+                  "type": "string",
+                  "minLength": 30
+                },
+                "observerHealth": {
+                  "type": "string",
+                  "minLength": 30
+                },
+                "transportIndependence": {
+                  "type": "string",
+                  "minLength": 30
+                },
+                "degradeNeverAuthorizes": {
+                  "const": true
+                }
+              }
+            },
+            "privacy": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "forbiddenFields",
+                "subscription",
+                "ownerSignatures"
+              ],
+              "properties": {
+                "forbiddenFields": {
+                  "type": "array",
+                  "minItems": 8,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 3
+                  }
+                },
+                "subscription": {
+                  "type": "string",
+                  "minLength": 30
+                },
+                "ownerSignatures": {
+                  "type": "string",
+                  "minLength": 30
+                }
+              }
+            },
+            "acceptance": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "scenarios",
+                "claimBoundary"
+              ],
+              "properties": {
+                "scenarios": {
+                  "type": "array",
+                  "minItems": 10,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 3
+                  }
+                },
+                "claimBoundary": {
+                  "type": "string",
+                  "minLength": 30
+                }
+              }
+            }
+          }
         }
       }
     },
