@@ -34,7 +34,7 @@
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-skill-authoring-and-sync",
       "marketplaceWebsiteURL": "https://fcis.fountain.coach/",
-      "contentSHA256": "e5e539924c106bb3f2e6a474c8ed6703b97c4198888b21253d1d015524fb4a52",
+      "contentSHA256": "ab694a625b20f0878d9d744fa661c793d0b6c62d8ed1fb3921a8970dac704352",
       "provenance": {
         "importedFrom": "Fountain-Coach/midi2-gpu-fabric",
         "sourcePath": ".codex/skills/fcis-skill-authoring-and-sync",
@@ -45,7 +45,7 @@
       "name": "fcis-owner-access",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-owner-access",
-      "contentSHA256": "b93310bb9be7ba0bbdeaf55d0d429b6af897c6a6f24b0d7b957655144a256e6b",
+      "contentSHA256": "94a6ebd0a8c4eb17adaf1ccfe29d56c14267b685786591c56915587cdfb1aff9",
       "provenance": {
         "sourceDocument": "Fountain-Coach/fountain-press/docs/access-passkey-first-owner-signin-2026-11-12.md",
         "sourceCommit": "ef9226a2dc25106caffc0ef3e87a7e110a17aef4",
@@ -104,7 +104,7 @@
       "name": "fcis-go-runtime-migration",
       "distribution": "not-content-verified",
       "canonicalPath": ".codex/skills/fcis-go-runtime-migration",
-      "contentSHA256": "21bb1a6d0ae23582ea0019da4a39c5e9fb355051b5a5728ecadaa1e1460315a8",
+      "contentSHA256": "7882756c23d638b4f096ab637761865d3f53f8d734babc25e24eb26021ce651b",
       "provenance": {
         "sourceDocument": "Fountain-Coach/midi2-gpu-fabric/docs/fcis-go-build-instrument-v0.1.0.md",
         "sourceCommit": "a41166fea218741c502b1b17f3bb860c3f5e8e40",

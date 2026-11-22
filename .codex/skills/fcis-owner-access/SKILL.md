@@ -5,6 +5,13 @@ description: Govern Fountain Coach owner passkeys, OAuth/Host access, machine en
 
 # FCIS Owner Access — Passkeys and Recovery
 
+## First operational gate — stop the Invented-Prerequisite Loop
+
+**Before changing owner access, Fleet Manager, pairing, API, a Skill or any ceremony:** retain the user's **original goal** and existing finite DoD; inspect the working issuer, Host, Store, owner credential metadata and prior terminal receipts. Reject **goal substitution → speculative prerequisite → implementation → test-based legitimization → new dependency → moving Definition of Done**.
+
+Before asserting a new blocker, name the **observed failure**, the binding security or wire rule, and the **smallest correction** on the existing path. Untested theories are **PROPOSED / non-blocking**. Preserve genuine WebAuthn, owner-root, OAuth, Host, grant, revocation and replay controls, but do not invent an extra enrollment or signing ceremony, permission service or independent trust root. Source tests do not establish need or live acceptance; stop on original acceptance and use **reversal** for unjustified additions. See the [FCIS Founding Rule](../../../docs/FCIS-Non-Invention-and-Goal-Fidelity.md).
+
+
 ## Canonical Go stack and OpenAPI — owner-adopted 18 November, corrected for Hetzner-first migration 19 November 2026
 
 **Peer canonical source:** `Fountain-Coach/.github/FCIS-STACK.md` defines the Go FCIS architecture and finite production DoD; `Fountain-Coach/.github/FCIS-OPENAPI.json` is its **same-level authority** for precise FCIS-owned HTTP operation IDs, schemas, security/refusal and target status. Read and maintain **both** together when HTTP boundaries change. Do not merely link to a domain-maintained OpenAPI or treat one as a generated authority of the other.

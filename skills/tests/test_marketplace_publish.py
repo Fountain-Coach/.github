@@ -30,8 +30,13 @@ class MarketplacePublishTests(unittest.TestCase):
         git(self.root, "config", "user.email", "fcis-test@example.invalid")
         self.skill = self.root / ".codex/skills/fcis-skill-authoring-and-sync/SKILL.md"
         self.skill.parent.joinpath("agents").mkdir(parents=True)
-        self.skill.write_text("---\nname: fcis-skill-authoring-and-sync\n"
-                              "description: FCIS authoring\n---\n\n# FCIS\n")
+        self.skill.write_text(
+            "---\nname: fcis-skill-authoring-and-sync\n"
+            "description: FCIS authoring\n---\n\n# FCIS\n\n"
+            "## First operational gate — stop the Invented-Prerequisite Loop\n"
+            "Keep original goal; require observed failure, smallest correction; "
+            "PROPOSED / non-blocking, reversal and a finite Definition of Done.\n"
+        )
         self.skill.parent.joinpath("agents/openai.yaml").write_text(
             "interface:\n  display_name: FCIS\n"
         )
@@ -45,9 +50,13 @@ class MarketplacePublishTests(unittest.TestCase):
             folder.mkdir(parents=True, exist_ok=True)
             (folder / "agents").mkdir(exist_ok=True)
             if name != projection.SKILL:
-                (folder / "SKILL.md").write_text(
-                    "---\nname: " + name + "\ndescription: Reviewed\n---\n# " + name + "\n"
-                )
+                sample = ("---\nname: " + name + "\ndescription: Reviewed\n---\n"
+                          "# " + name + "\n")
+                if name in projection.ANTI_LOOP_GATED_SKILLS:
+                    sample += ("\n## First operational gate — stop the Invented-Prerequisite Loop\n"
+                               "Keep original goal; require observed failure, smallest correction; "
+                               "PROPOSED / non-blocking, reversal and a finite Definition of Done.\n")
+                (folder / "SKILL.md").write_text(sample)
                 (folder / "agents/openai.yaml").write_text(
                     "interface:\n  display_name: " + name + "\n"
                 )
