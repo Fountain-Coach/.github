@@ -41,6 +41,14 @@ ANTI_LOOP_GATED_SKILLS = frozenset({
     "fcis-owner-access",
 })
 ANTI_LOOP_FIRST_HEADING = "## First operational gate — stop the Invented-Prerequisite Loop"
+GOVERNING_SKILL_FIRST_LINE = "**Governing-Skill resolution — before external tools"
+# Source-distribution guard, not a claim to control ChatGPT's hosted dispatcher.
+# Keep the same three existing Skills; selection must precede any tool action.
+ROUTING_TRIGGER_TERMS = {
+    "fcis-owner-access": ("iPad", "passkey", "session", "redirect", "Access"),
+    "fcis-go-runtime-migration": ("Go", "runtime", "release", "fcis-owner-access"),
+    "fcis-skill-authoring-and-sync": ("Skill", "routing", "plugin", "preflight"),
+}
 
 
 class ProjectionError(ValueError):
@@ -56,10 +64,26 @@ def validate_first_anti_loop_gate(name, files):
     if match is None or not source[match.end():].startswith(ANTI_LOOP_FIRST_HEADING + "\n"):
         raise ProjectionError(f"{name}: first operational gate missing or displaced")
     gate = source[match.end():].split("\n## ", 2)[0]
+    if not gate.startswith(GOVERNING_SKILL_FIRST_LINE):
+        raise ProjectionError(f"{name}: governing Skill resolution is not the first operation")
+    for term in ("skills__read", "skills__list", "fcis-owner-access",
+                 "fcis-go-runtime-migration", "fcis-skill-authoring-and-sync",
+                 "original user goal", "Definition of Done"):
+        if term.lower() not in gate.lower():
+            raise ProjectionError(f"{name}: incomplete governing Skill resolution: {term}")
     for term in ("original goal", "observed failure", "smallest correction",
                  "non-blocking", "reversal", "Definition of Done"):
         if term.lower() not in gate.lower():
             raise ProjectionError(f"{name}: incomplete first operational anti-loop gate: {term}")
+    # The metadata, not just the body, decides which Skill can be selected.
+    # A route hidden inside the body would never be discovered in ChatGPT.
+    metadata = re.match(r"\A---\nname: [^\n]+\ndescription: ([^\n]+)", source)
+    if metadata is None:
+        raise ProjectionError(f"{name}: missing skill routing description")
+    description = metadata.group(1).lower()
+    for term in ROUTING_TRIGGER_TERMS[name]:
+        if term.lower() not in description:
+            raise ProjectionError(f"{name}: metadata missing routing trigger: {term}")
 
 
 def _read_json(path):
