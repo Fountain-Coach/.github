@@ -12,6 +12,18 @@ import marketplace_publish as publishing
 import plugin_projection as projection
 from skillctl import digest, entries
 
+TRIGGER_DESCRIPTIONS = {
+    "fcis-skill-authoring-and-sync": "Skill routing preflight and plugin maintenance",
+    "fcis-owner-access": "iPad passkey session redirect Access",
+    "fcis-go-runtime-migration": "Go runtime release, consult fcis-owner-access",
+}
+RESOLUTION_PRELUDE = (
+    "**Governing-Skill resolution — before external tools:** "
+    "Use skills__list and skills__read; choose fcis-owner-access for owner UX, "
+    "fcis-go-runtime-migration for Go release, fcis-skill-authoring-and-sync "
+    "for Skill routing; preserve the original user goal and Definition of Done.\n\n"
+)
+
 
 def git(root, *args):
     return subprocess.check_output(
@@ -32,9 +44,11 @@ class MarketplacePublishTests(unittest.TestCase):
         self.skill.parent.joinpath("agents").mkdir(parents=True)
         self.skill.write_text(
             "---\nname: fcis-skill-authoring-and-sync\n"
-            "description: FCIS authoring\n---\n\n# FCIS\n\n"
-            "## First operational gate — stop the Invented-Prerequisite Loop\n"
-            "Keep original goal; require observed failure, smallest correction; "
+            "description: " + TRIGGER_DESCRIPTIONS[projection.SKILL]
+            + "\n---\n\n# FCIS\n\n"
+            "## First operational gate — stop the Invented-Prerequisite Loop\n\n"
+            + RESOLUTION_PRELUDE
+            + "Keep original goal; require observed failure, smallest correction; "
             "PROPOSED / non-blocking, reversal and a finite Definition of Done.\n"
         )
         self.skill.parent.joinpath("agents/openai.yaml").write_text(
@@ -50,11 +64,13 @@ class MarketplacePublishTests(unittest.TestCase):
             folder.mkdir(parents=True, exist_ok=True)
             (folder / "agents").mkdir(exist_ok=True)
             if name != projection.SKILL:
-                sample = ("---\nname: " + name + "\ndescription: Reviewed\n---\n"
-                          "# " + name + "\n")
+                description = TRIGGER_DESCRIPTIONS.get(name, "Reviewed")
+                sample = ("---\nname: " + name + "\ndescription: " + description
+                          + "\n---\n# " + name + "\n")
                 if name in projection.ANTI_LOOP_GATED_SKILLS:
-                    sample += ("\n## First operational gate — stop the Invented-Prerequisite Loop\n"
-                               "Keep original goal; require observed failure, smallest correction; "
+                    sample += ("\n## First operational gate — stop the Invented-Prerequisite Loop\n\n"
+                               + RESOLUTION_PRELUDE
+                               + "Keep original goal; require observed failure, smallest correction; "
                                "PROPOSED / non-blocking, reversal and a finite Definition of Done.\n")
                 (folder / "SKILL.md").write_text(sample)
                 (folder / "agents/openai.yaml").write_text(

@@ -9,6 +9,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import plugin_projection as projection
 from skillctl import digest, entries
 
+# Independent source fixtures: the provider chooses from descriptions first.
+# These must remain explicit and not be derived from the projection validator.
+TRIGGER_DESCRIPTIONS = {
+    "fcis-skill-authoring-and-sync": "Skill routing preflight and plugin maintenance",
+    "fcis-owner-access": "iPad passkey session redirect Access",
+    "fcis-go-runtime-migration": "Go runtime release, consult fcis-owner-access",
+}
+RESOLUTION_PRELUDE = (
+    "**Governing-Skill resolution — before external tools:** "
+    "Use skills__list and skills__read; choose fcis-owner-access for owner UX, "
+    "fcis-go-runtime-migration for Go release, fcis-skill-authoring-and-sync "
+    "for Skill routing; preserve the original user goal and Definition of Done.\n\n"
+)
+
 
 class MarketplaceProjectionTests(unittest.TestCase):
     def setUp(self):
@@ -18,10 +32,12 @@ class MarketplaceProjectionTests(unittest.TestCase):
         self.canonical = self.root / ".codex/skills" / projection.SKILL
         self.canonical.mkdir(parents=True)
         self.canonical.joinpath("SKILL.md").write_text(
-            "---\nname: fcis-skill-authoring-and-sync\ndescription: FCIS\n---\n\n"
+            "---\nname: fcis-skill-authoring-and-sync\ndescription: "
+            + TRIGGER_DESCRIPTIONS[projection.SKILL] + "\n---\n\n"
             "# FCIS Skill Authoring\n\n"
-            "## First operational gate — stop the Invented-Prerequisite Loop\n"
-            "Preserve original goal; demand observed failure, smallest correction; "
+            "## First operational gate — stop the Invented-Prerequisite Loop\n\n"
+            + RESOLUTION_PRELUDE
+            + "Preserve original goal; demand observed failure, smallest correction; "
             "PROPOSED / non-blocking; use reversal before a moving Definition of Done.\n"
         )
         self.canonical.joinpath("agents").mkdir()
@@ -36,11 +52,13 @@ class MarketplaceProjectionTests(unittest.TestCase):
             folder.mkdir(parents=True, exist_ok=True)
             (folder / "agents").mkdir(exist_ok=True)
             if name != projection.SKILL:
-                sample = ("---\nname: " + name + "\ndescription: Reviewed\n---\n"
-                          "# " + name + "\n")
+                description = TRIGGER_DESCRIPTIONS.get(name, "Reviewed")
+                sample = ("---\nname: " + name + "\ndescription: " + description
+                          + "\n---\n# " + name + "\n")
                 if name in projection.ANTI_LOOP_GATED_SKILLS:
-                    sample += ("\n## First operational gate — stop the Invented-Prerequisite Loop\n"
-                               "Preserve original goal; demand observed failure, smallest correction; "
+                    sample += ("\n## First operational gate — stop the Invented-Prerequisite Loop\n\n"
+                               + RESOLUTION_PRELUDE
+                               + "Preserve original goal; demand observed failure, smallest correction; "
                                "PROPOSED / non-blocking; use reversal before a moving Definition of Done.\n")
                 (folder / "SKILL.md").write_text(sample)
                 (folder / "agents/openai.yaml").write_text(
@@ -159,6 +177,60 @@ class MarketplaceProjectionTests(unittest.TestCase):
         self.assertEqual(result["changedSkills"], [other])
         self.assertEqual(result["version"], "0.1.1")
         self.assertEqual(projection.sync(self.root)["state"], "MATCHED")
+
+    def _re_pin(self, name):
+        catalog = self.root / "skills/openai-distribution.json"
+        data = json.loads(catalog.read_text())
+        next(item for item in data["skills"] if item["name"] == name)[
+            "contentSHA256"
+        ] = digest(entries(self.root / ".codex/skills" / name))
+        catalog.write_text(json.dumps(data))
+
+    def test_refuses_missing_governing_skill_preflight(self):
+        projection.sync(self.root)
+        for name in projection.ANTI_LOOP_GATED_SKILLS:
+            with self.subTest(skill=name):
+                path = self.root / ".codex/skills" / name / "SKILL.md"
+                original = path.read_text()
+                path.write_text(original.replace(RESOLUTION_PRELUDE, "", 1))
+                self._re_pin(name)
+                with self.assertRaisesRegex(projection.ProjectionError, "governing Skill resolution"):
+                    projection.check(self.root)
+                path.write_text(original)
+                self._re_pin(name)
+        self.assertEqual(projection.check(self.root)["state"], "MATCHED")
+
+    def test_refuses_skill_resolution_displaced_below_other_action(self):
+        projection.sync(self.root)
+        path = self.canonical / "SKILL.md"
+        original = path.read_text()
+        path.write_text(original.replace(
+            RESOLUTION_PRELUDE,
+            "Run Git first.\n\n" + RESOLUTION_PRELUDE, 1))
+        self._re_pin(projection.SKILL)
+        with self.assertRaisesRegex(projection.ProjectionError, "governing Skill resolution"):
+            projection.check(self.root)
+
+    def test_refuses_missing_owner_ux_routing_in_metadata(self):
+        projection.sync(self.root)
+        name = "fcis-owner-access"
+        path = self.root / ".codex/skills" / name / "SKILL.md"
+        original = path.read_text()
+        path.write_text(original.replace("iPad passkey session redirect Access", "generic automation"))
+        self._re_pin(name)
+        with self.assertRaisesRegex(projection.ProjectionError, "metadata missing routing trigger"):
+            projection.check(self.root)
+
+    def test_refuses_missing_skill_read_or_list_instruction(self):
+        projection.sync(self.root)
+        name = "fcis-owner-access"
+        path = self.root / ".codex/skills" / name / "SKILL.md"
+        original = path.read_text()
+        path.write_text(original.replace(
+            "Use skills__list and skills__read", "Use generic tooling", 1))
+        self._re_pin(name)
+        with self.assertRaisesRegex(projection.ProjectionError, "incomplete governing Skill resolution"):
+            projection.check(self.root)
 
     def test_refuses_displaced_creator_first_gate(self):
         projection.sync(self.root)
