@@ -64,7 +64,10 @@ def validate_first_anti_loop_gate(name, files):
     if match is None or not source[match.end():].startswith(ANTI_LOOP_FIRST_HEADING + "\n"):
         raise ProjectionError(f"{name}: first operational gate missing or displaced")
     gate = source[match.end():].split("\n## ", 2)[0]
-    if not gate.startswith(GOVERNING_SKILL_FIRST_LINE):
+    # The selected first heading is already part of gate. Inspect the first
+    # instruction *after* it, not the heading itself.
+    body = gate.split(ANTI_LOOP_FIRST_HEADING + "\n\n", 1)
+    if len(body) != 2 or not body[1].startswith(GOVERNING_SKILL_FIRST_LINE):
         raise ProjectionError(f"{name}: governing Skill resolution is not the first operation")
     for term in ("skills__read", "skills__list", "fcis-owner-access",
                  "fcis-go-runtime-migration", "fcis-skill-authoring-and-sync",

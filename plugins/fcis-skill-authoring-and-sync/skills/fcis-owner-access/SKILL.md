@@ -1,11 +1,15 @@
 ---
 name: fcis-owner-access
-description: Govern Fountain Coach owner passkeys, OAuth/Host access, machine enrollment, and reasoning-expressive FCIS OpenAPI 3.1 and MCP capability discovery. Use for access.fountain.coach fleet management, fcis.fountain.coach APIs, human- and LLM-readable operation IDs/descriptions, callable instrument inventories, per-client authorization, conformance, or API maintenance and release, dated contract criticism, and owner-controlled portable POSIX Git-hook CI. Reuse the existing owner-access Skill, current MIDI2/FCIS-KIT identities, Host registry, FountainAuthKit, FountainStore and contract tests. Never treat API documentation as a grant or build a second authority.
+description: Govern Fountain Coach owner access: iPad/Safari first-owner passkey enrollment, returning sign-in, session cookies, redirects, recovery, OAuth, Fleet and Host permissions, Fountain Press Access frontend and FCIS Go issuer bindings. Use for owner login 401, Go Access UI/UX, session return, consent, machine enrollment, OpenAPI 3.1 and MCP capability management. For owner UX invoke this Skill before general Go runtime or deployment.
 ---
 
 # FCIS Owner Access — Passkeys and Recovery
 
 ## First operational gate — stop the Invented-Prerequisite Loop
+
+**Governing-Skill resolution — before external tools, implementation, source edits, tests or release:** first resolve the actual task from installed Skill names/descriptions, and read the **full selected entrypoint** with `skills__read`. If the catalog is truncated, call `skills__list` before choosing; do not assume absence or choose an available general Skill instead. Route iPad first-owner passkeys, sign-in, session cookies, redirects, OAuth consent and Fleet owner UX to `fcis-owner-access`; Go source build/runtime/release to `fcis-go-runtime-migration`; and Skill changes, routing or synchronization to `fcis-skill-authoring-and-sync`. On overlap load the specific owner Skill first and supporting Skills afterward. Neither `governance-read` nor `secure-publishing` substitutes for the task owner. If unresolved or unreadable, stop FCIS mutation and state the missing routing decision; do not improvise a fallback. Record selected Skill, original user goal and Definition of Done. This is not a new owner permission ceremony or proof of ChatGPT's internal runtime routing.
+
+**For this Skill's work:** iPad first-owner registration, login, sessions, redirects, owner OAuth and Fleet Access select `fcis-owner-access` **before** runtime or deployment support. The word *Go* does not make browser authentication primarily a runtime migration task. Separate credential existence, authenticated session, FountainStore receipt and real iPad acceptance.
 
 **Before changing owner access, Fleet Manager, pairing, API, a Skill or any ceremony:** retain the user's **original goal** and existing finite DoD; inspect the working issuer, Host, Store, owner credential metadata and prior terminal receipts. Reject **goal substitution → speculative prerequisite → implementation → test-based legitimization → new dependency → moving Definition of Done**.
 

@@ -1,11 +1,15 @@
 ---
 name: fcis-go-runtime-migration
-description: Implement, maintain, independently build/test and cut over the standalone Fountain Coach FCIS Go service using an owner-authorized isolated Ubuntu development lane, portable POSIX Git-hook CI and Go-native FountainStore, against canonical FCIS-STACK.md and FCIS-OPENAPI.json in Fountain-Coach/.github. Use for Go FCIS OAuth/WebAuthn/MCP/Host parity, headless Hetzner-initiated old-to-new FountainStore/SecretStore authority continuity, owner/passkey/grant/revocation preservation, native Go persistence, release and acceptance. No Mac-dependent migration, new owner bootstrap or silent grant reauthorization; preserve MIDI2/FCIS-KIT authority and finite DoD.
+description: Implement, independently build, test, release and verify native Fountain Coach FCIS Go and FountainStore against FCIS-STACK.md, FCIS-SYSTEM.json and FCIS-OPENAPI.json. Use for Go handler parity, persistence, OAuth/MCP/Host runtime, signed release and optionally expressly selected legacy adoption. For iPad first-owner UX, passkeys, session cookies and Access redirects select fcis-owner-access first.
 ---
 
 # FCIS Go Runtime Migration
 
 ## First operational gate — stop the Invented-Prerequisite Loop
+
+**Governing-Skill resolution — before external tools, implementation, source edits, tests or release:** first resolve the actual task from installed Skill names/descriptions, and read the **full selected entrypoint** with `skills__read`. If the catalog is truncated, call `skills__list` before choosing; do not assume absence or choose an available general Skill instead. Route iPad first-owner passkeys, sign-in, session cookies, redirects, OAuth consent and Fleet owner UX to `fcis-owner-access`; Go source build/runtime/release to `fcis-go-runtime-migration`; and Skill changes, routing or synchronization to `fcis-skill-authoring-and-sync`. On overlap load the specific owner Skill first and supporting Skills afterward. Neither `governance-read` nor `secure-publishing` substitutes for the task owner. If unresolved or unreadable, stop FCIS mutation and state the missing routing decision; do not improvise a fallback. Record selected Skill, original user goal and Definition of Done. This is not a new owner permission ceremony or proof of ChatGPT's internal runtime routing.
+
+**For this Skill's work:** Go compilation, runtime and release are governed by `fcis-go-runtime-migration`; first-owner iPad UX, passkey login, session return and Access redirects are governed **first** by `fcis-owner-access`. Clean-from-zero Go is the default when owner-selected; historical old-to-new continuity is optional and not a precondition that overrides an explicit fresh-start decision.
 
 **Before any continue, code, new PR, test harness or security prerequisite:** preserve the owner's **original goal** and current finite DoD; inspect the live existing issuer/Host/Store authority and last accepted receipts first. FCIS prohibits **goal substitution → speculative prerequisite → implementation → test-based legitimization → new dependency → moving Definition of Done**.
 

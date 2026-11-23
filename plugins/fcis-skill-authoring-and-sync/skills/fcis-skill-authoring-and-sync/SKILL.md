@@ -1,11 +1,15 @@
 ---
 name: fcis-skill-authoring-and-sync
-description: Automatically elevate verified scenario lessons into canonical FCIS Skills and govern GitHub marketplace publication, existing ChatGPT workspace plugin adoption and Git-backed synchronization, canonical FCIS maintenance planning, and owner-controlled portable Git-hook CI validation. Use for task closure learning, marketplace import and migration of historical standalone Skills to Git ownership, preservation of plugin identities, source drift and version verification.
+description: Resolve the governing FCIS Skill before any FCIS operation; author, update, validate and synchronize canonical FCIS Skills, selection/routing triggers, source drift and the existing GitHub marketplace. Use when a Skill was not invoked, repairing routing or preflight selection, maintaining Skill metadata and CI, distributing the existing plugin, or elevating verified scenario lessons.
 ---
 
 # FCIS Skill Authoring and Sync
 
 ## First operational gate — stop the Invented-Prerequisite Loop
+
+**Governing-Skill resolution — before external tools, implementation, source edits, tests or release:** first resolve the actual task from installed Skill names/descriptions, and read the **full selected entrypoint** with `skills__read`. If the catalog is truncated, call `skills__list` before choosing; do not assume absence or choose an available general Skill instead. Route iPad first-owner passkeys, sign-in, session cookies, redirects, OAuth consent and Fleet owner UX to `fcis-owner-access`; Go source build/runtime/release to `fcis-go-runtime-migration`; and Skill changes, routing or synchronization to `fcis-skill-authoring-and-sync`. On overlap load the specific owner Skill first and supporting Skills afterward. Neither `governance-read` nor `secure-publishing` substitutes for the task owner. If unresolved or unreadable, stop FCIS mutation and state the missing routing decision; do not improvise a fallback. Record selected Skill, original user goal and Definition of Done. This is not a new owner permission ceremony or proof of ChatGPT's internal runtime routing.
+
+**For this Skill's work:** read `fcis-skill-authoring-and-sync` before editing Skill packages, triggers, CI or marketplace distribution. For owner-passkey or Access UX tasks select `fcis-owner-access` even if Go code will change. For Go implementation/release select `fcis-go-runtime-migration`. Explicit owner scope controls the DoD.
 
 **Apply FIRST when creating, revising, learning, synchronizing or troubleshooting a Skill, before proposals, planning, tests or packaging.** FCIS forbids **goal substitution → speculative prerequisite → implementation → test-based legitimization → new dependency → moving Definition of Done**. An invented mechanism does not become necessary because its tests pass.
 
