@@ -439,7 +439,7 @@
         "SameSite=Lax",
         "Secure on HTTPS; localhost secure-context exception only"
       ],
-      "cookiePath": "/oauth",
+      "cookiePath": "/",
       "sessionMaxSeconds": 600,
       "frontendFetchCredentials": "include",
       "allowedCredentialedCORSOrigin": "none in bundled same-origin mode; optional pinned external Access origin",
@@ -454,7 +454,9 @@
       "a revoke success requires independently fresh issuer inventory and terminal Store evidence",
       "static frontend must not persist access tokens, grants or credentials",
       "Golden Key uses existing authorized owner; separate owner-root signature is verified when required",
-      "Fresh installation owner setup uses existing UI presentation and the one-use bootstrap without prior Golden Key; Gold Key is an optional physical owner authorizer after claim"
+      "Fresh installation owner setup uses existing UI presentation and the one-use bootstrap without prior Golden Key; Golden Key is an optional physical owner authorizer after claim",
+      "An owner credential in FountainStore is not a browser session: only a currently verified Go owner session permits the protected Clients, Hosts, Skills and Reference workspace",
+      "First-owner registration finishes with native Go session establishment and a deterministic return to the same Fountain Press workspace on the selected issuer origin; returning sign-in, expiry and logout have bounded explicit states"
     ],
     "apiBindings": {
       "clients": [
@@ -490,7 +492,7 @@
       "urlBinding": "replace only hardcoded issuer/access origins with generated same-origin config in a structured build transform; no new layout, tabs, CSS, workflow or second permission store",
       "sourceCompatibility": "historic Swift-only OpenAPI reference validator must validate current standalone Go title, version, source owner, security and implementation-state without claiming Go is deployed",
       "cors": "same origin default: no CORS; optional external Access origin explicitly listed with credentials, deny unknown origins",
-      "login": "owner WebAuthn registration when UNCLAIMED, existing passkey login once CLAIMED, preserve original navigation",
+      "login": "owner WebAuthn registration when UNCLAIMED; after verified first claim, establish or immediately complete a native Go owner session and enter the original Press workspace; when CLAIMED without a verified session render the original Press passkey sign-in, never an unprotected workspace; preserve original navigation",
       "failure": "401/403 clears protected DOM inventory, 503 does not create phantom permission or success"
     },
     "sourceBindingReconciliation": {
@@ -542,6 +544,11 @@
           "id": "UI-BIND-08",
           "kind": "inventory",
           "effect": "Host/Skills inventory is derived from admitted registry and signed versioned catalog; Git URL fetch optional and not required to render local catalog"
+        },
+        {
+          "id": "UI-BIND-09",
+          "kind": "ownerSession",
+          "effect": "After verified first-owner claim, establish or immediately complete the Go owner session and navigate into the existing Press workspace; without a verified same-origin Go owner cookie /manage/ must show sign-in, never protected inventory; cookie Path=/ covers both /manage and /oauth; no Swift URL binding or second frontend"
         }
       ],
       "visualParity": "For existing pages and their selectors/nav/tab semantics, DOM/CSS markup must remain source-derived; only contract-compatible data binding, issuer origin and first-owner mode added",
@@ -2957,14 +2964,21 @@
       "end-to-end existing frontend and owner passkey",
       "OAuth/MCP and Host signed receipts"
     ],
+    "selectedProductionProfile": "fresh-install",
     "production": [
-      "fresh-install may be deployed independently on any supported Linux host; optional current Hetzner migration is a distinct deployment profile",
-      "existing origin serves Go OAuth and MCP without Swift runtime",
-      "existing owner/public-key, grants, revocations, Host identities retained",
-      "SecretStore custody remains authorized",
-      "verified immutable backup/restore and non-resurrecting rollback",
-      "independent Hetzner and public HTTPS witnesses"
+      "GO-DOD-01: Immutable source-bound standalone Go release serves the selected stable public issuer, OAuth and MCP, bundled pinned Fountain Press /manage/, with a private self-initialized Go FountainStore/SecretStore and no Swift or imported authority dependency; inspect the deployed binary digest, discovery and HTTPS.",
+      "GO-DOD-02: One physical iPad Safari first-owner WebAuthn registration with one-time private invitation atomically persists the owner and used ticket; verified Go session and deterministic Press workspace return follow, and returning login, session expiry, logout, unauthenticated denial, accessibility and same-origin cookie behavior are independently witnessed without Mac or pasted setup token.",
+      "GO-DOD-03: One newly registered public OAuth client completes exact authorization-code plus PKCE S256, consent and scoped resource issuance; refresh rotation, expiry, revocation and replay refusal persist across restart; no Swift client/grant/refresh family is imported.",
+      "GO-DOD-04: One authorized new OAuth client discovers only admitted granted MCP operations, invokes one typed operation and receives an independently readable native FountainStore terminal receipt; missing-scope, revoked, unknown and wrong-target operations are refused.",
+      "GO-DOD-05: One real external machine obtains a new Go-issued machine identity, explicit owner admission and bounded target-scoped authorization, completes one signed operation with independent Store/Host evidence; unknown or replayed identities are refused; software Host proof alone is not this external-Host witness.",
+      "GO-DOD-06: Single-writer private native Store/Vault supports safe restart/crash recovery, bounded grants and replay fencing, encrypted independently restorable backup and revocation-safe release rollback; negative WebAuthn RP/origin/challenge/UV, CSRF, session, OAuth, Host and secret exposure tests pass.",
+      "GO-DOD-07: Public HTTPS Go issuer and MCP complete the same-instance owner/client/Host/receipt journey after restart; Swift OAuth/MCP are disabled and absent from active routing, and selected Go issuer/RP identity remains stable without a silent hostname or authority substitution."
     ],
+    "optionalAdoptExistingProduction": [
+      "Only if explicitly selected, preserve and independently read back the original owner/public key, client grants, refresh revocations, Host identities and SecretStore custody under the source-bounded migration profile.",
+      "Verify existing-issuer continuity, independently tested backup/restore and non-resurrecting rollback before an adopted-instance cutover; none of these predecessor requirements applies to the selected fresh-install profile."
+    ],
+    "completionRule": "Only GO-DOD-01 through GO-DOD-07 on one deployed native Go instance with source/runtime/Store/physical-client witnesses collectively establish production DONE. Source existence, passing tests, Git merge, HTTPS 200, a passkey record or a UI badge never independently establishes acceptance.",
     "proofPolicy": "source existence, successful build/test, Git merge and production terminal state are independent claims"
   },
   "knownSpecificationLimitations": [],
@@ -3111,7 +3125,7 @@
     },
     "setupTicket": {
       "algorithm": "256-bit CSPRNG random opaque token, displayed once only to local operator",
-      "transport": "operator console or restricted AF_UNIX socket; never Git or remote HTTP logs",
+      "transport": "one-time local operator action delivered by restricted console/AF_UNIX or a private iPad HTTPS invitation URL fragment; strip fragment from browser history before requests, retain only server-side SHA-256 digest and never require owner Mac copy/paste or expose credentials in Git, HTTP logs or static HTML",
       "storage": "SHA-256 digest + issuedAt + expiresAt, not plaintext",
       "expiresAfterSeconds": 600,
       "attempts": 5,
