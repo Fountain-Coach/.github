@@ -17,6 +17,24 @@ This repository is the **canonical Git owner of Fountain Coach's organization-wi
 | **External providers** | [Official OpenAPI policy](docs/FCIS-Official-OpenAPI-Dependency.md) | Source-pinned provider adapters, tests and example provenance |
 | **Canonical Skills** | [`.codex/skills/`](.codex/skills/) | Reusable agent procedures, distributed through the existing Git-backed plugin |
 
+### Business priority P0 — Fountain Coach independence (24 November 2026)
+
+**Business independence precedes marketplace growth.** Fountain Coach owns the
+authoritative identity, customer knowledge, capability policy, durable execution
+evidence and recovery path. ChatGPT/OpenAI, GitHub hosting, model subscriptions,
+marketplace plugin management and other external delivery channels are optional
+integrations, not mandatory runtime/owner-administration dependencies. Continue
+using the existing GitHub source authority and optional adapters; no new
+repository, issuer, Skill, plugin or payment requirement is implied.
+
+The **next acceptance** is one independently operable owner journey through the
+already specified Fountain Coach standalone Go/Access/Store/Host boundaries:
+owner sign-in, effective capability/grant inspection, one permitted deterministic
+operation and persistent receipt, one denied/revoked call, and a verified state
+recovery while ChatGPT is absent. Source tests and current deployed partial
+capabilities do not by themselves prove the complete journey.
+[Active owner decision](PLANS.md) · [Provider boundary](docs/FCIS-Model-Provider-Boundary.md).
+
 ### Current architecture priorities
 
 **First:** Prerequisite-free standalone Go FCIS as defined in [FCIS-SYSTEM.json](FCIS-SYSTEM.json): zero prior FCIS state, private native Store/vault, single-use first-owner WebAuthn claim, OAuth/MCP, bundled Access UX, software Host and optional admitted machine/MIDI2 instruments. **Separately**, the existing `fcis.fountain.coach` installation may be adopted with identity, grants and custody preserved; this is not a first-install prerequisite.
