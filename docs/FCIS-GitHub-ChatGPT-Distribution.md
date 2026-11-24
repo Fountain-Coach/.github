@@ -41,6 +41,52 @@ installation, effective provider selection, and reversible hosted rollback.
 A supported previous-version restoration must be witnessed through the actual
 workspace marketplace before declaring full ownership acceptance.
 
+## FCIS-GO hosted installation and recoverability (24 November 2026)
+
+The original GitHub marketplace `fountain-coach/.github`, branch `main`, now
+reports a completed manual sync of revision `159dc244`: one existing plugin
+updated and zero failed. The authenticated Workspace Admin Console readback
+shows plugin `Plugin_fb9e0937c59c8191b9fa077fa5ea53ef`, product name
+`FCIS-GO`, installed version `0.1.39`, publisher Fountain Coach, approved
+short description and workspace-default installation enabled. The same-origin
+marketplace-provided logo rendered as a 128 x 128 PNG and matches the
+source-pinned 460 x 460 original Fountain Coach mark after resampling
+(white-composited mean difference about 0.2 of 255 per channel).
+All nine installed Skill entrypoints exactly match the Git-derived
+`SKILL.md` files. Their **canonical source mode is maintenance**;
+the existing nine-entry consumer-facing bundle remains visible.
+
+The unrelated private `Fountain Host FCIS` plugin
+`plugin_asdk_app_6aef6a108bd081919baf80e8b7843d03` was deleted
+using Admin Console Plugin Actions > Delete. A refreshed workspace-scoped
+Admin Plugins listing showed only FCIS-GO. This does not remove the
+separate Host service, repository, or evidence.
+
+### Supported recovery boundary
+
+The existing marketplace settings display `Branch, Tag oder Commit: main`
+as **read-only**. Available controls include manual sync, automatic daily
+sync and marketplace deletion. No previous-version selector or restore
+button is exposed. The provider's published import/sync guidance says
+**invalid updates retain the last working plugin**, which is not evidence
+that an earlier valid version can be chosen on demand:
+https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github
+
+For a controlled recovery of a previously accepted valid release, the
+candidate supported path is a **reviewed protected Git restoration** of
+the exact prior plugin source and derived package; the existing
+marketplace's `Jetzt synchronisieren`; then independent readback of
+the unchanged plugin ID, installed version, contents and Git source
+revision. To restore the preferred current release, repeat through
+a reviewed Git source revision and another independently verified sync.
+Preserve previous Git identity and passing source/package evidence.
+**Do not delete or re-import a marketplace, create a replacement plugin,
+force-update main or treat Git revert as hosted acceptance.**
+
+At this point no live restore has been exercised: valid-version rollback
+remains `NOT_ESTABLISHED`. Prepare a safe reversible exercise that
+retains the owner maintenance restriction before downgrading any live Skills.
+
 ## One reviewed plugin, five canonical Skills (7 November 2026)
 
 The portable Agent Plugins format supports multiple Skill directories under one
