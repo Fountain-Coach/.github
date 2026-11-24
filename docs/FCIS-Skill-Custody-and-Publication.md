@@ -9,3 +9,7 @@
 - The existing source checks and managed Git hooks refuse unapproved Skill package paths before publication. CI is a secondary check after upload, not a confidentiality barrier. The path guard cannot detect arbitrary sensitive prose in otherwise allowed files; keep private bytes entirely outside public authoring workflows. No automated promotion or expansion of the published marketplace inventory.
 
 No live billing or commercial distribution is authorized by this custody decision. Preserve the P0 owner-independence journey and the existing public FCIS-GO release while implementing the private Skill slice.
+
+## Independent distribution API — OpenAPI 0.5.0 target
+
+The existing FCIS Go Admin API, not GitHub Marketplace, is the primary target for managing private Skills and their licensed distribution. See the canonical [OpenAPI](../FCIS-OPENAPI.json) and [stack §4.5](../FCIS-STACK.md#45-store-owned-skills-and-independent-distribution). Separate authoring/review/signed admission from an explicit signed offer and customer entitlement. The catalogue exposes approved offer metadata only. Exact-revision delivery requires current authorized customer/client scope and entitlement; marketplace or model access alone is insufficient. Paid acquisitions depend on a verified terminal Payment Instrument receipt, never a redirect. GitHub and model-provider adapters remain optional channels. All new HTTP operations are specified only; existing CLI private custody is accepted separately. No live charges or customer provisioning are implied.

@@ -204,6 +204,7 @@ def expected_atomic(system: dict) -> dict[str, dict[str, str]]:
           two, lambda x, i: f"Optional migration operation {x}", "adoption")
     array("OUTPUT-", "/generation/requiredArtifacts",
           two, lambda x, i: f"Generated deliverable {x}", "generation")
+    fields("SKILL-DISTRIBUTION-", "/skillAndScenarioSystem/distribution", "skill-distribution")
     fields("OWNER-POLICY-", "/ownerAndTenancy", "owner-policy")
     fields("BOOTSTRAP-", "/initialization/setupTicket", "bootstrap")
     return expected

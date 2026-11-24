@@ -5,7 +5,7 @@
   "status": "SPEC_VALIDATED__NOT_GENERATED",
   "generatedAtUTC": "2026-11-19",
   "owner": "Fountain Coach",
-  "architectureVersion": "1.2",
+  "architectureVersion": "1.3",
   "scope": {
     "goal": "Specify, generate and independently install the entire native-Go FCIS Instruction System with no preexisting Fountain Coach runtime, including secure first-owner bootstrap, native FountainStore and SecretStore, OAuth/WebAuthn, MCP, typed Host/MIDI2 instrument registry, FCIS Skills/scenario learning, existing Fountain Press Access UX and independent release lifecycle. Optionally adopt an existing installation with separate continuity verification.",
     "included": [
@@ -19,34 +19,36 @@
       "Provider-neutral model adapters and customer-supplied provider accounts",
       "One-instance customer/owner model with tenant-ready namespaces and portable Store export",
       "Reproducible immutable generation, offline CI, release, backup/restore and rollback",
-      "Optional source-bound legacy migration including the existing Hetzner instance"
+      "Optional source-bound legacy migration including the existing Hetzner instance",
+      "Owner-private Skill authoring and signed revision management through the existing Go Admin API, with independent commercial catalogue, acquisition, entitlements and licensed source delivery specified for priority two."
     ],
     "excludedFromFirstRelease": [
       "commercial Stripe billing adapter (versioned optional integration only)",
       "external hardware conformance claim",
       "production deployment or migration automatically implied by a source commit",
-      "any universal external provider grant"
+      "any universal external provider grant",
+      "Commercial distribution, customer admission beyond the initial owner, and payment-enabled acquisition are priority two; no additional first-release or P0 prerequisite."
     ],
     "developmentHost": "headless Ubuntu Mac mini isolated unprivileged workspace, no production credentials",
     "productionHost": "Deployment adapter selected by operator; Hetzner + Caddy is one optional profile, not an environment dependency",
-    "canonicalGit": "GitHub protected main in Fountain-Coach organization",
+    "canonicalGit": "Git owns organization law, engineering plans, contracts and source; the native tenant FountainStore owns private Skills and revisions. Public Git/provider Skill projections are explicit exceptions.",
     "defaultInstallation": "Any supported Linux host (amd64 or arm64); process may serve loopback without DNS, SSH or reverse proxy",
     "currentFountainCoachMigration": "Optional adopt-existing production instance at fcis.fountain.coach; preserve prior identities/grants only in that profile"
   },
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "0c48c54694769a0463ed8bdddbe4dbcdde14933b",
+      "ref": "c5a00f185d4b03e5f065cfad1daffaa1dbf019ca",
       "path": "FCIS-STACK.md",
-      "blobSha": "5ac7a8a227d2d3ddd1b7b436527e470ed024d1cf",
-      "url": "https://github.com/Fountain-Coach/.github/blob/0c48c54694769a0463ed8bdddbe4dbcdde14933b/FCIS-STACK.md"
+      "blobSha": "24f959f9bf5df4477ec932f41365dfcb4a7d4eef",
+      "url": "https://github.com/Fountain-Coach/.github/blob/c5a00f185d4b03e5f065cfad1daffaa1dbf019ca/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "a53efd6348919ebe80fcd92141613a064f0cb93c",
+      "ref": "c5a00f185d4b03e5f065cfad1daffaa1dbf019ca",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "82b904c09c2aad620b1f2d441a43ec4c4b5321f7",
-      "url": "https://github.com/Fountain-Coach/.github/blob/a53efd6348919ebe80fcd92141613a064f0cb93c/FCIS-OPENAPI.json"
+      "blobSha": "94a07024ed51d92eed41f47b860c3e22f7d853e3",
+      "url": "https://github.com/Fountain-Coach/.github/blob/c5a00f185d4b03e5f065cfad1daffaa1dbf019ca/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -174,7 +176,7 @@
     "fcisHTTP": "org FCIS-OPENAPI.json owns exact FCIS paths, schemas, request and auth semantics",
     "storeHTTP": "Fountain-Store docs/openapi-fountainstore.yaml owns optional Store HTTP projection",
     "secretCustody": "swift-secretstore docs/openapi-secretstore-host.json owns Host custody HTTP projection, but no Swift runtime dependency",
-    "ui": "fountain-press runtime assets own rendered management UX and browser event handling",
+    "ui": "Existing pinned Fountain Press assets own baseline rendering and event handling; FCIS Console target follows the owner-selected founding-experience study and canonical HTTP bindings.",
     "migration": "org docs/FCIS-Migration-Security-Profile.md supersedes any earlier clean-owner bootstrap or grant-reset procedure",
     "instruments": "FCIS-KIT standard and source-owned MIDI2 IDL define typed instrument identity, admission and effects"
   },
@@ -446,8 +448,8 @@
       "foreignOriginDecision": "deny"
     },
     "behavioralInvariants": [
-      "No UI redesign or second login authority",
-      "Clients, Hosts, Skills, Reference remain a single Fountain Press workspace",
+      "Preserve existing Press baseline until accepted Console replacement; no second login authority.",
+      "Existing Clients, Hosts, Skills, Reference baseline remains usable; target Console follows accepted study and exact API availability.",
       "401 or 403 invalidates stale browser inventory",
       "logout clears session",
       "explicit scope/resource/intent confirmation before revoke",
@@ -467,7 +469,13 @@
         "/oauth/owner/hosts/channel/status"
       ],
       "skills": [
-        "/oauth/owner/host/describe"
+        "/oauth/owner/skills",
+        "/oauth/owner/skills/{skillName}",
+        "/oauth/owner/skills/{skillName}/drafts",
+        "/oauth/owner/skills/{skillName}/drafts/{draftId}",
+        "/oauth/owner/skills/{skillName}/drafts/{draftId}/review",
+        "/oauth/owner/skills/{skillName}/releases",
+        "/oauth/owner/skills/{skillName}/releases/{releaseId}"
       ],
       "reference": [
         "/oauth/owner/reference/openapi"
@@ -546,13 +554,41 @@
       ],
       "visualParity": "For existing pages and their selectors/nav/tab semantics, DOM/CSS markup must remain source-derived; only contract-compatible data binding, issuer origin and first-owner mode added",
       "noLegacyServerDependence": true
+    },
+    "consoleTarget": {
+      "status": "specified-only-not-deployed",
+      "study": "docs/FCIS-Founding-Experience-and-Console-Study.md",
+      "build": "Vite, React, TypeScript, React Router, TanStack Query; canonical OpenAPI-generated typed bindings; static bundle embedded in the same Go executable.",
+      "ownerBindings": [
+        "/oauth/owner/skills",
+        "/oauth/owner/skills/{skillName}",
+        "/oauth/owner/skills/{skillName}/drafts",
+        "/oauth/owner/skills/{skillName}/drafts/{draftId}",
+        "/oauth/owner/skills/{skillName}/drafts/{draftId}/review",
+        "/oauth/owner/skills/{skillName}/releases",
+        "/oauth/owner/skills/{skillName}/releases/{releaseId}",
+        "/oauth/owner/skill-offers",
+        "/oauth/owner/skill-offers/{offerId}/withdraw",
+        "/oauth/owner/skill-entitlements",
+        "/oauth/owner/skill-entitlements/{entitlementId}/revoke"
+      ],
+      "commercialBindings": [
+        "/catalog/skills",
+        "/.well-known/oauth-protected-resource/oauth/skills",
+        "/oauth/skills/offers/{offerId}/acquisitions",
+        "/oauth/skills/acquisitions/{acquisitionId}",
+        "/oauth/skills/entitlements",
+        "/oauth/skills/releases/{releaseId}",
+        "/oauth/skills/offers/{offerId}"
+      ],
+      "acceptance": "Use verified owner session, exact object routes, private drafts/source only in protected responses, no automatic publication or phantom payment. Owner management first; commercial phase two. Existing Press baseline remains until accepted replacement."
     }
   },
   "apis": {
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -885,6 +921,245 @@
           ],
           "status": "specified",
           "sourcePointer": "/paths/~1oauth~1owner~1hosts~1channel~1status/get"
+        },
+        {
+          "id": "listOwnerSkills",
+          "method": "GET",
+          "path": "/oauth/owner/skills",
+          "summary": "List owner-controlled Skills",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1skills/get"
+        },
+        {
+          "id": "readOwnerSkill",
+          "method": "GET",
+          "path": "/oauth/owner/skills/{skillName}",
+          "summary": "Inspect one Skill and revision history",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1skills~1{skillName}/get"
+        },
+        {
+          "id": "createOwnerSkillDraft",
+          "method": "POST",
+          "path": "/oauth/owner/skills/{skillName}/drafts",
+          "summary": "Create an immutable private Skill draft",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1skills~1{skillName}~1drafts/post"
+        },
+        {
+          "id": "readOwnerSkillDraft",
+          "method": "GET",
+          "path": "/oauth/owner/skills/{skillName}/drafts/{draftId}",
+          "summary": "Read an exact private draft",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1skills~1{skillName}~1drafts~1{draftId}/get"
+        },
+        {
+          "id": "reviewOwnerSkillDraft",
+          "method": "POST",
+          "path": "/oauth/owner/skills/{skillName}/drafts/{draftId}/review",
+          "summary": "Record explicit Skill review",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1skills~1{skillName}~1drafts~1{draftId}~1review/post"
+        },
+        {
+          "id": "admitOwnerSkillRelease",
+          "method": "POST",
+          "path": "/oauth/owner/skills/{skillName}/releases",
+          "summary": "Admit reviewed private Skill revision",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1skills~1{skillName}~1releases/post"
+        },
+        {
+          "id": "readOwnerSkillRelease",
+          "method": "GET",
+          "path": "/oauth/owner/skills/{skillName}/releases/{releaseId}",
+          "summary": "Read exact signed Skill release",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1skills~1{skillName}~1releases~1{releaseId}/get"
+        },
+        {
+          "id": "listOwnerSkillOffers",
+          "method": "GET",
+          "path": "/oauth/owner/skill-offers",
+          "summary": "List seller's Skill offers",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1skill-offers/get"
+        },
+        {
+          "id": "releaseOwnerSkillOffer",
+          "method": "POST",
+          "path": "/oauth/owner/skill-offers",
+          "summary": "Release an explicitly signed Skill offer",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1skill-offers/post"
+        },
+        {
+          "id": "withdrawOwnerSkillOffer",
+          "method": "POST",
+          "path": "/oauth/owner/skill-offers/{offerId}/withdraw",
+          "summary": "Withdraw a released Skill offer",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1skill-offers~1{offerId}~1withdraw/post"
+        },
+        {
+          "id": "listOwnerSkillEntitlements",
+          "method": "GET",
+          "path": "/oauth/owner/skill-entitlements",
+          "summary": "Inspect seller's issued entitlements",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1skill-entitlements/get"
+        },
+        {
+          "id": "revokeOwnerSkillEntitlement",
+          "method": "POST",
+          "path": "/oauth/owner/skill-entitlements/{entitlementId}/revoke",
+          "summary": "Revoke one Skill delivery entitlement",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1skill-entitlements~1{entitlementId}~1revoke/post"
+        },
+        {
+          "id": "listPublishedSkillOffers",
+          "method": "GET",
+          "path": "/catalog/skills",
+          "summary": "Discover explicitly listed Skill offers",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1catalog~1skills/get"
+        },
+        {
+          "id": "readSkillProtectedResourceMetadata",
+          "method": "GET",
+          "path": "/.well-known/oauth-protected-resource/oauth/skills",
+          "summary": "Discover FCIS licensed Skill resource authorization",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1.well-known~1oauth-protected-resource~1oauth~1skills/get"
+        },
+        {
+          "id": "acquireLicensedSkill",
+          "method": "POST",
+          "path": "/oauth/skills/offers/{offerId}/acquisitions",
+          "summary": "Acquire one explicitly selected Skill offer",
+          "security": [
+            {
+              "oauthBearer": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1skills~1offers~1{offerId}~1acquisitions/post"
+        },
+        {
+          "id": "readSkillAcquisition",
+          "method": "GET",
+          "path": "/oauth/skills/acquisitions/{acquisitionId}",
+          "summary": "Read own acquisition and settlement status",
+          "security": [
+            {
+              "oauthBearer": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1skills~1acquisitions~1{acquisitionId}/get"
+        },
+        {
+          "id": "listCustomerSkillEntitlements",
+          "method": "GET",
+          "path": "/oauth/skills/entitlements",
+          "summary": "List customer's Skill entitlements",
+          "security": [
+            {
+              "oauthBearer": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1skills~1entitlements/get"
+        },
+        {
+          "id": "readLicensedSkillRelease",
+          "method": "GET",
+          "path": "/oauth/skills/releases/{releaseId}",
+          "summary": "Retrieve an entitled exact Skill revision",
+          "security": [
+            {
+              "oauthBearer": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1skills~1releases~1{releaseId}/get"
+        },
+        {
+          "id": "readCustomerSkillOffer",
+          "method": "GET",
+          "path": "/oauth/skills/offers/{offerId}",
+          "summary": "Read approved terms for one selected Skill offer",
+          "security": [
+            {
+              "oauthBearer": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1skills~1offers~1{offerId}/get"
         }
       ],
       "schemas": [
@@ -925,7 +1200,33 @@
         "HostSessionFrame",
         "HealthStatus",
         "FirstOwnerPasskeyAttestation",
-        "FirstOwnerBootstrapPolicy"
+        "FirstOwnerBootstrapPolicy",
+        "SkillMutationReceipt",
+        "SkillListEntry",
+        "SkillDraftMetadata",
+        "SkillReleaseMetadata",
+        "SkillDraftCreate",
+        "SkillDraftRecord",
+        "SkillDraftReview",
+        "SkillReleaseAdmission",
+        "SkillSignedRelease",
+        "SkillDetail",
+        "SkillInventoryPage",
+        "SkillPrice",
+        "SkillOfferManifest",
+        "SkillOfferRelease",
+        "SkillOffer",
+        "SkillOfferPage",
+        "SkillOfferWithdraw",
+        "SkillEntitlement",
+        "SkillEntitlementPage",
+        "SkillEntitlementRevoke",
+        "SkillAcquisitionRequest",
+        "SkillAcquisition",
+        "SkillLicensedSource",
+        "SkillAdminError",
+        "SkillPrivateReleaseManifest",
+        "SkillProtectedResourceMetadata"
       ],
       "securitySchemes": [
         "ownerPasskeySession",
@@ -1308,7 +1609,14 @@
       "fcis.instruments",
       "fcis.executions",
       "fcis.receipts",
-      "fcis.audit"
+      "fcis.audit",
+      "fcis.skill-revisions",
+      "fcis.skill-inventory",
+      "fcis.skill-drafts",
+      "fcis.skill-reviews",
+      "fcis.skill-offers",
+      "fcis.skill-acquisitions",
+      "fcis.skill-entitlements"
     ],
     "correctness": [
       "single writer with fencing",
@@ -1320,7 +1628,16 @@
       "verified data readback"
     ],
     "secretExclusion": "no raw key, token or private credential in ordinary records, logs, receipts or generation source",
-    "formatOwnership": "source-owned FountainStore engine contract, with Go implementation independent of Swift at runtime"
+    "formatOwnership": "source-owned FountainStore engine contract, with Go implementation independent of Swift at runtime",
+    "skillCollections": {
+      "fcis.skill-revisions": "Existing immutable signed release bytes and signature keyed by SHA-256 of exact manifest. Preserve v1 and v2.",
+      "fcis.skill-inventory": "Existing per-Skill active pointer, revision CAS; commit atomically with admitted release.",
+      "fcis.skill-drafts": "Private immutable exact UTF-8 bytes/hash plus predecessor and per-Skill draft head via inventory; no inferred release.",
+      "fcis.skill-reviews": "Append-only review/evidence decisions and current draft projection, no fabricated scenario success.",
+      "fcis.skill-offers": "Priority two: exact signed offer manifest/terms, price and immutable identity plus withdrawal state.",
+      "fcis.skill-acquisitions": "Priority two: actor-bound idempotent acquisition and verified payment receipt reference, status projection.",
+      "fcis.skill-entitlements": "Priority two: exact customer tenant/principal, offer/revision, terms and current state; preserve history on lawful revocation."
+    }
   },
   "custody": {
     "backend": "existing Hetzner trusted secret custodian through Go private Host adapter",
@@ -1381,7 +1698,7 @@
       "generate from prerequisite-free FCIS-SYSTEM.json + pinned canonical OpenAPI and source-owned protocol contracts",
       "implement new native Go Store format and vault format exactly as specified",
       "implement initial setup, local WebAuthn, OAuth/MCP and software Host without network dependencies",
-      "embed and bind pinned existing Access frontend without redesign",
+      "embed and bind pinned existing Access frontend as baseline; implement accepted React Console target in a bounded separate slice against current canonical API, preserving owner login and source acceptance",
       "implement typed Host/MIDI2 admission, grants, Skills/scenarios and tenant-owned data",
       "ship CLI init/serve/status/backup/restore/adopt/upgrade/doctor",
       "implement optional migration and Hetzner/Caddy adapters without making them dependencies"
@@ -1404,9 +1721,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 222,
+      "expectedRequirementCount": 259,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 222,
+      "minimumAtomicRequirementCount": 259,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -1421,6 +1738,7 @@
         "frontend-bind",
         "adoption",
         "generation",
+        "skill-distribution",
         "owner-policy",
         "bootstrap"
       ],
@@ -1459,9 +1777,9 @@
       }
     },
     "inputContractDigests": {
-      "fcisOpenAPI": "0.4.0",
-      "fcisOpenAPIBlob": "82b904c09c2aad620b1f2d441a43ec4c4b5321f7",
-      "architectureBlob": "ffec2078940348cf3199d64d76b47525674d9808",
+      "fcisOpenAPI": "0.5.0",
+      "fcisOpenAPIBlob": "94a07024ed51d92eed41f47b860c3e22f7d853e3",
+      "architectureBlob": "24f959f9bf5df4477ec932f41365dfcb4a7d4eef",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
     "requirementCatalog": [
@@ -2063,879 +2381,1138 @@
         "source": "initialization"
       },
       {
+        "id": "HTTP-listOwnerSkills",
+        "name": "/oauth/owner/skills GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1skills/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOwnerSkill",
+        "name": "/oauth/owner/skills/{skillName} GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1skills~1{skillName}/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-createOwnerSkillDraft",
+        "name": "/oauth/owner/skills/{skillName}/drafts POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1skills~1{skillName}~1drafts/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOwnerSkillDraft",
+        "name": "/oauth/owner/skills/{skillName}/drafts/{draftId} GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1skills~1{skillName}~1drafts~1{draftId}/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-reviewOwnerSkillDraft",
+        "name": "/oauth/owner/skills/{skillName}/drafts/{draftId}/review POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1skills~1{skillName}~1drafts~1{draftId}~1review/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-admitOwnerSkillRelease",
+        "name": "/oauth/owner/skills/{skillName}/releases POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1skills~1{skillName}~1releases/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOwnerSkillRelease",
+        "name": "/oauth/owner/skills/{skillName}/releases/{releaseId} GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1skills~1{skillName}~1releases~1{releaseId}/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-listOwnerSkillOffers",
+        "name": "/oauth/owner/skill-offers GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1skill-offers/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-releaseOwnerSkillOffer",
+        "name": "/oauth/owner/skill-offers POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1skill-offers/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-withdrawOwnerSkillOffer",
+        "name": "/oauth/owner/skill-offers/{offerId}/withdraw POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1skill-offers~1{offerId}~1withdraw/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-listOwnerSkillEntitlements",
+        "name": "/oauth/owner/skill-entitlements GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1skill-entitlements/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-revokeOwnerSkillEntitlement",
+        "name": "/oauth/owner/skill-entitlements/{entitlementId}/revoke POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1skill-entitlements~1{entitlementId}~1revoke/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-listPublishedSkillOffers",
+        "name": "/catalog/skills GET",
+        "mandatory": true,
+        "pointer": "/paths/~1catalog~1skills/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readSkillProtectedResourceMetadata",
+        "name": "/.well-known/oauth-protected-resource/oauth/skills GET",
+        "mandatory": true,
+        "pointer": "/paths/~1.well-known~1oauth-protected-resource~1oauth~1skills/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-acquireLicensedSkill",
+        "name": "/oauth/skills/offers/{offerId}/acquisitions POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1skills~1offers~1{offerId}~1acquisitions/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readSkillAcquisition",
+        "name": "/oauth/skills/acquisitions/{acquisitionId} GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1skills~1acquisitions~1{acquisitionId}/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-listCustomerSkillEntitlements",
+        "name": "/oauth/skills/entitlements GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1skills~1entitlements/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readLicensedSkillRelease",
+        "name": "/oauth/skills/releases/{releaseId} GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1skills~1releases~1{releaseId}/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readCustomerSkillOffer",
+        "name": "/oauth/skills/offers/{offerId} GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1skills~1offers~1{offerId}/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
         "id": "INIT-TRANSITION-01",
-        "name": "ABSENT / fcis init -> UNCLAIMED",
         "mandatory": true,
         "sourcePointer": "/initialization/stateMachine/0",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "ABSENT / fcis init -> UNCLAIMED"
       },
       {
         "id": "INIT-TRANSITION-02",
-        "name": "UNCLAIMED / begin owner WebAuthn enrollment -> CLAIM_CHALLENGE",
         "mandatory": true,
         "sourcePointer": "/initialization/stateMachine/1",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "UNCLAIMED / begin owner WebAuthn enrollment -> CLAIM_CHALLENGE"
       },
       {
         "id": "INIT-TRANSITION-03",
-        "name": "CLAIM_CHALLENGE / verify first WebAuthn registration -> CLAIMED",
         "mandatory": true,
         "sourcePointer": "/initialization/stateMachine/2",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "CLAIM_CHALLENGE / verify first WebAuthn registration -> CLAIMED"
       },
       {
         "id": "INIT-TRANSITION-04",
-        "name": "CLAIM_CHALLENGE / expiry/refusal -> UNCLAIMED",
         "mandatory": true,
         "sourcePointer": "/initialization/stateMachine/3",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "CLAIM_CHALLENGE / expiry/refusal -> UNCLAIMED"
       },
       {
         "id": "INIT-TRANSITION-05",
-        "name": "CLAIMED / new owner credential -> CLAIMED",
         "mandatory": true,
         "sourcePointer": "/initialization/stateMachine/4",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "CLAIMED / new owner credential -> CLAIMED"
       },
       {
         "id": "INIT-TRANSITION-06",
-        "name": "CLAIMED / re-init or untrusted recovery -> REFUSED",
         "mandatory": true,
         "sourcePointer": "/initialization/stateMachine/5",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "CLAIMED / re-init or untrusted recovery -> REFUSED"
       },
       {
         "id": "INIT-TRANSITION-07",
-        "name": "ANY / persistent Store corruption or vault mismatch -> LOCKED",
         "mandatory": true,
         "sourcePointer": "/initialization/stateMachine/6",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "ANY / persistent Store corruption or vault mismatch -> LOCKED"
       },
       {
         "id": "ADMISSION-TRANSITION-01",
-        "name": "ABSENT / install signed manifest -> DECLARED",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/admissionStateMachine/0",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "ABSENT / install signed manifest -> DECLARED"
       },
       {
         "id": "ADMISSION-TRANSITION-02",
-        "name": "DECLARED / prove Host challenge and pin machine key -> ENROLLED",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/admissionStateMachine/1",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "DECLARED / prove Host challenge and pin machine key -> ENROLLED"
       },
       {
         "id": "ADMISSION-TRANSITION-03",
-        "name": "ENROLLED / run compatible capability/transport negotiation -> ADMITTED",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/admissionStateMachine/2",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "ENROLLED / run compatible capability/transport negotiation -> ADMITTED"
       },
       {
         "id": "ADMISSION-TRANSITION-04",
-        "name": "ADMITTED / owner grant -> AUTHORIZED",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/admissionStateMachine/3",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "ADMITTED / owner grant -> AUTHORIZED"
       },
       {
         "id": "ADMISSION-TRANSITION-05",
-        "name": "AUTHORIZED / client tools/list -> DISCOVERABLE",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/admissionStateMachine/4",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "AUTHORIZED / client tools/list -> DISCOVERABLE"
       },
       {
         "id": "ADMISSION-TRANSITION-06",
-        "name": "DISCOVERABLE / client tools/call -> EXECUTING",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/admissionStateMachine/5",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "DISCOVERABLE / client tools/call -> EXECUTING"
       },
       {
         "id": "ADMISSION-TRANSITION-07",
-        "name": "EXECUTING / verified signed terminal receipt -> SUCCEEDED_OR_FAILED",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/admissionStateMachine/6",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "EXECUTING / verified signed terminal receipt -> SUCCEEDED_OR_FAILED"
       },
       {
         "id": "ADMISSION-TRANSITION-08",
-        "name": "ANY / expiry/revocation/Host mismatch -> REFUSED",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/admissionStateMachine/7",
-        "proofClass": "state-machine"
+        "proofClass": "state-machine",
+        "name": "ANY / expiry/revocation/Host mismatch -> REFUSED"
       },
       {
         "id": "VAULT-OP-CREATE",
-        "name": "SecretStore operation create",
         "mandatory": true,
         "sourcePointer": "/secretStoreFormat/operations/0",
-        "proofClass": "custody-operation"
+        "proofClass": "custody-operation",
+        "name": "SecretStore operation create"
       },
       {
         "id": "VAULT-OP-SIGN",
-        "name": "SecretStore operation sign",
         "mandatory": true,
         "sourcePointer": "/secretStoreFormat/operations/1",
-        "proofClass": "custody-operation"
+        "proofClass": "custody-operation",
+        "name": "SecretStore operation sign"
       },
       {
         "id": "VAULT-OP-RESOLVE",
-        "name": "SecretStore operation resolve",
         "mandatory": true,
         "sourcePointer": "/secretStoreFormat/operations/2",
-        "proofClass": "custody-operation"
+        "proofClass": "custody-operation",
+        "name": "SecretStore operation resolve"
       },
       {
         "id": "VAULT-OP-ROTATE",
-        "name": "SecretStore operation rotate",
         "mandatory": true,
         "sourcePointer": "/secretStoreFormat/operations/3",
-        "proofClass": "custody-operation"
+        "proofClass": "custody-operation",
+        "name": "SecretStore operation rotate"
       },
       {
         "id": "VAULT-OP-DELETE",
-        "name": "SecretStore operation delete",
         "mandatory": true,
         "sourcePointer": "/secretStoreFormat/operations/4",
-        "proofClass": "custody-operation"
+        "proofClass": "custody-operation",
+        "name": "SecretStore operation delete"
       },
       {
         "id": "VAULT-OP-STATUS",
-        "name": "SecretStore operation status",
         "mandatory": true,
         "sourcePointer": "/secretStoreFormat/operations/5",
-        "proofClass": "custody-operation"
+        "proofClass": "custody-operation",
+        "name": "SecretStore operation status"
       },
       {
         "id": "VAULT-OP-BACKUP",
-        "name": "SecretStore operation backup",
         "mandatory": true,
         "sourcePointer": "/secretStoreFormat/operations/6",
-        "proofClass": "custody-operation"
+        "proofClass": "custody-operation",
+        "name": "SecretStore operation backup"
       },
       {
         "id": "SKILL-STATE-DRAFT",
-        "name": "Skill lifecycle: DRAFT",
         "mandatory": true,
         "sourcePointer": "/skillAndScenarioSystem/lifecycle/0",
-        "proofClass": "skill-lifecycle"
+        "proofClass": "skill-lifecycle",
+        "name": "Skill lifecycle: DRAFT"
       },
       {
         "id": "SKILL-STATE-SCENARIO-VERIFIED",
-        "name": "Skill lifecycle: SCENARIO_VERIFIED",
         "mandatory": true,
         "sourcePointer": "/skillAndScenarioSystem/lifecycle/1",
-        "proofClass": "skill-lifecycle"
+        "proofClass": "skill-lifecycle",
+        "name": "Skill lifecycle: SCENARIO_VERIFIED"
       },
       {
         "id": "SKILL-STATE-REVIEWED",
-        "name": "Skill lifecycle: REVIEWED",
         "mandatory": true,
         "sourcePointer": "/skillAndScenarioSystem/lifecycle/2",
-        "proofClass": "skill-lifecycle"
+        "proofClass": "skill-lifecycle",
+        "name": "Skill lifecycle: REVIEWED"
       },
       {
         "id": "SKILL-STATE-ADMITTED",
-        "name": "Skill lifecycle: ADMITTED",
         "mandatory": true,
         "sourcePointer": "/skillAndScenarioSystem/lifecycle/3",
-        "proofClass": "skill-lifecycle"
+        "proofClass": "skill-lifecycle",
+        "name": "Skill lifecycle: ADMITTED"
       },
       {
         "id": "SKILL-STATE-RELEASED",
-        "name": "Skill lifecycle: RELEASED",
         "mandatory": true,
         "sourcePointer": "/skillAndScenarioSystem/lifecycle/4",
-        "proofClass": "skill-lifecycle"
+        "proofClass": "skill-lifecycle",
+        "name": "Skill lifecycle: RELEASED"
       },
       {
         "id": "SKILL-STATE-RETIRED",
-        "name": "Skill lifecycle: RETIRED",
         "mandatory": true,
         "sourcePointer": "/skillAndScenarioSystem/lifecycle/5",
-        "proofClass": "skill-lifecycle"
+        "proofClass": "skill-lifecycle",
+        "name": "Skill lifecycle: RETIRED"
       },
       {
         "id": "PRINCIPAL-INSTALLATIONOWNER",
-        "name": "Authorization principal: installationOwner",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/principalTypes/0",
-        "proofClass": "principal-type"
+        "proofClass": "principal-type",
+        "name": "Authorization principal: installationOwner"
       },
       {
         "id": "PRINCIPAL-TENANTOWNER",
-        "name": "Authorization principal: tenantOwner",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/principalTypes/1",
-        "proofClass": "principal-type"
+        "proofClass": "principal-type",
+        "name": "Authorization principal: tenantOwner"
       },
       {
         "id": "PRINCIPAL-TENANTMEMBER",
-        "name": "Authorization principal: tenantMember",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/principalTypes/2",
-        "proofClass": "principal-type"
+        "proofClass": "principal-type",
+        "name": "Authorization principal: tenantMember"
       },
       {
         "id": "PRINCIPAL-OAUTHCLIENT",
-        "name": "Authorization principal: oauthClient",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/principalTypes/3",
-        "proofClass": "principal-type"
+        "proofClass": "principal-type",
+        "name": "Authorization principal: oauthClient"
       },
       {
         "id": "PRINCIPAL-REGISTEREDHOST",
-        "name": "Authorization principal: registeredHost",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/principalTypes/4",
-        "proofClass": "principal-type"
+        "proofClass": "principal-type",
+        "name": "Authorization principal: registeredHost"
       },
       {
         "id": "PRINCIPAL-PROVIDERADAPTER",
-        "name": "Authorization principal: providerAdapter",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/principalTypes/5",
-        "proofClass": "principal-type"
+        "proofClass": "principal-type",
+        "name": "Authorization principal: providerAdapter"
       },
       {
         "id": "COLLECTION-FCIS-OWNERS",
-        "name": "FountainStore collection fcis.owners",
         "mandatory": true,
         "sourcePointer": "/persistence/logicalCollections/0",
-        "proofClass": "store-schema"
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.owners"
       },
       {
         "id": "COLLECTION-FCIS-PASSKEYS",
-        "name": "FountainStore collection fcis.passkeys",
         "mandatory": true,
         "sourcePointer": "/persistence/logicalCollections/1",
-        "proofClass": "store-schema"
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.passkeys"
       },
       {
         "id": "COLLECTION-FCIS-OAUTH-CLIENTS",
-        "name": "FountainStore collection fcis.oauth.clients",
         "mandatory": true,
         "sourcePointer": "/persistence/logicalCollections/2",
-        "proofClass": "store-schema"
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.oauth.clients"
       },
       {
         "id": "COLLECTION-FCIS-OAUTH-GRANTS",
-        "name": "FountainStore collection fcis.oauth.grants",
         "mandatory": true,
         "sourcePointer": "/persistence/logicalCollections/3",
-        "proofClass": "store-schema"
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.oauth.grants"
       },
       {
         "id": "COLLECTION-FCIS-OAUTH-REVOCATIONS",
-        "name": "FountainStore collection fcis.oauth.revocations",
         "mandatory": true,
         "sourcePointer": "/persistence/logicalCollections/4",
-        "proofClass": "store-schema"
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.oauth.revocations"
       },
       {
         "id": "COLLECTION-FCIS-HOSTS",
-        "name": "FountainStore collection fcis.hosts",
         "mandatory": true,
         "sourcePointer": "/persistence/logicalCollections/5",
-        "proofClass": "store-schema"
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.hosts"
       },
       {
         "id": "COLLECTION-FCIS-ADMISSIONS",
-        "name": "FountainStore collection fcis.admissions",
         "mandatory": true,
         "sourcePointer": "/persistence/logicalCollections/6",
-        "proofClass": "store-schema"
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.admissions"
       },
       {
         "id": "COLLECTION-FCIS-INSTRUMENTS",
-        "name": "FountainStore collection fcis.instruments",
         "mandatory": true,
         "sourcePointer": "/persistence/logicalCollections/7",
-        "proofClass": "store-schema"
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.instruments"
       },
       {
         "id": "COLLECTION-FCIS-EXECUTIONS",
-        "name": "FountainStore collection fcis.executions",
         "mandatory": true,
         "sourcePointer": "/persistence/logicalCollections/8",
-        "proofClass": "store-schema"
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.executions"
       },
       {
         "id": "COLLECTION-FCIS-RECEIPTS",
-        "name": "FountainStore collection fcis.receipts",
         "mandatory": true,
         "sourcePointer": "/persistence/logicalCollections/9",
-        "proofClass": "store-schema"
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.receipts"
       },
       {
         "id": "COLLECTION-FCIS-AUDIT",
-        "name": "FountainStore collection fcis.audit",
         "mandatory": true,
         "sourcePointer": "/persistence/logicalCollections/10",
-        "proofClass": "store-schema"
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.audit"
+      },
+      {
+        "id": "COLLECTION-FCIS-SKILL-REVISIONS",
+        "mandatory": true,
+        "sourcePointer": "/persistence/logicalCollections/11",
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.skill-revisions"
+      },
+      {
+        "id": "COLLECTION-FCIS-SKILL-INVENTORY",
+        "mandatory": true,
+        "sourcePointer": "/persistence/logicalCollections/12",
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.skill-inventory"
+      },
+      {
+        "id": "COLLECTION-FCIS-SKILL-DRAFTS",
+        "mandatory": true,
+        "sourcePointer": "/persistence/logicalCollections/13",
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.skill-drafts"
+      },
+      {
+        "id": "COLLECTION-FCIS-SKILL-REVIEWS",
+        "mandatory": true,
+        "sourcePointer": "/persistence/logicalCollections/14",
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.skill-reviews"
+      },
+      {
+        "id": "COLLECTION-FCIS-SKILL-OFFERS",
+        "mandatory": true,
+        "sourcePointer": "/persistence/logicalCollections/15",
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.skill-offers"
+      },
+      {
+        "id": "COLLECTION-FCIS-SKILL-ACQUISITIONS",
+        "mandatory": true,
+        "sourcePointer": "/persistence/logicalCollections/16",
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.skill-acquisitions"
+      },
+      {
+        "id": "COLLECTION-FCIS-SKILL-ENTITLEMENTS",
+        "mandatory": true,
+        "sourcePointer": "/persistence/logicalCollections/17",
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.skill-entitlements"
       },
       {
         "id": "MCP-METHOD-INITIALIZE",
-        "name": "MCP method initialize",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/mcp/methods/0",
-        "proofClass": "mcp-transport"
+        "proofClass": "mcp-transport",
+        "name": "MCP method initialize"
       },
       {
         "id": "MCP-METHOD-NOTIFICATIONS-INITIALIZED",
-        "name": "MCP method notifications/initialized",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/mcp/methods/1",
-        "proofClass": "mcp-transport"
+        "proofClass": "mcp-transport",
+        "name": "MCP method notifications/initialized"
       },
       {
         "id": "MCP-METHOD-TOOLS-LIST",
-        "name": "MCP method tools/list",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/mcp/methods/2",
-        "proofClass": "mcp-transport"
+        "proofClass": "mcp-transport",
+        "name": "MCP method tools/list"
       },
       {
         "id": "MCP-METHOD-TOOLS-CALL",
-        "name": "MCP method tools/call",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/mcp/methods/3",
-        "proofClass": "mcp-transport"
+        "proofClass": "mcp-transport",
+        "name": "MCP method tools/call"
       },
       {
         "id": "HOST-CONTROL-CORRELATIONID",
-        "name": "Host signed request field correlationID",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/control/required/0",
-        "proofClass": "host-wire"
+        "proofClass": "host-wire",
+        "name": "Host signed request field correlationID"
       },
       {
         "id": "HOST-CONTROL-IDEMPOTENCYKEY",
-        "name": "Host signed request field idempotencyKey",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/control/required/1",
-        "proofClass": "host-wire"
+        "proofClass": "host-wire",
+        "name": "Host signed request field idempotencyKey"
       },
       {
         "id": "HOST-CONTROL-TENANTID",
-        "name": "Host signed request field tenantID",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/control/required/2",
-        "proofClass": "host-wire"
+        "proofClass": "host-wire",
+        "name": "Host signed request field tenantID"
       },
       {
         "id": "HOST-CONTROL-CLIENTID",
-        "name": "Host signed request field clientID",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/control/required/3",
-        "proofClass": "host-wire"
+        "proofClass": "host-wire",
+        "name": "Host signed request field clientID"
       },
       {
         "id": "HOST-CONTROL-HOSTID",
-        "name": "Host signed request field hostID",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/control/required/4",
-        "proofClass": "host-wire"
+        "proofClass": "host-wire",
+        "name": "Host signed request field hostID"
       },
       {
         "id": "HOST-CONTROL-INSTRUMENTID",
-        "name": "Host signed request field instrumentID",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/control/required/5",
-        "proofClass": "host-wire"
+        "proofClass": "host-wire",
+        "name": "Host signed request field instrumentID"
       },
       {
         "id": "HOST-CONTROL-INSTRUMENTVERSION",
-        "name": "Host signed request field instrumentVersion",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/control/required/6",
-        "proofClass": "host-wire"
+        "proofClass": "host-wire",
+        "name": "Host signed request field instrumentVersion"
       },
       {
         "id": "HOST-CONTROL-CAPABILITYID",
-        "name": "Host signed request field capabilityID",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/control/required/7",
-        "proofClass": "host-wire"
+        "proofClass": "host-wire",
+        "name": "Host signed request field capabilityID"
       },
       {
         "id": "HOST-CONTROL-GRANTID",
-        "name": "Host signed request field grantID",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/control/required/8",
-        "proofClass": "host-wire"
+        "proofClass": "host-wire",
+        "name": "Host signed request field grantID"
       },
       {
         "id": "HOST-CONTROL-TARGET",
-        "name": "Host signed request field target",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/control/required/9",
-        "proofClass": "host-wire"
+        "proofClass": "host-wire",
+        "name": "Host signed request field target"
       },
       {
         "id": "HOST-CONTROL-ISSUEDAT",
-        "name": "Host signed request field issuedAt",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/control/required/10",
-        "proofClass": "host-wire"
+        "proofClass": "host-wire",
+        "name": "Host signed request field issuedAt"
       },
       {
         "id": "HOST-CONTROL-EXPIRESAT",
-        "name": "Host signed request field expiresAt",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/control/required/11",
-        "proofClass": "host-wire"
+        "proofClass": "host-wire",
+        "name": "Host signed request field expiresAt"
       },
       {
         "id": "HOST-CONTROL-REQUESTDIGEST",
-        "name": "Host signed request field requestDigest",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/control/required/12",
-        "proofClass": "host-wire"
+        "proofClass": "host-wire",
+        "name": "Host signed request field requestDigest"
       },
       {
         "id": "HOST-RECEIPT-JOBID",
-        "name": "Host terminal receipt field jobID",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/receipts/required/0",
-        "proofClass": "host-receipt"
+        "proofClass": "host-receipt",
+        "name": "Host terminal receipt field jobID"
       },
       {
         "id": "HOST-RECEIPT-CORRELATIONID",
-        "name": "Host terminal receipt field correlationID",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/receipts/required/1",
-        "proofClass": "host-receipt"
+        "proofClass": "host-receipt",
+        "name": "Host terminal receipt field correlationID"
       },
       {
         "id": "HOST-RECEIPT-CAPABILITYID",
-        "name": "Host terminal receipt field capabilityID",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/receipts/required/2",
-        "proofClass": "host-receipt"
+        "proofClass": "host-receipt",
+        "name": "Host terminal receipt field capabilityID"
       },
       {
         "id": "HOST-RECEIPT-SOURCEDIGEST",
-        "name": "Host terminal receipt field sourceDigest",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/receipts/required/3",
-        "proofClass": "host-receipt"
+        "proofClass": "host-receipt",
+        "name": "Host terminal receipt field sourceDigest"
       },
       {
         "id": "HOST-RECEIPT-HOSTID",
-        "name": "Host terminal receipt field hostID",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/receipts/required/4",
-        "proofClass": "host-receipt"
+        "proofClass": "host-receipt",
+        "name": "Host terminal receipt field hostID"
       },
       {
         "id": "HOST-RECEIPT-STATE",
-        "name": "Host terminal receipt field state",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/receipts/required/5",
-        "proofClass": "host-receipt"
+        "proofClass": "host-receipt",
+        "name": "Host terminal receipt field state"
       },
       {
         "id": "HOST-RECEIPT-TERMINALKIND",
-        "name": "Host terminal receipt field terminalKind",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/receipts/required/6",
-        "proofClass": "host-receipt"
+        "proofClass": "host-receipt",
+        "name": "Host terminal receipt field terminalKind"
       },
       {
         "id": "HOST-RECEIPT-EFFECTSDIGEST",
-        "name": "Host terminal receipt field effectsDigest",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/receipts/required/7",
-        "proofClass": "host-receipt"
+        "proofClass": "host-receipt",
+        "name": "Host terminal receipt field effectsDigest"
       },
       {
         "id": "HOST-RECEIPT-SIGNEDAT",
-        "name": "Host terminal receipt field signedAt",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/receipts/required/8",
-        "proofClass": "host-receipt"
+        "proofClass": "host-receipt",
+        "name": "Host terminal receipt field signedAt"
       },
       {
         "id": "HOST-RECEIPT-SIGNATURE",
-        "name": "Host terminal receipt field signature",
         "mandatory": true,
         "sourcePointer": "/capabilitySystem/hostTransport/receipts/required/9",
-        "proofClass": "host-receipt"
+        "proofClass": "host-receipt",
+        "name": "Host terminal receipt field signature"
       },
       {
         "id": "STORE-WAL-01",
-        "name": "WAL physical field magic ASCII FCISFS01 (8 bytes)",
         "mandatory": true,
         "sourcePointer": "/persistentStoreFormat/wal/frame/layout/0",
-        "proofClass": "store-wire"
+        "proofClass": "store-wire",
+        "name": "WAL physical field magic ASCII FCISFS01 (8 bytes)"
       },
       {
         "id": "STORE-WAL-02",
-        "name": "WAL physical field version uint16 big endian (value 1)",
         "mandatory": true,
         "sourcePointer": "/persistentStoreFormat/wal/frame/layout/1",
-        "proofClass": "store-wire"
+        "proofClass": "store-wire",
+        "name": "WAL physical field version uint16 big endian (value 1)"
       },
       {
         "id": "STORE-WAL-03",
-        "name": "WAL physical field frameLength uint32 big endian",
         "mandatory": true,
         "sourcePointer": "/persistentStoreFormat/wal/frame/layout/2",
-        "proofClass": "store-wire"
+        "proofClass": "store-wire",
+        "name": "WAL physical field frameLength uint32 big endian"
       },
       {
         "id": "STORE-WAL-04",
-        "name": "WAL physical field sequence uint64 big endian",
         "mandatory": true,
         "sourcePointer": "/persistentStoreFormat/wal/frame/layout/3",
-        "proofClass": "store-wire"
+        "proofClass": "store-wire",
+        "name": "WAL physical field sequence uint64 big endian"
       },
       {
         "id": "STORE-WAL-05",
-        "name": "WAL physical field payload JSON bytes",
         "mandatory": true,
         "sourcePointer": "/persistentStoreFormat/wal/frame/layout/4",
-        "proofClass": "store-wire"
+        "proofClass": "store-wire",
+        "name": "WAL physical field payload JSON bytes"
       },
       {
         "id": "STORE-WAL-06",
-        "name": "WAL physical field payloadCRC32C uint32 big endian",
         "mandatory": true,
         "sourcePointer": "/persistentStoreFormat/wal/frame/layout/5",
-        "proofClass": "store-wire"
+        "proofClass": "store-wire",
+        "name": "WAL physical field payloadCRC32C uint32 big endian"
       },
       {
         "id": "VAULT-AAD-INSTANCEID",
-        "name": "Vault authenticated data field instanceID",
         "mandatory": true,
         "sourcePointer": "/secretStoreFormat/envelope/aad/0",
-        "proofClass": "custody-wire"
+        "proofClass": "custody-wire",
+        "name": "Vault authenticated data field instanceID"
       },
       {
         "id": "VAULT-AAD-TENANTID",
-        "name": "Vault authenticated data field tenantID",
         "mandatory": true,
         "sourcePointer": "/secretStoreFormat/envelope/aad/1",
-        "proofClass": "custody-wire"
+        "proofClass": "custody-wire",
+        "name": "Vault authenticated data field tenantID"
       },
       {
         "id": "VAULT-AAD-SECRETID",
-        "name": "Vault authenticated data field secretID",
         "mandatory": true,
         "sourcePointer": "/secretStoreFormat/envelope/aad/2",
-        "proofClass": "custody-wire"
+        "proofClass": "custody-wire",
+        "name": "Vault authenticated data field secretID"
       },
       {
         "id": "VAULT-AAD-VERSION",
-        "name": "Vault authenticated data field version",
         "mandatory": true,
         "sourcePointer": "/secretStoreFormat/envelope/aad/3",
-        "proofClass": "custody-wire"
+        "proofClass": "custody-wire",
+        "name": "Vault authenticated data field version"
       },
       {
         "id": "VAULT-AAD-PURPOSE",
-        "name": "Vault authenticated data field purpose",
         "mandatory": true,
         "sourcePointer": "/secretStoreFormat/envelope/aad/4",
-        "proofClass": "custody-wire"
+        "proofClass": "custody-wire",
+        "name": "Vault authenticated data field purpose"
       },
       {
         "id": "UI-TAB-CLIENTS",
-        "name": "Frontend tab clients",
         "mandatory": true,
         "sourcePointer": "/frontend/tabs/0",
-        "proofClass": "frontend-bind"
+        "proofClass": "frontend-bind",
+        "name": "Frontend tab clients"
       },
       {
         "id": "UI-TAB-HOSTS",
-        "name": "Frontend tab hosts",
         "mandatory": true,
         "sourcePointer": "/frontend/tabs/1",
-        "proofClass": "frontend-bind"
+        "proofClass": "frontend-bind",
+        "name": "Frontend tab hosts"
       },
       {
         "id": "UI-TAB-SKILLS",
-        "name": "Frontend tab skills",
         "mandatory": true,
         "sourcePointer": "/frontend/tabs/2",
-        "proofClass": "frontend-bind"
+        "proofClass": "frontend-bind",
+        "name": "Frontend tab skills"
       },
       {
         "id": "UI-TAB-REFERENCE",
-        "name": "Frontend tab reference",
         "mandatory": true,
         "sourcePointer": "/frontend/tabs/3",
-        "proofClass": "frontend-bind"
+        "proofClass": "frontend-bind",
+        "name": "Frontend tab reference"
       },
       {
         "id": "ADOPT-STEP-01",
-        "name": "Optional migration operation read-only source authority census",
         "mandatory": true,
         "sourcePointer": "/migration/steps/0",
-        "proofClass": "adoption"
+        "proofClass": "adoption",
+        "name": "Optional migration operation read-only source authority census"
       },
       {
         "id": "ADOPT-STEP-02",
-        "name": "Optional migration operation verify exact owner/Host operation approval",
         "mandatory": true,
         "sourcePointer": "/migration/steps/1",
-        "proofClass": "adoption"
+        "proofClass": "adoption",
+        "name": "Optional migration operation verify exact owner/Host operation approval"
       },
       {
         "id": "ADOPT-STEP-03",
-        "name": "Optional migration operation fence old writer and obtain consistent WAL snapshot",
         "mandatory": true,
         "sourcePointer": "/migration/steps/2",
-        "proofClass": "adoption"
+        "proofClass": "adoption",
+        "name": "Optional migration operation fence old writer and obtain consistent WAL snapshot"
       },
       {
         "id": "ADOPT-STEP-04",
-        "name": "Optional migration operation create encrypted immutable backups and independently restore",
         "mandatory": true,
         "sourcePointer": "/migration/steps/3",
-        "proofClass": "adoption"
+        "proofClass": "adoption",
+        "name": "Optional migration operation create encrypted immutable backups and independently restore"
       },
       {
         "id": "ADOPT-STEP-05",
-        "name": "Optional migration operation import verified typed owner/passkey/OAuth/Host/audit records into dedicated Go Store",
         "mandatory": true,
         "sourcePointer": "/migration/steps/4",
-        "proofClass": "adoption"
+        "proofClass": "adoption",
+        "name": "Optional migration operation import verified typed owner/passkey/OAuth/Host/audit records into dedicated Go Store"
       },
       {
         "id": "ADOPT-STEP-06",
-        "name": "Optional migration operation retain existing non-exportable SecretStore keys in their custodian",
         "mandatory": true,
         "sourcePointer": "/migration/steps/5",
-        "proofClass": "adoption"
+        "proofClass": "adoption",
+        "name": "Optional migration operation retain existing non-exportable SecretStore keys in their custodian"
       },
       {
         "id": "ADOPT-STEP-07",
-        "name": "Optional migration operation quarantine unverifiable records as inactive with reason codes",
         "mandatory": true,
         "sourcePointer": "/migration/steps/6",
-        "proofClass": "adoption"
+        "proofClass": "adoption",
+        "name": "Optional migration operation quarantine unverifiable records as inactive with reason codes"
       },
       {
         "id": "ADOPT-STEP-08",
-        "name": "Optional migration operation prove ID/fingerprint/client-grant/revocation/custody parity and restart",
         "mandatory": true,
         "sourcePointer": "/migration/steps/7",
-        "proofClass": "adoption"
+        "proofClass": "adoption",
+        "name": "Optional migration operation prove ID/fingerprint/client-grant/revocation/custody parity and restart"
       },
       {
         "id": "ADOPT-STEP-09",
-        "name": "Optional migration operation activate immutable Go release at existing fcis.fountain.coach behind Caddy",
         "mandatory": true,
         "sourcePointer": "/migration/steps/8",
-        "proofClass": "adoption"
+        "proofClass": "adoption",
+        "name": "Optional migration operation activate immutable Go release at existing fcis.fountain.coach behind Caddy"
       },
       {
         "id": "ADOPT-STEP-10",
-        "name": "Optional migration operation independent public OAuth+MCP and Store/Host terminal readback",
         "mandatory": true,
         "sourcePointer": "/migration/steps/9",
-        "proofClass": "adoption"
+        "proofClass": "adoption",
+        "name": "Optional migration operation independent public OAuth+MCP and Store/Host terminal readback"
       },
       {
         "id": "OUTPUT-01",
-        "name": "Generated deliverable complete Go sources for FCIS/Store/Custody/Host",
         "mandatory": true,
         "sourcePointer": "/generation/requiredArtifacts/0",
-        "proofClass": "generation"
+        "proofClass": "generation",
+        "name": "Generated deliverable complete Go sources for FCIS/Store/Custody/Host"
       },
       {
         "id": "OUTPUT-02",
-        "name": "Generated deliverable existing frontend assets pinned and integrated",
         "mandatory": true,
         "sourcePointer": "/generation/requiredArtifacts/1",
-        "proofClass": "generation"
+        "proofClass": "generation",
+        "name": "Generated deliverable existing frontend assets pinned and integrated"
       },
       {
         "id": "OUTPUT-03",
-        "name": "Generated deliverable all API operation mapping",
         "mandatory": true,
         "sourcePointer": "/generation/requiredArtifacts/2",
-        "proofClass": "generation"
+        "proofClass": "generation",
+        "name": "Generated deliverable all API operation mapping"
       },
       {
         "id": "OUTPUT-04",
-        "name": "Generated deliverable pinned dependency manifest",
         "mandatory": true,
         "sourcePointer": "/generation/requiredArtifacts/3",
-        "proofClass": "generation"
+        "proofClass": "generation",
+        "name": "Generated deliverable pinned dependency manifest"
       },
       {
         "id": "OUTPUT-05",
-        "name": "Generated deliverable coverage ledger requirement-to-source",
         "mandatory": true,
         "sourcePointer": "/generation/requiredArtifacts/4",
-        "proofClass": "generation"
+        "proofClass": "generation",
+        "name": "Generated deliverable coverage ledger requirement-to-source"
       },
       {
         "id": "OUTPUT-06",
-        "name": "Generated deliverable reproducible generation receipt",
         "mandatory": true,
         "sourcePointer": "/generation/requiredArtifacts/5",
-        "proofClass": "generation"
+        "proofClass": "generation",
+        "name": "Generated deliverable reproducible generation receipt"
       },
       {
         "id": "OUTPUT-07",
-        "name": "Generated deliverable self-contained first-run Go binary and embedded Access assets",
         "mandatory": true,
         "sourcePointer": "/generation/requiredArtifacts/6",
-        "proofClass": "generation"
+        "proofClass": "generation",
+        "name": "Generated deliverable self-contained first-run Go binary and embedded Access assets"
       },
       {
         "id": "OUTPUT-08",
-        "name": "Generated deliverable source-bound implementation of every invariant in this file",
         "mandatory": true,
         "sourcePointer": "/generation/requiredArtifacts/7",
-        "proofClass": "generation"
+        "proofClass": "generation",
+        "name": "Generated deliverable source-bound implementation of every invariant in this file"
+      },
+      {
+        "id": "SKILL-DISTRIBUTION-DECISION",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/distribution/decision",
+        "proofClass": "skill-distribution",
+        "name": "skill-distribution: decision"
+      },
+      {
+        "id": "SKILL-DISTRIBUTION-OWNERPROFILE",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/distribution/ownerProfile",
+        "proofClass": "skill-distribution",
+        "name": "skill-distribution: ownerProfile"
+      },
+      {
+        "id": "SKILL-DISTRIBUTION-SECURITY",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/distribution/security",
+        "proofClass": "skill-distribution",
+        "name": "skill-distribution: security"
+      },
+      {
+        "id": "SKILL-DISTRIBUTION-CLIENTRESOURCE",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/distribution/clientResource",
+        "proofClass": "skill-distribution",
+        "name": "skill-distribution: clientResource"
+      },
+      {
+        "id": "SKILL-DISTRIBUTION-TRANSACTIONS",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/distribution/transactions",
+        "proofClass": "skill-distribution",
+        "name": "skill-distribution: transactions"
+      },
+      {
+        "id": "SKILL-DISTRIBUTION-COMMERCIAL",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/distribution/commercial",
+        "proofClass": "skill-distribution",
+        "name": "skill-distribution: commercial"
+      },
+      {
+        "id": "SKILL-DISTRIBUTION-DELIVERY",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/distribution/delivery",
+        "proofClass": "skill-distribution",
+        "name": "skill-distribution: delivery"
+      },
+      {
+        "id": "SKILL-DISTRIBUTION-LIFECYCLE",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/distribution/lifecycle",
+        "proofClass": "skill-distribution",
+        "name": "skill-distribution: lifecycle"
+      },
+      {
+        "id": "SKILL-DISTRIBUTION-HTTPCONTRACT",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/distribution/httpContract",
+        "proofClass": "skill-distribution",
+        "name": "skill-distribution: httpContract"
+      },
+      {
+        "id": "SKILL-DISTRIBUTION-COLLECTIONS",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/distribution/collections",
+        "proofClass": "skill-distribution",
+        "name": "skill-distribution: collections"
+      },
+      {
+        "id": "SKILL-DISTRIBUTION-PHASES",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/distribution/phases",
+        "proofClass": "skill-distribution",
+        "name": "skill-distribution: phases"
       },
       {
         "id": "OWNER-POLICY-INITIALMODE",
-        "name": "owner-policy: initialMode",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/initialMode",
-        "proofClass": "owner-policy"
+        "proofClass": "owner-policy",
+        "name": "owner-policy: initialMode"
       },
       {
         "id": "OWNER-POLICY-PRINCIPALTYPES",
-        "name": "owner-policy: principalTypes",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/principalTypes",
-        "proofClass": "owner-policy"
+        "proofClass": "owner-policy",
+        "name": "owner-policy: principalTypes"
       },
       {
         "id": "OWNER-POLICY-TENANTISOLATION",
-        "name": "owner-policy: tenantIsolation",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/tenantIsolation",
-        "proofClass": "owner-policy"
+        "proofClass": "owner-policy",
+        "name": "owner-policy: tenantIsolation"
       },
       {
         "id": "OWNER-POLICY-OWNERRIGHTS",
-        "name": "owner-policy: ownerRights",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/ownerRights",
-        "proofClass": "owner-policy"
+        "proofClass": "owner-policy",
+        "name": "owner-policy: ownerRights"
       },
       {
         "id": "OWNER-POLICY-CUSTOMERADMISSION",
-        "name": "owner-policy: customerAdmission",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/customerAdmission",
-        "proofClass": "owner-policy"
+        "proofClass": "owner-policy",
+        "name": "owner-policy: customerAdmission"
       },
       {
         "id": "OWNER-POLICY-PROVIDERBUDGETS",
-        "name": "owner-policy: providerBudgets",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/providerBudgets",
-        "proofClass": "owner-policy"
+        "proofClass": "owner-policy",
+        "name": "owner-policy: providerBudgets"
       },
       {
         "id": "OWNER-POLICY-LEARNINGRIGHTS",
-        "name": "owner-policy: learningRights",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/learningRights",
-        "proofClass": "owner-policy"
+        "proofClass": "owner-policy",
+        "name": "owner-policy: learningRights"
       },
       {
         "id": "OWNER-POLICY-PORTABILITY",
-        "name": "owner-policy: portability",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/portability",
-        "proofClass": "owner-policy"
+        "proofClass": "owner-policy",
+        "name": "owner-policy: portability"
       },
       {
         "id": "OWNER-POLICY-SHARING",
-        "name": "owner-policy: sharing",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/sharing",
-        "proofClass": "owner-policy"
+        "proofClass": "owner-policy",
+        "name": "owner-policy: sharing"
       },
       {
         "id": "OWNER-POLICY-BILLING",
-        "name": "owner-policy: billing",
         "mandatory": true,
         "sourcePointer": "/ownerAndTenancy/billing",
-        "proofClass": "owner-policy"
+        "proofClass": "owner-policy",
+        "name": "owner-policy: billing"
       },
       {
         "id": "BOOTSTRAP-ALGORITHM",
-        "name": "bootstrap: algorithm",
         "mandatory": true,
         "sourcePointer": "/initialization/setupTicket/algorithm",
-        "proofClass": "bootstrap"
+        "proofClass": "bootstrap",
+        "name": "bootstrap: algorithm"
       },
       {
         "id": "BOOTSTRAP-TRANSPORT",
-        "name": "bootstrap: transport",
         "mandatory": true,
         "sourcePointer": "/initialization/setupTicket/transport",
-        "proofClass": "bootstrap"
+        "proofClass": "bootstrap",
+        "name": "bootstrap: transport"
       },
       {
         "id": "BOOTSTRAP-STORAGE",
-        "name": "bootstrap: storage",
         "mandatory": true,
         "sourcePointer": "/initialization/setupTicket/storage",
-        "proofClass": "bootstrap"
+        "proofClass": "bootstrap",
+        "name": "bootstrap: storage"
       },
       {
         "id": "BOOTSTRAP-EXPIRESAFTERSECONDS",
-        "name": "bootstrap: expiresAfterSeconds",
         "mandatory": true,
         "sourcePointer": "/initialization/setupTicket/expiresAfterSeconds",
-        "proofClass": "bootstrap"
+        "proofClass": "bootstrap",
+        "name": "bootstrap: expiresAfterSeconds"
       },
       {
         "id": "BOOTSTRAP-ATTEMPTS",
-        "name": "bootstrap: attempts",
         "mandatory": true,
         "sourcePointer": "/initialization/setupTicket/attempts",
-        "proofClass": "bootstrap"
+        "proofClass": "bootstrap",
+        "name": "bootstrap: attempts"
       },
       {
         "id": "BOOTSTRAP-SINGLEUSE",
-        "name": "bootstrap: singleUse",
         "mandatory": true,
         "sourcePointer": "/initialization/setupTicket/singleUse",
-        "proofClass": "bootstrap"
+        "proofClass": "bootstrap",
+        "name": "bootstrap: singleUse"
       },
       {
         "id": "BOOTSTRAP-CONCURRENTCLAIM",
-        "name": "bootstrap: concurrentClaim",
         "mandatory": true,
         "sourcePointer": "/initialization/setupTicket/concurrentClaim",
-        "proofClass": "bootstrap"
+        "proofClass": "bootstrap",
+        "name": "bootstrap: concurrentClaim"
       },
       {
         "id": "BOOTSTRAP-SCOPE",
-        "name": "bootstrap: scope",
         "mandatory": true,
         "sourcePointer": "/initialization/setupTicket/scope",
-        "proofClass": "bootstrap"
+        "proofClass": "bootstrap",
+        "name": "bootstrap: scope"
       },
       {
         "id": "BOOTSTRAP-CONSUMPTION",
-        "name": "bootstrap: consumption",
         "mandatory": true,
         "sourcePointer": "/initialization/setupTicket/consumption",
-        "proofClass": "bootstrap"
+        "proofClass": "bootstrap",
+        "name": "bootstrap: consumption"
       },
       {
         "id": "BOOTSTRAP-ONEXPIRY",
-        "name": "bootstrap: onExpiry",
         "mandatory": true,
         "sourcePointer": "/initialization/setupTicket/onExpiry",
-        "proofClass": "bootstrap"
+        "proofClass": "bootstrap",
+        "name": "bootstrap: onExpiry"
       }
     ]
   },
@@ -2969,7 +3546,7 @@
   },
   "knownSpecificationLimitations": [],
   "coverageBaseline": {
-    "fcisHTTP": 30,
+    "fcisHTTP": 49,
     "fountainStoreHTTP": 24,
     "secretStoreHTTP": 4,
     "frontendFiles": 8,
@@ -2991,13 +3568,13 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 222,
+    "atomicRequirementCount": 259,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
       "skill-lifecycle": 6,
       "principal-type": 6,
-      "store-schema": 11,
+      "store-schema": 18,
       "mcp-transport": 4,
       "host-wire": 13,
       "host-receipt": 10,
@@ -3006,6 +3583,7 @@
       "frontend-bind": 4,
       "adoption": 10,
       "generation": 8,
+      "skill-distribution": 11,
       "owner-policy": 10,
       "bootstrap": 10
     }
@@ -3362,8 +3940,8 @@
     "providerBudgets": "provider credentials and billing remain customer-held; adapter calls require explicit per-tenant consent, budget ceiling and allowance; native deterministic tasks require no model account",
     "learningRights": "source Skill licensing unchanged; tenant-authored scenario evidence, extensions and new Skills belong to the author/tenant unless an explicit license transfers rights; no silent transfer of customer IP to FCIS operator",
     "portability": "versioned encrypted tenant Store snapshot and Skill/scenario provenance can be exported via owner-authenticated operation; import validates schema and rights; export never includes third-party credentials or raw keys",
-    "sharing": "tenant explicitly publishes signed skill revisions under a chosen license; private tenant skills are not promoted to global catalog by default",
-    "billing": "a provider-neutral payment instrument is optional phase-two; startup and core usage never require Stripe"
+    "sharing": "Tenant explicitly approves signed offers for exact admitted revisions with rights, terms and price; private source stays private, approved metadata only is listed; client delivery requires current resource consent and exact entitlement. Git and providers optional.",
+    "billing": "Optional phase-two payment instrument; customer acquisition/entitlement must reconcile exact verified terminal receipts for paid offers; startup and core usage never require Stripe."
   },
   "capabilitySystem": {
     "registry": {
@@ -3491,7 +4069,7 @@
     }
   },
   "skillAndScenarioSystem": {
-    "bundledCatalog": "read-only signed/versioned canonical FCIS-KIT metadata is shipped in executable; a live Git connection is optional",
+    "bundledCatalog": "Read-only signed/versioned FCIS-KIT metadata may be bundled; canonical private Skill content is persisted in tenant Store, never embedded in public assets or fetched from Git as a runtime prerequisite.",
     "skillIdentity": [
       "owner",
       "name",
@@ -3522,7 +4100,20 @@
     "promotion": "owner/tenant policy controls explicit signed version promotion, immutable release manifest and independent terminal evidence; a model cannot self-admit a proposed Skill",
     "recovery": "Skill revision and scenario provenance persist in tenant Store and signed export; Git is a synchronized publication copy, not a required operational database",
     "privacy": "tenant scenario data never becomes shared training or globally published Skill automatically",
-    "rights": "tenant/user-authored derived skills retain their chosen rights; source owner's existing license is not overwritten"
+    "rights": "tenant/user-authored derived skills retain their chosen rights; source owner's existing license is not overwritten",
+    "distribution": {
+      "decision": "FountainStore canonical private custody; FCIS API primary distribution authority; GitHub/ChatGPT optional explicitly approved adapters. Existing FCIS-GO public projection unchanged.",
+      "ownerProfile": "Version 2 signed Skill admission is only current single owner/default tenant; admin operations derive actor/tenant from authorized session, no caller-selected tenant. Reject unavailable additional tenant admission/signing; commercial customer flow requires separately admitted customer principal and grant, not owner session impersonation. Current version-2 CLI admission is retained and does not require a pre-existing browser draft; the new browser admission must verify the referenced reviewed draft. Existing admitted private v2 releases are readable without manufactured draft history.",
+      "security": "Owner writes require exact same-origin session, specific X-Fountain-Owner-Intent and explicit confirmation; signed admission and offer use existing trusted owner signer, exact immutable bytes. No new signer, public write route, bearer fallback or arbitrary tenant ID. Reject unknown fields, duplicate keys, wrong signatures and oversized decoded inputs.",
+      "clientResource": "Exact installation-bound {issuerOrigin}/oauth/skills; existing OAuth authorization code PKCE S256 and explicit resource consent. Scope skills.read or skills.acquire independently; tokens for /mcp, expired/revoked grants, unadmitted principals and unrelated audiences refused. Customer identity derived from verified server-side binding, no owner grant converted to customer licence.",
+      "transactions": "Tenant+actor+operation+idempotencyKey binds canonical request digest. Identical replay returns original receipt/status; changed payload returns 409; re-evaluate current access before disclosing protected replay. Compare expected revisions; no duplicate mutations or charge. Atomic immutable revisions, active pointers, offer/entitlement states and receipts. No source bytes in telemetry; authenticated responses and refusals no-store. For draft create receipt.subjectId is the draftId; for admission it is releaseId; for offer release it is offerId; for review/withdraw/revoke it is the changed object's exact ID. recordRevision is that object's committed revision. A verified receipt remains independently readable via the corresponding protected resource, with audit references.",
+      "commercial": "Phase two, not first release or P0 prerequisite. Price and terms immutable per offer; new price requires new signed offer. Zero-price offers require explicit terms acceptance; paid entitlement only after verified instrument terminal receipt exact amount, currency, customer, offer and acquisition. Provider checkout is hosted; no live charges authorized, no UI redirect proof. Refunds are separate approved instrument actions, entitlement changes only under accepted terms and reconciled receipts. Unlisted is non-enumerated metadata, not a confidentiality or access grant; customer may inspect an exact known offer before accepting terms. Restricted bespoke audience/recurring or metered plans require a later explicit contract; this version supports one-time exact-release licensing only.",
+      "delivery": "Only exact authorized source bytes and license are delivered, never public projection by default. No guarantee of provider installation, DRM or deletion of previously delivered copies. A client adapter may consume delivered instructions only with customer consent and separately proven supported integration. Tenant-derived knowledge remains customer-owned.",
+      "lifecycle": "Draft -> verified evidence where applicable -> reviewed -> signed admitted revision; separate signed offer releases/withdrawals govern distribution, not source visibility. Restore is a fresh signed admission; withdrawal and entitlement revocation do not delete immutable history.",
+      "httpContract": "FCIS-OPENAPI.json 0.5.0 defines exact typed HTTP operations and private/offer manifest schemas. Existing v1/v2 CLI signed custody remains compatible; all added HTTP operations specified only.",
+      "collections": "Existing native Store and its logical collections in persistence.skillCollections, one writer and verified readback. No new database, identity service, external marketplace or runtime prerequisite.",
+      "phases": "Owner-private management first; commercial distribution and customer admission/payment priority two. No change to existing P0 owner-independence or first-install DoD."
+    }
   },
   "specificationClosure": {
     "namedGaps": [
@@ -3553,7 +4144,7 @@
       }
     ],
     "architectureDecision": "All five are resolved by explicit source-independent design requirements, not by claiming the old live environments exist.",
-    "verificationStatus": "SOURCE_CI_VALIDATED__NOT_GENERATED",
+    "verificationStatus": "SOURCE_GATE_VALIDATED_0_5_0__NOT_GENERATED",
     "productionInstanceInventory": "OPTIONAL_NOT_A_GENERATION_GATE",
     "sourceAcceptance": {
       "reviewedPR": "https://github.com/Fountain-Coach/.github/pull/106",
@@ -3580,7 +4171,7 @@
         "97 mandatory source coverage identifiers",
         "19 immutable input Git source identities"
       ],
-      "scopeOfAcceptance": "Only the organization-owned written specification and source checks. No generated Go system, no runtime tests, no verified deployed issuer, no existing-instance migration or production approval."
+      "scopeOfAcceptance": "Only the organization-owned written specification and source checks. No generated Go system, no runtime tests, no verified deployed issuer, no existing-instance migration or production approval. Historical 0.4.0 baseline only; does not certify newly added 0.5.0 operations."
     },
     "validationReceipt": {
       "scope": "source-only",
@@ -3598,14 +4189,19 @@
         "premature COMPLETE receipt"
       ],
       "limitations": "No generated Go code, compile/test, live FCIS Host, server or production acceptance witnessed."
+    },
+    "currentAdminAPI": {
+      "sourceRevision": "c5a00f185d4b03e5f065cfad1daffaa1dbf019ca",
+      "scope": "0.5.0 source definition, no implementation/production claim",
+      "status": "local source consistency validation passed; protected CI acceptance recorded separately in reviewed PR"
     }
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.4.0",
-    "apiBlobSha": "82b904c09c2aad620b1f2d441a43ec4c4b5321f7",
-    "stackBlobSha": "5ac7a8a227d2d3ddd1b7b436527e470ed024d1cf",
-    "frontendPolicy": "Original pinned Fountain Press UX assets are inputs; adapt only bindings, owner-mode transitions, and legacy Swift-only reference validation; do not redesign it",
+    "httpContractVersion": "0.5.0",
+    "apiBlobSha": "94a07024ed51d92eed41f47b860c3e22f7d853e3",
+    "stackBlobSha": "24f959f9bf5df4477ec932f41365dfcb4a7d4eef",
+    "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },
   "documentSchema": "FCIS-SYSTEM.schema.json",
