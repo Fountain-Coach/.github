@@ -44,6 +44,29 @@ Proposed navigation: Overview, Skills, Instruments, Hosts, Access, Integrations;
 
 Selection stays stable on navigation, refresh and return from authentication or external payment when the selected object is still accessible. Each object has its own meaningful context, actions, evidence and history. Show unavailable, unverified, pending, denied, failed and completed states accurately. Make the smallest necessary action discoverable; don't ask customers to reload or inspect server logs to discover outcomes. Use accessible semantics, keyboard and touch navigation, clear focus and responsive layouts; verify real iPad use rather than assume virtual browser parity.
 
+### 3.1 Selected implementation stack — owner decision, 24 November 2026
+
+Use **Vite + React + TypeScript** for the proposed FCIS Console. This is the selected implementation direction for the experience study, not a claim that React is already deployed. Preserve the existing native Go runtime and all admitted authority.
+
+| Layer | Selected technology / responsibility |
+| --- | --- |
+| Build | Vite, producing a static production bundle |
+| Interface | React and TypeScript |
+| Design language | Fountain Coach CSS design tokens, semantic HTML and adaptive layouts; study-derived components rather than a mandatory third-party design system |
+| Navigation | React Router; stable object routes, selection and safe return after authentication or checkout |
+| Server state | TanStack Query; authoritative reads, bounded refresh and mutation-result reconciliation |
+| HTTP bindings | TypeScript bindings generated from the peer canonical FCIS-OPENAPI.json; unavailable operations remain unavailable |
+| Human authentication | Browser WebAuthn and existing FCIS Go owner sessions; no frontend token store or additional identity provider |
+| Runtime and persistence | Existing FCIS Go and native FountainStore; the browser is not an authority |
+| Payment | Provider-neutral FCIS Payment Instrument, with Stripe as the first adapter, subject to section 4 |
+| Browser acceptance | Playwright for new console journeys (including WebKit), accessibility checks and actual physical iPad Safari acceptance; preserve existing regression evidence |
+
+**Deployment shape:** build the frontend as static assets, embed the verified bundle in the Go executable using Go's existing embedded-asset approach, and serve it from the existing same-origin HTTPS management surface. Node.js and package tooling are build-time dependencies only. No separate Node server, Next.js/SSR, external CDN, additional runtime deployment service or second authentication system is required. An installed standalone FCIS executable must remain independently operable without a package registry, GitHub, ChatGPT or Stripe access for core owner operations.
+
+Pin dependency versions and the lockfile when implementation begins. Tie the static build and API bindings to the reviewed source revision and retain the existing immutable Go release/rollback path. Keep assets cacheable by content identity while session-dependent responses remain private and non-cacheable. The Go service continues to enforce authorization, origin/intent checks, Secure HttpOnly sessions and actual Store effects. Client navigation or cached data cannot grant authority; a failed or unknown mutation is not a completed operation. Preserve the accepted passkey gesture and return semantics, including direct Skills navigation, and never expose tokens, card data or private Store records in static assets.
+
+Use the existing Press implementation as the working baseline until a bounded console replacement passes acceptance; do not interrupt the accepted owner path or expand the P0 definition of done. Start the design prototype with the authenticated single FCIS-GO inventory and its account context, not invented API operations or fake payment success. Study the commercial journey now; enable actual test-mode payment only within the separate priority-two scope. This decision selects the tools and deployment boundary; it does not authorize production replacement or new paid services by itself.
+
 ## 4. Commercial experience
 
 Payment is a first-class subject of the design study now, not an additional blocker for the already defined P0 owner-operation/recovery milestone. Runtime payment remains priority two under [FCIS Stack §9](../FCIS-STACK.md#9-future-commercial-capability--priority-two).
