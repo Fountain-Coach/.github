@@ -1,13 +1,19 @@
 {
   "schemaVersion": 1,
   "owner": "Fountain-Coach/.github",
-  "approvedDecision": "owner-selected single FCIS-GO Skill publication 24 November 2026",
+  "approvedDecision": "owner decision 24 November 2026: vendor-neutral FCIS source and OpenAI as versioned derived adapter; one public FCIS-GO Skill",
   "maintainedSourceCatalog": "skills/openai-distribution.json",
   "activeSkill": {
     "name": "fcis-go",
-    "canonicalPath": ".codex/skills/fcis-go",
+    "canonicalPath": "skills/canonical/fcis-go",
     "marketplaceWebsiteURL": "https://fcis.fountain.coach/",
-    "contentSHA256": "781184570b8cbe32d9924d1f7905bf69448e822acfa635ab3e9ba82cc544f47f"
+    "contentSHA256": "1bd18f3dac5e29d699f7a24daef160970688438c0f3fcadcb34436384a58f86c",
+    "projections": {
+      "openai": {
+        "path": ".codex/skills/fcis-go",
+        "contentSHA256": "781184570b8cbe32d9924d1f7905bf69448e822acfa635ab3e9ba82cc544f47f"
+      }
+    }
   },
   "activePluginId": "Plugin_fb9e0937c59c8191b9fa077fa5ea53ef"
 }
