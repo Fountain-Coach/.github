@@ -66,8 +66,12 @@ class FCISModelIndependenceTests(unittest.TestCase):
         self.assertEqual(provider["contentSHA256"], digest(projected))
         self.assertEqual(check_adapter(ROOT)["state"], "MATCHED")
         self.assertEqual(check_plugin(ROOT)["state"], "MATCHED")
-        self.assertEqual(check_plugin(ROOT)["version"], "0.1.40")
+        self.assertEqual(check_plugin(ROOT)["version"], "0.1.41")
         self.assertEqual(set(check_plugin(ROOT)["skills"]), {"fcis-go"})
+        router = canonical["SKILL.md"].decode()
+        for required in ("Mandatory task routing", "fcis-go-runtime-migration", "fcis-owner-access", "fcis-console-development", "authorized FCIS Skill read surface", "do not silently fall back", "verify actual selection and consumption"):
+            self.assertIn(required, router)
+        self.assertIn("do not run the marketplace work cycle for ordinary runtime development", router)
     def test_provider_docs_and_compliance_are_scoped(self):
         identity = (ROOT / "docs/FCIS-Name-and-Identity.md").read_text()
         boundary = (ROOT / "docs/FCIS-Model-Provider-Boundary.md").read_text()
