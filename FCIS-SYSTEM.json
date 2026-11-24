@@ -38,17 +38,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "c5a00f185d4b03e5f065cfad1daffaa1dbf019ca",
+      "ref": "8cbf51abe1f56ae8fc3f9805844ccc3afeae6445",
       "path": "FCIS-STACK.md",
-      "blobSha": "24f959f9bf5df4477ec932f41365dfcb4a7d4eef",
-      "url": "https://github.com/Fountain-Coach/.github/blob/c5a00f185d4b03e5f065cfad1daffaa1dbf019ca/FCIS-STACK.md"
+      "blobSha": "804dcf44e1250621c323196cefe22644f1780287",
+      "url": "https://github.com/Fountain-Coach/.github/blob/8cbf51abe1f56ae8fc3f9805844ccc3afeae6445/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "e9a3e3acfc49d9e186e32647d146840d2a552dee",
+      "ref": "8cbf51abe1f56ae8fc3f9805844ccc3afeae6445",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "c714953ab880fc8404e8774a49669d7149c336a4",
-      "url": "https://github.com/Fountain-Coach/.github/blob/e9a3e3acfc49d9e186e32647d146840d2a552dee/FCIS-OPENAPI.json"
+      "blobSha": "547731f3c809ce4cf904faddeb36617256b72b41",
+      "url": "https://github.com/Fountain-Coach/.github/blob/8cbf51abe1f56ae8fc3f9805844ccc3afeae6445/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -1722,9 +1722,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 259,
+      "expectedRequirementCount": 275,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 259,
+      "minimumAtomicRequirementCount": 275,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -1741,7 +1741,10 @@
         "generation",
         "skill-distribution",
         "owner-policy",
-        "bootstrap"
+        "bootstrap",
+        "learning-stage",
+        "learning-evidence",
+        "learning-refusal"
       ],
       "generatorReceipt": {
         "artifact": "generation-coverage.json",
@@ -1779,8 +1782,8 @@
     },
     "inputContractDigests": {
       "fcisOpenAPI": "0.5.2",
-      "fcisOpenAPIBlob": "c714953ab880fc8404e8774a49669d7149c336a4",
-      "architectureBlob": "24f959f9bf5df4477ec932f41365dfcb4a7d4eef",
+      "fcisOpenAPIBlob": "547731f3c809ce4cf904faddeb36617256b72b41",
+      "architectureBlob": "804dcf44e1250621c323196cefe22644f1780287",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
     "requirementCatalog": [
@@ -3514,6 +3517,118 @@
         "sourcePointer": "/initialization/setupTicket/onExpiry",
         "proofClass": "bootstrap",
         "name": "bootstrap: onExpiry"
+      },
+      {
+        "id": "LEARN-STAGE-BASELINE",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/stages/0",
+        "proofClass": "learning-stage",
+        "name": "learning-stage: baseline"
+      },
+      {
+        "id": "LEARN-STAGE-PROPOSAL",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/stages/1",
+        "proofClass": "learning-stage",
+        "name": "learning-stage: proposal"
+      },
+      {
+        "id": "LEARN-STAGE-SCENARIO-REVIEW",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/stages/2",
+        "proofClass": "learning-stage",
+        "name": "learning-stage: scenario-review"
+      },
+      {
+        "id": "LEARN-STAGE-SIGNED-ADMISSION",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/stages/3",
+        "proofClass": "learning-stage",
+        "name": "learning-stage: signed-admission"
+      },
+      {
+        "id": "LEARN-STAGE-FRESH-CONSUMPTION",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/stages/4",
+        "proofClass": "learning-stage",
+        "name": "learning-stage: fresh-consumption"
+      },
+      {
+        "id": "LEARN-STAGE-INDEPENDENT-IMPROVEMENT",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/stages/5",
+        "proofClass": "learning-stage",
+        "name": "learning-stage: independent-improvement"
+      },
+      {
+        "id": "LEARN-EVIDENCE-BASELINE-RUN",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/evidence/0",
+        "proofClass": "learning-evidence",
+        "name": "learning-evidence: baseline-run"
+      },
+      {
+        "id": "LEARN-EVIDENCE-LEARNED-DRAFT",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/evidence/1",
+        "proofClass": "learning-evidence",
+        "name": "learning-evidence: learned-draft"
+      },
+      {
+        "id": "LEARN-EVIDENCE-RELEASE-CHAIN",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/evidence/2",
+        "proofClass": "learning-evidence",
+        "name": "learning-evidence: release-chain"
+      },
+      {
+        "id": "LEARN-EVIDENCE-CONSUMPTION",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/evidence/3",
+        "proofClass": "learning-evidence",
+        "name": "learning-evidence: consumption"
+      },
+      {
+        "id": "LEARN-EVIDENCE-NEXT-RUN",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/evidence/4",
+        "proofClass": "learning-evidence",
+        "name": "learning-evidence: next-run"
+      },
+      {
+        "id": "LEARN-REFUSAL-INVALID-EVIDENCE",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/refusals/0",
+        "proofClass": "learning-refusal",
+        "name": "learning-refusal: invalid-evidence"
+      },
+      {
+        "id": "LEARN-REFUSAL-INVALID-PROMOTION",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/refusals/1",
+        "proofClass": "learning-refusal",
+        "name": "learning-refusal: invalid-promotion"
+      },
+      {
+        "id": "LEARN-REFUSAL-INVALID-CONSUMPTION",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/refusals/2",
+        "proofClass": "learning-refusal",
+        "name": "learning-refusal: invalid-consumption"
+      },
+      {
+        "id": "LEARN-REFUSAL-INVALID-IMPROVEMENT",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/refusals/3",
+        "proofClass": "learning-refusal",
+        "name": "learning-refusal: invalid-improvement"
+      },
+      {
+        "id": "LEARN-REFUSAL-PRIVACY-OR-SCOPE",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/refusals/4",
+        "proofClass": "learning-refusal",
+        "name": "learning-refusal: privacy-or-scope"
       }
     ]
   },
@@ -3533,7 +3648,8 @@
       "negative WebAuthn/OAuth/Host and custody refusal tests",
       "Store commit/restart/snapshot/rollback",
       "end-to-end existing frontend and owner passkey",
-      "OAuth/MCP and Host signed receipts"
+      "OAuth/MCP and Host signed receipts",
+      "FCIS-LEARN-01: actual scenario-evidence review and distinct supported reasoning invocation consuming exact active revised private Skill; independent two-attempt improvement and all refusal predicates per skillAndScenarioSystem.learningAcceptance."
     ],
     "production": [
       "fresh-install may be deployed independently on any supported Linux host; optional current Hetzner migration is a distinct deployment profile",
@@ -3569,7 +3685,7 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 259,
+    "atomicRequirementCount": 275,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
@@ -3586,7 +3702,10 @@
       "generation": 8,
       "skill-distribution": 11,
       "owner-policy": 10,
-      "bootstrap": 10
+      "bootstrap": 10,
+      "learning-stage": 6,
+      "learning-evidence": 5,
+      "learning-refusal": 5
     }
   },
   "nonClaims": [
@@ -4114,6 +4233,91 @@
       "httpContract": "FCIS-OPENAPI.json 0.5.0 defines exact typed HTTP operations and private/offer manifest schemas. Existing v1/v2 CLI signed custody remains compatible; all added HTTP operations specified only.",
       "collections": "Existing native Store and its logical collections in persistence.skillCollections, one writer and verified readback. No new database, identity service, external marketplace or runtime prerequisite.",
       "phases": "Owner-private management first; commercial distribution and customer admission/payment priority two. No change to existing P0 owner-independence or first-install DoD."
+    },
+    "learningAcceptance": {
+      "scenarioId": "FCIS-LEARN-01",
+      "status": "SPECIFIED_ONLY",
+      "outcome": "An independently accepted correction becomes a bounded private revision of an existing Skill; a distinct subsequent authorized reasoning invocation consumes that exact active revision and independently satisfies the predeclared comparable-task predicate without the owner repeating the correction.",
+      "operationIds": [
+        "readOwnerSkill",
+        "readOwnerSkillRelease",
+        "createOwnerSkillDraft",
+        "readOwnerSkillDraft",
+        "reviewOwnerSkillDraft",
+        "admitOwnerSkillRelease"
+      ],
+      "stages": [
+        {
+          "id": "baseline",
+          "requirement": "Select an existing Skill and actual authorized scenario. Bind its active signed R0 release and instructions digest to the original input/source revision, capability, run and independently witnessed deficiency and accepted correction. Before drafting, fix the observable subsequent-task predicate and comparable input boundary. Retain the original terminal receipts and counterexamples; an invalidated attempt is negative evidence only."
+        },
+        {
+          "id": "proposal",
+          "requirement": "Extract the non-trivial reusable trigger, exact bounded procedure, constraints, stop conditions and counterexamples from the accepted work. Create a private immutable draft for that existing Skill through the existing owner-authorized intent path. Bind the draft digest, provenance, owner/tenant and R0 predecessor to the accepted evidence. A reasoning model can propose but cannot review or self-admit."
+        },
+        {
+          "id": "scenario-review",
+          "requirement": "Resolve actual independently accepted scenario evidence from existing execution, receipt, audit and domain-owned sources. Verify the same tenant, scenario, task/input/source/capability/run identities, terminal result, accepted correction and exact draft binding. Use scenario-verified review, not a source-review substitute. Persist the explicit owner decision and evidence references; rejected, unrelated, invalidated or unavailable evidence cannot promote the draft."
+        },
+        {
+          "id": "signed-admission",
+          "requirement": "Require explicit existing owner approval and the established release signer; admit exact reviewed draft as private R1 with R0 as active predecessor. Verify signature, source digest, version, visibility, unchanged rights, immutable history and atomic active-pointer/receipt readback. CLI custody admission alone does not establish scenario review or learning. No execution grant, public publication or automatic promotion."
+        },
+        {
+          "id": "fresh-consumption",
+          "requirement": "In a distinct actual supported reasoning-client invocation, select the applicable Skill by task and resolve the currently active R1 under existing authorized delivery. Independently verify manifest, signature, active identity and exact source digest; bind the delivered instruction bytes and their effective inclusion in the selected provider/client invocation before any governed work. Persist adapter-observed invocation/run and release/digest evidence; a model assertion, marketplace listing or cached historical source is insufficient. Revalidate capability authorization independently before effects; refuse missing, unauthorized or stale required instructions."
+        },
+        {
+          "id": "independent-improvement",
+          "requirement": "Run a new comparable task without repeating the lesson in its prompt, and independently witness the predeclared predicate and terminal result. Use a distinct run and comparable actual input, not a replayed test fixture or a result certified by the same validator. Correlate the baseline, accepted correction, proposal/review, signed R0/R1 chain, actual consumption, subsequent result and bounded negative witness; retain in existing tenant Store/evidence custody. Only the complete chain establishes LIVE-ACCEPTED learning."
+        }
+      ],
+      "evidence": [
+        {
+          "id": "baseline-run",
+          "requirement": "Actual task and scenario identity, pinned input/source revision, R0 release/source digest, authorized capability and version, original run and terminal receipt, independently witnessed deficiency and accepted correction; subsequent predicate fixed before the change."
+        },
+        {
+          "id": "learned-draft",
+          "requirement": "Existing Skill name and owner/tenant, exact immutable draft identity and source SHA-256, active predecessor R0, evidence references, reviewer decision and reason, verified scenario and correction binding."
+        },
+        {
+          "id": "release-chain",
+          "requirement": "Exact R0 and R1 identities and instruction digests, existing signer verification, version, privacy/rights, predecessor and independent committed active pointer and terminal receipt."
+        },
+        {
+          "id": "consumption",
+          "requirement": "Actual selected provider/client identity, current authorized Skill delivery, R1 exact release/source digest, adapter-observed effective instruction inclusion bound to distinct invocation/request/run, before work, with no source content in public telemetry."
+        },
+        {
+          "id": "next-run",
+          "requirement": "Distinct comparable real task/input revision, same predeclared observable predicate, independent outcome witness and terminal receipt, no owner restatement of learned procedure, linked negative/refusal evidence."
+        }
+      ],
+      "refusals": [
+        {
+          "id": "invalid-evidence",
+          "requirement": "Missing, source-only, fabricated, invalidated, unrelated, mismatched or cross-tenant evidence must refuse scenario-verified review; keep active revision unchanged."
+        },
+        {
+          "id": "invalid-promotion",
+          "requirement": "Unreviewed/rejected draft, stale predecessor, changed bytes, invalid signature, missing owner approval or automatic self-admission must refuse promotion; retain history and active pointer."
+        },
+        {
+          "id": "invalid-consumption",
+          "requirement": "Absent/revoked authorization, unavailable or mismatched active revision, stale Git/cached copy, or unproved effective delivery must refuse governed work rather than silently substitute instructions."
+        },
+        {
+          "id": "invalid-improvement",
+          "requirement": "Absent independent subsequent predicate/outcome, replayed fixture, repeated owner correction, model self-assertion or unlinked runs cannot establish learning acceptance."
+        },
+        {
+          "id": "privacy-or-scope",
+          "requirement": "Never disclose private source or tenant evidence via public Git, marketplace, unauthorized provider, or telemetry; never derive Host, provider, spend, commercial or publication authority from learning."
+        }
+      ],
+      "completion": "LIVE-ACCEPTED only after all six stages and evidence/refusal obligations have real, independently read-back proof in one correlated two-attempt scenario. Source schema, tests, Git merge, provider sync, standalone admission or a successful deterministic task are separate milestones; any missing predicate remains NOT_ESTABLISHED.",
+      "boundaries": "Retain existing fcis.skills, Store collections and owner/client/Host/provider contracts. No new endpoint, signer, database, permission system, marketplace Skill, automatic Git elevation, auto-admission or provider entitlement. This is a product acceptance gate, not a new first-install, P0 deterministic operation, or commercial prerequisite. Proposals and reviewed private learning remain distinct from suspended automatic promotion."
     }
   },
   "specificationClosure": {
@@ -4200,8 +4404,8 @@
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
     "httpContractVersion": "0.5.2",
-    "apiBlobSha": "c714953ab880fc8404e8774a49669d7149c336a4",
-    "stackBlobSha": "24f959f9bf5df4477ec932f41365dfcb4a7d4eef",
+    "apiBlobSha": "547731f3c809ce4cf904faddeb36617256b72b41",
+    "stackBlobSha": "804dcf44e1250621c323196cefe22644f1780287",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },

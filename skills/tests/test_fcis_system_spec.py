@@ -83,6 +83,46 @@ class FCISWholeSystemContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "may not start COMPLETE"):
             verifier.check_atomic_coverage(copy_b, base)
 
+    def test_learning_acceptance_contract(self):
+        verifier, doc, base = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
+        verifier.check_learning_acceptance(doc, api)
+        self.assertEqual(verifier.check_atomic_coverage(doc, base),
+                         len(doc["generation"]["requirementCatalog"]))
+
+    def test_learning_missing_stage_refusal_and_premature_acceptance(self):
+        verifier, doc, _ = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
+        for field in ("stages", "evidence", "refusals"):
+            candidate = copy.deepcopy(doc)
+            candidate["skillAndScenarioSystem"]["learningAcceptance"][field].pop()
+            with self.assertRaisesRegex(ValueError, "learning .* coverage/order drift"):
+                verifier.check_learning_acceptance(candidate, api)
+        candidate = copy.deepcopy(doc)
+        candidate["skillAndScenarioSystem"]["learningAcceptance"]["status"] = "LIVE-ACCEPTED"
+        with self.assertRaisesRegex(ValueError, "premature acceptance"):
+            verifier.check_learning_acceptance(candidate, api)
+
+    def test_learning_cannot_substitute_source_review_or_drop_authority(self):
+        verifier, doc, _ = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
+        candidate = copy.deepcopy(api)
+        candidate["x-fcis-learning-acceptance"]["reviewEvidenceKind"] = "source-review"
+        with self.assertRaisesRegex(ValueError, "learning OpenAPI binding"):
+            verifier.check_learning_acceptance(doc, candidate)
+        candidate = copy.deepcopy(api)
+        candidate["paths"]["/oauth/owner/skills/{skillName}/drafts/{draftId}/review"]["post"]["security"] = []
+        with self.assertRaisesRegex(ValueError, "learning operation authorization"):
+            verifier.check_learning_acceptance(doc, candidate)
+
+    def test_learning_removal_fails_atomic_coverage(self):
+        verifier, doc, base = self._atomic_fixture()
+        doc["generation"]["requirementCatalog"] = [
+            row for row in doc["generation"]["requirementCatalog"]
+            if row["id"] != "LEARN-STAGE-FRESH-CONSUMPTION"]
+        with self.assertRaisesRegex(ValueError, "coverage catalog mismatch"):
+            verifier.check_atomic_coverage(doc, base)
+
     def test_exact_spec_and_http_contract_consistency(self):
         completed = subprocess.run(
             [sys.executable, str(ROOT / "scripts/verify_fcis_system_spec.py")],
