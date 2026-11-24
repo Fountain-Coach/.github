@@ -27,6 +27,25 @@ class FCISModelIndependenceTests(unittest.TestCase):
         ):
             self.assertIn(required, document)
 
+    def test_business_independence_is_p0_without_vendor_execution_claims(self):
+        plan = (ROOT / "PLANS.md").read_text()
+        readme = (ROOT / "README.md").read_text()
+        stack = (ROOT / "FCIS-STACK.md").read_text()
+        provider = (ROOT / "docs/FCIS-Model-Provider-Boundary.md").read_text()
+        self.assertIn("P0 — FOUNTAIN COACH BUSINESS INDEPENDENCE", plan)
+        self.assertIn("Business priority P0", readme)
+        self.assertIn("**Immediate priority:** Go-native production cutover", stack)
+        self.assertIn("Business independence before marketplace expansion", provider)
+        self.assertIn("without ChatGPT login", provider)
+        self.assertIn("independently readable receipt", plan)
+        self.assertIn("NOT ESTABLISHED", plan)
+        self.assertIn("No architectural choice can silently widen", stack)
+        self.assertIn("marketplace adapter", provider)
+        self.assertIn("owner decision", provider.lower())
+        # This is an instruction/priority contract, not source-level proof
+        # of a released issuer, customer product or alternative LLM runtime.
+        self.assertIn("not an FCIS capability guarantee", provider)
+
     def test_provider_docs_and_compliance_are_scoped(self):
         identity = (ROOT / "docs/FCIS-Name-and-Identity.md").read_text()
         boundary = (ROOT / "docs/FCIS-Model-Provider-Boundary.md").read_text()

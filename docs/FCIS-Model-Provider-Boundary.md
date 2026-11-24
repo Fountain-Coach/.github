@@ -19,6 +19,47 @@ A deterministic, admitted tool operation must not be forced through a paid model
 - **Optional reasoning clients:** OpenAI Codex, ChatGPT, third-party cloud models, and local models are possible implementation choices, not an FCIS capability guarantee. A new runtime is supported only after its exact technical requirements and effective invocation are verified.
 - **Execution effects:** The owning runtime/Kit, MCP service, or approved host operation owns permission checks, scopes, lifecycle and terminal receipts. A model response cannot replace such evidence.
 
+## Business independence before marketplace expansion — owner priority P0
+
+**Accepted owner decision, 24 November 2026.** Fountain Coach's commercial
+value is its independently operable, customer-respecting FCIS technology,
+rather than ChatGPT plugin placement. The business must not delegate its
+authoritative customer identity, customer work, capability grants, durable
+receipts, administration or recoverability to an agent marketplace.
+ChatGPT/OpenAI and other reasoning/marketplace services are optional clients
+and adapters governed by their providers, not Fountain Coach's permission
+authority. Git-hosted canonical source remains reviewed and recoverable; a
+live FCIS operation must not require GitHub availability or a model subscription.
+
+**Observed distribution limitation:** the single FCIS-GO 0.1.40 ChatGPT
+marketplace plugin was published with one Skill and read back independently.
+The account's browser and iPadOS plugin lists nevertheless differ; Plugin
+Management's catalog and permission APIs disagree for the same plugin identities
+and do not expose a reliable cross-device installation actor audit. This is
+an unresolved **provider administration and provenance** question, not proof
+of an unauthorized grant or a broken FCIS runtime. Preserving the working
+plugin while independently proving owned operation is the bounded remedy.
+
+**First business release gate:** reuse the current standalone Go/Access/native
+FountainStore/software Host contracts and any verified implementations.
+Demonstrate an actual owner-controlled browser/client, without ChatGPT login
+or plugin, that can (1) authenticate the owner and inspect effective access,
+(2) discover one admitted, versioned bounded capability, (3) execute it
+under an explicitly authorized grant with a durable independent receipt,
+(4) observe refusal after revocation or an absent grant, and (5) recover
+verified owner-owned state from a known accepted snapshot/release. Inspect
+existing evidence first and implement only the observed gaps. A new identity
+or host subsystem is not an implied prerequisite; customer registration,
+multi-tenancy and paid inference/payment are separate, later scopes.
+
+**Distribution stance:** retain existing single-Skill FCIS-GO as an optional
+maintained marketplace adapter (and nine historical canonical Skills in
+maintenance). Do not expand marketplace/runtime capabilities to mask a
+provider-admin inconsistency. Keep model choice and model-provider spend
+outside the deterministic owner execution gate. Closure requires live
+owner-facing use and independent issuer/Host/Store evidence, never a source
+document, test harness or ChatGPT catalog screenshot alone.
+
 ## FCIS-BYOM — Bring Your Own Model (pinned product concept)
 
 **Reference label:** `FCIS-BYOM` — **Bring Your Own Model**. **Status:** proposed customer-access and commercial delivery pattern, **not** an implemented customer product or a new normative runtime requirement. The word *own* identifies the customer's choice and responsibility for an independently licensed model service or an actually controlled local model; it does **not** imply ownership of third-party foundation-model weights, APIs, or infrastructure.
