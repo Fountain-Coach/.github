@@ -1,6 +1,6 @@
 # Fountain Coach canonical Skill source
 
-**Authority:** Fountain Coach, through the reviewed `Fountain-Coach/.github` repository and Governance Chapter 160. Provider directories are adapters, not instruction authorities.
+**Authority:** Fountain Coach; this is the public publication repository, not private Skill custody. FountainStore holds private Skill content and revisions; provider directories are distribution adapters. Governance Chapter 160 and the owner custody decision govern publication.
 
 ## Active owner-operated instruction
 
@@ -10,7 +10,7 @@ The source and projected package have **separate versioned digests** in `skills/
 
 ## Private Skill custody
 
-This public directory contains only explicitly authorized publication material. New private Skills are authored and versioned in FountainStore, not here. See the [custody and publication boundary](../../docs/FCIS-Skill-Custody-and-Publication.md). FCIS Console Development is designated private; Store admission remains pending independently verified readback. The accidental public source has been withdrawn from the current tree.
+This public directory contains only explicitly authorized publication material. New private Skills are authored and versioned in FountainStore, not here. See the [custody and publication boundary](../../docs/FCIS-Skill-Custody-and-Publication.md). FCIS Console Development v0.1.0 is admitted as private in the native Store, with verified signed readback; see the custody decision for evidence. The accidental public source has been withdrawn from the current tree.
 
 ## Compatibility and restrictions
 

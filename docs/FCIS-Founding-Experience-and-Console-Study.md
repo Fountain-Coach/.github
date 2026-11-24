@@ -46,7 +46,7 @@ Selection stays stable on navigation, refresh and return from authentication or 
 
 ### 3.1 Selected implementation stack — owner decision, 24 November 2026
 
-**Reusable development procedure:** FCIS Console Development is an owner-private Skill designated for FountainStore custody. Consult the [custody and publication boundary](FCIS-Skill-Custody-and-Publication.md); admission/readback pending. No public Skill payload or marketplace expansion.
+**Reusable development procedure:** FCIS Console Development v0.1.0 is an owner-private Skill in FountainStore, with verified signed admission and readback. Consult the [custody and publication boundary](FCIS-Skill-Custody-and-Publication.md) for evidence. No public Skill payload or marketplace expansion; private management UI remains to be implemented.
 
 Use **Vite + React + TypeScript** for the proposed FCIS Console. This is the selected implementation direction for the experience study, not a claim that React is already deployed. Preserve the existing native Go runtime and all admitted authority.
 
@@ -81,7 +81,7 @@ Keep test and live environments visibly distinct. No live customer charging, car
 
 ## 5. Study journeys and proposed acceptance
 
-Use exactly one Skill, FCIS-GO, to learn and demonstrate the management experience before expanding the inventory. Measure real task completion, number of explicit actions and avoidable reauthentication, time to usable state, navigation/selection continuity, and whether the customer can tell the verified outcome without agent assistance. Baseline measurements are pending; no numerical performance claim is made.
+Keep exactly one public Skill, FCIS-GO. Use the existing FCIS Console Development private Skill to prove the separate owner-private custody and management journey; neither admission nor learning widens the public marketplace. Measure real task completion, number of explicit actions and avoidable reauthentication, time to usable state, navigation/selection continuity, and whether the customer can tell the verified outcome without agent assistance. Baseline measurements are pending; no numerical performance claim is made.
 
 | Journey | Observable target | Evidence |
 | --- | --- | --- |
