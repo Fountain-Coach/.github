@@ -1,7 +1,7 @@
 # FCIS — Standalone Go Stack Specification
 
 **Owner:** Fountain Coach · **Canonical architecture:** [`FCIS-STACK.md`](FCIS-STACK.md) · **Peer canonical HTTP API:** [`FCIS-OPENAPI.json`](FCIS-OPENAPI.json) (OpenAPI 3.1.0; equal organization source authority for HTTP wire contracts)
-**Architecture version:** 1.2 · **Initial decision:** 18 November 2026 · **Prerequisite-free system decision:** 19 November 2026
+**Architecture version:** 1.3 · **Initial decision:** 18 November 2026 · **Prerequisite-free system decision:** 19 November 2026
 **Decision status:** Standalone prerequisite-free Go system; optional existing-instance adoption preserves independently verified prior authority. Git source, generated implementation, test evidence and deployed state remain separate.
 **Public service identity:** `https://fcis.fountain.coach/`
 **Immediate priority:** Go-native production cutover · **Second priority:** payment instrument with a Stripe provider adapter
@@ -36,7 +36,7 @@ The user-selected initial deployment is one owner-operated installation. There a
 | Human authentication | WebAuthn/passkeys, bound to an explicitly authorized owner |
 | Client authorization | OAuth 2.0 authorization code + PKCE S256; scoped grants and revocation |
 | Persistence | New self-initializing native Go **FountainStore** on private local persistent storage; optional separately approved logical import of verified existing FCIS authority |
-| Git authority | `Fountain-Coach/.github` for instruction/Skill ownership; source-owning repositories retain their executable contracts |
+| Instruction and Skill custody | Git owns authored organization law, plans and engineering contracts. FountainStore owns private Skill content and revisions; Git/provider copies are explicit optional distribution projections. |
 | Service deployment | Immutable source-bound Go artifact, service supervision and independently verified HTTPS release |
 | Initial operators | Fresh installation starts UNCLAIMED with zero owner/grants/remote Hosts; local single-use ticket enables first WebAuthn owner claim. Existing adoption preserves verified prior owner, grants and Hosts. |
 | First production priority | Go issuer **and** MCP active on the existing production origin, with native persistent authorization |
@@ -118,11 +118,17 @@ Use the source-owned MIDI2 IDL and governed FCIS-KIT capability contracts. Every
 
 Every enrolled machine has authenticated identity and a bounded capability inventory. Enrollment is not MIDI-CI readiness; MIDI-CI readiness is not an authorized session; a session is not a grant to invoke every operation. An individual Host executes its own admitted operations and returns verifiable evidence. The FCIS runtime routes and observes; it does not substitute an unrestricted SSH endpoint.
 
-### 4.5 Git-owned instruction plane
+### 4.5 Store-owned Skills and independent distribution
 
-Canonical organization behavior and Skills belong under this organization's `AGENTS.md`, `PLANS.md`, `.codex/skills/` and policy documents. Domain repositories own their source, schemas and released capabilities. Runtime records the **exact version/digest/admission**, not an alternative mutable copy of canonical Git source.
+Organization law, plans, engineering contracts and source collaboration remain Git-owned. Private Skill authorship, immutable draft/revision history, review decisions, admission and rights belong in native FountainStore, under the existing owner/tenant authority. The [Skill custody and publication boundary](docs/FCIS-Skill-Custody-and-Publication.md) governs all new authoring. The existing public FCIS-GO 0.1.40 Git-backed projection and nine already-public legacy maintenance trees remain compatibility exceptions; do not widen or destroy them. GitHub is a publication channel, not our private Skill repository or commercial distribution authority.
 
-Maintain the single existing Git-backed FCIS Skill distribution. Do not create ZIP-based or competing Skills/plugins.
+The **FCIS Admin API**, in the existing Go process and canonical OpenAPI **0.5.0**, owns the target owner Skill management operations under `/oauth/owner/skills`. Preserve the existing private schema-2 signed release/active-pointer transaction and public schema-1 FCIS-GO. Private draft creation, source/scenario evidence review, exact signed admission and historical readback use the same owner authentication, intent checks, revision CAS and trusted release signer. New private source must never enter Git or provider publication by default. Restoration is a new explicit signed admission, not WAL rewind. The owner session does not replace a required release signature.
+
+The owner-directed Console design uses Vite, React and TypeScript compiled into the same Go executable, as selected in the [Founding Experience study](docs/FCIS-Founding-Experience-and-Console-Study.md). Generate bindings from the peer OpenAPI; use same-origin owner sessions. The working Press frontend and its pinned source bindings remain the existing baseline until the replacement is implemented and accepted; neither the new routes nor a new UI are claimed deployed by this specification.
+
+**Independent commercial distribution (priority two):** a separate owner-signed offer binds one admitted release, source digest, immutable price in currency minor units, explicit distribution rights/terms and selected catalogue visibility. Listing publishes approved metadata and terms only, never private Skill bytes. New price/terms require a new offer; withdrawal stops new acquisitions without automatically revoking existing entitlements. The initial contract supports one-time exact-revision licences (including explicitly free offers), not subscriptions, meter rates or blanket licence transfer. Customer acquisition requires admitted customer identity and resource-bound OAuth consent. The separately scoped `/oauth/skills` resource returns only authorized exact licensed revisions; the `/mcp` audience and Host grants cannot authorize source delivery. Entitlements are current tenant/principal/release-bound Store records; revocation denies future delivery subject to the accepted terms but cannot recall delivered copies. Preserve customer-owned knowledge and rights. Public GitHub/ChatGPT distribution is optional; a client integration or native provider installation must be independently supported and verified.
+
+New owner/API and commercial operations are specified-only until independently implemented and tested. No new service, signer, identity authority, production release, native provider installation or automatic commercial admission is inferred. Preserve the original independent owner-operation P0 DoD.
 
 ### 4.6 Durable execution and audit
 
@@ -142,6 +148,9 @@ The canonical FountainStore engine and on-disk format are owned by [`Fountain-Co
 - `fcis.oauth.clients`, `fcis.oauth.grants`, `fcis.oauth.revocations` — client, token-family and authorization lifecycle
 - `fcis.hosts`, `fcis.admissions`, `fcis.instruments` — machine identities, admission and version references
 - `fcis.executions`, `fcis.receipts`, `fcis.audit` — durable jobs, typed terminal evidence and append-only security events
+- `fcis.skill-revisions`, `fcis.skill-inventory` — immutable exact signed releases and per-Skill active pointers (existing native custody)
+- `fcis.skill-drafts`, `fcis.skill-reviews` — immutable private draft bytes and append-only review decisions (target API)
+- `fcis.skill-offers`, `fcis.skill-acquisitions`, `fcis.skill-entitlements` — signed offer terms/state, idempotent acquisition and exact licensed delivery entitlement (priority-two target API)
 
 The names are **target logical collections**, not an assertion that all presently exist. Sensitive secrets are excluded from ordinary records, logs and receipts.
 
@@ -222,7 +231,7 @@ A payment gateway is provided by a **provider-neutral FCIS Payment Instrument**;
 
 Candidate contract only (not admitted or released): `fountaincoach.payment@0.1.0`, with typed checkout creation, payment status, authenticated provider-event reconciliation, explicitly approved refund, and receipt readback. The owning instrument enforces price/account authority, cost boundaries, idempotency and safe replay. FountainStore records durable intent, provider identifiers and verified terminal events; a redirect alone never proves payment.
 
-The Stripe adapter must pin and verify Stripe's **official** OpenAPI revision/projection where available, and separately verify webhook signature/event contracts. See [Official OpenAPI Dependency](docs/FCIS-Official-OpenAPI-Dependency.md). Payment completion must not silently grant unrestricted FCIS or Host capabilities.
+The Stripe adapter must pin and verify Stripe's **official** OpenAPI revision/projection where available, and separately verify webhook signature/event contracts. See [Official OpenAPI Dependency](docs/FCIS-Official-OpenAPI-Dependency.md). Payment completion must not silently grant unrestricted FCIS or Host capabilities. The FCIS acquisition API uses only an admitted Payment Instrument and reconciles an authenticated terminal receipt bound to the exact acquisition, customer, offer, amount and currency before committing a paid entitlement. A checkout return is not settlement proof; direct Stripe webhook/refund/card operations belong to the instrument, not the Admin API. When payment is unavailable, fail closed without charging or minting entitlement. No live charging is authorized by this specification.
 
 This is a **second-priority specification seam**, not permission to start or deploy payment integration during the Go cutover.
 

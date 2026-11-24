@@ -71,6 +71,8 @@ Use the existing Press implementation as the working baseline until a bounded co
 
 ## 4. Commercial experience
 
+**Selected wire contract:** root [FCIS-OPENAPI.json v0.5.0](../FCIS-OPENAPI.json) specifies owner Skill draft/review/signed release management, independent signed offers and scoped customer acquisition/entitlement/exact-revision delivery. It is a target, not a claim of callable handlers. Use the typed contract to drive the React Console; keep the existing owner session/Press path working. Do not show unimplemented payment or distribution as available. GitHub Marketplace remains the optional FCIS-GO entry projection, not the authority for commercial Skill content.
+
 Payment is a first-class subject of the design study now, not an additional blocker for the already defined P0 owner-operation/recovery milestone. Runtime payment remains priority two under [FCIS Stack §9](../FCIS-STACK.md#9-future-commercial-capability--priority-two).
 
 Separate platform subscription/licence, individually licensed or metered instrument services, and separately selected/billed model inference. These are candidate commercial relationships, not adopted prices or compulsory charging rules. A Skill is an instruction artifact, not an automatic billable event. Do not assume deterministic operations require paid inference or that buying a product grants arbitrary execution rights.
