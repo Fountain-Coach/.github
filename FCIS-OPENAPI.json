@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.5.0",
-    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two.",
+    "version": "0.5.1",
+    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes.",
     "contact": {
       "name": "Fountain Coach FCIS",
       "url": "https://github.com/Fountain-Coach/.github"
@@ -483,12 +483,12 @@
           {
             "name": "Origin",
             "in": "header",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string",
               "format": "uri"
             },
-            "description": "Exact browser Origin must be on the issuer allowlist. No Origin is a 403 on owner pairing routes."
+            "description": "Read-only status: require the exact issuer Origin, or absent Origin only with browser Fetch Metadata same-origin, cors, empty destination and the exact issuer Host. A foreign or ambiguous Origin is refused. A current owner passkey session is still required. Mutation Origin and intent requirements are unchanged."
           },
           {
             "name": "requestID",
