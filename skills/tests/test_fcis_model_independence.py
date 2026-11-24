@@ -46,6 +46,28 @@ class FCISModelIndependenceTests(unittest.TestCase):
         # of a released issuer, customer product or alternative LLM runtime.
         self.assertIn("not an FCIS capability guarantee", provider)
 
+    def test_openai_projection_is_not_owner_canonical_source(self):
+        import json
+        import sys
+        sys.path.insert(0, str(ROOT / "skills"))
+        from skillctl import digest, entries
+        from provider_projection import check as check_adapter
+        from plugin_projection import check as check_plugin
+        pub = json.loads((ROOT / "skills/fcis-go-publication.json").read_text())
+        active = pub["activeSkill"]
+        self.assertEqual(active["canonicalPath"], "skills/canonical/fcis-go")
+        canonical = entries(ROOT / active["canonicalPath"])
+        self.assertEqual(set(canonical), {"SKILL.md"})
+        self.assertEqual(active["contentSHA256"], digest(canonical))
+        provider = active["projections"]["openai"]
+        self.assertEqual(provider["path"], ".codex/skills/fcis-go")
+        projected = entries(ROOT / provider["path"])
+        self.assertEqual(projected["SKILL.md"], canonical["SKILL.md"])
+        self.assertEqual(provider["contentSHA256"], digest(projected))
+        self.assertEqual(check_adapter(ROOT)["state"], "MATCHED")
+        self.assertEqual(check_plugin(ROOT)["state"], "MATCHED")
+        self.assertEqual(check_plugin(ROOT)["version"], "0.1.40")
+        self.assertEqual(set(check_plugin(ROOT)["skills"]), {"fcis-go"})
     def test_provider_docs_and_compliance_are_scoped(self):
         identity = (ROOT / "docs/FCIS-Name-and-Identity.md").read_text()
         boundary = (ROOT / "docs/FCIS-Model-Provider-Boundary.md").read_text()
