@@ -207,6 +207,13 @@ def expected_atomic(system: dict) -> dict[str, dict[str, str]]:
     fields("SKILL-DISTRIBUTION-", "/skillAndScenarioSystem/distribution", "skill-distribution")
     fields("OWNER-POLICY-", "/ownerAndTenancy", "owner-policy")
     fields("BOOTSTRAP-", "/initialization/setupTicket", "bootstrap")
+    for field, stem, cls in (
+        ("stages", "LEARN-STAGE-", "learning-stage"),
+        ("evidence", "LEARN-EVIDENCE-", "learning-evidence"),
+        ("refusals", "LEARN-REFUSAL-", "learning-refusal"),
+    ):
+        array(stem, "/skillAndScenarioSystem/learningAcceptance/" + field,
+              lambda x, i: _slug(x["id"]), lambda x, i: f"{cls}: {x['id']}", cls)
     return expected
 
 
@@ -262,7 +269,43 @@ def check_atomic_coverage(system: dict, base_ids: set[str]) -> int:
     return count
 
 
+def check_learning_acceptance(system: dict, api: dict) -> None:
+    """Require the learning cycle and its exact existing operation bindings."""
+    lesson = system["skillAndScenarioSystem"]["learningAcceptance"]
+    if lesson["scenarioId"] != "FCIS-LEARN-01" or lesson["status"] != "SPECIFIED_ONLY":
+        reject("learning contract identity or premature acceptance")
+    required = {
+        "stages": ["baseline", "proposal", "scenario-review", "signed-admission",
+                   "fresh-consumption", "independent-improvement"],
+        "evidence": ["baseline-run", "learned-draft", "release-chain", "consumption", "next-run"],
+        "refusals": ["invalid-evidence", "invalid-promotion", "invalid-consumption",
+                     "invalid-improvement", "privacy-or-scope"],
+    }
+    for field, identities in required.items():
+        if [x["id"] for x in lesson[field]] != identities:
+            reject(f"learning {field} coverage/order drift")
+    operations = ["readOwnerSkill", "readOwnerSkillRelease", "createOwnerSkillDraft",
+                  "readOwnerSkillDraft", "reviewOwnerSkillDraft", "admitOwnerSkillRelease"]
+    extension = api["x-fcis-learning-acceptance"]
+    if (lesson["operationIds"] != operations or extension["operationIds"] != operations
+            or extension["scenarioId"] != lesson["scenarioId"]
+            or extension["canonicalContract"] != "FCIS-SYSTEM.json#/skillAndScenarioSystem/learningAcceptance"
+            or extension["reviewEvidenceKind"] != "scenario-verified"
+            or extension["status"] != "specified-only-not-deployed"):
+        reject("learning OpenAPI binding or source-only state drift")
+    by_id = {op["operationId"]: op for op in operation_index(api).values()}
+    for operation in operations:
+        if operation not in by_id or by_id[operation].get("security") != [{"ownerPasskeySession": []}]:
+            reject(f"learning operation authorization drift: {operation}")
+    review = api["components"]["schemas"]["SkillDraftReview"]
+    if "scenario-verified" not in review["properties"]["evidenceKind"]["enum"]:
+        reject("learning scenario evidence review missing")
+    if not any("FCIS-LEARN-01" in x for x in system["acceptance"]["postGenerationTesting"]):
+        reject("learning live acceptance omitted from product testing")
+
+
 def check(system: dict, api: dict) -> None:
+    check_learning_acceptance(system, api)
     if system["sourcePinPolicy"]["httpContractVersion"] != api["info"]["version"]:
         reject("source-pin contract version differs from canonical HTTP API")
     if system["apis"]["fcis"]["version"] != api["info"]["version"]:
