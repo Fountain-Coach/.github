@@ -207,8 +207,18 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.5.0")
-        self.assertEqual(digest({p: a["paths"][p] for p in BASELINE_PATHS}), BASELINE_PATHS_SHA256)
+        self.assertEqual(a["info"]["version"], "0.5.1")
+        # Preserve every predecessor operation byte-semantically except the
+        # reviewed status GET Origin clarification. Restore that exact two-field
+        # delta before comparing the original 0.4.0 compatibility digest.
+        baseline = json.loads(json.dumps({p: a["paths"][p] for p in BASELINE_PATHS}))
+        origin = baseline["/oauth/owner/hosts/pair/status"]["get"]["parameters"][0]
+        self.assertEqual(origin["name"], "Origin")
+        self.assertIs(origin["required"], False)
+        self.assertEqual(origin["description"], "Read-only status: require the exact issuer Origin, or absent Origin only with browser Fetch Metadata same-origin, cors, empty destination and the exact issuer Host. A foreign or ambiguous Origin is refused. A current owner passkey session is still required. Mutation Origin and intent requirements are unchanged.")
+        origin["required"] = True
+        origin["description"] = "Exact browser Origin must be on the issuer allowlist. No Origin is a 403 on owner pairing routes."
+        self.assertEqual(digest(baseline), BASELINE_PATHS_SHA256)
         self.assertEqual(digest({n: a["components"]["schemas"][n] for n in BASELINE_SCHEMAS}), BASELINE_SCHEMAS_SHA256)
         self.assertEqual(digest(a["components"]["securitySchemes"]), BASELINE_SECURITY_SHA256)
         self.assertEqual(sum(len(v) for v in a["paths"].values()), 49)
