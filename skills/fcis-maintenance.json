@@ -8,7 +8,7 @@
     "automaticSkillElevation": "suspended",
     "newSkillAdmission": "suspended",
     "skillChanges": "owner-reviewed-maintenance-and-security-only",
-    "marketplaceActiveSurface": "unchanged-pending-independently-verified-consumer-and-provider-readback",
+    "marketplaceActiveSurface": "fcis-go-only-owner-approved",
     "canonicalHistory": "retained"
   },
   "skills": [
@@ -57,5 +57,7 @@
       "state": "maintenance",
       "source": ".codex/skills/fcis-go-runtime-migration"
     }
-  ]
+  ],
+  "activeMarketplaceSkill": "fcis-go",
+  "publicationMode": "single-managed-skill"
 }

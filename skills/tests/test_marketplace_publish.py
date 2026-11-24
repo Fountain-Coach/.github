@@ -93,6 +93,24 @@ class MarketplacePublishTests(unittest.TestCase):
         self.catalog.write_text(json.dumps({
             "owner": "Fountain-Coach/.github", "skills": rows
         }))
+        self.active = self.root / ".codex/skills/fcis-go/SKILL.md"
+        self.active.parent.joinpath("agents").mkdir(parents=True)
+        self.active.write_text(
+            "---\nname: fcis-go\ndescription: Govern owner FCIS marketplace updates\n"
+            "---\n# FCIS-GO\n\nVerify source and installed state.\n")
+        self.active.parent.joinpath("agents/openai.yaml").write_text(
+            "interface:\n  display_name: FCIS-GO\n")
+        publication = {
+            "owner":"Fountain-Coach/.github",
+            "maintainedSourceCatalog":"skills/openai-distribution.json",
+            "activePluginId":projection.WORKSPACE_PLUGIN_ID,
+            "activeSkill":{
+                "name":"fcis-go", "canonicalPath":".codex/skills/fcis-go",
+                "marketplaceWebsiteURL":"https://fcis.fountain.coach/",
+                "contentSHA256":digest(entries(self.active.parent))
+            }
+        }
+        (self.root / projection.ACTIVE_MANIFEST_PATH).write_text(json.dumps(publication))
         self.marketplace = self.root / projection.MARKETPLACE_PATH
         self.marketplace.parent.mkdir(parents=True)
         self.marketplace.write_text(json.dumps({
@@ -118,13 +136,14 @@ class MarketplacePublishTests(unittest.TestCase):
         self.original = git(self.root, "rev-parse", "HEAD")
 
     def accept_new_canonical_skill(self):
-        self.skill.write_text(self.skill.read_text() + "\nObserved accepted lesson.\n")
-        content = json.loads(self.catalog.read_text())
-        next(item for item in content["skills"] if item["name"] == projection.SKILL
-             )["contentSHA256"] = digest(entries(self.skill.parent))
-        self.catalog.write_text(json.dumps(content))
-        git(self.root, "add", "--", ".codex/skills/fcis-skill-authoring-and-sync/SKILL.md",
-            "skills/openai-distribution.json")
+        # The only accepted public mutation is on the new active FCIS-GO Skill.
+        self.active.write_text(self.active.read_text() + "\nObserved owner-accepted maintenance lesson.\n")
+        publication = self.root / projection.ACTIVE_MANIFEST_PATH
+        content = json.loads(publication.read_text())
+        content["activeSkill"]["contentSHA256"] = digest(entries(self.active.parent))
+        publication.write_text(json.dumps(content))
+        git(self.root, "add", "--", ".codex/skills/fcis-go/SKILL.md",
+            "skills/fcis-go-publication.json")
         git(self.root, "commit", "-q", "-m", "accepted canonical learning")
 
     def test_versioned_post_commit_hook_makes_separate_derived_commit(self):
@@ -155,7 +174,7 @@ class MarketplacePublishTests(unittest.TestCase):
                           'HEAD').splitlines())
         self.assertEqual(changed, {
             'plugins/fcis-skill-authoring-and-sync/plugin.json',
-            'plugins/fcis-skill-authoring-and-sync/skills/fcis-skill-authoring-and-sync/SKILL.md',
+            'plugins/fcis-skill-authoring-and-sync/skills/fcis-go/SKILL.md',
         })
 
     def test_direct_main_push_is_refused(self):
@@ -178,7 +197,7 @@ class MarketplacePublishTests(unittest.TestCase):
         changed = set(git(self.root, "show", "--pretty=format:", "--name-only", "HEAD").splitlines())
         self.assertEqual(changed, {
             "plugins/fcis-skill-authoring-and-sync/plugin.json",
-            "plugins/fcis-skill-authoring-and-sync/skills/fcis-skill-authoring-and-sync/SKILL.md",
+            "plugins/fcis-skill-authoring-and-sync/skills/fcis-go/SKILL.md",
         })
         again = publishing.publish(self.root, perform_push=False)
         self.assertEqual(again["state"], "ALREADY_SYNCHRONIZED")
