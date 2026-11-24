@@ -7,11 +7,11 @@
     "name": "fcis-go",
     "canonicalPath": "skills/canonical/fcis-go",
     "marketplaceWebsiteURL": "https://fcis.fountain.coach/",
-    "contentSHA256": "1bd18f3dac5e29d699f7a24daef160970688438c0f3fcadcb34436384a58f86c",
+    "contentSHA256": "3ca19cdb7c6afcbda1f3eef06cb4b7aaaaffdc358e167fad05d67fb95446cf2f",
     "projections": {
       "openai": {
         "path": ".codex/skills/fcis-go",
-        "contentSHA256": "781184570b8cbe32d9924d1f7905bf69448e822acfa635ab3e9ba82cc544f47f"
+        "contentSHA256": "e4bc2bd352013fd0eeaa4dfd02d485d818840f1a7ec3f409aeed606af501860e"
       }
     }
   },
