@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.5.1",
-    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes.",
+    "version": "0.5.2",
+    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result.",
     "contact": {
       "name": "Fountain Coach FCIS",
       "url": "https://github.com/Fountain-Coach/.github"
@@ -3052,11 +3052,11 @@
         },
         "responses": {
           "200": {
-            "description": "Authenticated target result; execution and admission still separately verified",
+            "description": "Durable issuer readback of one authenticated outbound machine contact; not Host admission or execution",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HostObservation"
+                  "$ref": "#/components/schemas/HostChannelReceipt"
                 }
               }
             }
@@ -3306,11 +3306,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Store-correlated last channel witness",
+            "description": "Last persisted and reverified signed contact receipt for the owner-bound pairing; not current reachability or execution",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HostObservation"
+                  "$ref": "#/components/schemas/HostChannelReceipt"
                 }
               }
             }
@@ -9872,6 +9872,73 @@
           "scopes_supported"
         ],
         "additionalProperties": false
+      },
+      "HostChannelReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Existing FountainHostOwnerChannelReceipt wire. A fresh signed machine probe is bound to a durable owner-approved pairing and its exact artifact. Challenge expiry does not erase a completed pairing. Receipt is historical contact only, never native MIDI2 peer admission, session, current health or tool permission.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "channel- plus targetID, colon and the canonical base64 nonce"
+          },
+          "requestID": {
+            "type": "string"
+          },
+          "targetID": {
+            "$ref": "#/components/schemas/HostTargetID"
+          },
+          "machine": {
+            "type": "string"
+          },
+          "artifactDigest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "machineKeyFingerprint": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "nonce": {
+            "type": "string",
+            "description": "Canonical standard base64 of 32-byte nonce"
+          },
+          "signedAtSeconds": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix epoch seconds; at ingress within 30 seconds of issuer clock"
+          },
+          "observedAt": {
+            "$ref": "#/components/schemas/FoundationDateSeconds"
+          },
+          "state": {
+            "const": "channel-observed-unadmitted"
+          },
+          "terminal": {
+            "const": true
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "id",
+          "requestID",
+          "targetID",
+          "machine",
+          "artifactDigest",
+          "machineKeyFingerprint",
+          "nonce",
+          "signedAtSeconds",
+          "observedAt",
+          "state",
+          "terminal",
+          "evidence"
+        ]
       }
     }
   },

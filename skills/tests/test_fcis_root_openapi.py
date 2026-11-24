@@ -207,7 +207,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.5.1")
+        self.assertEqual(a["info"]["version"], "0.5.2")
         # Preserve every predecessor operation byte-semantically except the
         # reviewed status GET Origin clarification. Restore that exact two-field
         # delta before comparing the original 0.4.0 compatibility digest.
@@ -218,6 +218,28 @@ class FCISRootOpenAPITests(unittest.TestCase):
         self.assertEqual(origin["description"], "Read-only status: require the exact issuer Origin, or absent Origin only with browser Fetch Metadata same-origin, cors, empty destination and the exact issuer Host. A foreign or ambiguous Origin is refused. A current owner passkey session is still required. Mutation Origin and intent requirements are unchanged.")
         origin["required"] = True
         origin["description"] = "Exact browser Origin must be on the issuer allowlist. No Origin is a 403 on owner pairing routes."
+        # The two formerly specified-only contact operations accidentally
+        # promised a host.describe job. Restore only their reviewed response
+        # description/schema delta for the immutable predecessor comparison.
+        for path, method, old, new in (
+            ("/oauth/host/channel/probe", "post",
+             "Authenticated target result; execution and admission still separately verified",
+             "Durable issuer readback of one authenticated outbound machine contact; not Host admission or execution"),
+            ("/oauth/owner/hosts/channel/status", "get",
+             "Store-correlated last channel witness",
+             "Last persisted and reverified signed contact receipt for the owner-bound pairing; not current reachability or execution"),
+        ):
+            r = baseline[path][method]["responses"]["200"]
+            self.assertEqual(r["description"], new)
+            self.assertEqual(r["content"]["application/json"]["schema"], {"$ref": "#/components/schemas/HostChannelReceipt"})
+            r["description"] = old
+            r["content"]["application/json"]["schema"] = {"$ref": "#/components/schemas/HostObservation"}
+        witness = a["components"]["schemas"]["HostChannelReceipt"]
+        self.assertFalse(witness["additionalProperties"])
+        self.assertEqual(set(witness["required"]), {"id", "requestID", "targetID", "machine", "artifactDigest", "machineKeyFingerprint", "nonce", "signedAtSeconds", "observedAt", "state", "terminal", "evidence"})
+        self.assertEqual(witness["properties"]["state"], {"const": "channel-observed-unadmitted"})
+        self.assertEqual(witness["properties"]["terminal"], {"const": True})
+        self.assertEqual(witness["properties"]["observedAt"], {"$ref": "#/components/schemas/FoundationDateSeconds"})
         self.assertEqual(digest(baseline), BASELINE_PATHS_SHA256)
         self.assertEqual(digest({n: a["components"]["schemas"][n] for n in BASELINE_SCHEMAS}), BASELINE_SCHEMAS_SHA256)
         self.assertEqual(digest(a["components"]["securitySchemes"]), BASELINE_SECURITY_SHA256)
