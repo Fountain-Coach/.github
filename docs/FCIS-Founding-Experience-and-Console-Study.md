@@ -46,6 +46,8 @@ Selection stays stable on navigation, refresh and return from authentication or 
 
 ### 3.1 Selected implementation stack — owner decision, 24 November 2026
 
+**Reusable development procedure:** [FCIS Console Development](../skills/canonical/fcis-console-development/SKILL.md) (owner-controlled source Skill; no additional marketplace distribution).
+
 Use **Vite + React + TypeScript** for the proposed FCIS Console. This is the selected implementation direction for the experience study, not a claim that React is already deployed. Preserve the existing native Go runtime and all admitted authority.
 
 | Layer | Selected technology / responsibility |
