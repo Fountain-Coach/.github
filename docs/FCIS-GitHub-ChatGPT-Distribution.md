@@ -41,6 +41,41 @@ installation, effective provider selection, and reversible hosted rollback.
 A supported previous-version restoration must be witnessed through the actual
 workspace marketplace before declaring full ownership acceptance.
 
+## FCIS-GO single-Skill marketplace publication — owner decision 24 November 2026
+
+The first managed FCIS-GO customer-facing plugin must contain **exactly one**
+active Skill: `fcis-go`. All nine existing historical canonical Skills remain
+source-maintained with their original provenance and pinned hashes in
+`skills/openai-distribution.json`. Automatic evidence elevation is suspended.
+The explicitly admitted active operator Skill is retained at
+`.codex/skills/fcis-go/` and separately pinned in
+`skills/fcis-go-publication.json`. No other FCIS Skill is published through
+the GitHub plugin.
+
+The existing plugin slug `fcis-skill-authoring-and-sync`, fixed marketplace
+identity `Plugin_fb9e0937c59c8191b9fa077fa5ea53ef`, GitHub marketplace,
+source repository, publisher, front page, original logo and approved copy are
+preserved. Only the derived package under
+`plugins/fcis-skill-authoring-and-sync/skills/` changes. A migration is
+authorized to remove the nine old **derived mirror directories** only if
+their full file trees match the current pinned historical sources exactly.
+No `.codex/skills/` source tree is deleted or moved. The single new mirror
+must match the pinned active canonical Skill. Any extra, modified or symlinked
+mirror is refused.
+
+A single plugin patch version is issued for the reviewed change. Git tests
+and source/package parity must pass before protected merge; source-only
+success is distinct from hosted delivery. The owner then synchronizes
+the existing marketplace with `Jetzt synchronisieren` and independently
+verifies: one marketplace plugin, unchanged ID, new version, loaded original
+Fountain Coach icon, **one visible Skill named FCIS-GO**, exactly matched
+installed entrypoint and zero remaining old nine entries. A provider refusal
+or incomplete inspection remains explicitly unaccepted. Product release
+is separated from the still-unproven valid-version rollback operation.
+
+All earlier historical sections below document the prior nine-Skill
+distribution. They are provenance, not instructions to republish nine Skills.
+
 ## FCIS-GO hosted installation and recoverability (24 November 2026)
 
 The original GitHub marketplace `fountain-coach/.github`, branch `main`, now

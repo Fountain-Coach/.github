@@ -62,9 +62,9 @@ source_checks() {
     note "Validate prerequisite-free whole-system FCIS composition and source bindings"
     python3 scripts/verify_fcis_system_spec.py
   fi
-  note "Validate nine canonical Skill full-tree digests"
+  note "Validate nine maintained canonical Skill hashes and the one owner-approved active publication"
   python3 skills/skillctl.py check
-  note "Validate the existing single-plugin mirror"
+  note "Validate the existing plugin with exactly one active FCIS-GO mirror"
   python3 skills/plugin_projection.py check
   note "Run source, contract and Git-hook regression suite"
   python3 -m unittest discover -s skills/tests -v

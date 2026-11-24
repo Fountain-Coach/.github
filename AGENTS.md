@@ -1,6 +1,6 @@
 **Canonical prerequisite-free FCIS system:** [FCIS-SYSTEM.json](FCIS-SYSTEM.json) and its [structural validation schema](FCIS-SYSTEM.schema.json) own the machine-readable whole-system composition and coverage gate. [FCIS-STACK.md](FCIS-STACK.md) owns the human-readable architecture; its peer [FCIS-OPENAPI.json](FCIS-OPENAPI.json) owns exact FCIS HTTP routes and types. The standalone Go specification must build from zero FCIS state: first-owner bootstrap, new native Store/vault, included frontend and software Host must not require an existing Hetzner instance, GitHub service, external MIDI2 device, deployed FCIS owner or operator SSH credential. Historical Fountain Coach deployment adoption is a separate optional profile, preserving existing grants and custody only when explicitly invoked. **No Go source generation until the entire system contract is structurally and source-consistency validated; a spec commit is never code, a test result or deployed evidence.** No automatic owner migration, admission/grant invention, Skill ownership transfer or billing gate. Keep instruction-layer rules in RFC 0001, external MIDI2/FCIS-KIT execution contracts in source owners and full runtime acceptance separate.
 
-**Mandatory governing-Skill resolution (before Git, SSH, planning, tests or implementation):** Classify the original FCIS task against installed Skill names/descriptions. If the skill catalog is truncated, call `skills__list`, then read the most specific full entrypoint via `skills__read` **before** non-Skill tools. Owner/iPad passkeys, registration, sign-in, session cookies, redirects, OAuth consent and Fleet Access → **`fcis-owner-access`**. Go implementations, builds and release → **`fcis-go-runtime-migration`**. Skill authoring, skill-selection/routing problems and plugin maintenance → **`fcis-skill-authoring-and-sync`**. If tasks overlap, load the owner-specific Skill first, then supporting ones. `governance-read` and `secure-publishing` are supporting rules, not substitutes for the domain Skill. If a necessary entrypoint cannot be found/read, or routing is genuinely ambiguous, stop FCIS mutation with an exact report and no invented fallback. Preserve the original goal and DoD. Git can validate published routing guidance but cannot guarantee provider-side ChatGPT Skill invocation.
+**Mandatory governing-Skill resolution (before Git, SSH, planning, tests or implementation):** In the FCIS-GO marketplace release, the owner has selected **one active published Skill: `fcis-go`**. For marketplace ownership, source-to-plugin publication, skill maintenance, synchronization, version drift, installed readback or recovery, load `fcis-go` first with `skills__read`. The nine older canonical FCIS Skill trees remain source-maintained under `.codex/skills/` but are **not installed through FCIS-GO**; when specialized owner Access, Go runtime, Linotype, EstatePublisher or instrument procedures are needed, read their canonical Git source under the existing policy, and use authorized runtime tools separately. Do not try to invoke maintained source Skills as if they remain provider-installed, infer grants from instructions, or create a substitute plugin. Keep the original owner DoD and distinguish source contracts from live provider acceptance.
 
 # Fountain Coach Organization — Founding Agent Conduct
 
@@ -24,34 +24,8 @@ developing them further.
 
 **Project continuity (mandatory for governed implementation):** Read the owning repository's current `PLANS.md` and resolve its accepted scenario, active phase, latest evidenced state and next unfinished action **before** proposing another plan or modifying source. Maintain that same phase **in place** during work and reconcile it before handoff; do not append a new session narrative on each turn. Keep the readable state concise and point to Git commits and existing acceptance records. FountainStore proves only Store operations independently witnessed there; GitHub collaboration metadata is not runtime proof. An unavailable Store is not automatically a blocker to an otherwise authorized Git operation. Preserve concurrent plan changes by checking the revision before writing. Consult the [FCIS project continuity contract](docs/FCIS-Non-Invention-and-Goal-Fidelity.md#project-continuity-and-transparent-execution) for exact boundaries.
 
-**Active procedural learning (automatic canonical elevation):** After independently
-accepted nontrivial work, proactively inspect actual result and available evidence
-for a transferable, non-obvious procedure. Prefer revising an existing FCIS agent
-Skill to creating a duplicate. For a Reframe scenario with a reconciled accepted
-Swift terminal receipt, bound run/events, Store readback, AX and window-ID witness,
-prepare an evidence-backed candidate and invoke `skills/auto_elevate.py` against
-the exact evidence bundle and scenario source Git repository. A successful
-validation automatically revises the one existing Skill under this organization's
-`.codex/skills/`, updates its file-tree digest, and commits both canonical files
-without a separate per-lesson approval. Repeated evidence is idempotent. Missing,
-inconsistent, or invalidated evidence refuses mutation. If the work is not yet
-independently witnessed, retain a non-admitted proposal; never fabricate proof.
-Automatic elevation owns only canonical source learning. It cannot create a
-Kit/runtime identity, rewrite the project's Definition of Done, or change
-unrelated source. **Separate, explicitly delegated Git distribution:** the
-versioned local `.githooks/post-commit` calls the existing
-`skills/plugin_projection.py` and `skills/marketplace_publish.py` to make
-one **separate derived commit** (never part of the canonical learning commit)
-for the nine reviewed Skill directories in the **existing single plugin**.
-`test.yml` and the read-only main-branch
-`.github/workflows/fcis-marketplace-sync.yml` refuse missing or drifting
-mirrors. Source and derivative are reviewed in the *same PR*, and protected
-`main` is updated only through required checks, not a bot push. A missing
-local hook is not a bypass: CI fails when the exact mirrored package is absent.
-This Git-owned procedure does not update ChatGPT account installations, the
-hosted Skills API or active/default pointers. Independent provider
-synchronization/readback remains a separate accepted operation; a source
-commit is not hosted Skill acceptance.
+**Current FCIS source maintenance freeze (owner decision 24 November 2026):**
+The nine source-bound canonical FCIS Skills retain their reviewed instructions, historical evidence and provenance in `skills/openai-distribution.json`, but automatic scenario-based learning promotion is suspended by `skills/fcis-maintenance.json` and fail-closed in `skills/auto_elevate.py`. The owner explicitly admitted `fcis-go` as the one published customer-facing operator Skill in `skills/fcis-go-publication.json`. Source reviews and security maintenance of the historical nine remain permitted; their changes do not add them to the public marketplace package. The existing `skills/plugin_projection.py` projects the sole active `fcis-go` tree; all deleted previous mirror directories must be byte-identical to their pinned canonical sources. Publication is a separate reviewed derived Git commit and protected PR. ChatGPT provider sync and independently observed active-version behavior are separate stages. Do not reenable speculative promotion or widen active published Skills without an explicit owner decision.
 
 **FCIS Skills: NO ZIP DELIVERY (binding, all agents and interfaces).**
 Never create, attach, download for handoff, upload, recommend, or distribute
@@ -69,19 +43,14 @@ never as a creation or publication action. This rule does not affect
 non-Skill archives or the tested Git disaster-recovery bundles.
 
 **FCIS account Skill collision guard (binding for FCIS maintenance).**
-The nine canonical FCIS Skills are distributed through the single imported
-GitHub-backed marketplace plugin. An independently installed account Skill of
-the same canonical identity is a runtime authority collision even if its text
-matches today. Following each marketplace synchronization, inspect the
-authenticated account's exact installed state and run the read-only
-`skills/skillctl.py guard` before claiming convergence. Under the user's
-bounded authorization, a proven duplicate may be **uninstalled** using the
-provider's reversible account control; never **delete** its authored copy,
-touch unrelated Skills, or change the plugin identity. Preserve separate
-evidence for the account uninstall, marketplace version, and actual fresh-chat
-execution. GitHub Actions cannot see or manage account Skills, so a source
-CI pass is not an account-cleanliness guarantee. Missing account access is
-UNVERIFIED; no ZIP fallback or undocumented provider API.
+The active FCIS-GO marketplace has one Skill `fcis-go`. The nine historical source
+Skills are not part of its advertised execution surface. After a marketplace
+sync, independently inspect exact provider-installed Skill counts and any
+separate standalone account Skills before claiming convergence. Conflicting
+identities are evidence, not authority to delete user-owned Skill definitions.
+Only the supported reversible uninstall of independently identified duplicates
+may be used under owner authorization. Git source checks do not establish
+ChatGPT runtime routing; record any unverified selected version separately.
 
 A new blocker requires four traceable answers: requested outcome, current
 failed operation, governing source, smallest necessary correction. An

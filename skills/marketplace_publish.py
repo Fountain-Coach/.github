@@ -10,7 +10,7 @@ import re
 import subprocess
 import sys
 
-from plugin_projection import CANONICAL_SKILLS, MIRROR_PATH, PLUGIN_PATH, ProjectionError, check
+from plugin_projection import CANONICAL_SKILLS, ACTIVE_SKILL, MIRROR_PATH, PLUGIN_PATH, ProjectionError, check
 from skillctl import ROOT
 
 
@@ -32,7 +32,7 @@ def git(root, *args):
 
 
 def eligible_path(path):
-    """Only the existing plugin manifest and reviewed nine Skill mirror trees."""
+    """Permit the single public Skill and removal of exactly nine old mirrors."""
     if path == (PLUGIN_PATH / "plugin.json").as_posix():
         return True
     # The installed marketplace brand is derived from the exact published
@@ -40,7 +40,7 @@ def eligible_path(path):
     if path == (PLUGIN_PATH / "assets" / "fountain-coach-logo-transparent.png").as_posix():
         return True
     return any(path.startswith((PLUGIN_PATH / "skills" / name).as_posix() + "/")
-               for name in CANONICAL_SKILLS)
+               for name in CANONICAL_SKILLS + (ACTIVE_SKILL,))
 
 
 def validate_changed_paths(root):

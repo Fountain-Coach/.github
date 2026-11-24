@@ -30,5 +30,5 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Verify all nine canonical Skills and existing plugin through owner POSIX source CI
+      - name: Verify nine maintained canonical Skills and one active FCIS-GO plugin Skill through source CI
         run: sh scripts/fcis-ci.sh source

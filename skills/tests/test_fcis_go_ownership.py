@@ -24,6 +24,22 @@ class FCISGOOwnershipTests(unittest.TestCase):
             self.assertTrue((ROOT / row["source"] / "SKILL.md").is_file())
         self.assertEqual(check(ROOT)["state"], "MATCHED")
 
+    def test_single_published_fcis_go_skill_and_retained_nine(self):
+        from skillctl import entries, digest
+        public = json.loads((ROOT / "skills/fcis-go-publication.json").read_text())
+        self.assertEqual(public["activePluginId"], WORKSPACE_PLUGIN_ID)
+        active = public["activeSkill"]
+        self.assertEqual(active["name"], "fcis-go")
+        self.assertEqual(active["canonicalPath"], ".codex/skills/fcis-go")
+        canonical = entries(ROOT / active["canonicalPath"])
+        self.assertEqual(digest(canonical), active["contentSHA256"])
+        mirror = ROOT / "plugins/fcis-skill-authoring-and-sync/skills"
+        self.assertEqual([p.name for p in mirror.iterdir()], ["fcis-go"])
+        self.assertEqual(entries(mirror / "fcis-go"), canonical)
+        self.assertFalse(set(p.name for p in mirror.iterdir()) & set(CANONICAL_SKILLS))
+        self.assertEqual(check(ROOT)["sourceSkill"], "fcis-go")
+        self.assertEqual(set(check(ROOT)["skills"]), {"fcis-go"})
+
     def test_existing_plugin_id_and_original_logo_are_retained(self):
         market = json.loads((ROOT / ".agents/plugins/marketplace.json").read_text())
         self.assertEqual(len(market["plugins"]), 1)

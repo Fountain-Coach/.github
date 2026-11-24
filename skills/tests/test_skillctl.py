@@ -369,20 +369,20 @@ class SovereigntyTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 ctl.read_archive(path, "sample")
 
-    def test_active_learning_is_automatic_but_external_versions_stay_governed(self):
+    def test_maintenance_suspends_automatic_learning_and_preserves_source(self):
         org = (ctl.ROOT / "AGENTS.md").read_text()
         skill = (ctl.SKILLS / "fcis-skill-authoring-and-sync" / "SKILL.md").read_text()
         metadata = (ctl.SKILLS / "fcis-skill-authoring-and-sync" / "agents" / "openai.yaml").read_text()
-        self.assertIn("Active procedural learning (automatic canonical elevation)", org)
-        self.assertIn("## Active learning", skill)
-        self.assertIn("independently accepted", skill)
+        self.assertIn("Current FCIS source maintenance freeze", org)
+        self.assertIn("automatic scenario-based learning promotion is suspended", org)
+        self.assertIn("skills/fcis-go-publication.json", org)
+        self.assertIn("one active published Skill", org)
+        self.assertIn("## Active learning", skill)  # retained historical procedure
         self.assertIn("skills/auto_elevate.py", skill)
-        self.assertIn("without a separate per-lesson approval", org)
         self.assertIn("no per-lesson approval", metadata.lower())
-        self.assertIn("not a background service", skill)
-        self.assertIn("Scenario-based learning input", skill)
-        self.assertIn("skills/scenario_learning.py", skill)
-        self.assertIn("No ChatGPT/OpenAI version is changed", skill)
+        maintenance = (ctl.ROOT / "skills/fcis-maintenance.json").read_text()
+        self.assertIn('"automaticSkillElevation": "suspended"', maintenance)
+        self.assertFalse((ctl.ROOT / "plugins/fcis-skill-authoring-and-sync/skills/fcis-skill-authoring-and-sync").exists())
 
 if __name__ == "__main__":
     unittest.main()

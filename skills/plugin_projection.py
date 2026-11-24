@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Project all nine source-admitted canonical FCIS Skills into one existing GitHub-backed plugin.
+"""Project one owner-approved FCIS-GO Skill into the existing GitHub-backed plugin.
 
+Nine historical Skills remain pinned in canonical Git and outside the plugin.
 The plugin identity stays unchanged; this performs only derived Git file changes.
 It never installs or promotes a hosted ChatGPT version.
 """
@@ -8,6 +9,7 @@ import argparse
 import json
 from pathlib import Path
 import re
+import shutil
 import xml.etree.ElementTree as ET
 
 from skillctl import ROOT, digest, entries
@@ -15,10 +17,13 @@ from skillctl import ROOT, digest, entries
 SKILL = "fcis-skill-authoring-and-sync"
 PLUGIN = SKILL
 PLUGIN_PATH = Path("plugins") / PLUGIN
-MIRROR_PATH = PLUGIN_PATH / "skills" / SKILL
+ACTIVE_SKILL = "fcis-go"
+ACTIVE_MANIFEST_PATH = Path("skills/fcis-go-publication.json")
+MIRROR_PATH = PLUGIN_PATH / "skills" / ACTIVE_SKILL
 MARKETPLACE_PATH = Path(".agents/plugins/marketplace.json")
 WORKSPACE_PLUGIN_ID = "Plugin_fb9e0937c59c8191b9fa077fa5ea53ef"
 
+# The retained nine canonical, source-maintained procedures are NOT published.
 # Fixed reviewed inventory: the writer authorized eight canonical Skills through
 # 16 November and the ninth Go migration Skill on 17 November.
 # Further identities require separate review and admission.
@@ -208,87 +213,108 @@ def inspect(root=ROOT):
         validate_first_anti_loop_gate(name, files)
         source[name], digests[name] = files, h
 
-    website = records[SKILL].get("marketplaceWebsiteURL")
+    # Source-only maintenance retains nine trees and their pinned digests.
+    # One separate owner-approved manifest admits the single marketplace Skill.
+    public = _read_json(root / ACTIVE_MANIFEST_PATH)
+    item = public.get("activeSkill")
+    if (public.get("owner") != "Fountain-Coach/.github"
+            or public.get("maintainedSourceCatalog") != "skills/openai-distribution.json"
+            or public.get("activePluginId") != WORKSPACE_PLUGIN_ID
+            or not isinstance(item, dict)
+            or item.get("name") != ACTIVE_SKILL
+            or item.get("canonicalPath") != f".codex/skills/{ACTIVE_SKILL}"):
+        raise ProjectionError("Owner-approved single-Skill publication identity changed")
+    active = entries(root / ".codex" / "skills" / ACTIVE_SKILL)
+    if "agents/openai.yaml" not in active:
+        raise ProjectionError("Active FCIS-GO provider metadata missing")
+    validate_skill_host_metadata(ACTIVE_SKILL, active)
+    active_hash = digest(active)
+    if active_hash != item.get("contentSHA256"):
+        raise ProjectionError("FCIS-GO active canonical source digest drift")
+    source[ACTIVE_SKILL], digests[ACTIVE_SKILL] = active, active_hash
+    website = item.get("marketplaceWebsiteURL")
     if not isinstance(website, str) or not re.fullmatch(r"https://[^\s]+/", website):
-        raise ProjectionError("Missing canonical FCIS website")
+        raise ProjectionError("Missing active FCIS-GO website")
     return root, plugin, source, digests, website
 
 
-def _mirrors(root):
+def _mirrors(root, *, allow_migration=False, source=None):
+    """Read only the active mirror, allowing a finite verified legacy migration."""
     parent = root / PLUGIN_PATH / "skills"
     if parent.is_symlink():
         raise ProjectionError("Refusing skill directory symlink")
+    observed, old = {}, {}
     if parent.exists():
-        extras = sorted(p.name for p in parent.iterdir() if p.name not in CANONICAL_SKILLS)
-        if extras:
-            raise ProjectionError("Unknown plugin skill entries: " + ", ".join(extras))
-    observed = {}
-    for name in CANONICAL_SKILLS:
-        dest = parent / name
-        if dest.is_symlink() or (dest.exists() and not dest.is_dir()):
-            raise ProjectionError("Refusing unexpected mirror type: " + name)
-        if dest.exists() and not (dest / "SKILL.md").is_file():
-            raise ProjectionError("Incomplete existing mirror: " + name)
-        observed[name] = entries(dest) if dest.exists() else {}
-    return observed
+        for dest in parent.iterdir():
+            name = dest.name
+            if dest.is_symlink() or not dest.is_dir():
+                raise ProjectionError(f"Refusing unexpected mirror type: {name}")
+            if name not in set(CANONICAL_SKILLS) | {ACTIVE_SKILL}:
+                raise ProjectionError("Unknown plugin skill entries: " + name)
+            if not (dest / "SKILL.md").is_file():
+                raise ProjectionError("Incomplete existing mirror: " + name)
+            files = entries(dest)
+            if name == ACTIVE_SKILL:
+                observed[name] = files
+            elif allow_migration and source is not None and files == source[name]:
+                old[name] = files
+            else:
+                raise ProjectionError("Maintained Skill remains published or drifted: " + name)
+    return observed.get(ACTIVE_SKILL, {}), old
 
 
 def check(root=ROOT):
     root, plugin, source, digests, website = inspect(root)
     if plugin["extensions"]["com.openai"]["interface"].get("websiteURL") != website:
         raise ProjectionError("Plugin websiteURL differs from canonical metadata")
-    observed = _mirrors(root)
-    for name in CANONICAL_SKILLS:
-        if observed[name] != source[name]:
-            expected, actual = source[name], observed[name]
-            missing = sorted(expected.keys() - actual.keys())
-            extra = sorted(actual.keys() - expected.keys())
-            modified = sorted(p for p in expected.keys() & actual.keys() if expected[p] != actual[p])
-            raise ProjectionError(f"Derived {name} drift: missing={missing}, extra={extra}, modified={modified}")
+    current, old = _mirrors(root)
+    if old or current != source[ACTIVE_SKILL]:
+        raise ProjectionError("Active FCIS-GO mirror missing or divergent")
     return {"state": "MATCHED", "plugin": PLUGIN, "version": plugin["version"],
-            "sourceSkill": SKILL, "contentSHA256": digests[SKILL], "skills": digests}
+            "sourceSkill": ACTIVE_SKILL, "contentSHA256": digests[ACTIVE_SKILL],
+            "skills": {ACTIVE_SKILL: digests[ACTIVE_SKILL]},
+            "maintainedCanonicalSkills": {name: digests[name] for name in CANONICAL_SKILLS}}
 
 
 def sync(root=ROOT):
     root, plugin, source, digests, website = inspect(root)
     interface = plugin["extensions"]["com.openai"]["interface"]
     metadata_changed = interface.get("websiteURL") != website
-    if metadata_changed:
-        interface["websiteURL"] = website
-    existing = _mirrors(root)
+    current, old = _mirrors(root, allow_migration=True, source=source)
+    target = source[ACTIVE_SKILL]
+    unexpected = current.keys() - target.keys()
+    if unexpected:
+        raise ProjectionError(f"Refusing to remove unreviewed FCIS-GO files: {sorted(unexpected)}")
+    changed = current != target
+    migration = bool(old)
 
-    changed = set()
-    for name in CANONICAL_SKILLS:
-        current = existing[name]
-        target = source[name]
-        unexpected = current.keys() - target.keys()
-        if unexpected:
-            raise ProjectionError(f"Refusing to remove unreviewed {name} files: {sorted(unexpected)}")
-        if current != target:
-            changed.add(name)
-
-    # Validate all packages before touching any derived files.
-    for name in changed:
-        dest = root / PLUGIN_PATH / "skills" / name
-        for relative, data in source[name].items():
+    # Check every old mirrored byte before deleting any published source.
+    # Only the nine specifically owner-retired, byte-identical derived copies
+    # may be removed; all canonical .codex/skills trees remain untouched.
+    if changed:
+        dest = root / PLUGIN_PATH / "skills" / ACTIVE_SKILL
+        for relative, data in target.items():
             path = dest / relative
             if path.is_symlink():
-                raise ProjectionError(f"Refusing mirror symlink: {name}/{relative}")
+                raise ProjectionError(f"Refusing mirror symlink: {ACTIVE_SKILL}/{relative}")
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
+    for name in old:
+        shutil.rmtree(root / PLUGIN_PATH / "skills" / name)
 
-    # One existing plugin identity, one patch bump even if multiple skills changed.
-    # A brand-new empty test fixture starts at its initial version.
-    if any(existing.values()) and (changed or metadata_changed):
+    if metadata_changed:
+        interface["websiteURL"] = website
+    if (current or old) and (changed or migration or metadata_changed):
         major, minor, patch = map(int, plugin["version"].split("."))
         plugin["version"] = f"{major}.{minor}.{patch + 1}"
-    if metadata_changed or (any(existing.values()) and changed):
+    if metadata_changed or (current or old) and (changed or migration):
         (root / PLUGIN_PATH / "plugin.json").write_text(
             json.dumps(plugin, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     result = check(root)
-    if changed or metadata_changed:
+    if changed or migration or metadata_changed:
         result["state"] = "SYNCED"
-        result["changedSkills"] = sorted(changed)
+        result["changedSkills"] = [ACTIVE_SKILL] if changed else []
+        result["removedMaintainedMirrors"] = sorted(old)
     return result
 
 

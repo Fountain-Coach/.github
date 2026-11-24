@@ -72,6 +72,26 @@ class MarketplaceProjectionTests(unittest.TestCase):
         catalog.write_text(json.dumps({
             "owner": "Fountain-Coach/.github", "skills": rows
         }))
+        self.active = self.root / ".codex/skills/fcis-go"
+        self.active.mkdir(parents=True)
+        (self.active / "agents").mkdir()
+        (self.active / "SKILL.md").write_text(
+            "---\nname: fcis-go\ndescription: Govern FCIS-GO marketplace publication\n---\n"
+            "# FCIS-GO\n\nResolve owner purpose and source evidence.\n")
+        (self.active / "agents/openai.yaml").write_text(
+            "interface:\n  display_name: FCIS-GO\n")
+        active = {
+            "owner":"Fountain-Coach/.github",
+            "maintainedSourceCatalog":"skills/openai-distribution.json",
+            "activePluginId":projection.WORKSPACE_PLUGIN_ID,
+            "activeSkill":{
+                "name":"fcis-go",
+                "canonicalPath":".codex/skills/fcis-go",
+                "marketplaceWebsiteURL":"https://fcis.fountain.coach/",
+                "contentSHA256":digest(entries(self.active)),
+            }
+        }
+        (self.root / projection.ACTIVE_MANIFEST_PATH).write_text(json.dumps(active))
         self.marketplace = self.root / projection.MARKETPLACE_PATH
         self.marketplace.parent.mkdir(parents=True)
         self.marketplace.write_text(json.dumps({
@@ -122,7 +142,7 @@ class MarketplaceProjectionTests(unittest.TestCase):
         result = projection.sync(self.root)
         self.assertEqual(result["state"], "SYNCED")
         self.assertEqual(result["version"], "0.1.0")
-        self.assertEqual(entries(self.canonical), entries(self.root / projection.MIRROR_PATH))
+        self.assertEqual(entries(self.active), entries(self.root / projection.MIRROR_PATH))
 
     def test_repeat_sync_is_a_no_op(self):
         projection.sync(self.root)
@@ -145,18 +165,14 @@ class MarketplaceProjectionTests(unittest.TestCase):
             updated["extensions"]["com.openai"]["interface"]["websiteURL"],
             "https://fcis.fountain.coach/",
         )
-        self.assertEqual(entries(self.canonical), entries(self.root / projection.MIRROR_PATH))
+        self.assertEqual(entries(self.active), entries(self.root / projection.MIRROR_PATH))
 
     def test_source_change_requires_sync_and_versions_derived_release(self):
         projection.sync(self.root)
-        self.canonical.joinpath("SKILL.md").write_text(
-            self.canonical.joinpath("SKILL.md").read_text() + "\nVerified learning.\n"
+        self.active.joinpath("SKILL.md").write_text(
+            self.active.joinpath("SKILL.md").read_text() + "\nVerified learning.\n"
         )
-        catalog = self.root / "skills/openai-distribution.json"
-        data = json.loads(catalog.read_text())
-        next(item for item in data["skills"] if item["name"] == projection.SKILL
-             )["contentSHA256"] = digest(entries(self.canonical))
-        catalog.write_text(json.dumps(data))
+        self._re_pin_active()
         with self.assertRaises(projection.ProjectionError):
             projection.check(self.root)
         result = projection.sync(self.root)
@@ -168,32 +184,71 @@ class MarketplaceProjectionTests(unittest.TestCase):
             projection.WORKSPACE_PLUGIN_ID,
         )
 
-    def test_all_nine_skills_projected_in_one_plugin_identity(self):
+    def test_only_one_active_skill_and_nine_retained_source_skills(self):
         result = projection.sync(self.root)
-        self.assertEqual(set(result["skills"]), set(projection.CANONICAL_SKILLS))
-        self.assertEqual(len(result["changedSkills"]), 9)
-        for name in projection.CANONICAL_SKILLS:
-            self.assertEqual(entries(self.root / ".codex/skills" / name),
-                             entries(self.root / projection.PLUGIN_PATH / "skills" / name))
+        self.assertEqual(set(result["skills"]), {"fcis-go"})
+        self.assertEqual(result["changedSkills"], ["fcis-go"])
+        self.assertEqual(set(result["maintainedCanonicalSkills"]), set(projection.CANONICAL_SKILLS))
+        self.assertEqual(sorted(p.name for p in (self.root / projection.PLUGIN_PATH / "skills").iterdir()), ["fcis-go"])
+        self.assertEqual(entries(self.root / ".codex/skills/fcis-go"),
+                         entries(self.root / projection.PLUGIN_PATH / "skills/fcis-go"))
         self.assertEqual(len(json.loads(self.marketplace.read_text())["plugins"]), 1)
 
-    def test_only_secondary_skill_change_bumps_once(self):
+    def test_maintenance_source_edit_does_not_widen_public_surface(self):
         projection.sync(self.root)
         other = "linotype-estate-template"
-        source = self.root / ".codex/skills" / other
+        source = self.root / ".codex" / "skills" / other
         (source / "SKILL.md").write_text((source / "SKILL.md").read_text() +
-                                        "\nA new accepted rule.\n")
-        catalog = self.root / "skills/openai-distribution.json"
-        data = json.loads(catalog.read_text())
-        next(item for item in data["skills"] if item["name"] == other
-             )["contentSHA256"] = digest(entries(source))
-        catalog.write_text(json.dumps(data))
+                                        "\nReviewed security correction.\n")
+        self._re_pin(other)
+        result = projection.check(self.root)
+        self.assertEqual(result["state"], "MATCHED")
+        self.assertEqual(projection.sync(self.root)["state"], "MATCHED")
+        self.assertEqual(result["version"], "0.1.0")
+        self.assertFalse((self.root / projection.PLUGIN_PATH / "skills" / other).exists())
+
+    def test_active_skill_revision_bumps_once(self):
+        projection.sync(self.root)
+        (self.active / "SKILL.md").write_text(
+            (self.active / "SKILL.md").read_text() + "\nOwner-accepted release correction.\n")
+        self._re_pin_active()
         with self.assertRaises(projection.ProjectionError):
             projection.check(self.root)
-        result = projection.sync(self.root)
-        self.assertEqual(result["changedSkills"], [other])
-        self.assertEqual(result["version"], "0.1.1")
+        changed = projection.sync(self.root)
+        self.assertEqual(changed["version"], "0.1.1")
+        self.assertEqual(changed["changedSkills"], ["fcis-go"])
         self.assertEqual(projection.sync(self.root)["state"], "MATCHED")
+
+    def test_retiring_old_exact_mirrors_removes_only_derived_copies(self):
+        # Reconstruct one retired legacy mirror as if this were 0.1.39.
+        name = "linotype-estate-template"
+        import shutil
+        old = self.root / projection.PLUGIN_PATH / "skills" / name
+        shutil.copytree(self.root / ".codex/skills" / name, old)
+        before = entries(self.root / ".codex/skills" / name)
+        result = projection.sync(self.root)
+        self.assertEqual(result["removedMaintainedMirrors"], [name])
+        self.assertFalse(old.exists())
+        self.assertEqual(entries(self.root / ".codex/skills" / name), before)
+        self.assertEqual(sorted(p.name for p in old.parent.iterdir()), ["fcis-go"])
+
+    def test_retirement_refuses_modified_old_mirror_without_deletion(self):
+        import shutil
+        name = "fcis-swift-build"
+        old = self.root / projection.PLUGIN_PATH / "skills" / name
+        shutil.copytree(self.root / ".codex/skills" / name, old)
+        (old / "SKILL.md").write_text("Unreviewed live instruction\n")
+        canonical = entries(self.root / ".codex/skills" / name)
+        with self.assertRaisesRegex(projection.ProjectionError, "drifted"):
+            projection.sync(self.root)
+        self.assertTrue(old.exists())
+        self.assertEqual(entries(self.root / ".codex/skills" / name), canonical)
+
+    def _re_pin_active(self):
+        path = self.root / projection.ACTIVE_MANIFEST_PATH
+        data = json.loads(path.read_text())
+        data["activeSkill"]["contentSHA256"] = digest(entries(self.active))
+        path.write_text(json.dumps(data))
 
     def _re_pin(self, name):
         catalog = self.root / "skills/openai-distribution.json"

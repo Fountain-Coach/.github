@@ -41,8 +41,8 @@ class FCISMaintenancePlanTests(unittest.TestCase):
         for name in ("fcis-owner-access", "fcis-go-runtime-migration",
                      "fcis-skill-authoring-and-sync"):
             canonical = entries(ROOT / ".codex" / "skills" / name)
-            mirrored = entries(ROOT / "plugins" / "fcis-skill-authoring-and-sync" / "skills" / name)
-            self.assertEqual(canonical, mirrored)
+            mirror = ROOT / "plugins" / "fcis-skill-authoring-and-sync" / "skills" / name
+            self.assertFalse(mirror.exists(), "Maintained source Skill was republished")
             self.assertEqual(digest(canonical), records[name]["contentSHA256"])
             intro = canonical["SKILL.md"].decode("utf-8")
             self.assertIn("FCIS-Maintenance-Hook-CI-Plan.md", intro)

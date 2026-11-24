@@ -184,17 +184,14 @@ class FCISRootOpenAPITests(unittest.TestCase):
         self.assertNotIn("/regulation", self.api["paths"])
         self.assertNotIn("/compliance", self.api["paths"])
 
-    def test_skills_are_mirrored_in_single_existing_plugin(self):
+    def test_one_active_skill_and_maintained_owner_openapi_sources(self):
+        parent = ROOT / "plugins/fcis-skill-authoring-and-sync/skills"
+        self.assertEqual([p.name for p in parent.iterdir()], ["fcis-go"])
         for name in ("fcis-owner-access", "fcis-go-runtime-migration"):
             canonical = ROOT / ".codex" / "skills" / name
-            derived = ROOT / "plugins/fcis-skill-authoring-and-sync/skills" / name
-            files = {p.relative_to(canonical) for p in canonical.rglob("*")
-                     if p.is_file()}
-            self.assertEqual(files, {p.relative_to(derived)
-                                     for p in derived.rglob("*") if p.is_file()})
-            for path in files:
-                self.assertEqual((canonical / path).read_bytes(),
-                                 (derived / path).read_bytes())
+            self.assertTrue((canonical / "SKILL.md").is_file())
+            self.assertFalse((parent / name).exists())
+
 
 
 if __name__ == "__main__":
