@@ -3,6 +3,7 @@
 This is source/schema validation only: never certifies a deployed Go service.
 """
 import json
+import hashlib
 from pathlib import Path
 import re
 import unittest
@@ -47,6 +48,14 @@ REQUIRED_GO = {
     ("post", "/oauth/host/channel/probe"),
     ("get", "/oauth/owner/hosts/channel/status"),
 }
+
+
+# Immutable 0.4.0 compatibility baseline (organization commit 57d7470).
+BASELINE_PATHS = ['/oauth/owner/hosts', '/oauth/owner/host/describe', '/oauth/owner/hosts/pair/begin', '/oauth/owner/hosts/pair/status', '/oauth/owner/hosts/pair/decide', '/oauth/host/enrollment/prove', '/oauth/host/enrollment/activate', '/oauth/owner/grants', '/oauth/owner/revoke', '/oauth/owner/reference/openapi', '/.well-known/oauth-authorization-server', '/.well-known/oauth-protected-resource', '/.well-known/jwks.json', '/oauth/register', '/oauth/authorize', '/oauth/token', '/oauth/owner/passkeys/login', '/oauth/owner/passkeys/login/options', '/oauth/owner/passkeys/enroll/options', '/oauth/owner/passkeys/login/verify', '/oauth/owner/passkeys/enroll/verify', '/oauth/owner/passkeys/logout', '/mcp', '/healthz', '/oauth/host/instruments/discover', '/oauth/host/grants/renew', '/oauth/host/channel/probe', '/oauth/host/session/frame', '/oauth/owner/hosts/channel/status']
+BASELINE_SCHEMAS = ['HostTargetID', 'FoundationDateSeconds', 'OwnerError', 'OwnerFleetHost', 'OwnerFleetInventory', 'HostObservation', 'PairBeginRequest', 'PairStart', 'PairStatus', 'PairDecisionRequest', 'PairProofRequest', 'MachineActivationRequest', 'MachineAdmissionReceipt', 'OwnerGrant', 'OwnerGrantOverview', 'OwnerRevokeRequest', 'OwnerRevokeReceipt', 'OwnerOpenAPIDocument', 'OAuthServerMetadata', 'ProtectedResourceMetadata', 'JSONWebKeySet', 'OAuthClientRegistration', 'OAuthClientRegistrationResult', 'OAuthTokenResult', 'OAuthError', 'PasskeyOptions', 'PasskeyCredentialAssertion', 'OwnerSessionResult', 'MCPJSONRPCRequest', 'MCPJSONRPCResponse', 'MachineSignedRequest', 'MachineGrantReceipt', 'HostInstrumentDiscovery', 'HostChannelProbe', 'HostSessionFrame', 'HealthStatus', 'FirstOwnerPasskeyAttestation', 'FirstOwnerBootstrapPolicy']
+BASELINE_PATHS_SHA256 = '7290559144cda7d4b9d841e02233f86f96df8b2b5a8bfba1fb5af77b2548e940'
+BASELINE_SCHEMAS_SHA256 = '043bc5c7c4909532590c50d6482ddcd99158d0ceaffce7444b7dc99ec080eed2'
+BASELINE_SECURITY_SHA256 = '5ea921ceb9f07831cfb465dc09ad3f1cc511dc7b04e69ada9df813aaa5e24221'
 
 
 def all_refs(obj):
@@ -191,6 +200,81 @@ class FCISRootOpenAPITests(unittest.TestCase):
             canonical = ROOT / ".codex" / "skills" / name
             self.assertTrue((canonical / "SKILL.md").is_file())
             self.assertFalse((parent / name).exists())
+
+
+    def test_admin_api_050_preserves_040_http_contract(self):
+        def digest(value):
+            return hashlib.sha256(json.dumps(value, sort_keys=True,
+                separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
+        a = self.api
+        self.assertEqual(a["info"]["version"], "0.5.0")
+        self.assertEqual(digest({p: a["paths"][p] for p in BASELINE_PATHS}), BASELINE_PATHS_SHA256)
+        self.assertEqual(digest({n: a["components"]["schemas"][n] for n in BASELINE_SCHEMAS}), BASELINE_SCHEMAS_SHA256)
+        self.assertEqual(digest(a["components"]["securitySchemes"]), BASELINE_SECURITY_SHA256)
+        self.assertEqual(sum(len(v) for v in a["paths"].values()), 49)
+
+    def test_skill_admin_and_delivery_security_are_separate(self):
+        operations = [(path, method, op) for path, methods in self.api["paths"].items()
+                      for method, op in methods.items() if method in METHODS and "x-fcis-phase" in op]
+        self.assertEqual(len(operations), 19)
+        for path, method, op in operations:
+            with self.subTest(operation=op["operationId"]):
+                params = op.get("parameters", [])
+                placeholders = set(re.findall(r"\{([^}]+)\}", path))
+                self.assertEqual(placeholders, {p["name"] for p in params if p["in"] == "path"})
+                self.assertTrue(all(p["required"] for p in params if p["in"] == "path"))
+                if path.startswith("/oauth/owner/"):
+                    self.assertEqual(op["security"], [{"ownerPasskeySession": []}])
+                    if method == "post":
+                        headers = {p["name"]: p for p in params if p["in"] == "header"}
+                        self.assertTrue(headers["Origin"]["required"])
+                        h = headers["X-Fountain-Owner-Intent"]
+                        self.assertTrue(h["required"])
+                        self.assertEqual(h["schema"]["const"], op["x-fcis-owner-intent"])
+                elif path.startswith("/oauth/skills/"):
+                    self.assertEqual(op["security"], [{"oauthBearer": []}])
+                    self.assertEqual(op["x-fcis-resource"], "{issuerOrigin}/oauth/skills")
+                    self.assertIn(op["x-fcis-required-scope"], ("skills.read", "skills.acquire"))
+                    self.assertIn("WWW-Authenticate", op["responses"]["401"]["headers"])
+                else:
+                    self.assertIn(path, ("/catalog/skills", "/.well-known/oauth-protected-resource/oauth/skills"))
+                    self.assertEqual(method, "get")
+                    self.assertEqual(op["security"], [])
+                if path.startswith("/oauth/"):
+                    for response in op["responses"].values():
+                        self.assertEqual(response["headers"]["Cache-Control"]["schema"]["const"], "no-store")
+                if method == "post":
+                    self.assertTrue(op["requestBody"]["required"])
+        self.assertEqual(sum(op["x-fcis-phase"] == "skill-management" for _, _, op in operations), 7)
+        self.assertEqual(self.api["paths"]["/oauth/skills/releases/{releaseId}"]["get"]["x-fcis-required-scope"], "skills.read")
+
+    def test_skill_custody_public_catalogue_and_paid_receipt_shapes(self):
+        schemas = self.api["components"]["schemas"]
+        m = schemas["SkillPrivateReleaseManifest"]["properties"]
+        self.assertEqual(m["schemaVersion"]["const"], 2)
+        self.assertEqual(m["visibility"]["enum"], ["private"])
+        self.assertEqual(m["pluginID"]["const"], "")
+        self.assertEqual(m["pluginVersion"]["const"], "")
+        self.assertNotIn("source", schemas["SkillOffer"]["properties"])
+        self.assertNotIn("manifest", schemas["SkillOffer"]["properties"])
+        self.assertNotIn("signature", schemas["SkillOffer"]["properties"])
+        self.assertNotIn("customerTenantId", schemas["SkillOffer"]["properties"])
+        self.assertEqual(schemas["SkillPrice"]["properties"]["amountMinor"]["type"], "integer")
+        self.assertIn("acceptedTermsSHA256", schemas["SkillAcquisitionRequest"]["required"])
+        self.assertIn("confirmedPrice", schemas["SkillAcquisitionRequest"]["required"])
+        self.assertIn("receiptId", schemas["SkillAcquisition"]["required"])
+        conditional = schemas["SkillEntitlement"]["allOf"][0]
+        self.assertEqual(conditional["if"]["properties"]["basis"]["const"], "verified-payment")
+        self.assertEqual(conditional["then"]["properties"]["paymentReceiptId"]["type"], "string")
+        source = schemas["SkillLicensedSource"]["properties"]
+        self.assertIn("sourceSHA256", source)
+        self.assertIn("entitlementId", source)
+        for forbidden in ("manifest", "signature", "draftId", "customerTenantId"):
+            self.assertNotIn(forbidden, source)
+        for route in self.api["paths"]:
+            self.assertNotIn("/stripe/", route)
+            self.assertNotIn("/webhook", route)
+        self.assertEqual(self.api["x-fcis-skill-distribution"]["status"], "specified-only-not-deployed")
 
 
 

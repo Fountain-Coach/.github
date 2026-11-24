@@ -45,8 +45,11 @@ class FCISWholeSystemContractTests(unittest.TestCase):
 
     def test_exact_atomic_coverage_is_derived_from_source(self):
         verifier, doc, base = self._atomic_fixture()
-        self.assertEqual(len(doc["generation"]["requirementCatalog"]), 222)
-        self.assertEqual(verifier.check_atomic_coverage(doc, base), 222)
+        count = len(doc["generation"]["requirementCatalog"])
+        self.assertGreater(count, 222)
+        self.assertEqual(verifier.check_atomic_coverage(doc, base), count)
+        self.assertEqual(count, doc["coverageBaseline"]["atomicRequirementCount"])
+        self.assertIn("skill-distribution", doc["coverageBaseline"]["atomicRequirementGroups"])
         self.assertEqual(doc["generation"]["requirementGate"]["generatorReceipt"]["initialStatus"], "INCOMPLETE")
 
     def test_missing_atomic_requirement_fails_closed(self):

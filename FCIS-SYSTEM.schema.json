@@ -534,8 +534,31 @@
         "promotion",
         "recovery",
         "privacy",
-        "rights"
-      ]
+        "rights",
+        "distribution"
+      ],
+      "properties": {
+        "distribution": {
+          "type": "object",
+          "required": [
+            "decision",
+            "ownerProfile",
+            "security",
+            "clientResource",
+            "transactions",
+            "commercial",
+            "delivery",
+            "lifecycle",
+            "httpContract",
+            "collections",
+            "phases"
+          ],
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 10
+          }
+        }
+      }
     },
     "migration": {
       "type": "object",
