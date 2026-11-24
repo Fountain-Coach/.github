@@ -35,6 +35,10 @@ def eligible_path(path):
     """Only the existing plugin manifest and reviewed nine Skill mirror trees."""
     if path == (PLUGIN_PATH / "plugin.json").as_posix():
         return True
+    # The installed marketplace brand is derived from the exact published
+    # Fountain Coach logo, and this one owned file is reviewable in the PR.
+    if path == (PLUGIN_PATH / "assets" / "fountain-coach-logo-transparent.png").as_posix():
+        return True
     return any(path.startswith((PLUGIN_PATH / "skills" / name).as_posix() + "/")
                for name in CANONICAL_SKILLS)
 

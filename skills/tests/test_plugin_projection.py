@@ -101,6 +101,23 @@ class MarketplaceProjectionTests(unittest.TestCase):
             }}
         }))
 
+    def test_refuses_partial_or_invalid_marketplace_logo_asset(self):
+        data = json.loads(self.manifest.read_text())
+        interface = data["extensions"]["com.openai"]["interface"]
+        interface["logo"] = "./assets/fountain-coach-logo.png"
+        self.manifest.write_text(json.dumps(data))
+        with self.assertRaisesRegex(projection.ProjectionError, "logo and composerIcon"):
+            projection.check(self.root)
+        interface["composerIcon"] = "./assets/fountain-coach-logo.png"
+        self.manifest.write_text(json.dumps(data))
+        with self.assertRaisesRegex(projection.ProjectionError, "missing, unsafe"):
+            projection.check(self.root)
+        asset = self.root / projection.PLUGIN_PATH / "assets/fountain-coach-logo.png"
+        asset.parent.mkdir(parents=True)
+        asset.write_bytes(b"not an image")
+        with self.assertRaisesRegex(projection.ProjectionError, "PNG header"):
+            projection.check(self.root)
+
     def test_first_sync_copies_only_exact_canonical_tree(self):
         result = projection.sync(self.root)
         self.assertEqual(result["state"], "SYNCED")

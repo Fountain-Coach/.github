@@ -32,6 +32,14 @@ def git(root, *args):
 
 
 class MarketplacePublishTests(unittest.TestCase):
+    def test_original_logo_is_only_allowed_derived_brand_asset(self):
+        self.assertTrue(publishing.eligible_path(
+            "plugins/fcis-skill-authoring-and-sync/assets/fountain-coach-logo-transparent.png"))
+        self.assertFalse(publishing.eligible_path(
+            "plugins/fcis-skill-authoring-and-sync/assets/alternate-brand.png"))
+        self.assertFalse(publishing.eligible_path(
+            "plugins/fcis-skill-authoring-and-sync/assets/../../other.png"))
+
     def setUp(self):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)

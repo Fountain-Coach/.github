@@ -21,6 +21,12 @@ description: Resolve the governing FCIS Skill before any FCIS operation; author,
 This is the first decision of Skill Creator usage for FCIS. Read the existing [Founding Rule](../../../docs/FCIS-Non-Invention-and-Goal-Fidelity.md) and [named loop](../linotype-estate-template/references/invented-prerequisite-loop.md); do not create an additional gate service, second authority or packaged Skill. The generic platform skill-creator is provider-owned and is not changed by this Git source.
 
 
+## Current operating mode — FCIS-GO ownership milestone (24 November 2026)
+
+The owner has placed **all nine existing canonical FCIS Skills in maintenance mode**. The pinned canonical source and installed consumer contracts remain available; owner-reviewed security and observed-defect maintenance remains permitted. The standing automatic elevation workflow and new Skill admission are **suspended** until an explicit reviewed reactivation decision. The source-owned `skills/fcis-maintenance.json` records each maintained identity and `skills/auto_elevate.py` refuses an automatic write while this phase is active. An otherwise accepted scenario does not bypass the freeze.
+
+**Fixed first DoD:** prove control of the existing FCIS-GO marketplace plugin by a real Fountain Coach-logo update, exact owner-approved public metadata, one Git-derived patch release, independently read-back installed provider version, and a supported rollback with readback. Preserve `Plugin_fb9e0937c59c8191b9fa077fa5ea53ef` and its GitHub marketplace connection. Do not expand or retire the live nine-Skill provider surface before independent consumer/routing evidence and an expressly reviewed compatibility change. Fountain Coach maintains technology and canonical shared Skills; each customer governs their own learned extensions and working knowledge.
+
 ## Purpose
 
 Design and validate skill packages using FCIS-owned conventions; OpenAI Skill Creator may be used as a non-authoritative formatting aid. Fountain Coach Governance Chapter 160 establishes that **`Fountain-Coach/.github` alone owns the canonical agent skill definition.** Every repository mirror, ChatGPT installation, or OpenAI project API version is a derived distribution. The source owner has delegated evidence-gated automatic updates to existing canonical FCIS Skills; downstream observations alone never amend canonical source.
