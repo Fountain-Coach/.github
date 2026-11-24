@@ -5,6 +5,7 @@
 **Decision status:** Standalone prerequisite-free Go system; optional existing-instance adoption preserves independently verified prior authority. Git source, generated implementation, test evidence and deployed state remain separate.
 **Public service identity:** `https://fcis.fountain.coach/`
 **Immediate priority:** Go-native production cutover · **Second priority:** payment instrument with a Stripe provider adapter
+**Owner/customer experience study:** [FCIS — Founding Experience and Console Study](docs/FCIS-Founding-Experience-and-Console-Study.md) (design study, not additional runtime authority or a cutover prerequisite).
 
 > **Claim boundary:** This specification is the canonical *target architecture*, not evidence of a running production release. A Git commit, source test, process, staging URL or a public status badge cannot replace runtime acceptance.
 
@@ -214,6 +215,8 @@ Keep the existing GitHub `build` branch rule intact until a replacement owned-or
 Scale is achieved by evolving FountainStore's measured concurrency, replication and recovery capacity. Neither SQL databases nor an unproven multiwriter design is a mandatory initial cutover dependency.
 
 ## 9. Future commercial capability — **priority two**
+
+The owner-directed [Founding Experience and Console Study](docs/FCIS-Founding-Experience-and-Console-Study.md#4-commercial-experience) considers payment and usage in the interface from the outset. This design study does not change the priority-two runtime boundary or authorize live charges.
 
 A payment gateway is provided by a **provider-neutral FCIS Payment Instrument**; Stripe is its first external adapter. It is **not** a built-in OAuth subsystem, not an alternate capability plane, and **not a dependency** of FCIS production cutover.
 
