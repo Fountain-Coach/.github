@@ -26,6 +26,7 @@ diff_range() {
   git merge-base "$1" "$2" >/dev/null || fail "No common ancestor for candidate"
   note "Formatting changed committed bytes: $1...$2"
   git diff --check "$1...$2" || fail "Committed source contains whitespace errors"
+  if [ -f skills/public_skill_guard.py ]; then python3 skills/public_skill_guard.py --range "$1" "$2"; fi
 }
 default_diff() {
   require git
@@ -46,11 +47,13 @@ staged() {
   note "Fast local commit gate: canonical skill digests and staged whitespace"
   python3 skills/skillctl.py check
   git diff --cached --check || fail "Staged source contains whitespace errors"
+  if [ -f skills/public_skill_guard.py ]; then python3 skills/public_skill_guard.py --staged; fi
 }
 source_checks() {
   require git
   require python3
   [ -f FCIS-OPENAPI.json ] || fail "Missing canonical root OpenAPI"
+  if [ -f skills/public_skill_guard.py ]; then python3 skills/public_skill_guard.py --tree HEAD; fi
   note "Validate canonical OpenAPI JSON"
   python3 -m json.tool FCIS-OPENAPI.json >/dev/null
   # Minimal disposable H2/H3 Git-hook fixtures intentionally carry no system spec.
