@@ -10041,5 +10041,20 @@
     "delivery": "Only exact authorized source bytes and license are delivered, never public projection by default. No guarantee of provider installation, DRM or deletion of previously delivered copies. A client adapter may consume delivered instructions only with customer consent and separately proven supported integration. Tenant-derived knowledge remains customer-owned.",
     "lifecycle": "Draft -> verified evidence where applicable -> reviewed -> signed admitted revision; separate signed offer releases/withdrawals govern distribution, not source visibility. Restore is a fresh signed admission; withdrawal and entitlement revocation do not delete immutable history.",
     "status": "specified-only-not-deployed"
+  },
+  "x-fcis-learning-acceptance": {
+    "scenarioId": "FCIS-LEARN-01",
+    "canonicalContract": "FCIS-SYSTEM.json#/skillAndScenarioSystem/learningAcceptance",
+    "operationIds": [
+      "readOwnerSkill",
+      "readOwnerSkillRelease",
+      "createOwnerSkillDraft",
+      "readOwnerSkillDraft",
+      "reviewOwnerSkillDraft",
+      "admitOwnerSkillRelease"
+    ],
+    "reviewEvidenceKind": "scenario-verified",
+    "status": "specified-only-not-deployed",
+    "boundary": "These existing owner operations supply private draft, evidence review, signed admission and exact revision readback. The scenario also requires actual supported reasoning-client consumption and independent linked execution outcomes under existing authorization. Source-review, CLI admission without scenario review, a signed release, marketplace sync or a model assertion alone do not complete it. No new HTTP operation, credential, grant or commercial/public distribution is implied."
   }
 }
