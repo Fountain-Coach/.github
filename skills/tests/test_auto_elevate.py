@@ -115,6 +115,22 @@ class AutomaticElevationTests(unittest.TestCase):
         ]
         self.write_evidence()
 
+    def test_owner_maintenance_refuses_before_automatic_source_change(self):
+        policy = self.canonical / "skills" / "fcis-maintenance.json"
+        policy.write_text(json.dumps({
+            "owner": "Fountain-Coach/.github",
+            "mode": "maintenance",
+            "policy": {"automaticSkillElevation": "suspended"},
+        }))
+        before = self.skill.read_bytes()
+        revision = run_git(self.canonical, "rev-parse", "HEAD")
+        with self.assertRaisesRegex(learning.ElevationError,
+                                    "automatic Skill elevation suspended"):
+            learning.elevate(self.proposal_path, self.evidence, self.runtime,
+                             root=self.canonical)
+        self.assertEqual(self.skill.read_bytes(), before)
+        self.assertEqual(run_git(self.canonical, "rev-parse", "HEAD"), revision)
+
     def save_proposal(self):
         self.proposal_path.write_text(json.dumps(self.proposal, indent=2) + "\n")
 

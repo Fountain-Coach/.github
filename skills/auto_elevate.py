@@ -234,6 +234,19 @@ def elevate(proposal_path, evidence_dir, runtime_repo, root=ROOT):
     root = Path(root).resolve(strict=True)
     if Path(git(root, "rev-parse", "--show-toplevel")).resolve() != root:
         raise ElevationError("Canonical repository root does not match")
+    # The owner can freeze automatic learning in canonical Git without changing
+    # the verified procedures or deleting their history. Fail before reading
+    # a proposal, inspecting scenario evidence, or writing source.
+    maintenance_path = root / "skills" / "fcis-maintenance.json"
+    if maintenance_path.exists() or maintenance_path.is_symlink():
+        phase = read_json(maintenance_path, "FCIS maintenance policy")
+        if phase.get("owner") != "Fountain-Coach/.github":
+            raise ElevationError("FCIS maintenance authority disagrees")
+        if phase.get("mode") != "maintenance" or phase.get("policy", {}).get(
+                "automaticSkillElevation") != "suspended":
+            raise ElevationError("FCIS maintenance policy is inconsistent")
+        raise ElevationError(
+            "FCIS-GO owner maintenance mode: automatic Skill elevation suspended")
     proposal = read_json(Path(proposal_path), "scenario learning candidate")
     catalog_path = root / "skills" / "openai-distribution.json"
     catalog = read_json(catalog_path, "canonical distribution catalog")

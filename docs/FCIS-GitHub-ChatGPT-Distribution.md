@@ -10,10 +10,36 @@ authority for editing the Skill or installing any ChatGPT account version.
 - Canonical Git repository: https://github.com/Fountain-Coach/.github
 - Git marketplace: .agents/plugins/marketplace.json
 - Portable plugin: plugins/fcis-skill-authoring-and-sync/
-- Plugin: fcis-skill-authoring-and-sync (one identity); included Skills: all five exact canonical FCIS packages
+- Plugin: fcis-skill-authoring-and-sync (one identity); included source packages: nine canonical FCIS Skills (maintenance mode as of 24 November 2026)
 - Existing ChatGPT workspace plugin ID: `Plugin_fb9e0937c59c8191b9fa077fa5ea53ef`
   (authenticated Admin Console readback, activated and installed at 0.1.1)
 - No MCP service, runtime Kit capability, provider credentials or account action
+
+## FCIS-GO first ownership milestone — 24 November 2026
+
+The owner has frozen automatic Skill elevation and new Skill admission while
+establishing source-to-provider release ownership. All nine canonical reviewed
+Skill trees remain intact and are identified as maintained assets in
+`skills/fcis-maintenance.json`. `skills/auto_elevate.py` refuses automated
+promotion during this phase. Reviewed observed-defect and security maintenance
+continues.
+
+The existing plugin identity remains `Plugin_fb9e0937c59c8191b9fa077fa5ea53ef`.
+`FCIS-GO` is its public display name; Fountain Coach is its publisher. Its
+logo and composer icon reference the unchanged transparent Fountain Coach
+brand mark from `Fountain-Coach/fcis.fountain.coach`, maintained as a pinned
+derived asset in `plugins/fcis-skill-authoring-and-sync/assets/`. The public
+reading at `fcis.fountain.coach` explains the FCIS method and distinguishes
+the technology owner from each customer's retained knowledge.
+
+The nine-Skill Git projection is a compatibility baseline, not the customer
+product definition or a promise that every installed Skill is the active
+execution path. A change to provider-visible Skill availability requires a
+separate consumer/routing inventory and independently supported provider
+readback. Source merge and mirrored package parity are distinct from
+installation, effective provider selection, and reversible hosted rollback.
+A supported previous-version restoration must be witnessed through the actual
+workspace marketplace before declaring full ownership acceptance.
 
 ## One reviewed plugin, five canonical Skills (7 November 2026)
 

@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "mode": "maintenance",
+  "effectiveDate": "2026-11-24",
+  "owner": "Fountain-Coach/.github",
+  "pluginId": "Plugin_fb9e0937c59c8191b9fa077fa5ea53ef",
+  "policy": {
+    "automaticSkillElevation": "suspended",
+    "newSkillAdmission": "suspended",
+    "skillChanges": "owner-reviewed-maintenance-and-security-only",
+    "marketplaceActiveSurface": "unchanged-pending-independently-verified-consumer-and-provider-readback",
+    "canonicalHistory": "retained"
+  },
+  "skills": [
+    {
+      "name": "teatro-scenario-composer",
+      "state": "maintenance",
+      "source": ".codex/skills/teatro-scenario-composer"
+    },
+    {
+      "name": "linotype-estate-template",
+      "state": "maintenance",
+      "source": ".codex/skills/linotype-estate-template"
+    },
+    {
+      "name": "fcis-skill-authoring-and-sync",
+      "state": "maintenance",
+      "source": ".codex/skills/fcis-skill-authoring-and-sync"
+    },
+    {
+      "name": "fcis-owner-access",
+      "state": "maintenance",
+      "source": ".codex/skills/fcis-owner-access"
+    },
+    {
+      "name": "estate-publisher-deployment",
+      "state": "maintenance",
+      "source": ".codex/skills/estate-publisher-deployment"
+    },
+    {
+      "name": "satzfunk-voice-render",
+      "state": "maintenance",
+      "source": ".codex/skills/satzfunk-voice-render"
+    },
+    {
+      "name": "linotype-proof-press",
+      "state": "maintenance",
+      "source": ".codex/skills/linotype-proof-press"
+    },
+    {
+      "name": "fcis-swift-build",
+      "state": "maintenance",
+      "source": ".codex/skills/fcis-swift-build"
+    },
+    {
+      "name": "fcis-go-runtime-migration",
+      "state": "maintenance",
+      "source": ".codex/skills/fcis-go-runtime-migration"
+    }
+  ]
+}

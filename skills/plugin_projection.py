@@ -126,6 +126,33 @@ def validate_skill_host_metadata(name, files):
                 raise ProjectionError(f"{name}: {field} SVG below 48x48 provider minimum")
 
 
+def validate_plugin_brand_assets(root, interface):
+    """Verify actual portable marketplace branding files with bounded image data.
+
+    Historical isolated projection fixtures may have no provider branding;
+    a production presentation declares the pair together.
+    """
+    icon_fields = ("logo", "composerIcon")
+    if not any(interface.get(key) for key in icon_fields):
+        return
+    if not all(interface.get(key) for key in icon_fields):
+        raise ProjectionError("Marketplace logo and composerIcon must be provided together")
+    for field in icon_fields:
+        rel = interface[field]
+        if not isinstance(rel, str) or not re.fullmatch(r"\./assets/[A-Za-z0-9_.-]+[.]png", rel):
+            raise ProjectionError(f"Marketplace {field} must use a local ./assets/*.png path")
+        file = root / PLUGIN_PATH / rel.removeprefix("./")
+        if file.is_symlink() or not file.is_file() or file.stat().st_size > 5 * 1024 * 1024:
+            raise ProjectionError(f"Marketplace {field} image missing, unsafe or over 5 MiB")
+        data = file.read_bytes()
+        if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
+            raise ProjectionError(f"Marketplace {field} must be a decodable PNG header")
+        width = int.from_bytes(data[16:20], "big")
+        height = int.from_bytes(data[20:24], "big")
+        if width != height or not 48 <= width <= 4096:
+            raise ProjectionError(f"Marketplace {field} must be square, 48..4096 pixels")
+
+
 def inspect(root=ROOT):
     root = Path(root).resolve(strict=True)
     plugin = _read_json(root / PLUGIN_PATH / "plugin.json")
@@ -140,6 +167,7 @@ def inspect(root=ROOT):
     interface = plugin.get("extensions", {}).get("com.openai", {}).get("interface", {})
     if not interface.get("displayName"):
         raise ProjectionError("Plugin display name missing")
+    validate_plugin_brand_assets(root, interface)
 
     # One installed workspace plugin, not nine new installations.
     if market.get("name") != "fountain-coach" or len(market.get("plugins", [])) != 1:

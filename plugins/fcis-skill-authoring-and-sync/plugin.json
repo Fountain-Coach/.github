@@ -1,19 +1,21 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "fcis-skill-authoring-and-sync",
-  "version": "0.1.38",
-  "description": "FCIS-governed agent skill authoring, verified scenario learning, and canonical Git source reconciliation.",
+  "version": "0.1.39",
+  "description": "Good work should teach the next attempt.",
   "repository": "https://github.com/Fountain-Coach/.github",
   "extensions": {
     "com.openai": {
       "interface": {
-        "displayName": "Fountain Coach FCIS",
-        "shortDescription": "Governed, evidence-backed agent skill learning.",
-        "longDescription": "Reusable Fountain Coach FCIS agent-skill procedure, derived from the organization-owned Git definition. No new Kit or model runtime capability.",
+        "displayName": "FCIS-GO",
+        "shortDescription": "Good work should teach the next attempt.",
+        "longDescription": "FCIS-GO connects your workspace to the Fountain Coach Instruction System.\n\nVerified work can become reusable procedures with retained sources, evidence and conditions. Fountain Coach maintains the shared technology and canonical instructions. Each customer develops their own working knowledge and governs its use.\n\nDiscover the method, examples and source references at fcis.fountain.coach.",
         "developerName": "Fountain Coach",
         "category": "Productivity",
         "capabilities": [],
-        "websiteURL": "https://fcis.fountain.coach/"
+        "websiteURL": "https://fcis.fountain.coach/",
+        "logo": "./assets/fountain-coach-logo-transparent.png",
+        "composerIcon": "./assets/fountain-coach-logo-transparent.png"
       }
     }
   }
