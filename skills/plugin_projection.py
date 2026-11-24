@@ -222,15 +222,32 @@ def inspect(root=ROOT):
             or public.get("activePluginId") != WORKSPACE_PLUGIN_ID
             or not isinstance(item, dict)
             or item.get("name") != ACTIVE_SKILL
-            or item.get("canonicalPath") != f".codex/skills/{ACTIVE_SKILL}"):
-        raise ProjectionError("Owner-approved single-Skill publication identity changed")
-    active = entries(root / ".codex" / "skills" / ACTIVE_SKILL)
+            or item.get("canonicalPath") != f"skills/canonical/{ACTIVE_SKILL}"):
+        raise ProjectionError("Owner-approved neutral FCIS source identity changed")
+
+    # One vendor-neutral FCIS source; its OpenAI package is a derived adapter.
+    # The first phase contains one SKILL.md. Later neutral reference files
+    # require an explicitly reviewed projection rule, not silent admission.
+    neutral = entries(root / "skills" / "canonical" / ACTIVE_SKILL)
+    if set(neutral) != {"SKILL.md"}:
+        raise ProjectionError("Neutral FCIS-GO source contains unreviewed files")
+    neutral_hash = digest(neutral)
+    if neutral_hash != item.get("contentSHA256"):
+        raise ProjectionError("Neutral FCIS-GO source digest drift")
+
+    openai = item.get("projections", {}).get("openai")
+    if (not isinstance(openai, dict)
+            or openai.get("path") != f".codex/skills/{ACTIVE_SKILL}"):
+        raise ProjectionError("OpenAI projection path disagrees with owner admission")
+    active = entries(root / openai["path"])
     if "agents/openai.yaml" not in active:
-        raise ProjectionError("Active FCIS-GO provider metadata missing")
+        raise ProjectionError("OpenAI adapter metadata missing")
+    if active.get("SKILL.md") != neutral["SKILL.md"]:
+        raise ProjectionError("OpenAI adapter instructions drift from neutral FCIS source")
     validate_skill_host_metadata(ACTIVE_SKILL, active)
     active_hash = digest(active)
-    if active_hash != item.get("contentSHA256"):
-        raise ProjectionError("FCIS-GO active canonical source digest drift")
+    if active_hash != openai.get("contentSHA256"):
+        raise ProjectionError("Unpinned OpenAI adapter package")
     source[ACTIVE_SKILL], digests[ACTIVE_SKILL] = active, active_hash
     website = item.get("marketplaceWebsiteURL")
     if not isinstance(website, str) or not re.fullmatch(r"https://[^\s]+/", website):

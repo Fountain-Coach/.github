@@ -80,15 +80,22 @@ class MarketplaceProjectionTests(unittest.TestCase):
             "# FCIS-GO\n\nResolve owner purpose and source evidence.\n")
         (self.active / "agents/openai.yaml").write_text(
             "interface:\n  display_name: FCIS-GO\n")
+        self.neutral = self.root / "skills/canonical/fcis-go"
+        self.neutral.mkdir(parents=True)
+        (self.neutral / "SKILL.md").write_bytes((self.active / "SKILL.md").read_bytes())
         active = {
             "owner":"Fountain-Coach/.github",
             "maintainedSourceCatalog":"skills/openai-distribution.json",
             "activePluginId":projection.WORKSPACE_PLUGIN_ID,
             "activeSkill":{
                 "name":"fcis-go",
-                "canonicalPath":".codex/skills/fcis-go",
+                "canonicalPath":"skills/canonical/fcis-go",
                 "marketplaceWebsiteURL":"https://fcis.fountain.coach/",
-                "contentSHA256":digest(entries(self.active)),
+                "contentSHA256":digest(entries(self.neutral)),
+                "projections":{"openai":{
+                    "path":".codex/skills/fcis-go",
+                    "contentSHA256":digest(entries(self.active)),
+                }},
             }
         }
         (self.root / projection.ACTIVE_MANIFEST_PATH).write_text(json.dumps(active))
@@ -169,9 +176,10 @@ class MarketplaceProjectionTests(unittest.TestCase):
 
     def test_source_change_requires_sync_and_versions_derived_release(self):
         projection.sync(self.root)
-        self.active.joinpath("SKILL.md").write_text(
-            self.active.joinpath("SKILL.md").read_text() + "\nVerified learning.\n"
+        (self.neutral / "SKILL.md").write_text(
+            (self.neutral / "SKILL.md").read_text() + "\nVerified learning.\n"
         )
+        (self.active / "SKILL.md").write_bytes((self.neutral / "SKILL.md").read_bytes())
         self._re_pin_active()
         with self.assertRaises(projection.ProjectionError):
             projection.check(self.root)
@@ -194,6 +202,39 @@ class MarketplaceProjectionTests(unittest.TestCase):
                          entries(self.root / projection.PLUGIN_PATH / "skills/fcis-go"))
         self.assertEqual(len(json.loads(self.marketplace.read_text())["plugins"]), 1)
 
+    def test_provider_cannot_override_accepted_neutral_instruction(self):
+        projection.sync(self.root)
+        (self.active / "SKILL.md").write_text(
+            (self.active / "SKILL.md").read_text() + "\nUnapproved provider change.\n")
+        # Even pinning the derived hash cannot let a vendor projection change
+        # the Fountain Coach instruction source.
+        self._re_pin_active()
+        with self.assertRaisesRegex(projection.ProjectionError,
+                                    "adapter instructions drift"):
+            projection.check(self.root)
+        with self.assertRaises(projection.ProjectionError):
+            projection.sync(self.root)
+
+    def test_neutral_source_revision_requires_explicit_adapter_reprojection(self):
+        projection.sync(self.root)
+        (self.neutral / "SKILL.md").write_text(
+            (self.neutral / "SKILL.md").read_text() + "\nReviewed owner change.\n")
+        old = (self.active / "SKILL.md").read_bytes()
+        with self.assertRaises(projection.ProjectionError):
+            projection.check(self.root)
+        with self.assertRaises(projection.ProjectionError):
+            projection.sync(self.root)
+        self.assertEqual((self.active / "SKILL.md").read_bytes(), old)
+
+    def test_rejects_provider_path_as_active_owner_authority(self):
+        public = self.root / projection.ACTIVE_MANIFEST_PATH
+        data = json.loads(public.read_text())
+        data["activeSkill"]["canonicalPath"] = ".codex/skills/fcis-go"
+        public.write_text(json.dumps(data))
+        with self.assertRaisesRegex(projection.ProjectionError,
+                                    "neutral FCIS source identity"):
+            projection.check(self.root)
+
     def test_maintenance_source_edit_does_not_widen_public_surface(self):
         projection.sync(self.root)
         other = "linotype-estate-template"
@@ -209,8 +250,9 @@ class MarketplaceProjectionTests(unittest.TestCase):
 
     def test_active_skill_revision_bumps_once(self):
         projection.sync(self.root)
-        (self.active / "SKILL.md").write_text(
-            (self.active / "SKILL.md").read_text() + "\nOwner-accepted release correction.\n")
+        (self.neutral / "SKILL.md").write_text(
+            (self.neutral / "SKILL.md").read_text() + "\nOwner-accepted release correction.\n")
+        (self.active / "SKILL.md").write_bytes((self.neutral / "SKILL.md").read_bytes())
         self._re_pin_active()
         with self.assertRaises(projection.ProjectionError):
             projection.check(self.root)
@@ -247,7 +289,8 @@ class MarketplaceProjectionTests(unittest.TestCase):
     def _re_pin_active(self):
         path = self.root / projection.ACTIVE_MANIFEST_PATH
         data = json.loads(path.read_text())
-        data["activeSkill"]["contentSHA256"] = digest(entries(self.active))
+        data["activeSkill"]["contentSHA256"] = digest(entries(self.neutral))
+        data["activeSkill"]["projections"]["openai"]["contentSHA256"] = digest(entries(self.active))
         path.write_text(json.dumps(data))
 
     def _re_pin(self, name):

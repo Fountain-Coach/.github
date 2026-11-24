@@ -14,8 +14,10 @@ A deterministic, admitted tool operation must not be forced through a paid model
 
 ## Distribution and provider adapters
 
-- **Canonical Skill source:** `Fountain-Coach/.github/.codex/skills/`, as required by Governance Chapter 160. The legacy `.codex` path is a Git source identity and does not give Codex a privileged semantic role.
-- **Derived distributions:** `.codex/skills`, `.claude/skills`, the reviewed GitHub-backed ChatGPT marketplace plugin, and any other explicitly admitted discovery surface are adapters or projections, not independent sources.
+- **FCIS-owned active instruction:** `Fountain-Coach/.github/skills/canonical/fcis-go/SKILL.md`. Governance Chapter 160 requires one declared source and an independently checked projection, not a provider-owned directory. The owner-approved manifest `skills/fcis-go-publication.json` pins its own digest separately from the OpenAI copy.
+- **Derived OpenAI distribution:** `.codex/skills/fcis-go/` carries the current OpenAI metadata/logo plus a byte-identical `SKILL.md`, checked by `skills/provider_projection.py` and `skills/plugin_projection.py` before packaging one Git-backed ChatGPT plugin.
+- **Historical maintenance exception:** The nine older Skills retain their original `.codex/skills/` source paths, complete digests and provenance. They are not republished and are not silently relocated. Each future source migration requires explicit compatibility review.
+- **Other provider adapters:** Anthropic (`.claude/` when independently supported) and other model clients may consume an admitted projection, but **no Anthropic adapter, hosted invocation or cross-provider equivalence is accepted yet**. There is no mandatory provider.
 - **Optional reasoning clients:** OpenAI Codex, ChatGPT, third-party cloud models, and local models are possible implementation choices, not an FCIS capability guarantee. A new runtime is supported only after its exact technical requirements and effective invocation are verified.
 - **Execution effects:** The owning runtime/Kit, MCP service, or approved host operation owns permission checks, scopes, lifecycle and terminal receipts. A model response cannot replace such evidence.
 

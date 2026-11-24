@@ -15,7 +15,22 @@ This repository is the **canonical Git owner of Fountain Coach's organization-wi
 | **Goal Fidelity** | [Founding rule](docs/FCIS-Non-Invention-and-Goal-Fidelity.md) | Do not invent requirements or move an owner-controlled DoD |
 | **Capabilities** | [FCIS-KIT standard](docs/FCIS-KIT-Standard.md) | Owned instrument contracts, mechanical constraints, release and proof |
 | **External providers** | [Official OpenAPI policy](docs/FCIS-Official-OpenAPI-Dependency.md) | Source-pinned provider adapters, tests and example provenance |
-| **Canonical Skills** | [`.codex/skills/`](.codex/skills/) | Reusable agent procedures, distributed through the existing Git-backed plugin |
+| **FCIS-GO canonical Skill** | [`skills/canonical/fcis-go/`](skills/canonical/fcis-go/) | One owner-authored instruction source; its OpenAI plugin copy is a checked projection |
+| **Historical maintained Skills** | [`.codex/skills/`](.codex/skills/) | Nine checksum-pinned legacy source procedures in maintenance, not published in FCIS-GO |
+
+### Provider adapters remain replaceable
+
+OpenAI is an admitted, derived FCIS-GO instruction adapter; its existing
+marketplace plugin ID is retained. The owner source for the active procedure
+is now `skills/canonical/fcis-go/SKILL.md`. The OpenAI-specific
+`.codex/skills/fcis-go/` and installed Git-backed plugin must match its
+content by pinned SHA-256; see
+[`skills/provider_projection.py`](skills/provider_projection.py).
+Anthropic is another potential adapter, **not yet admitted or validated**.
+No vendor may become the authority for FCIS instructions, execution grants,
+customer knowledge or persistent state. The nine historical `.codex` source
+procedures are preserved under source maintenance for a separate reviewed
+compatibility migration.
 
 ### Business priority P0 — Fountain Coach independence (24 November 2026)
 

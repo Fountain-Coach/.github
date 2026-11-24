@@ -100,14 +100,21 @@ class MarketplacePublishTests(unittest.TestCase):
             "---\n# FCIS-GO\n\nVerify source and installed state.\n")
         self.active.parent.joinpath("agents/openai.yaml").write_text(
             "interface:\n  display_name: FCIS-GO\n")
+        self.neutral = self.root / "skills/canonical/fcis-go/SKILL.md"
+        self.neutral.parent.mkdir(parents=True)
+        self.neutral.write_bytes(self.active.read_bytes())
         publication = {
             "owner":"Fountain-Coach/.github",
             "maintainedSourceCatalog":"skills/openai-distribution.json",
             "activePluginId":projection.WORKSPACE_PLUGIN_ID,
             "activeSkill":{
-                "name":"fcis-go", "canonicalPath":".codex/skills/fcis-go",
+                "name":"fcis-go", "canonicalPath":"skills/canonical/fcis-go",
                 "marketplaceWebsiteURL":"https://fcis.fountain.coach/",
-                "contentSHA256":digest(entries(self.active.parent))
+                "contentSHA256":digest(entries(self.neutral.parent)),
+                "projections":{"openai":{
+                    "path":".codex/skills/fcis-go",
+                    "contentSHA256":digest(entries(self.active.parent)),
+                }}
             }
         }
         (self.root / projection.ACTIVE_MANIFEST_PATH).write_text(json.dumps(publication))
@@ -137,13 +144,17 @@ class MarketplacePublishTests(unittest.TestCase):
 
     def accept_new_canonical_skill(self):
         # The only accepted public mutation is on the new active FCIS-GO Skill.
-        self.active.write_text(self.active.read_text() + "\nObserved owner-accepted maintenance lesson.\n")
+        self.neutral.write_text(self.neutral.read_text() +
+                                "\nObserved owner-accepted maintenance lesson.\n")
+        self.active.write_bytes(self.neutral.read_bytes())
         publication = self.root / projection.ACTIVE_MANIFEST_PATH
         content = json.loads(publication.read_text())
-        content["activeSkill"]["contentSHA256"] = digest(entries(self.active.parent))
+        content["activeSkill"]["contentSHA256"] = digest(entries(self.neutral.parent))
+        content["activeSkill"]["projections"]["openai"]["contentSHA256"] = digest(
+            entries(self.active.parent))
         publication.write_text(json.dumps(content))
-        git(self.root, "add", "--", ".codex/skills/fcis-go/SKILL.md",
-            "skills/fcis-go-publication.json")
+        git(self.root, "add", "--", "skills/canonical/fcis-go/SKILL.md",
+            ".codex/skills/fcis-go/SKILL.md", "skills/fcis-go-publication.json")
         git(self.root, "commit", "-q", "-m", "accepted canonical learning")
 
     def test_versioned_post_commit_hook_makes_separate_derived_commit(self):

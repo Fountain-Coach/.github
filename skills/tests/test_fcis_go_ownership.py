@@ -30,12 +30,18 @@ class FCISGOOwnershipTests(unittest.TestCase):
         self.assertEqual(public["activePluginId"], WORKSPACE_PLUGIN_ID)
         active = public["activeSkill"]
         self.assertEqual(active["name"], "fcis-go")
-        self.assertEqual(active["canonicalPath"], ".codex/skills/fcis-go")
+        self.assertEqual(active["canonicalPath"], "skills/canonical/fcis-go")
         canonical = entries(ROOT / active["canonicalPath"])
+        self.assertEqual(set(canonical), {"SKILL.md"})
         self.assertEqual(digest(canonical), active["contentSHA256"])
+        adapter = active["projections"]["openai"]
+        self.assertEqual(adapter["path"], ".codex/skills/fcis-go")
+        projected = entries(ROOT / adapter["path"])
+        self.assertEqual(projected["SKILL.md"], canonical["SKILL.md"])
+        self.assertEqual(digest(projected), adapter["contentSHA256"])
         mirror = ROOT / "plugins/fcis-skill-authoring-and-sync/skills"
         self.assertEqual([p.name for p in mirror.iterdir()], ["fcis-go"])
-        self.assertEqual(entries(mirror / "fcis-go"), canonical)
+        self.assertEqual(entries(mirror / "fcis-go"), projected)
         self.assertFalse(set(p.name for p in mirror.iterdir()) & set(CANONICAL_SKILLS))
         self.assertEqual(check(ROOT)["sourceSkill"], "fcis-go")
         self.assertEqual(set(check(ROOT)["skills"]), {"fcis-go"})

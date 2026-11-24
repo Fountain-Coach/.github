@@ -1,9 +1,37 @@
 # FCIS GitHub-backed ChatGPT distribution
 
-Authority: Fountain Coach Governance Chapter 160. Only
-Fountain-Coach/.github/.codex/skills/fcis-skill-authoring-and-sync/
-owns the procedure. This plugin is a derived Git artifact, not independent
-authority for editing the Skill or installing any ChatGPT account version.
+Authority: Fountain Coach Governance Chapter 160. The active FCIS-GO
+procedure is now owned by `skills/canonical/fcis-go/SKILL.md` in canonical
+Fountain Coach Git. The `.codex/skills/fcis-go/` directory and installed
+ChatGPT marketplace plugin are checked OpenAI projections. The historical nine
+Skills remain separately pinned in maintenance at their legacy source paths.
+A provider installation does not author, replace or grant access to FCIS.
+
+## One-way owner to provider projection — 24 November 2026
+
+Current authority chain:
+
+1. `skills/canonical/fcis-go/SKILL.md` — owner-authored FCIS instructions.
+2. `skills/fcis-go-publication.json` — approved source and OpenAI-adapter
+   identity plus **separate** content digests.
+3. `skills/provider_projection.py check` — verifies the OpenAI Skill's
+   instructions match the owner source. A vendor-side change cannot be
+   accepted by merely changing the projected checksum.
+4. For an explicitly accepted neutral revision, update the source digest
+   in the manifest, run `skills/provider_projection.py sync` to update only
+   the OpenAI instruction copy and its projection digest, then run
+   `skills/plugin_projection.py sync` to derive the existing one-Skill
+   marketplace package. Protect and validate both commits through Git.
+5. Independently read the installed provider version and content after
+   the existing marketplace `Jetzt synchronisieren` action.
+
+This initial source-ownership migration preserves the **existing 0.1.40**
+OpenAI adapter byte-for-byte. A new provider or a new Skill is **not**
+admitted by creating a directory. Anthropic is an optional future adapter,
+not an implemented or accepted integration. Migration of the nine historical
+maintained `.codex/skills/` sources is deferred to separate reviewed
+compatibility decisions. An accepted source revision is not proof of
+independent owner-facing capability execution or marketplace rollback.
 
 ## Identity and publication boundary
 
