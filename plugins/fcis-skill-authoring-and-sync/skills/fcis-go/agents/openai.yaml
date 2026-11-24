@@ -1,0 +1,5 @@
+interface:
+  display_name: FCIS-GO
+  short_description: Govern and maintain your Fountain Coach instruction system.
+  icon_small: assets/fountain-coach-logo-transparent.png
+  icon_large: assets/fountain-coach-logo-transparent.png
