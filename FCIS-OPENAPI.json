@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.6.0",
-    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim.",
+    "version": "0.7.0",
+    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant.",
     "contact": {
       "name": "Fountain Coach FCIS",
       "url": "https://github.com/Fountain-Coach/.github"
@@ -8502,7 +8502,7 @@
       "post": {
         "operationId": "startOwnerReasoningTurn",
         "summary": "Start one subscription-only reasoning turn",
-        "description": "Only for an actual verified native-conversation adapter, selected account/model, current allowance and enforceable provider-side no-extra-charge guarantee. Require owner disclosure consent for selected bounded conversation context and governing signed Skills. Revalidate before transmission. Refuse unsupported, exhausted or unverified connection before any request; never call Workspace Agent trigger, purchase credits, use paid inference, or fall back. Persist request state before dispatch; 202 never proves a reply. An empty or unauthorized context selection, noncurrent Skill, or missing disclosure consent is refused.",
+        "description": "Only for an actual verified native-conversation adapter, selected account/model, current allowance and enforceable provider-side no-extra-charge guarantee. Require owner disclosure consent for selected bounded conversation context and governing signed Skills. Revalidate before transmission. Refuse unsupported, exhausted or unverified connection before any request; never call Workspace Agent trigger, purchase credits, use paid inference, or fall back. Persist request state before dispatch; 202 never proves a reply. An empty or unauthorized context selection, noncurrent Skill, or missing disclosure consent is refused. For a domain-bound turn resolve and verify exact composition, confirmed Grounding where required and current Situation before dispatch. Refuse stale or unauthorized inputs and bind the actual resolved snapshot to disclosure consent; never infer source truth from transcript.",
         "tags": [
           "Conversations"
         ],
@@ -12638,9 +12638,12 @@
             "type": "boolean",
             "const": true,
             "description": "Explicit permission for this selected provider/model to receive the exact selected messages and governing Skill content. Not consent to extra spend or new instrument rights."
+          },
+          "situatedContext": {
+            "$ref": "#/components/schemas/OwnerSituatedContext"
           }
         },
-        "description": "Start a native reasoning turn for the exact committed human message, under selected supported subscription account and current no-extra-charge entitlement. No browser cookies, provider API keys, arbitrary endpoint, silent provider switch, or implicit paid mode."
+        "description": "Start a native reasoning turn for the exact committed human message, under selected supported subscription account and current no-extra-charge entitlement. No browser cookies, provider API keys, arbitrary endpoint, silent provider switch, or implicit paid mode. If situatedContext is supplied, disclosureConsent binds its exact resolved and validated references and their authorized semantic content as well as the existing selected messages and Skills. Server recomputes the owner-reviewed expectedContextSHA256; a mismatch or unavailable required authoritative input refuses before transmission."
       },
       "OwnerReasoningTurn": {
         "type": "object",
@@ -12752,7 +12755,11 @@
                   "skill_unavailable",
                   "result_unverified",
                   "cancelled_by_owner",
-                  "store_unavailable"
+                  "store_unavailable",
+                  "domain_unavailable",
+                  "grounding_unconfirmed",
+                  "situation_stale",
+                  "context_conflict"
                 ]
               },
               {
@@ -12763,9 +12770,12 @@
           "additionalInferenceChargeCeilingMinor": {
             "type": "integer",
             "const": 0
+          },
+          "domainContextBinding": {
+            "$ref": "#/components/schemas/OwnerDomainContextBinding"
           }
         },
-        "description": "Completed only after actual provider response and independently committed owner message/result. An instrument outcome remains separate. An uncertain transport effect remains unverified; never blindly retry or manufacture answer."
+        "description": "Completed only after actual provider response and independently committed owner message/result. An instrument outcome remains separate. An uncertain transport effect remains unverified; never blindly retry or manufacture answer. A committed domain-bound turn includes domainContextBinding; historical and ordinary unscoped turns omit it. Never store a Situation projection as a new artifact."
       },
       "OwnerConversationReceipt": {
         "type": "object",
@@ -12934,7 +12944,11 @@
               "provider_unavailable",
               "unsupported_native_transport",
               "result_unverified",
-              "store_unavailable"
+              "store_unavailable",
+              "domain_unavailable",
+              "grounding_unconfirmed",
+              "situation_stale",
+              "context_conflict"
             ]
           },
           "correlationId": {
@@ -12975,6 +12989,126 @@
           }
         },
         "description": "Owner intent to stop this exact turn. No implication of verified remote cancellation."
+      },
+      "OwnerDomainResourceRef": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "revision",
+          "sourceSHA256"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "revision": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "sourceSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "description": "Exact immutable reference within the authorized source-owning domain. Server resolves identity, revision and digest from current authority; caller assertions are not evidence."
+      },
+      "OwnerSituatedContext": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "domain",
+          "grounding",
+          "situation",
+          "expectedContextSHA256"
+        ],
+        "properties": {
+          "domain": {
+            "$ref": "#/components/schemas/OwnerDomainResourceRef"
+          },
+          "grounding": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OwnerDomainResourceRef"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Exact confirmed Grounding. Null only if the resolved domain explicitly requires none."
+          },
+          "situation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "arrangementId",
+              "wiringState",
+              "selectedObjects"
+            ],
+            "properties": {
+              "arrangementId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+              },
+              "selectedObjects": {
+                "type": "array",
+                "maxItems": 100,
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "#/components/schemas/OwnerDomainResourceRef"
+                }
+              },
+              "wiringState": {
+                "type": "string",
+                "enum": [
+                  "not-applicable",
+                  "unwired",
+                  "wired"
+                ],
+                "description": "Distinguish an unwired arrangement from an empty wired selection."
+              }
+            },
+            "description": "Transient arrangement and selected/wired objects, checked against current authoritative application/domain state. No inferred or invented scope. Not a stored domain artifact."
+          },
+          "expectedContextSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "Digest of the exact owner-reviewed canonical resolved input binding. The server independently resolves and recomputes it before disclosure; mismatch refuses. Not part of the hashed binding itself."
+          }
+        },
+        "description": "Optional domain-bound turn input; absent retains the existing unscoped mode. Resolve the domain declaration and all references server-side, derive current Situation, enforce current scope and Skill releases, and bind exact resolved context to consent. No new execution permission."
+      },
+      "OwnerDomainContextBinding": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "domain",
+          "grounding",
+          "contextSHA256"
+        ],
+        "properties": {
+          "domain": {
+            "$ref": "#/components/schemas/OwnerDomainResourceRef"
+          },
+          "grounding": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OwnerDomainResourceRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "contextSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "Verified digest of the exact approved and resolved turn input. No persisted Situation projection."
+          }
+        },
+        "description": "Private committed provenance of a domain-bound turn; no authority over current domain state or execution."
       }
     }
   },
@@ -13115,6 +13249,13 @@
     "externalClientIntegration": "Existing /mcp with OAuth/PKCE and explicitly scoped FCIS resources. A connected external chat is not native reasoning transport. Record only actual authorized work evidence; no automatic provider chat-history ingestion.",
     "privateSkillDelivery": "Resolve and verify exact current active signed release through existing separately authorized Skill resource; generic /mcp bearer and Host grants are not source-delivery grants. A client adapter must demonstrate supported separately scoped retrieval, not forward owner cookies or invent a token exchange.",
     "historyAuthority": "Existing tenant-scoped native FountainStore, independent from provider account, with owner-controlled read, export, archive and deletion.",
-    "noFallback": true
+    "noFallback": true,
+    "situatedReasoning": {
+      "canonicalContract": "FCIS-SYSTEM.json#/reasoningAndConversationSystem",
+      "acceptance": "FCIS-CHAT-01 situated Reframe reference subcase",
+      "mode": "optional-domain-bound-turn",
+      "newOperations": [],
+      "status": "specified-only-not-deployed"
+    }
   }
 }
