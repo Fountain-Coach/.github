@@ -163,6 +163,27 @@ class FCISWholeSystemContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "owner chat premature acceptance"):
             verifier.check_owner_chat(candidate, api)
 
+    def test_situated_reference_contract_is_optional_and_bound(self):
+        verifier, doc, base = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
+        verifier.check_situated_context(doc, api)
+        for edit, error in (
+            (lambda a: a["components"]["schemas"]["OwnerReasoningTurnCreate"]["required"].append("situatedContext"), "must be optional"),
+            (lambda a: a["components"]["schemas"]["OwnerSituatedContext"]["required"].remove("expectedContextSHA256"), "exact source and consent"),
+            (lambda a: a["components"]["schemas"]["OwnerSituatedContext"]["properties"]["situation"]["properties"]["wiringState"]["enum"].remove("unwired"), "empty and unwired"),
+            (lambda a: a["components"]["schemas"]["OwnerReasoningTurn"]["properties"].update(situatedContext={}), "must not persist"),
+            (lambda a: a["components"]["schemas"]["OwnerConversationError"]["properties"]["error"]["enum"].remove("context_conflict"), "refusal coverage"),
+            (lambda a: a["x-fcis-owner-chat"]["situatedReasoning"]["newOperations"].append("invented"), "scope or acceptance"),
+        ):
+            candidate = copy.deepcopy(api)
+            edit(candidate)
+            with self.assertRaisesRegex(ValueError, error):
+                verifier.check_situated_context(doc, candidate)
+        candidate = copy.deepcopy(doc)
+        candidate["generation"]["requirementCatalog"] = [x for x in candidate["generation"]["requirementCatalog"] if x["id"] != "CHAT-REQ-DOMAIN-CONTEXT-BINDING"]
+        with self.assertRaisesRegex(ValueError, "coverage catalog mismatch"):
+            verifier.check_atomic_coverage(candidate, base)
+
     def test_exact_spec_and_http_contract_consistency(self):
         completed = subprocess.run(
             [sys.executable, str(ROOT / "scripts/verify_fcis_system_spec.py")],

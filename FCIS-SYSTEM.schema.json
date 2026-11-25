@@ -994,8 +994,8 @@
         },
         "requirements": {
           "type": "array",
-          "minItems": 11,
-          "maxItems": 11,
+          "minItems": 15,
+          "maxItems": 15,
           "uniqueItems": true,
           "items": {
             "type": "object",
@@ -1018,8 +1018,8 @@
         },
         "refusals": {
           "type": "array",
-          "minItems": 5,
-          "maxItems": 5,
+          "minItems": 6,
+          "maxItems": 6,
           "uniqueItems": true,
           "items": {
             "type": "object",

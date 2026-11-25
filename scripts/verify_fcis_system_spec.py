@@ -336,9 +336,11 @@ def check_owner_chat(system: dict, api: dict) -> None:
         "requirements": ["owner-history", "subscription-only", "external-mcp",
             "native-adapter", "selection-and-consent", "durable-turn",
             "cross-provider-continuity", "instrument-evidence", "privacy-deletion",
-            "owner-ux", "publication-boundary"],
+            "owner-ux", "publication-boundary", "domain-composition",
+            "domain-grounding", "domain-situation", "domain-context-binding"],
         "refusals": ["unknown-or-extra-charge", "unauthorized-context",
-            "conflicting-turn", "private-disclosure", "false-history-or-learning"],
+            "conflicting-turn", "private-disclosure", "false-history-or-learning",
+            "stale-domain-context"],
     }
     for field, ids in required.items():
         if [x["id"] for x in chat[field]] != ids:
@@ -374,9 +376,50 @@ def check_owner_chat(system: dict, api: dict) -> None:
             reject("owner chat send boundary drift: " + name)
     if not {"contextMessageIds", "skillReleaseIds"}.issubset(start["required"]):
         reject("owner chat exact context binding drift")
+    check_situated_context(system, api)
     if not any("FCIS-CHAT-01" in x for x in system["acceptance"]["postGenerationTesting"]):
         reject("owner chat acceptance omitted")
 
+
+
+def check_situated_context(system: dict, api: dict) -> None:
+    schemas = api["components"]["schemas"]
+    start = schemas["OwnerReasoningTurnCreate"]
+    turn = schemas["OwnerReasoningTurn"]
+    binding = schemas["OwnerDomainContextBinding"]
+    context = schemas["OwnerSituatedContext"]
+    ref = schemas["OwnerDomainResourceRef"]
+    sha = {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    if ("situatedContext" in start["required"]
+            or start["properties"].get("situatedContext") != {"$ref": "#/components/schemas/OwnerSituatedContext"}
+            or "domainContextBinding" in turn["required"]
+            or turn["properties"].get("domainContextBinding") != {"$ref": "#/components/schemas/OwnerDomainContextBinding"}):
+        reject("situated context must be optional on existing turn contract")
+    if (set(context["required"]) != {"domain", "grounding", "situation", "expectedContextSHA256"}
+            or context["properties"]["expectedContextSHA256"].get("pattern") != sha["pattern"]
+            or set(ref["required"]) != {"id", "revision", "sourceSHA256"}
+            or ref["properties"]["sourceSHA256"] != sha
+            or any(x.get("additionalProperties") is not False for x in (binding, context, ref))):
+        reject("situated exact source and consent binding drift")
+    situation = context["properties"]["situation"]
+    if (set(situation["required"]) != {"arrangementId", "wiringState", "selectedObjects"}
+            or situation.get("additionalProperties") is not False
+            or set(situation["properties"]["wiringState"]["enum"]) != {"not-applicable", "unwired", "wired"}):
+        reject("situated empty and unwired context drift")
+    if (set(binding["required"]) != {"domain", "grounding", "contextSHA256"}
+            or set(binding["properties"]) != set(binding["required"])
+            or binding["properties"]["contextSHA256"].get("pattern") != sha["pattern"]
+            or "situatedContext" in turn["properties"]):
+        reject("Situation must not persist as a turn artifact")
+    refusal = {"domain_unavailable", "grounding_unconfirmed", "situation_stale", "context_conflict"}
+    if (not refusal.issubset(schemas["OwnerConversationError"]["properties"]["error"]["enum"])
+            or not refusal.issubset(turn["properties"]["reason"]["anyOf"][0]["enum"])):
+        reject("situated refusal coverage drift")
+    ext = api["x-fcis-owner-chat"]["situatedReasoning"]
+    if (ext["newOperations"] != [] or ext["status"] != "specified-only-not-deployed"
+            or ext["canonicalContract"] != "FCIS-SYSTEM.json#/reasoningAndConversationSystem"
+            or not any("situated Reframe" in x for x in system["acceptance"]["postGenerationTesting"])):
+        reject("situated scope or acceptance drift")
 
 def check(system: dict, api: dict) -> None:
     check_learning_acceptance(system, api)
