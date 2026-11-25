@@ -207,7 +207,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.5.2")
+        self.assertEqual(a["info"]["version"], "0.6.0")
         # Preserve every predecessor operation byte-semantically except the
         # reviewed status GET Origin clarification. Restore that exact two-field
         # delta before comparing the original 0.4.0 compatibility digest.
@@ -243,7 +243,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
         self.assertEqual(digest(baseline), BASELINE_PATHS_SHA256)
         self.assertEqual(digest({n: a["components"]["schemas"][n] for n in BASELINE_SCHEMAS}), BASELINE_SCHEMAS_SHA256)
         self.assertEqual(digest(a["components"]["securitySchemes"]), BASELINE_SECURITY_SHA256)
-        self.assertEqual(sum(len(v) for v in a["paths"].values()), 49)
+        self.assertEqual(sum(len(v) for v in a["paths"].values()), 60)
 
     def test_skill_admin_and_delivery_security_are_separate(self):
         operations = [(path, method, op) for path, methods in self.api["paths"].items()

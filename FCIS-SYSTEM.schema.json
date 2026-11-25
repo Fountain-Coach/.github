@@ -33,7 +33,8 @@
     "specificationClosure",
     "sourcePinPolicy",
     "coverageBaseline",
-    "knownSpecificationLimitations"
+    "knownSpecificationLimitations",
+    "reasoningAndConversationSystem"
   ],
   "properties": {
     "kind": {
@@ -884,6 +885,168 @@
             "type": "integer",
             "minimum": 1
           }
+        }
+      }
+    },
+    "reasoningAndConversationSystem": {
+      "type": "object",
+      "required": [
+        "scenarioId",
+        "status",
+        "outcome",
+        "operationIds",
+        "policy",
+        "collections",
+        "requirements",
+        "refusals",
+        "acceptance",
+        "boundaries"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "scenarioId": {
+          "const": "FCIS-CHAT-01"
+        },
+        "status": {
+          "const": "SPECIFIED_ONLY"
+        },
+        "outcome": {
+          "type": "string",
+          "minLength": 20
+        },
+        "operationIds": {
+          "type": "array",
+          "minItems": 11,
+          "maxItems": 11,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "additionalInferenceChargeCeilingMinor",
+            "permittedExternalChargeBasis",
+            "noPaidFallback",
+            "workspaceCreditsAllowed",
+            "automaticRechargeAllowed",
+            "ownerBillingMutationAllowed",
+            "unknownEntitlement",
+            "nativeTransport",
+            "externalTransport"
+          ],
+          "properties": {
+            "additionalInferenceChargeCeilingMinor": {
+              "const": 0
+            },
+            "permittedExternalChargeBasis": {
+              "const": "included-subscription"
+            },
+            "noPaidFallback": {
+              "const": true
+            },
+            "workspaceCreditsAllowed": {
+              "const": false
+            },
+            "automaticRechargeAllowed": {
+              "const": false
+            },
+            "ownerBillingMutationAllowed": {
+              "const": false
+            },
+            "unknownEntitlement": {
+              "const": "refuse-before-transmission"
+            },
+            "nativeTransport": {
+              "const": "supported-account-and-result-delivery-only"
+            },
+            "externalTransport": {
+              "const": "existing-oauth-mcp"
+            }
+          }
+        },
+        "collections": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "requirement"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 3
+              },
+              "requirement": {
+                "type": "string",
+                "minLength": 20
+              }
+            }
+          }
+        },
+        "requirements": {
+          "type": "array",
+          "minItems": 11,
+          "maxItems": 11,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "requirement"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 3
+              },
+              "requirement": {
+                "type": "string",
+                "minLength": 20
+              }
+            }
+          }
+        },
+        "refusals": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "requirement"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 3
+              },
+              "requirement": {
+                "type": "string",
+                "minLength": 20
+              }
+            }
+          }
+        },
+        "acceptance": {
+          "type": "string",
+          "minLength": 20
+        },
+        "boundaries": {
+          "type": "string",
+          "minLength": 20
         }
       }
     }

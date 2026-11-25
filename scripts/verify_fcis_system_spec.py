@@ -214,6 +214,12 @@ def expected_atomic(system: dict) -> dict[str, dict[str, str]]:
     ):
         array(stem, "/skillAndScenarioSystem/learningAcceptance/" + field,
               lambda x, i: _slug(x["id"]), lambda x, i: f"{cls}: {x['id']}", cls)
+    for field, stem, cls in (
+        ("requirements", "CHAT-REQ-", "chat-requirement"),
+        ("refusals", "CHAT-REFUSAL-", "chat-refusal"),
+    ):
+        array(stem, "/reasoningAndConversationSystem/" + field,
+              lambda x, i: _slug(x["id"]), lambda x, i: f"{cls}: {x['id']}", cls)
     return expected
 
 
@@ -304,8 +310,77 @@ def check_learning_acceptance(system: dict, api: dict) -> None:
         reject("learning live acceptance omitted from product testing")
 
 
+def check_owner_chat(system: dict, api: dict) -> None:
+    chat = system["reasoningAndConversationSystem"]
+    ext = api["x-fcis-owner-chat"]
+    policy = chat["policy"]
+    if (chat["scenarioId"] != "FCIS-CHAT-01" or chat["status"] != "SPECIFIED_ONLY"
+            or ext["status"] != "specified-only-not-deployed"):
+        reject("owner chat premature acceptance")
+    if (policy["additionalInferenceChargeCeilingMinor"] != 0
+            or policy["permittedExternalChargeBasis"] != "included-subscription"
+            or policy["noPaidFallback"] is not True
+            or any(policy[k] is not False for k in ("workspaceCreditsAllowed",
+                   "automaticRechargeAllowed", "ownerBillingMutationAllowed"))
+            or policy["unknownEntitlement"] != "refuse-before-transmission"
+            or ext["additionalInferenceChargeCeilingMinor"] != 0
+            or ext["permittedExternalChargeBasis"] != "included-subscription"
+            or ext["noFallback"] is not True):
+        reject("subscription-only reasoning policy drift")
+    required_collections = ["fcis.conversations", "fcis.messages", "fcis.reasoning-turns"]
+    if ([x["id"] for x in chat["collections"]] != required_collections
+            or any(x not in system["persistence"]["logicalCollections"] for x in required_collections)
+            or list(system["persistence"]["conversationCollections"]) != required_collections):
+        reject("owner conversation custody drift")
+    required = {
+        "requirements": ["owner-history", "subscription-only", "external-mcp",
+            "native-adapter", "selection-and-consent", "durable-turn",
+            "cross-provider-continuity", "instrument-evidence", "privacy-deletion",
+            "owner-ux", "publication-boundary"],
+        "refusals": ["unknown-or-extra-charge", "unauthorized-context",
+            "conflicting-turn", "private-disclosure", "false-history-or-learning"],
+    }
+    for field, ids in required.items():
+        if [x["id"] for x in chat[field]] != ids:
+            reject(f"owner chat {field} coverage/order drift")
+    operations = ["listOwnerReasoningClients", "listOwnerConversations", "createOwnerConversation",
+        "readOwnerConversation", "updateOwnerConversation", "deleteOwnerConversation",
+        "listOwnerConversationMessages", "appendOwnerMessage", "startOwnerReasoningTurn",
+        "readOwnerReasoningTurn", "cancelOwnerReasoningTurn"]
+    if (chat["operationIds"] != operations or ext["operationIds"] != operations
+            or ext["canonicalContract"] != "FCIS-SYSTEM.json#/reasoningAndConversationSystem"):
+        reject("owner chat operation binding drift")
+    by_id = {op["operationId"]: (method, op) for (method, _), op in operation_index(api).items()}
+    for name in operations:
+        if name not in by_id:
+            reject("owner chat operation missing: " + name)
+        method, op = by_id[name]
+        if op.get("security") != [{"ownerPasskeySession": []}]:
+            reject("owner chat operation authorization drift: " + name)
+        if op.get("x-fcis-go-target-state") != "specified-only-not-deployed":
+            reject("owner chat operation premature acceptance")
+        for response in op["responses"].values():
+            if response["headers"]["Cache-Control"]["schema"]["const"] != "no-store":
+                reject("owner chat private caching drift")
+        if method != "GET":
+            headers = {p["name"]: p for p in op["parameters"] if p["in"] == "header"}
+            if (not headers["Origin"]["required"] or not headers["X-Fountain-Owner-Intent"]["required"]
+                    or headers["X-Fountain-Owner-Intent"]["schema"]["const"] != op["x-fcis-owner-intent"]):
+                reject("owner chat mutation intent drift")
+    start = api["components"]["schemas"]["OwnerReasoningTurnCreate"]
+    for name, value in (("subscriptionOnly", True), ("additionalInferenceChargeCeilingMinor", 0),
+                        ("disclosureConsent", True)):
+        if name not in start["required"] or start["properties"][name]["const"] != value:
+            reject("owner chat send boundary drift: " + name)
+    if not {"contextMessageIds", "skillReleaseIds"}.issubset(start["required"]):
+        reject("owner chat exact context binding drift")
+    if not any("FCIS-CHAT-01" in x for x in system["acceptance"]["postGenerationTesting"]):
+        reject("owner chat acceptance omitted")
+
+
 def check(system: dict, api: dict) -> None:
     check_learning_acceptance(system, api)
+    check_owner_chat(system, api)
     if system["sourcePinPolicy"]["httpContractVersion"] != api["info"]["version"]:
         reject("source-pin contract version differs from canonical HTTP API")
     if system["apis"]["fcis"]["version"] != api["info"]["version"]:

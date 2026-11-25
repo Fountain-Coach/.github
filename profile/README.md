@@ -352,3 +352,8 @@ FCIS establishes a **provider-independent contractual architecture** for support
 - MCP defines capability
 
 Adherence is mandatory for Fountain Coach repositories that adopt the FCIS standard, independent of their elected model provider.
+
+
+---
+
+**Rights and provenance:** [Fountain Coach rights notice](../NOTICE.md) · [IP and public specification boundary](../docs/FCIS-Intellectual-Property-and-Publication.md).
