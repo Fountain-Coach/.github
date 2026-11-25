@@ -8502,7 +8502,7 @@
       "post": {
         "operationId": "startOwnerReasoningTurn",
         "summary": "Start one subscription-only reasoning turn",
-        "description": "Only for an actual verified native-conversation adapter, selected account/model, current allowance and enforceable provider-side no-extra-charge guarantee. Require owner disclosure consent for selected bounded conversation context and governing signed Skills. Revalidate before transmission. Refuse unsupported, exhausted or unverified connection before any request; never call Workspace Agent trigger, purchase credits, use paid inference, or fall back. Persist request state before dispatch; 202 never proves a reply.",
+        "description": "Only for an actual verified native-conversation adapter, selected account/model, current allowance and enforceable provider-side no-extra-charge guarantee. Require owner disclosure consent for selected bounded conversation context and governing signed Skills. Revalidate before transmission. Refuse unsupported, exhausted or unverified connection before any request; never call Workspace Agent trigger, purchase credits, use paid inference, or fall back. Persist request state before dispatch; 202 never proves a reply. An empty or unauthorized context selection, noncurrent Skill, or missing disclosure consent is refused.",
         "tags": [
           "Conversations"
         ],
@@ -9098,7 +9098,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/OwnerConversationDelete"
+                "$ref": "#/components/schemas/OwnerReasoningTurnCancel"
               }
             }
           }
@@ -12383,7 +12383,29 @@
             ]
           }
         },
-        "description": "At least one mutable field required; selection is not invocation, consent, or a grant. A model must belong to the selected verified client. Archive/restore retain content; no provider transmission."
+        "description": "At least one mutable field required; selection is not invocation, consent, or a grant. A model must belong to the selected verified client. Archive/restore retain content; no provider transmission.",
+        "anyOf": [
+          {
+            "required": [
+              "title"
+            ]
+          },
+          {
+            "required": [
+              "state"
+            ]
+          },
+          {
+            "required": [
+              "selectedClientId"
+            ]
+          },
+          {
+            "required": [
+              "selectedModel"
+            ]
+          }
+        ]
       },
       "OwnerConversationDelete": {
         "type": "object",
@@ -12553,7 +12575,10 @@
           "clientId",
           "model",
           "subscriptionOnly",
-          "additionalInferenceChargeCeilingMinor"
+          "additionalInferenceChargeCeilingMinor",
+          "contextMessageIds",
+          "skillReleaseIds",
+          "disclosureConsent"
         ],
         "properties": {
           "correlationId": {
@@ -12588,6 +12613,31 @@
           "additionalInferenceChargeCeilingMinor": {
             "type": "integer",
             "const": 0
+          },
+          "contextMessageIds": {
+            "type": "array",
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact ordered owner-approved messages from the selected conversation only. Must contain the selected human message. No automatic full history or other-tenant source."
+          },
+          "skillReleaseIds": {
+            "type": "array",
+            "maxItems": 32,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "description": "Exact selected current authorized active Skill releases; verify before outbound dispatch."
+          },
+          "disclosureConsent": {
+            "type": "boolean",
+            "const": true,
+            "description": "Explicit permission for this selected provider/model to receive the exact selected messages and governing Skill content. Not consent to extra spend or new instrument rights."
           }
         },
         "description": "Start a native reasoning turn for the exact committed human message, under selected supported subscription account and current no-extra-charge entitlement. No browser cookies, provider API keys, arbitrary endpoint, silent provider switch, or implicit paid mode."
@@ -12900,6 +12950,31 @@
           }
         },
         "description": "Redacted error; no private source, transcript, provider secret or cross-tenant existence disclosure."
+      },
+      "OwnerReasoningTurnCancel": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "correlationId",
+          "idempotencyKey",
+          "expectedRevision"
+        ],
+        "properties": {
+          "correlationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Expected current turn revision."
+          }
+        },
+        "description": "Owner intent to stop this exact turn. No implication of verified remote cancellation."
       }
     }
   },
