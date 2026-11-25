@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.5.2",
-    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result.",
+    "version": "0.6.0",
+    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim.",
     "contact": {
       "name": "Fountain Coach FCIS",
       "url": "https://github.com/Fountain-Coach/.github"
@@ -71,6 +71,10 @@
     {
       "name": "Licensed access",
       "description": "Customer-scoped acquisitions, entitlements and exact licensed source delivery; not execution grants."
+    },
+    {
+      "name": "Conversations",
+      "description": "Owner-private native chat and subscription-only reasoning availability, specified-only."
     }
   ],
   "x-fcis-exposure": "organization-canonical-source-target-contract",
@@ -6920,6 +6924,2187 @@
           "evidence": "Authoritative scoped Store readback and terminal receipt where applicable; no model or redirect proof."
         }
       }
+    },
+    "/oauth/owner/reasoning-clients": {
+      "get": {
+        "operationId": "listOwnerReasoningClients",
+        "summary": "Inspect reasoning connections",
+        "description": "Return only actually known eligible connections and redacted verified availability. Never infer subscription entitlement from FCIS login or configured MCP. Account connection uses an independently supported provider-specific authorization handshake or existing OAuth client grant, no generic secret submission.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "description": "Bounded page size."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "description": "Opaque owner/tenant/query/snapshot-bound cursor; reject foreign or changed context."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified scoped Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerReasoningClientPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Inspect reasoning connections",
+          "notFor": "Provider or Host authorization by inference; cross-tenant read; paid fallback; fabricated results.",
+          "effect": "Read-only private owner projection.",
+          "evidence": "Authoritative owner/tenant-bound native Store readback; actual provider result and instrument receipts independently verified."
+        }
+      }
+    },
+    "/oauth/owner/conversations": {
+      "get": {
+        "operationId": "listOwnerConversations",
+        "summary": "List owner conversations",
+        "description": "Page private owner conversation metadata and archived selection; no provider request. Authenticated export uses ordered pages and existing authorized Store export.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "description": "Bounded page size."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "description": "Opaque owner/tenant/query/snapshot-bound cursor; reject foreign or changed context."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified scoped Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "List owner conversations",
+          "notFor": "Provider or Host authorization by inference; cross-tenant read; paid fallback; fabricated results.",
+          "effect": "Read-only private owner projection.",
+          "evidence": "Authoritative owner/tenant-bound native Store readback; actual provider result and instrument receipts independently verified."
+        }
+      },
+      "post": {
+        "operationId": "createOwnerConversation",
+        "summary": "Create a private conversation",
+        "description": "Create an empty owner conversation in existing FountainStore. No provider requirement or call.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          },
+          {
+            "name": "X-Fountain-Owner-Intent",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "const": "fountaincoach/chat.createOwnerConversation"
+            },
+            "description": "Exact owner mutation intent; authenticated session and current authority still required."
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Verified scoped Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Create a private conversation",
+          "notFor": "Provider or Host authorization by inference; cross-tenant read; paid fallback; fabricated results.",
+          "effect": "Bounded owner Store transaction and readback; external inference only at explicit permitted turn start.",
+          "evidence": "Authoritative owner/tenant-bound native Store readback; actual provider result and instrument receipts independently verified."
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerConversationCreate"
+              }
+            }
+          }
+        },
+        "x-fcis-owner-intent": "fountaincoach/chat.createOwnerConversation"
+      }
+    },
+    "/oauth/owner/conversations/{conversationId}": {
+      "get": {
+        "operationId": "readOwnerConversation",
+        "summary": "Read an owner conversation",
+        "description": "Read exact conversation metadata, selected client and turn projection, owner/tenant derived from current session.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact owner-scoped object ID."
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified scoped Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Read an owner conversation",
+          "notFor": "Provider or Host authorization by inference; cross-tenant read; paid fallback; fabricated results.",
+          "effect": "Read-only private owner projection.",
+          "evidence": "Authoritative owner/tenant-bound native Store readback; actual provider result and instrument receipts independently verified."
+        }
+      },
+      "patch": {
+        "operationId": "updateOwnerConversation",
+        "summary": "Rename, archive, restore or select reasoning",
+        "description": "CAS-bound metadata change only. Select an actual client and model or clear both; do not start inference, change permissions or forward history. Do not archive an unresolved active turn.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact owner-scoped object ID."
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          },
+          {
+            "name": "X-Fountain-Owner-Intent",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "const": "fountaincoach/chat.updateOwnerConversation"
+            },
+            "description": "Exact owner mutation intent; authenticated session and current authority still required."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified scoped Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Rename, archive, restore or select reasoning",
+          "notFor": "Provider or Host authorization by inference; cross-tenant read; paid fallback; fabricated results.",
+          "effect": "Bounded owner Store transaction and readback; external inference only at explicit permitted turn start.",
+          "evidence": "Authoritative owner/tenant-bound native Store readback; actual provider result and instrument receipts independently verified."
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerConversationUpdate"
+              }
+            }
+          }
+        },
+        "x-fcis-owner-intent": "fountaincoach/chat.updateOwnerConversation"
+      }
+    },
+    "/oauth/owner/conversations/{conversationId}/delete": {
+      "post": {
+        "operationId": "deleteOwnerConversation",
+        "summary": "Delete an owner conversation",
+        "description": "Explicit, confirmed CAS-bound deletion. Refuse unresolved active turns; deny future content access and apply retained-backup/tombstone deletion policy. No promise of erasure from independently controlled provider copies.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact owner-scoped object ID."
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          },
+          {
+            "name": "X-Fountain-Owner-Intent",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "const": "fountaincoach/chat.deleteOwnerConversation"
+            },
+            "description": "Exact owner mutation intent; authenticated session and current authority still required."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified scoped Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Delete an owner conversation",
+          "notFor": "Provider or Host authorization by inference; cross-tenant read; paid fallback; fabricated results.",
+          "effect": "Bounded owner Store transaction and readback; external inference only at explicit permitted turn start.",
+          "evidence": "Authoritative owner/tenant-bound native Store readback; actual provider result and instrument receipts independently verified."
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerConversationDelete"
+              }
+            }
+          }
+        },
+        "x-fcis-owner-intent": "fountaincoach/chat.deleteOwnerConversation"
+      }
+    },
+    "/oauth/owner/conversations/{conversationId}/messages": {
+      "get": {
+        "operationId": "listOwnerConversationMessages",
+        "summary": "Read ordered conversation messages",
+        "description": "Stable ordered pages of committed owner messages and references. No provider session is needed; no hidden chain of thought or raw secrets. Pagination is consistent at a committed snapshot.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact owner-scoped object ID."
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "description": "Bounded page size."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "description": "Opaque owner/tenant/query/snapshot-bound cursor; reject foreign or changed context."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified scoped Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationMessagePage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Read ordered conversation messages",
+          "notFor": "Provider or Host authorization by inference; cross-tenant read; paid fallback; fabricated results.",
+          "effect": "Read-only private owner projection.",
+          "evidence": "Authoritative owner/tenant-bound native Store readback; actual provider result and instrument receipts independently verified."
+        }
+      },
+      "post": {
+        "operationId": "appendOwnerMessage",
+        "summary": "Append a human message",
+        "description": "Commit a human message with monotonic conversation sequence and exact idempotency. Does not invoke a provider. Owner cannot assert an assistant response or instrument receipt through this operation.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact owner-scoped object ID."
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          },
+          {
+            "name": "X-Fountain-Owner-Intent",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "const": "fountaincoach/chat.appendOwnerMessage"
+            },
+            "description": "Exact owner mutation intent; authenticated session and current authority still required."
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Verified scoped Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Append a human message",
+          "notFor": "Provider or Host authorization by inference; cross-tenant read; paid fallback; fabricated results.",
+          "effect": "Bounded owner Store transaction and readback; external inference only at explicit permitted turn start.",
+          "evidence": "Authoritative owner/tenant-bound native Store readback; actual provider result and instrument receipts independently verified."
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerMessageCreate"
+              }
+            }
+          }
+        },
+        "x-fcis-owner-intent": "fountaincoach/chat.appendOwnerMessage"
+      }
+    },
+    "/oauth/owner/conversations/{conversationId}/turns": {
+      "post": {
+        "operationId": "startOwnerReasoningTurn",
+        "summary": "Start one subscription-only reasoning turn",
+        "description": "Only for an actual verified native-conversation adapter, selected account/model, current allowance and enforceable provider-side no-extra-charge guarantee. Require owner disclosure consent for selected bounded conversation context and governing signed Skills. Revalidate before transmission. Refuse unsupported, exhausted or unverified connection before any request; never call Workspace Agent trigger, purchase credits, use paid inference, or fall back. Persist request state before dispatch; 202 never proves a reply.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact owner-scoped object ID."
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          },
+          {
+            "name": "X-Fountain-Owner-Intent",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "const": "fountaincoach/chat.startOwnerReasoningTurn"
+            },
+            "description": "Exact owner mutation intent; authenticated session and current authority still required."
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Committed request state, not a completed model result",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerReasoningTurn"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Start one subscription-only reasoning turn",
+          "notFor": "Provider or Host authorization by inference; cross-tenant read; paid fallback; fabricated results.",
+          "effect": "Bounded owner Store transaction and readback; external inference only at explicit permitted turn start.",
+          "evidence": "Authoritative owner/tenant-bound native Store readback; actual provider result and instrument receipts independently verified."
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerReasoningTurnCreate"
+              }
+            }
+          }
+        },
+        "x-fcis-owner-intent": "fountaincoach/chat.startOwnerReasoningTurn"
+      }
+    },
+    "/oauth/owner/conversations/{conversationId}/turns/{turnId}": {
+      "get": {
+        "operationId": "readOwnerReasoningTurn",
+        "summary": "Read reasoning turn state",
+        "description": "Read authoritative persisted turn status and exact result references. No inferred answer from provider status; completed requires actual answer committed in FountainStore. No implicit re-invocation.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact owner-scoped object ID."
+          },
+          {
+            "name": "turnId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact owner-scoped object ID."
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified scoped Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerReasoningTurn"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Read reasoning turn state",
+          "notFor": "Provider or Host authorization by inference; cross-tenant read; paid fallback; fabricated results.",
+          "effect": "Read-only private owner projection.",
+          "evidence": "Authoritative owner/tenant-bound native Store readback; actual provider result and instrument receipts independently verified."
+        }
+      }
+    },
+    "/oauth/owner/conversations/{conversationId}/turns/{turnId}/cancel": {
+      "post": {
+        "operationId": "cancelOwnerReasoningTurn",
+        "summary": "Stop a reasoning turn",
+        "description": "Stop future local dispatch and use actual supported provider cancellation if present; if provider outcome cannot be verified retain unverified state rather than assert remote cancellation. No retry or new provider turn.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact owner-scoped object ID."
+          },
+          {
+            "name": "turnId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact owner-scoped object ID."
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          },
+          {
+            "name": "X-Fountain-Owner-Intent",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "const": "fountaincoach/chat.cancelOwnerReasoningTurn"
+            },
+            "description": "Exact owner mutation intent; authenticated session and current authority still required."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified scoped Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerReasoningTurn"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Stop a reasoning turn",
+          "notFor": "Provider or Host authorization by inference; cross-tenant read; paid fallback; fabricated results.",
+          "effect": "Bounded owner Store transaction and readback; external inference only at explicit permitted turn start.",
+          "evidence": "Authoritative owner/tenant-bound native Store readback; actual provider result and instrument receipts independently verified."
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerConversationDelete"
+              }
+            }
+          }
+        },
+        "x-fcis-owner-intent": "fountaincoach/chat.cancelOwnerReasoningTurn"
+      }
     }
   },
   "components": {
@@ -9939,6 +12124,782 @@
           "terminal",
           "evidence"
         ]
+      },
+      "OwnerReasoningClient": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "provider",
+          "label",
+          "mode",
+          "state",
+          "chargeBasis",
+          "additionalInferenceChargeCeilingMinor",
+          "subscriptionOnlyVerified",
+          "availabilityReason",
+          "models"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "provider": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "external-mcp",
+              "native-conversation"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "unverified",
+              "unavailable",
+              "connected",
+              "ready",
+              "disconnected"
+            ]
+          },
+          "chargeBasis": {
+            "type": "string",
+            "enum": [
+              "included-subscription",
+              "unverified"
+            ]
+          },
+          "additionalInferenceChargeCeilingMinor": {
+            "type": "integer",
+            "const": 0
+          },
+          "subscriptionOnlyVerified": {
+            "type": "boolean"
+          },
+          "availabilityReason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "account_not_connected",
+                  "entitlement_unverified",
+                  "charge_boundary_unverified",
+                  "allowance_exhausted",
+                  "unsupported_native_transport",
+                  "revoked",
+                  "provider_unavailable"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 64
+          }
+        },
+        "description": "Server-derived redacted capability/eligibility projection, never a credential or an invented model list. Ready native conversation requires current independently verified included entitlement and provider-enforced no-extra-charge behavior; a connected MCP client alone is not ready native inference."
+      },
+      "OwnerConversation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "revision",
+          "title",
+          "state",
+          "createdAt",
+          "updatedAt",
+          "selectedClientId",
+          "selectedModel",
+          "messageCount",
+          "activeTurnId"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "active",
+              "archived"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "selectedClientId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selectedModel": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "messageCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "activeTurnId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "description": "Owner/tenant derived from current session; no provider identifier is required for conversation continuity."
+      },
+      "OwnerConversationCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "correlationId",
+          "idempotencyKey"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "correlationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          }
+        }
+      },
+      "OwnerConversationUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "correlationId",
+          "idempotencyKey",
+          "expectedRevision"
+        ],
+        "properties": {
+          "correlationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "active",
+              "archived"
+            ]
+          },
+          "selectedClientId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "selectedModel": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "description": "At least one mutable field required; selection is not invocation, consent, or a grant. A model must belong to the selected verified client. Archive/restore retain content; no provider transmission."
+      },
+      "OwnerConversationDelete": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "correlationId",
+          "idempotencyKey",
+          "expectedRevision",
+          "confirm"
+        ],
+        "properties": {
+          "correlationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "confirm": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "description": "Explicit deletion of the selected owner conversation. Refuse active or ambiguous turns. Preserve only necessary redacted independent execution/rights records; apply the specified backup retention and deletion tombstone policy."
+      },
+      "OwnerConversationMessage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "conversationId",
+          "sequence",
+          "role",
+          "text",
+          "createdAt",
+          "turnId",
+          "providerClientId",
+          "model",
+          "instructionReleaseIds",
+          "executionReceiptIds"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "conversationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "human",
+              "assistant"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64000
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "turnId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "providerClientId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instructionReleaseIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "maxItems": 32
+          },
+          "executionReceiptIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "maxItems": 100
+          }
+        },
+        "description": "Committed human message or actual provider response only. Assistant role cannot be submitted by an ordinary owner message request. No hidden reasoning traces, secrets, tool-output-as-assistant or fabricated completion."
+      },
+      "OwnerMessageCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "correlationId",
+          "idempotencyKey",
+          "expectedRevision",
+          "text"
+        ],
+        "properties": {
+          "correlationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64000
+          }
+        },
+        "description": "Append one human message only, with no external provider call. Return committed message ID and revision through receipt; refuse duplicate or conflicting revision."
+      },
+      "OwnerReasoningTurnCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "correlationId",
+          "idempotencyKey",
+          "expectedRevision",
+          "messageId",
+          "clientId",
+          "model",
+          "subscriptionOnly",
+          "additionalInferenceChargeCeilingMinor"
+        ],
+        "properties": {
+          "correlationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "messageId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "clientId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "subscriptionOnly": {
+            "type": "boolean",
+            "const": true
+          },
+          "additionalInferenceChargeCeilingMinor": {
+            "type": "integer",
+            "const": 0
+          }
+        },
+        "description": "Start a native reasoning turn for the exact committed human message, under selected supported subscription account and current no-extra-charge entitlement. No browser cookies, provider API keys, arbitrary endpoint, silent provider switch, or implicit paid mode."
+      },
+      "OwnerReasoningTurn": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "conversationId",
+          "messageId",
+          "clientId",
+          "model",
+          "state",
+          "revision",
+          "correlationId",
+          "createdAt",
+          "updatedAt",
+          "assistantMessageId",
+          "instructionReleaseIds",
+          "executionReceiptIds",
+          "reason",
+          "additionalInferenceChargeCeilingMinor"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "conversationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "messageId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "clientId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "requested",
+              "reasoning",
+              "completed",
+              "refused",
+              "failed",
+              "cancelled",
+              "unverified"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "correlationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "assistantMessageId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instructionReleaseIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "maxItems": 32
+          },
+          "executionReceiptIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "maxItems": 100
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "entitlement_unverified",
+                  "charge_boundary_unverified",
+                  "allowance_exhausted",
+                  "provider_unavailable",
+                  "scope_refused",
+                  "skill_unavailable",
+                  "result_unverified",
+                  "cancelled_by_owner",
+                  "store_unavailable"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "additionalInferenceChargeCeilingMinor": {
+            "type": "integer",
+            "const": 0
+          }
+        },
+        "description": "Completed only after actual provider response and independently committed owner message/result. An instrument outcome remains separate. An uncertain transport effect remains unverified; never blindly retry or manufacture answer."
+      },
+      "OwnerConversationReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "receiptId",
+          "operationId",
+          "conversationId",
+          "subjectId",
+          "revision",
+          "storeSequence",
+          "correlationId",
+          "committedAt",
+          "effectDigest"
+        ],
+        "properties": {
+          "receiptId": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "operationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "conversationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "subjectId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "storeSequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "correlationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "committedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "effectDigest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "description": "Verified owner-scoped native Store commit/readback. Does not assert actual model or instrument success."
+      },
+      "OwnerConversationPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OwnerConversation"
+            },
+            "maxItems": 100
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "OwnerConversationMessagePage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OwnerConversationMessage"
+            },
+            "maxItems": 100
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "OwnerReasoningClientPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OwnerReasoningClient"
+            },
+            "maxItems": 100
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "OwnerConversationError": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "error",
+          "correlationId"
+        ],
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "invalid_request",
+              "owner_authentication_required",
+              "origin_refused",
+              "intent_refused",
+              "not_authorized",
+              "not_found",
+              "revision_conflict",
+              "idempotency_conflict",
+              "active_turn",
+              "entitlement_unverified",
+              "charge_boundary_unverified",
+              "allowance_exhausted",
+              "provider_unavailable",
+              "unsupported_native_transport",
+              "result_unverified",
+              "store_unavailable"
+            ]
+          },
+          "correlationId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "description": "Redacted error; no private source, transcript, provider secret or cross-tenant existence disclosure."
       }
     }
   },
@@ -10000,7 +12961,8 @@
     "midi2": "MIDI2 IDL/MIDI-CI instrument negotiation and Host envelopes belong to their owning contract.",
     "instrument": "Admitted FCIS-KIT mechanical constraints and release proof are not defined by an HTTP path.",
     "payment": "Second-priority provider-neutral FCIS Payment Instrument. FCIS acquisition operations consume its admitted typed checkout/status/reconciliation and verified terminal receipts; direct Stripe API, webhook and refund effects remain instrument-owned and outside this core HTTP contract.",
-    "regulatoryMaintenance": "The organization FCIS-STACK.md section 6.1 and docs/FCIS-EU-Regulatory-Maintenance.md govern ongoing EU/German legal applicability and release evidence. No regulatory HTTP route, approval API, or legal certification is created by this metadata."
+    "regulatoryMaintenance": "The organization FCIS-STACK.md section 6.1 and docs/FCIS-EU-Regulatory-Maintenance.md govern ongoing EU/German legal applicability and release evidence. No regulatory HTTP route, approval API, or legal certification is created by this metadata.",
+    "reasoningAdapter": "Provider-specific account authorization, model choice, included subscription entitlement and actual reasoning return are separate from MCP instrument access. Only supported, independently verified no-additional-charge native transport may send a task; otherwise unavailable. FCIS HTTP routes do not confer external provider entitlement."
   },
   "x-fcis-regulatory-maintenance": {
     "policy": "docs/FCIS-EU-Regulatory-Maintenance.md",
@@ -10056,5 +13018,28 @@
     "reviewEvidenceKind": "scenario-verified",
     "status": "specified-only-not-deployed",
     "boundary": "These existing owner operations supply private draft, evidence review, signed admission and exact revision readback. The scenario also requires actual supported reasoning-client consumption and independent linked execution outcomes under existing authorization. Source-review, CLI admission without scenario review, a signed release, marketplace sync or a model assertion alone do not complete it. No new HTTP operation, credential, grant or commercial/public distribution is implied."
+  },
+  "x-fcis-owner-chat": {
+    "canonicalContract": "FCIS-SYSTEM.json#/reasoningAndConversationSystem",
+    "status": "specified-only-not-deployed",
+    "operationIds": [
+      "listOwnerReasoningClients",
+      "listOwnerConversations",
+      "createOwnerConversation",
+      "readOwnerConversation",
+      "updateOwnerConversation",
+      "deleteOwnerConversation",
+      "listOwnerConversationMessages",
+      "appendOwnerMessage",
+      "startOwnerReasoningTurn",
+      "readOwnerReasoningTurn",
+      "cancelOwnerReasoningTurn"
+    ],
+    "additionalInferenceChargeCeilingMinor": 0,
+    "permittedExternalChargeBasis": "included-subscription",
+    "externalClientIntegration": "Existing /mcp with OAuth/PKCE and explicitly scoped FCIS resources. A connected external chat is not native reasoning transport. Record only actual authorized work evidence; no automatic provider chat-history ingestion.",
+    "privateSkillDelivery": "Resolve and verify exact current active signed release through existing separately authorized Skill resource; generic /mcp bearer and Host grants are not source-delivery grants. A client adapter must demonstrate supported separately scoped retrieval, not forward owner cookies or invent a token exchange.",
+    "historyAuthority": "Existing tenant-scoped native FountainStore, independent from provider account, with owner-controlled read, export, archive and deletion.",
+    "noFallback": true
   }
 }
