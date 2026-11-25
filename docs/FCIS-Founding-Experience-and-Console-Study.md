@@ -38,6 +38,8 @@ Use the current working Press UI as the before-study baseline. Capture ordinary 
 
 ## 3. Proposed experience: the FCIS Console
 
+**Design shorthand (owner-approved, 25 November 2026): FCIS Style.** “Render in FCIS Style” means use the existing FCIS Console visual language for interfaces, architectural illustrations and publications: Linear-inspired, responsive, iPad-first, using Fountain Coach CSS design tokens, restrained sans-serif typography, clear hierarchy, quiet modular surfaces and precise diagrams. This is a shorthand for the existing design direction, not a new design system or implementation gate.
+
 Investigate an adaptive, object-centred operating environment, retaining the existing Go service, issuer, owner identity, grants, native Store and instrument contracts. Fountain Press remains the reading and publication environment and a place to explain the system. Preserve the brand without forcing book pagination or editorial navigation onto operating tasks.
 
 Proposed navigation: Overview, Chat, Skills, Instruments, Hosts, Access, Integrations; Account/Billing, Usage, Activity and Settings. Show only capabilities available to the current role. This is an information architecture hypothesis, not an endpoint list or permission grant. Do not create a second identity, Store, control plane, payment authority, or marketplace as a consequence of the study. A separate customer-facing workspace is a design question, not an implementation prerequisite.
