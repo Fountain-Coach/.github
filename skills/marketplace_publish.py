@@ -33,7 +33,7 @@ def git(root, *args):
 
 def eligible_path(path):
     """Permit the single public Skill and removal of exactly nine old mirrors."""
-    if path == (PLUGIN_PATH / "plugin.json").as_posix():
+    if path in {(PLUGIN_PATH / "plugin.json").as_posix(), (PLUGIN_PATH / "mcp.json").as_posix()}:
         return True
     # The installed marketplace brand is derived from the exact published
     # Fountain Coach logo, and this one owned file is reviewable in the PR.
