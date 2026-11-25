@@ -66,7 +66,8 @@ class FCISModelIndependenceTests(unittest.TestCase):
         self.assertEqual(provider["contentSHA256"], digest(projected))
         self.assertEqual(check_adapter(ROOT)["state"], "MATCHED")
         self.assertEqual(check_plugin(ROOT)["state"], "MATCHED")
-        self.assertEqual(check_plugin(ROOT)["version"], "0.1.41")
+        self.assertEqual(check_plugin(ROOT)["version"], "0.1.42")
+        self.assertEqual(check_plugin(ROOT)["mcpConnection"], "https://go.fcis.fountain.coach/mcp")
         self.assertEqual(set(check_plugin(ROOT)["skills"]), {"fcis-go"})
         router = canonical["SKILL.md"].decode()
         for required in ("Mandatory task routing", "fcis-go-runtime-migration", "fcis-owner-access", "fcis-console-development", "authorized FCIS Skill read surface", "do not silently fall back", "verify actual selection and consumption"):
