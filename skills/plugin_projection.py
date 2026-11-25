@@ -19,6 +19,8 @@ PLUGIN = SKILL
 PLUGIN_PATH = Path("plugins") / PLUGIN
 ACTIVE_SKILL = "fcis-go"
 ACTIVE_MANIFEST_PATH = Path("skills/fcis-go-publication.json")
+MCP_PATH = PLUGIN_PATH / "mcp.json"
+APPROVED_MCP_URL = "https://go.fcis.fountain.coach/mcp"
 MIRROR_PATH = PLUGIN_PATH / "skills" / ACTIVE_SKILL
 MARKETPLACE_PATH = Path(".agents/plugins/marketplace.json")
 WORKSPACE_PLUGIN_ID = "Plugin_fb9e0937c59c8191b9fa077fa5ea53ef"
@@ -280,16 +282,66 @@ def _mirrors(root, *, allow_migration=False, source=None):
     return observed.get(ACTIVE_SKILL, {}), old
 
 
+def approved_mcp_projection(root):
+    """One public FCIS endpoint, no secrets, billing, new plugin or implied grant.
+
+    Legacy single-Skill packages may omit the reviewed connection. A new
+    connection must be explicitly declared by the canonical owner manifest.
+    """
+    manifest = _read_json(root / ACTIVE_MANIFEST_PATH)
+    connection = manifest.get("mcpConnection")
+    if connection is None:
+        return None
+    if (not isinstance(connection, dict)
+            or set(connection) != {"schemaVersion", "serverName", "transport", "url",
+                                   "authentication", "chargeBasis", "sourceRelease"}
+            or connection["schemaVersion"] != 1
+            or connection["serverName"] != "fcis"
+            or connection["transport"] != "streamable-http"
+            or connection["url"] != APPROVED_MCP_URL
+            or connection["authentication"] != "oauth"
+            or connection["chargeBasis"] != "included-subscription"
+            or not isinstance(connection["sourceRelease"], str)
+            or not re.fullmatch("[0-9a-f]{40}", connection["sourceRelease"])):
+        raise ProjectionError("Unapproved FCIS MCP connection or charge basis")
+    return {
+        "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+        "mcpServers": {
+            "fcis": {
+                "type": "streamable-http",
+                "url": APPROVED_MCP_URL,
+                "extensions": {"com.openai": {"auth": {"type": "oauth"}}},
+            }
+        },
+    }
+
+
+def mcp_projection_state(root, *, allow_missing=False):
+    target = approved_mcp_projection(root)
+    path = root / MCP_PATH
+    if path.is_symlink():
+        raise ProjectionError("Refusing symlinked MCP projection")
+    if not path.exists():
+        if target is not None and not allow_missing:
+            raise ProjectionError("Approved MCP projection missing")
+        return target, target is not None
+    if target is None or _read_json(path) != target:
+        raise ProjectionError("Unreviewed MCP projection; refusing overwrite")
+    return target, False
+
+
 def check(root=ROOT):
     root, plugin, source, digests, website = inspect(root)
     if plugin["extensions"]["com.openai"]["interface"].get("websiteURL") != website:
         raise ProjectionError("Plugin websiteURL differs from canonical metadata")
+    target_mcp, _ = mcp_projection_state(root)
     current, old = _mirrors(root)
     if old or current != source[ACTIVE_SKILL]:
         raise ProjectionError("Active FCIS-GO mirror missing or divergent")
     return {"state": "MATCHED", "plugin": PLUGIN, "version": plugin["version"],
             "sourceSkill": ACTIVE_SKILL, "contentSHA256": digests[ACTIVE_SKILL],
             "skills": {ACTIVE_SKILL: digests[ACTIVE_SKILL]},
+            "mcpConnection": APPROVED_MCP_URL if target_mcp else None,
             "maintainedCanonicalSkills": {name: digests[name] for name in CANONICAL_SKILLS}}
 
 
@@ -297,6 +349,7 @@ def sync(root=ROOT):
     root, plugin, source, digests, website = inspect(root)
     interface = plugin["extensions"]["com.openai"]["interface"]
     metadata_changed = interface.get("websiteURL") != website
+    target_mcp, mcp_changed = mcp_projection_state(root, allow_missing=True)
     current, old = _mirrors(root, allow_migration=True, source=source)
     target = source[ACTIVE_SKILL]
     unexpected = current.keys() - target.keys()
@@ -321,15 +374,18 @@ def sync(root=ROOT):
 
     if metadata_changed:
         interface["websiteURL"] = website
-    if (current or old) and (changed or migration or metadata_changed):
+    if mcp_changed:
+        (root / MCP_PATH).write_text(json.dumps(target_mcp, indent=2) + "\n", encoding="utf-8")
+    if (current or old) and (changed or migration or metadata_changed or mcp_changed):
         major, minor, patch = map(int, plugin["version"].split("."))
         plugin["version"] = f"{major}.{minor}.{patch + 1}"
-    if metadata_changed or (current or old) and (changed or migration):
+    if metadata_changed or mcp_changed or (current or old) and (changed or migration):
         (root / PLUGIN_PATH / "plugin.json").write_text(
             json.dumps(plugin, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     result = check(root)
-    if changed or migration or metadata_changed:
+    if changed or migration or metadata_changed or mcp_changed:
         result["state"] = "SYNCED"
+        result["changedMCPConnection"] = mcp_changed
         result["changedSkills"] = [ACTIVE_SKILL] if changed else []
         result["removedMaintainedMirrors"] = sorted(old)
     return result

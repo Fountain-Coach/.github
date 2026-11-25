@@ -151,6 +151,60 @@ class MarketplaceProjectionTests(unittest.TestCase):
         self.assertEqual(result["version"], "0.1.0")
         self.assertEqual(entries(self.active), entries(self.root / projection.MIRROR_PATH))
 
+    def _approve_mcp(self):
+        path = self.root / projection.ACTIVE_MANIFEST_PATH
+        data = json.loads(path.read_text())
+        data["mcpConnection"] = {
+            "schemaVersion": 1, "serverName": "fcis", "transport": "streamable-http",
+            "url": "https://go.fcis.fountain.coach/mcp", "authentication": "oauth",
+            "chargeBasis": "included-subscription", "sourceRelease": "a" * 40,
+        }
+        path.write_text(json.dumps(data))
+        return path, data
+
+    def test_approved_mcp_projects_once_without_skill_expansion(self):
+        projection.sync(self.root)
+        self._approve_mcp()
+        with self.assertRaisesRegex(projection.ProjectionError, "MCP projection missing"):
+            projection.check(self.root)
+        result = projection.sync(self.root)
+        self.assertEqual(result["version"], "0.1.1")
+        self.assertEqual(result["mcpConnection"], "https://go.fcis.fountain.coach/mcp")
+        self.assertEqual(set(result["skills"]), {"fcis-go"})
+        config = json.loads((self.root / projection.MCP_PATH).read_text())
+        self.assertEqual(config, {
+            "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+            "mcpServers": {"fcis": {"type": "streamable-http",
+                "url": "https://go.fcis.fountain.coach/mcp",
+                "extensions": {"com.openai": {"auth": {"type": "oauth"}}}}}})
+        self.assertEqual(projection.sync(self.root)["version"], "0.1.1")
+
+    def test_mcp_refuses_paid_route_unknown_endpoint_and_credentials(self):
+        projection.sync(self.root)
+        path, data = self._approve_mcp()
+        for field, value in (("chargeBasis", "metered"),
+                             ("url", "https://untrusted.invalid/mcp"),
+                             ("authentication", "none"),
+                             ("apiKey", "synthetic-not-a-secret")):
+            candidate = json.loads(json.dumps(data))
+            candidate["mcpConnection"][field] = value
+            path.write_text(json.dumps(candidate))
+            with self.assertRaisesRegex(projection.ProjectionError, "Unapproved FCIS MCP"):
+                projection.sync(self.root)
+        self.assertFalse((self.root / projection.MCP_PATH).exists())
+
+    def test_mcp_refuses_unreviewed_projection_overwrite(self):
+        projection.sync(self.root)
+        self._approve_mcp()
+        projection.sync(self.root)
+        path = self.root / projection.MCP_PATH
+        config = json.loads(path.read_text())
+        config["mcpServers"]["unknown"] = {"type": "streamable-http", "url": "https://untrusted.invalid"}
+        path.write_text(json.dumps(config))
+        with self.assertRaisesRegex(projection.ProjectionError, "Unreviewed MCP projection"):
+            projection.sync(self.root)
+        self.assertEqual(json.loads(path.read_text()), config)
+
     def test_repeat_sync_is_a_no_op(self):
         projection.sync(self.root)
         result = projection.sync(self.root)

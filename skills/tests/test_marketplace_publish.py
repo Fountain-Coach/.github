@@ -32,6 +32,14 @@ def git(root, *args):
 
 
 class MarketplacePublishTests(unittest.TestCase):
+    def test_only_reviewed_mcp_configuration_is_derived_path(self):
+        self.assertTrue(publishing.eligible_path(
+            "plugins/fcis-skill-authoring-and-sync/mcp.json"))
+        self.assertFalse(publishing.eligible_path(
+            "plugins/fcis-skill-authoring-and-sync/other-mcp.json"))
+        self.assertFalse(publishing.eligible_path(
+            "plugins/other-plugin/mcp.json"))
+
     def test_original_logo_is_only_allowed_derived_brand_asset(self):
         self.assertTrue(publishing.eligible_path(
             "plugins/fcis-skill-authoring-and-sync/assets/fountain-coach-logo-transparent.png"))

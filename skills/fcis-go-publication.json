@@ -15,5 +15,14 @@
       }
     }
   },
-  "activePluginId": "Plugin_fb9e0937c59c8191b9fa077fa5ea53ef"
+  "activePluginId": "Plugin_fb9e0937c59c8191b9fa077fa5ea53ef",
+  "mcpConnection": {
+    "schemaVersion": 1,
+    "serverName": "fcis",
+    "transport": "streamable-http",
+    "url": "https://go.fcis.fountain.coach/mcp",
+    "authentication": "oauth",
+    "chargeBasis": "included-subscription",
+    "sourceRelease": "331c225e669f729467db81f8d1b66a4731f5e2a0"
+  }
 }
