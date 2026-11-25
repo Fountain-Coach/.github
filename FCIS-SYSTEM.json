@@ -2,7 +2,7 @@
   "kind": "fountaincoach.fcis.system.composition",
   "schemaVersion": "1.0.0",
   "compositionId": "fountaincoach.fcis.whole-system",
-  "status": "SPEC_VALIDATED__NOT_GENERATED",
+  "status": "NORMATIVE_SPECIFICATION_CANDIDATE__NOT_GENERATED",
   "generatedAtUTC": "2026-11-19",
   "owner": "Fountain Coach",
   "architectureVersion": "1.3",
@@ -16,11 +16,12 @@
       "Native software Host with read-only capability and optional external MIDI2 adapters",
       "Versioned capability inventory, instrument admissions, client-scoped grants and terminal receipts",
       "FCIS-KIT skills, scenarios, learning, version promotion and customer-owned derived work",
-      "Provider-neutral model adapters and customer-supplied provider accounts",
+      "Provider-neutral subscription-only model client adapters and actual supported customer account selection; zero additional inference charges",
       "One-instance customer/owner model with tenant-ready namespaces and portable Store export",
       "Reproducible immutable generation, offline CI, release, backup/restore and rollback",
       "Optional source-bound legacy migration including the existing Hetzner instance",
-      "Owner-private Skill authoring and signed revision management through the existing Go Admin API, with independent commercial catalogue, acquisition, entitlements and licensed source delivery specified for priority two."
+      "Owner-private Skill authoring and signed revision management through the existing Go Admin API, with independent commercial catalogue, acquisition, entitlements and licensed source delivery specified for priority two.",
+      "Owner-private native chat and provider-independent conversation continuity with subscription-only reasoning, external MCP integration and FCIS-CHAT-01 acceptance."
     ],
     "excludedFromFirstRelease": [
       "commercial Stripe billing adapter (versioned optional integration only)",
@@ -38,17 +39,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "8cbf51abe1f56ae8fc3f9805844ccc3afeae6445",
+      "ref": "41a56f76c8d24e58c79cc267bd8a86337b6fb9a2",
       "path": "FCIS-STACK.md",
-      "blobSha": "804dcf44e1250621c323196cefe22644f1780287",
-      "url": "https://github.com/Fountain-Coach/.github/blob/8cbf51abe1f56ae8fc3f9805844ccc3afeae6445/FCIS-STACK.md"
+      "blobSha": "e8236ab9d9268e473633f65250d32f9011b9ab8f",
+      "url": "https://github.com/Fountain-Coach/.github/blob/41a56f76c8d24e58c79cc267bd8a86337b6fb9a2/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "8cbf51abe1f56ae8fc3f9805844ccc3afeae6445",
+      "ref": "41a56f76c8d24e58c79cc267bd8a86337b6fb9a2",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "547731f3c809ce4cf904faddeb36617256b72b41",
-      "url": "https://github.com/Fountain-Coach/.github/blob/8cbf51abe1f56ae8fc3f9805844ccc3afeae6445/FCIS-OPENAPI.json"
+      "blobSha": "240d777a8080b5ca6a0c7379c1d83121a3731d8c",
+      "url": "https://github.com/Fountain-Coach/.github/blob/41a56f76c8d24e58c79cc267bd8a86337b6fb9a2/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -396,18 +397,34 @@
     {
       "id": "fcis.providers",
       "language": "Go provider interfaces",
-      "execution": "unconfigured by default; configured adapter only with owner-approved credential custody",
+      "execution": "unconfigured by default; only supported, owner-selected included-subscription account connection with independently verified current allowance and no-extra-charge enforcement; external MCP connection is separate from native reasoning",
       "owns": [
-        "provider adapter registration",
-        "budget/consent checks",
-        "provider refusals",
-        "usage receipts"
+        "supported provider/client adapter registration and account selection",
+        "included-subscription eligibility and zero additional inference charge refusal",
+        "authorized per-turn context disclosure and actual result return",
+        "provider status and evidence references"
       ],
       "requires": [
         "secretstore.custody",
         "fountainstore.native"
       ],
-      "defaultBehavior": "no external provider; FCIS native deterministic tools function without LLM access"
+      "defaultBehavior": "No external provider by default; native deterministic tools and conversation history function without a model account; unsupported native reasoning unavailable."
+    },
+    {
+      "id": "fcis.conversations",
+      "language": "Go and existing React Console",
+      "owns": [
+        "owner conversation identity/lifecycle",
+        "committed ordered messages and turn state",
+        "provider-independent history and authorized context selection",
+        "retention, export, deletion and evidence links"
+      ],
+      "requires": [
+        "fountainstore.native",
+        "fcis.providers"
+      ],
+      "execution": "Local owner history independent of provider availability; actual external dispatch only through selected verified subscription adapter",
+      "defaultBehavior": "empty private owner history; no automatic import of external provider transcripts"
     }
   ],
   "frontend": {
@@ -570,7 +587,15 @@
         "/oauth/owner/skill-offers",
         "/oauth/owner/skill-offers/{offerId}/withdraw",
         "/oauth/owner/skill-entitlements",
-        "/oauth/owner/skill-entitlements/{entitlementId}/revoke"
+        "/oauth/owner/skill-entitlements/{entitlementId}/revoke",
+        "/oauth/owner/reasoning-clients",
+        "/oauth/owner/conversations",
+        "/oauth/owner/conversations/{conversationId}",
+        "/oauth/owner/conversations/{conversationId}/delete",
+        "/oauth/owner/conversations/{conversationId}/messages",
+        "/oauth/owner/conversations/{conversationId}/turns",
+        "/oauth/owner/conversations/{conversationId}/turns/{turnId}",
+        "/oauth/owner/conversations/{conversationId}/turns/{turnId}/cancel"
       ],
       "commercialBindings": [
         "/catalog/skills",
@@ -581,14 +606,29 @@
         "/oauth/skills/releases/{releaseId}",
         "/oauth/skills/offers/{offerId}"
       ],
-      "acceptance": "Use verified owner session, exact object routes, private drafts/source only in protected responses, no automatic publication or phantom payment. Owner management first; commercial phase two. Existing Press baseline remains until accepted replacement."
+      "acceptance": "Use verified owner session, exact object routes, private drafts/source only in protected responses, no automatic publication or phantom payment. Owner management first; commercial phase two. Existing Press baseline remains until accepted replacement.",
+      "chat": {
+        "status": "specified-only-not-deployed",
+        "route": "/console/chat",
+        "bindings": [
+          "/oauth/owner/reasoning-clients",
+          "/oauth/owner/conversations",
+          "/oauth/owner/conversations/{conversationId}",
+          "/oauth/owner/conversations/{conversationId}/delete",
+          "/oauth/owner/conversations/{conversationId}/messages",
+          "/oauth/owner/conversations/{conversationId}/turns",
+          "/oauth/owner/conversations/{conversationId}/turns/{turnId}",
+          "/oauth/owner/conversations/{conversationId}/turns/{turnId}/cancel"
+        ],
+        "acceptance": "FCIS-CHAT-01; owner-local history available without provider. Integrations distinguishes connected external MCP and verified native subscription access. No additional inference cost or paid fallback."
+      }
     }
   },
   "apis": {
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.5.2",
+      "version": "0.6.0",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -1160,6 +1200,149 @@
           ],
           "status": "specified",
           "sourcePointer": "/paths/~1oauth~1skills~1offers~1{offerId}/get"
+        },
+        {
+          "id": "listOwnerReasoningClients",
+          "method": "GET",
+          "path": "/oauth/owner/reasoning-clients",
+          "summary": "Inspect reasoning connections",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1reasoning-clients/get"
+        },
+        {
+          "id": "listOwnerConversations",
+          "method": "GET",
+          "path": "/oauth/owner/conversations",
+          "summary": "List owner conversations",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1conversations/get"
+        },
+        {
+          "id": "createOwnerConversation",
+          "method": "POST",
+          "path": "/oauth/owner/conversations",
+          "summary": "Create a private conversation",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1conversations/post"
+        },
+        {
+          "id": "readOwnerConversation",
+          "method": "GET",
+          "path": "/oauth/owner/conversations/{conversationId}",
+          "summary": "Read an owner conversation",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}/get"
+        },
+        {
+          "id": "updateOwnerConversation",
+          "method": "PATCH",
+          "path": "/oauth/owner/conversations/{conversationId}",
+          "summary": "Rename, archive, restore or select reasoning",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}/patch"
+        },
+        {
+          "id": "deleteOwnerConversation",
+          "method": "POST",
+          "path": "/oauth/owner/conversations/{conversationId}/delete",
+          "summary": "Delete an owner conversation",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1delete/post"
+        },
+        {
+          "id": "listOwnerConversationMessages",
+          "method": "GET",
+          "path": "/oauth/owner/conversations/{conversationId}/messages",
+          "summary": "Read ordered conversation messages",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1messages/get"
+        },
+        {
+          "id": "appendOwnerMessage",
+          "method": "POST",
+          "path": "/oauth/owner/conversations/{conversationId}/messages",
+          "summary": "Append a human message",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1messages/post"
+        },
+        {
+          "id": "startOwnerReasoningTurn",
+          "method": "POST",
+          "path": "/oauth/owner/conversations/{conversationId}/turns",
+          "summary": "Start one subscription-only reasoning turn",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1turns/post"
+        },
+        {
+          "id": "readOwnerReasoningTurn",
+          "method": "GET",
+          "path": "/oauth/owner/conversations/{conversationId}/turns/{turnId}",
+          "summary": "Read reasoning turn state",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1turns~1{turnId}/get"
+        },
+        {
+          "id": "cancelOwnerReasoningTurn",
+          "method": "POST",
+          "path": "/oauth/owner/conversations/{conversationId}/turns/{turnId}/cancel",
+          "summary": "Stop a reasoning turn",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1turns~1{turnId}~1cancel/post"
         }
       ],
       "schemas": [
@@ -1227,7 +1410,22 @@
         "SkillAdminError",
         "SkillPrivateReleaseManifest",
         "SkillProtectedResourceMetadata",
-        "HostChannelReceipt"
+        "HostChannelReceipt",
+        "OwnerReasoningClient",
+        "OwnerConversation",
+        "OwnerConversationCreate",
+        "OwnerConversationUpdate",
+        "OwnerConversationDelete",
+        "OwnerConversationMessage",
+        "OwnerMessageCreate",
+        "OwnerReasoningTurnCreate",
+        "OwnerReasoningTurn",
+        "OwnerConversationReceipt",
+        "OwnerConversationPage",
+        "OwnerConversationMessagePage",
+        "OwnerReasoningClientPage",
+        "OwnerConversationError",
+        "OwnerReasoningTurnCancel"
       ],
       "securitySchemes": [
         "ownerPasskeySession",
@@ -1617,7 +1815,10 @@
       "fcis.skill-reviews",
       "fcis.skill-offers",
       "fcis.skill-acquisitions",
-      "fcis.skill-entitlements"
+      "fcis.skill-entitlements",
+      "fcis.conversations",
+      "fcis.messages",
+      "fcis.reasoning-turns"
     ],
     "correctness": [
       "single writer with fencing",
@@ -1638,6 +1839,11 @@
       "fcis.skill-offers": "Priority two: exact signed offer manifest/terms, price and immutable identity plus withdrawal state.",
       "fcis.skill-acquisitions": "Priority two: actor-bound idempotent acquisition and verified payment receipt reference, status projection.",
       "fcis.skill-entitlements": "Priority two: exact customer tenant/principal, offer/revision, terms and current state; preserve history on lawful revocation."
+    },
+    "conversationCollections": {
+      "fcis.conversations": "Private owner/tenant record, title, lifecycle, selected client/model, ordered sequence head, active turn reference, revision, and timestamps. Stable owner-controlled identity independent of provider session.",
+      "fcis.messages": "Committed immutable ordered human and actual returned assistant text, exact conversation and turn references, source/provider provenance and linked receipt IDs. No hidden reasoning, raw credentials or fabricated responses. Per-message size within the native Store bound.",
+      "fcis.reasoning-turns": "Distinct owner/tenant, exact committed human message, approved context and active signed Skill release IDs/digests, selected provider/client/model, consent and verified no-extra-charge evidence references, request/idempotency identity, state, actual returned message and independent instrument receipt links. Store metadata and content remain private."
     }
   },
   "custody": {
@@ -1722,9 +1928,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 275,
+      "expectedRequirementCount": 305,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 275,
+      "minimumAtomicRequirementCount": 305,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -1744,7 +1950,9 @@
         "bootstrap",
         "learning-stage",
         "learning-evidence",
-        "learning-refusal"
+        "learning-refusal",
+        "chat-requirement",
+        "chat-refusal"
       ],
       "generatorReceipt": {
         "artifact": "generation-coverage.json",
@@ -1781,9 +1989,9 @@
       }
     },
     "inputContractDigests": {
-      "fcisOpenAPI": "0.5.2",
-      "fcisOpenAPIBlob": "547731f3c809ce4cf904faddeb36617256b72b41",
-      "architectureBlob": "804dcf44e1250621c323196cefe22644f1780287",
+      "fcisOpenAPI": "0.6.0",
+      "fcisOpenAPIBlob": "240d777a8080b5ca6a0c7379c1d83121a3731d8c",
+      "architectureBlob": "e8236ab9d9268e473633f65250d32f9011b9ab8f",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
     "requirementCatalog": [
@@ -3629,6 +3837,216 @@
         "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/refusals/4",
         "proofClass": "learning-refusal",
         "name": "learning-refusal: privacy-or-scope"
+      },
+      {
+        "id": "HTTP-listOwnerReasoningClients",
+        "name": "/oauth/owner/reasoning-clients GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1reasoning-clients/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-listOwnerConversations",
+        "name": "/oauth/owner/conversations GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1conversations/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-createOwnerConversation",
+        "name": "/oauth/owner/conversations POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1conversations/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOwnerConversation",
+        "name": "/oauth/owner/conversations/{conversationId} GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-updateOwnerConversation",
+        "name": "/oauth/owner/conversations/{conversationId} PATCH",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}/patch",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-deleteOwnerConversation",
+        "name": "/oauth/owner/conversations/{conversationId}/delete POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1delete/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-listOwnerConversationMessages",
+        "name": "/oauth/owner/conversations/{conversationId}/messages GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1messages/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-appendOwnerMessage",
+        "name": "/oauth/owner/conversations/{conversationId}/messages POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1messages/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-startOwnerReasoningTurn",
+        "name": "/oauth/owner/conversations/{conversationId}/turns POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1turns/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOwnerReasoningTurn",
+        "name": "/oauth/owner/conversations/{conversationId}/turns/{turnId} GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1turns~1{turnId}/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-cancelOwnerReasoningTurn",
+        "name": "/oauth/owner/conversations/{conversationId}/turns/{turnId}/cancel POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1turns~1{turnId}~1cancel/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "COLLECTION-FCIS-CONVERSATIONS",
+        "mandatory": true,
+        "sourcePointer": "/persistence/logicalCollections/18",
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.conversations"
+      },
+      {
+        "id": "COLLECTION-FCIS-MESSAGES",
+        "mandatory": true,
+        "sourcePointer": "/persistence/logicalCollections/19",
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.messages"
+      },
+      {
+        "id": "COLLECTION-FCIS-REASONING-TURNS",
+        "mandatory": true,
+        "sourcePointer": "/persistence/logicalCollections/20",
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.reasoning-turns"
+      },
+      {
+        "id": "CHAT-REQ-OWNER-HISTORY",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/requirements/0",
+        "proofClass": "chat-requirement",
+        "name": "chat-requirement: owner-history"
+      },
+      {
+        "id": "CHAT-REQ-SUBSCRIPTION-ONLY",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/requirements/1",
+        "proofClass": "chat-requirement",
+        "name": "chat-requirement: subscription-only"
+      },
+      {
+        "id": "CHAT-REQ-EXTERNAL-MCP",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/requirements/2",
+        "proofClass": "chat-requirement",
+        "name": "chat-requirement: external-mcp"
+      },
+      {
+        "id": "CHAT-REQ-NATIVE-ADAPTER",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/requirements/3",
+        "proofClass": "chat-requirement",
+        "name": "chat-requirement: native-adapter"
+      },
+      {
+        "id": "CHAT-REQ-SELECTION-AND-CONSENT",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/requirements/4",
+        "proofClass": "chat-requirement",
+        "name": "chat-requirement: selection-and-consent"
+      },
+      {
+        "id": "CHAT-REQ-DURABLE-TURN",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/requirements/5",
+        "proofClass": "chat-requirement",
+        "name": "chat-requirement: durable-turn"
+      },
+      {
+        "id": "CHAT-REQ-CROSS-PROVIDER-CONTINUITY",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/requirements/6",
+        "proofClass": "chat-requirement",
+        "name": "chat-requirement: cross-provider-continuity"
+      },
+      {
+        "id": "CHAT-REQ-INSTRUMENT-EVIDENCE",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/requirements/7",
+        "proofClass": "chat-requirement",
+        "name": "chat-requirement: instrument-evidence"
+      },
+      {
+        "id": "CHAT-REQ-PRIVACY-DELETION",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/requirements/8",
+        "proofClass": "chat-requirement",
+        "name": "chat-requirement: privacy-deletion"
+      },
+      {
+        "id": "CHAT-REQ-OWNER-UX",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/requirements/9",
+        "proofClass": "chat-requirement",
+        "name": "chat-requirement: owner-ux"
+      },
+      {
+        "id": "CHAT-REQ-PUBLICATION-BOUNDARY",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/requirements/10",
+        "proofClass": "chat-requirement",
+        "name": "chat-requirement: publication-boundary"
+      },
+      {
+        "id": "CHAT-REFUSAL-UNKNOWN-OR-EXTRA-CHARGE",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/refusals/0",
+        "proofClass": "chat-refusal",
+        "name": "chat-refusal: unknown-or-extra-charge"
+      },
+      {
+        "id": "CHAT-REFUSAL-UNAUTHORIZED-CONTEXT",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/refusals/1",
+        "proofClass": "chat-refusal",
+        "name": "chat-refusal: unauthorized-context"
+      },
+      {
+        "id": "CHAT-REFUSAL-CONFLICTING-TURN",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/refusals/2",
+        "proofClass": "chat-refusal",
+        "name": "chat-refusal: conflicting-turn"
+      },
+      {
+        "id": "CHAT-REFUSAL-PRIVATE-DISCLOSURE",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/refusals/3",
+        "proofClass": "chat-refusal",
+        "name": "chat-refusal: private-disclosure"
+      },
+      {
+        "id": "CHAT-REFUSAL-FALSE-HISTORY-OR-LEARNING",
+        "mandatory": true,
+        "sourcePointer": "/reasoningAndConversationSystem/refusals/4",
+        "proofClass": "chat-refusal",
+        "name": "chat-refusal: false-history-or-learning"
       }
     ]
   },
@@ -3649,7 +4067,8 @@
       "Store commit/restart/snapshot/rollback",
       "end-to-end existing frontend and owner passkey",
       "OAuth/MCP and Host signed receipts",
-      "FCIS-LEARN-01: actual scenario-evidence review and distinct supported reasoning invocation consuming exact active revised private Skill; independent two-attempt improvement and all refusal predicates per skillAndScenarioSystem.learningAcceptance."
+      "FCIS-LEARN-01: actual scenario-evidence review and distinct supported reasoning invocation consuming exact active revised private Skill; independent two-attempt improvement and all refusal predicates per skillAndScenarioSystem.learningAcceptance.",
+      "FCIS-CHAT-01: actual private owner history, restart, cross-provider continuity, exact authorized context, verified included subscription and no-extra-charge refusal before dispatch, actual response/receipt, export, deletion/tombstone and physical owner UX; unsupported native transport remains unavailable."
     ],
     "production": [
       "fresh-install may be deployed independently on any supported Linux host; optional current Hetzner migration is a distinct deployment profile",
@@ -3663,7 +4082,7 @@
   },
   "knownSpecificationLimitations": [],
   "coverageBaseline": {
-    "fcisHTTP": 49,
+    "fcisHTTP": 60,
     "fountainStoreHTTP": 24,
     "secretStoreHTTP": 4,
     "frontendFiles": 8,
@@ -3685,13 +4104,13 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 275,
+    "atomicRequirementCount": 305,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
       "skill-lifecycle": 6,
       "principal-type": 6,
-      "store-schema": 18,
+      "store-schema": 21,
       "mcp-transport": 4,
       "host-wire": 13,
       "host-receipt": 10,
@@ -3705,7 +4124,9 @@
       "bootstrap": 10,
       "learning-stage": 6,
       "learning-evidence": 5,
-      "learning-refusal": 5
+      "learning-refusal": 5,
+      "chat-requirement": 11,
+      "chat-refusal": 5
     }
   },
   "nonClaims": [
@@ -4057,7 +4478,7 @@
     "tenantIsolation": "tenant ID is mandatory in every effective grant, Store key, audit record, SecretStore AAD and Host invocation; cross-tenant effect denied by default",
     "ownerRights": "installation owner controls initial trusted policy and service administration; customer owns data, tenant-derived Skills and serialized Store",
     "customerAdmission": "owner-approved issuance of a tenant identity and private default Store namespace; no billing provider required",
-    "providerBudgets": "provider credentials and billing remain customer-held; adapter calls require explicit per-tenant consent, budget ceiling and allowance; native deterministic tasks require no model account",
+    "providerBudgets": "External reasoning is included-subscription only, zero additional inference charge ceiling; independently verify actual selected account/model, current allowance and provider-enforced refusal of overage before transmission. No metered inference, Workspace Agent credits/trigger lane, recharge, paid fallback, or billing mutation. Unknown/exhausted/unsupported refuses; deterministic tasks and conversation history need no model account.",
     "learningRights": "source Skill licensing unchanged; tenant-authored scenario evidence, extensions and new Skills belong to the author/tenant unless an explicit license transfers rights; no silent transfer of customer IP to FCIS operator",
     "portability": "versioned encrypted tenant Store snapshot and Skill/scenario provenance can be exported via owner-authenticated operation; import validates schema and rights; export never includes third-party credentials or raw keys",
     "sharing": "Tenant explicitly approves signed offers for exact admitted revisions with rights, terms and price; private source stays private, approved metadata only is listed; client delivery requires current resource consent and exact entitlement. Git and providers optional.",
@@ -4265,7 +4686,7 @@
         },
         {
           "id": "fresh-consumption",
-          "requirement": "In a distinct actual supported reasoning-client invocation, select the applicable Skill by task and resolve the currently active R1 under existing authorized delivery. Independently verify manifest, signature, active identity and exact source digest; bind the delivered instruction bytes and their effective inclusion in the selected provider/client invocation before any governed work. Persist adapter-observed invocation/run and release/digest evidence; a model assertion, marketplace listing or cached historical source is insufficient. Revalidate capability authorization independently before effects; refuse missing, unauthorized or stale required instructions."
+          "requirement": "In a distinct actual supported reasoning-client invocation, select the applicable Skill by task and resolve the currently active R1 under existing authorized delivery. Independently verify manifest, signature, active identity and exact source digest; bind the delivered instruction bytes and their effective inclusion in the selected provider/client invocation before any governed work. Persist adapter-observed invocation/run and release/digest evidence; a model assertion, marketplace listing or cached historical source is insufficient. Revalidate capability authorization independently before effects; refuse missing, unauthorized or stale required instructions. External reasoning must satisfy the mandatory subscription-only rule of reasoningAndConversationSystem before dispatch; otherwise refuse."
         },
         {
           "id": "independent-improvement",
@@ -4317,7 +4738,7 @@
         }
       ],
       "completion": "LIVE-ACCEPTED only after all six stages and evidence/refusal obligations have real, independently read-back proof in one correlated two-attempt scenario. Source schema, tests, Git merge, provider sync, standalone admission or a successful deterministic task are separate milestones; any missing predicate remains NOT_ESTABLISHED.",
-      "boundaries": "Retain existing fcis.skills, Store collections and owner/client/Host/provider contracts. No new endpoint, signer, database, permission system, marketplace Skill, automatic Git elevation, auto-admission or provider entitlement. This is a product acceptance gate, not a new first-install, P0 deterministic operation, or commercial prerequisite. Proposals and reviewed private learning remain distinct from suspended automatic promotion."
+      "boundaries": "Retain existing fcis.skills, Store collections and owner/client/Host/provider contracts. No new endpoint for the learning scenario itself, signer, database, permission system, marketplace Skill, automatic Git elevation, auto-admission or provider entitlement. This is a product acceptance gate, not a new first-install, P0 deterministic operation, or commercial prerequisite. Proposals and reviewed private learning remain distinct from suspended automatic promotion."
     }
   },
   "specificationClosure": {
@@ -4399,16 +4820,134 @@
       "sourceRevision": "c5a00f185d4b03e5f065cfad1daffaa1dbf019ca",
       "scope": "0.5.0 source definition, no implementation/production claim",
       "status": "local source consistency validation passed; protected CI acceptance recorded separately in reviewed PR"
+    },
+    "currentOwnerChat": {
+      "scope": "0.6.0 owner conversation/subscription-only source target; no implementation or production claim",
+      "sourceRevision": "41a56f76c8d24e58c79cc267bd8a86337b6fb9a2",
+      "status": "candidate pending source validation; old validation receipts apply only to their pinned predecessor"
     }
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.5.2",
-    "apiBlobSha": "547731f3c809ce4cf904faddeb36617256b72b41",
-    "stackBlobSha": "804dcf44e1250621c323196cefe22644f1780287",
+    "httpContractVersion": "0.6.0",
+    "apiBlobSha": "240d777a8080b5ca6a0c7379c1d83121a3731d8c",
+    "stackBlobSha": "e8236ab9d9268e473633f65250d32f9011b9ab8f",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },
   "documentSchema": "FCIS-SYSTEM.schema.json",
-  "authorityNotice": "Prerequisite-free FCIS normative source specification, validated by owner-owned CI at referenced commit; generated Go binaries, runtime tests and deployments are separately unverified."
+  "authorityNotice": "Prerequisite-free FCIS normative source specification, validated by owner-owned CI at referenced commit; generated Go binaries, runtime tests and deployments are separately unverified.",
+  "reasoningAndConversationSystem": {
+    "scenarioId": "FCIS-CHAT-01",
+    "status": "SPECIFIED_ONLY",
+    "outcome": "An owner can manage private conversations independently of model availability, select a genuinely supported subscription-only reasoning client, resume retained history with consent, inspect actual governed effects and retain independently witnessed learning evidence.",
+    "operationIds": [
+      "listOwnerReasoningClients",
+      "listOwnerConversations",
+      "createOwnerConversation",
+      "readOwnerConversation",
+      "updateOwnerConversation",
+      "deleteOwnerConversation",
+      "listOwnerConversationMessages",
+      "appendOwnerMessage",
+      "startOwnerReasoningTurn",
+      "readOwnerReasoningTurn",
+      "cancelOwnerReasoningTurn"
+    ],
+    "policy": {
+      "additionalInferenceChargeCeilingMinor": 0,
+      "permittedExternalChargeBasis": "included-subscription",
+      "noPaidFallback": true,
+      "workspaceCreditsAllowed": false,
+      "automaticRechargeAllowed": false,
+      "ownerBillingMutationAllowed": false,
+      "unknownEntitlement": "refuse-before-transmission",
+      "nativeTransport": "supported-account-and-result-delivery-only",
+      "externalTransport": "existing-oauth-mcp"
+    },
+    "collections": [
+      {
+        "id": "fcis.conversations",
+        "requirement": "Private owner/tenant record, title, lifecycle, selected client/model, ordered sequence head, active turn reference, revision, and timestamps. Stable owner-controlled identity independent of provider session."
+      },
+      {
+        "id": "fcis.messages",
+        "requirement": "Committed immutable ordered human and actual returned assistant text, exact conversation and turn references, source/provider provenance and linked receipt IDs. No hidden reasoning, raw credentials or fabricated responses. Per-message size within the native Store bound."
+      },
+      {
+        "id": "fcis.reasoning-turns",
+        "requirement": "Distinct owner/tenant, exact committed human message, approved context and active signed Skill release IDs/digests, selected provider/client/model, consent and verified no-extra-charge evidence references, request/idempotency identity, state, actual returned message and independent instrument receipt links. Store metadata and content remain private."
+      }
+    ],
+    "requirements": [
+      {
+        "id": "owner-history",
+        "requirement": "Create, list, read, rename, archive, restore, export and explicitly delete conversations and committed ordered messages through existing tenant FountainStore, even with no external provider. Export through consistent scoped pages and existing protected Store export; never include credentials."
+      },
+      {
+        "id": "subscription-only",
+        "requirement": "Verify actual current supported account/selected model, included allowance and provider-enforced refusal of additional charges before sending any native reasoning request. Local zero budget or provider login alone is not proof. Never separately meter, consume additional credits, recharge, switch automatically, purchase, or fall back."
+      },
+      {
+        "id": "external-mcp",
+        "requirement": "Connect the external reasoning client through existing OAuth/PKCE and MCP; expose only scoped instruments, and keep private Skill delivery separately authorized through the existing resource. External model session initiation and complete chat history are not supplied by MCP. No owner-cookie transfer or invented token exchange."
+      },
+      {
+        "id": "native-adapter",
+        "requirement": "Support native FCIS Chat only through a provider-supported subscription account connection with actual returned response, independently verified included allowance and no-extra-charge behavior. Unsupported or unverified provider remains unavailable. Do not impersonate a browser session or revive the Workspace Agent trigger/credit lane."
+      },
+      {
+        "id": "selection-and-consent",
+        "requirement": "Derive owner and tenant from authenticated session. Only real eligible client and model selection; persist selection without invoking. Explicit per-turn disclosure consent binds selected same-conversation ordered context and exact current signed Skill revisions. Revalidate scope, identity, selected model, active release and provider eligibility before external dispatch."
+      },
+      {
+        "id": "durable-turn",
+        "requirement": "Commit human message and distinct turn request before dispatch with CAS/idempotency. Correlate selected provider, model, consent, exact context and Skill digest, and actual returned assistant message; verify Store readback. No blind retry after ambiguous dispatch. Provider status alone cannot establish completion. Cancellation distinguishes local stop from verified external cancellation."
+      },
+      {
+        "id": "cross-provider-continuity",
+        "requirement": "Disconnect or change eligible reasoning client without losing owner conversation history, Skills or instrument receipts. Resume the same local conversation with the explicitly selected authorized context; no requirement to transfer a vendor session or import its complete transcript."
+      },
+      {
+        "id": "instrument-evidence",
+        "requirement": "Keep execution permission independent of selected reasoning client. Link independently verified execution/receipt records to turns without converting model prose to execution evidence. Follow FCIS-LEARN-01 for private review, signed admission and subsequent real improvement."
+      },
+      {
+        "id": "privacy-deletion",
+        "requirement": "Owner-only private read/export/archive/delete with scoped same-origin authentication, cursor binding and no-store responses. Explicit deletion refuses unresolved turns, removes future content access, retains only required redacted independent evidence, and records deletion/tombstone across backup restore. Document actual backup retention and no claim of remote-provider erasure."
+      },
+      {
+        "id": "owner-ux",
+        "requirement": "Existing React Console Chat and Integrations show current history, selected reasoning connection/model, actual availability, context consent, committed messages, evidence and learning links; native send unavailable when unsupported. Stable object selection after reload, sign-in and disconnect, accessible iPad list/detail. No second UI authority, service or Store."
+      },
+      {
+        "id": "publication-boundary",
+        "requirement": "Public GitHub .github carries reviewed public behavior and protocol only. Existing authorized private implementation/tenant Store and SecretStore retain confidential material, private Skills, actual transcripts, evidence and credentials. Review exact disclosure and rights before public push; preserve explicit prior licences, customer rights and independent provenance. No new visibility change, rights assignment or blanket licence."
+      }
+    ],
+    "refusals": [
+      {
+        "id": "unknown-or-extra-charge",
+        "requirement": "Unverified, exhausted or revoked included entitlement, any possible additional inference charge or unsupported native transport refuses before outbound reasoning. No paid fallback or workspace billing mutation."
+      },
+      {
+        "id": "unauthorized-context",
+        "requirement": "Foreign owner/tenant, wrong audience, absent context disclosure consent, stale/revoked Skill, missing grant or unknown selected client/model refuses before disclosure or instrument execution."
+      },
+      {
+        "id": "conflicting-turn",
+        "requirement": "Stale revision, changed idempotency input, duplicate dispatch, unresolved turn, unverified cancellation or absent actual answer cannot manufacture a completed response or additional execution."
+      },
+      {
+        "id": "private-disclosure",
+        "requirement": "No actual private conversation, private Skill payload, customer evidence, credentials or confidential implementation in public Git, marketplace, logs, public telemetry or unauthorized provider; do not infer entitlement from ownership."
+      },
+      {
+        "id": "false-history-or-learning",
+        "requirement": "Do not import external transcript automatically, present provider status or tool prose as an assistant answer, or label work learned without FCIS-LEARN-01 independent proof. Do not restore deleted content or resurrect revoked grants."
+      }
+    ],
+    "acceptance": "Live acceptance requires actual owner Console journey, independently committed and restarted history, genuine scoped external MCP work, an actual native returned answer only from an independently verified eligible subscription-only adapter, distinct linked instrument proof, provider disconnect and continuity, authorized export/archive/delete/restore, and witnessed no-dispatch negative cases. If provider support is absent, native mode remains NOT_ESTABLISHED; deterministic FCIS and history remain operable. FCIS-LEARN-01 remains its separate real two-attempt proof.",
+    "boundaries": "No new database, identity, billing subsystem, automatic Skill promotion, hidden provider entitlement, extra marketplace Skill, public private source, or new P0 first-install dependency. Public interface obligations are distinct from confidential implementation. Existing commercial FCIS service entitlement is separate from prohibited additional reasoning charges."
+  }
 }

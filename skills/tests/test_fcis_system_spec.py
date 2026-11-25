@@ -123,6 +123,46 @@ class FCISWholeSystemContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "coverage catalog mismatch"):
             verifier.check_atomic_coverage(doc, base)
 
+    def test_owner_chat_contract_and_atomic_coverage(self):
+        verifier, doc, base = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
+        verifier.check_owner_chat(doc, api)
+        self.assertEqual(verifier.check_atomic_coverage(doc, base),
+                         len(doc["generation"]["requirementCatalog"]))
+
+    def test_owner_chat_refuses_paid_or_unverified_reasoning(self):
+        verifier, doc, _ = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
+        for field, value in (("additionalInferenceChargeCeilingMinor", 1),
+                             ("noPaidFallback", False), ("workspaceCreditsAllowed", True),
+                             ("automaticRechargeAllowed", True), ("ownerBillingMutationAllowed", True),
+                             ("unknownEntitlement", "dispatch")):
+            candidate = copy.deepcopy(doc)
+            candidate["reasoningAndConversationSystem"]["policy"][field] = value
+            with self.assertRaisesRegex(ValueError, "subscription-only reasoning policy drift"):
+                verifier.check_owner_chat(candidate, api)
+        for field in ("subscriptionOnly", "additionalInferenceChargeCeilingMinor", "disclosureConsent"):
+            candidate = copy.deepcopy(api)
+            candidate["components"]["schemas"]["OwnerReasoningTurnCreate"]["required"].remove(field)
+            with self.assertRaisesRegex(ValueError, "owner chat send boundary drift"):
+                verifier.check_owner_chat(doc, candidate)
+
+    def test_owner_chat_refuses_missing_history_and_authorization(self):
+        verifier, doc, _ = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
+        candidate = copy.deepcopy(doc)
+        candidate["persistence"]["logicalCollections"].remove("fcis.messages")
+        with self.assertRaisesRegex(ValueError, "owner conversation custody drift"):
+            verifier.check_owner_chat(candidate, api)
+        candidate = copy.deepcopy(api)
+        candidate["paths"]["/oauth/owner/conversations"]["get"]["security"] = []
+        with self.assertRaisesRegex(ValueError, "owner chat operation authorization drift"):
+            verifier.check_owner_chat(doc, candidate)
+        candidate = copy.deepcopy(doc)
+        candidate["reasoningAndConversationSystem"]["status"] = "LIVE-ACCEPTED"
+        with self.assertRaisesRegex(ValueError, "owner chat premature acceptance"):
+            verifier.check_owner_chat(candidate, api)
+
     def test_exact_spec_and_http_contract_consistency(self):
         completed = subprocess.run(
             [sys.executable, str(ROOT / "scripts/verify_fcis_system_spec.py")],
