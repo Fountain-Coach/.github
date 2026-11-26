@@ -109,6 +109,16 @@ the observed failed guard. Do not escalate a development pilot to an App Store
 identity program or a production recovery program without scope authority.
 Governance defines constraints; it does not generate work for its own sake.
 
+## Owner-authorized operation of an established system
+
+Apply rules 1–10 to deployment, publication, verification and recovery. Start from the owner's requested effect and the last accepted working state. Resolve the existing authenticated owner, target, available capability and applicable authorization; use them rather than recreating trust, enrollment, DNS, credentials or infrastructure. Distinguish a new resource from an existing resource and a deployment from a requested audit. A user's bounded decision is carried into the established confirmation and apply mechanism; a fresh decision is required only by the applicable contract or a material change of scope.
+
+**Owner intent → existing authority → admitted instrument or existing authorized delivery → effect → independent evidence.** Prefer the existing admitted FCIS/MIDI2 instrument or EstatePublisher for its governed purpose. Where the specific instrument is unavailable, an independently authorized, reviewed, target-bound administrative path may perform the requested effect only when the governing contract permits it. This includes an explicitly authorized bootstrap of the missing capability; it must not require the capability to install itself. Never use this rule to bypass required native admission, consent, signatures, origin, grant, revocation, tool restrictions or target checks. Ownership, login and credentials are not universal execution permission. Preserve immutable artifact identity, separate staging and production authority, previous release, rollback and independent live acceptance.
+
+Resume an interrupted operation by reading its existing identity and actual state. Retain verified steps, recover the first incomplete effect and refuse ambiguous duplicate mutations. Connector limits do not establish missing product functionality. Do not repeatedly demand "continue" or impose technical release chores on the owner; only a genuine owner-only decision or observed external constraint justifies stopping.
+
+The `secure-publishing` procedure is a repository-local projection of this rule, not a new source of authority. Classify deploy/stage, promote, verify, recover/rollback and provision separately; make provisioning references conditional. Keep existing provider and native release contracts intact. No new public marketplace Skill, credential, inference route, publisher or runtime is implied by this procedural correction.
+
 ## Audit and remedy
 
 When an agent claims a new blocker or dependency, a reviewer can demand the
