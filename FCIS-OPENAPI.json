@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.7.0",
-    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant.",
+    "version": "0.7.1",
+    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference.",
     "contact": {
       "name": "Fountain Coach FCIS",
       "url": "https://github.com/Fountain-Coach/.github"
@@ -6929,7 +6929,7 @@
       "get": {
         "operationId": "listOwnerReasoningClients",
         "summary": "Inspect reasoning connections",
-        "description": "Return only actually known eligible connections and redacted verified availability. Never infer subscription entitlement from FCIS login or configured MCP. Account connection uses an independently supported provider-specific authorization handshake or existing OAuth client grant, no generic secret submission.",
+        "description": "Return only actually known eligible connections and redacted verified availability. Never infer subscription entitlement from FCIS login or configured MCP. Account connection uses an independently supported provider-specific authorization handshake or existing OAuth client grant, no generic secret submission. The optional instrumentObservations field separately reports verified historical MIDI-CI presence with explicit non-admission and no callability; it does not add reasoning clients.",
         "tags": [
           "Conversations"
         ],
@@ -12915,6 +12915,14 @@
                 "type": "null"
               }
             ]
+          },
+          "instrumentObservations": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "$ref": "#/components/schemas/OwnerInstrumentObservation"
+            },
+            "description": "Optional distinct observed instrument presence. The items array continues to contain reasoning-client connections only. Omit when no verified observation is available. No implied readiness or current reachability."
           }
         }
       },
@@ -13109,6 +13117,109 @@
           }
         },
         "description": "Private committed provenance of a domain-bound turn; no authority over current domain state or execution."
+      },
+      "OwnerInstrumentObservation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "instrumentId",
+          "instrumentVersion",
+          "displayName",
+          "role",
+          "transport",
+          "declaredOperations",
+          "observedAt",
+          "sourceRevision",
+          "artifactSHA256",
+          "profileSHA256",
+          "correlationId",
+          "receiptId",
+          "storeSequence",
+          "receiptSHA256",
+          "admission",
+          "callable",
+          "reasoningEligible"
+        ],
+        "properties": {
+          "instrumentId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "instrumentVersion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "transport": {
+            "const": "rtp-midi2"
+          },
+          "declaredOperations": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 96
+            }
+          },
+          "observedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sourceRevision": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "artifactSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "profileSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "correlationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "receiptId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "storeSequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "receiptSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "admission": {
+            "const": "not-established"
+          },
+          "callable": {
+            "const": false
+          },
+          "reasoningEligible": {
+            "const": false
+          }
+        },
+        "description": "Last independently Store-verified read-only MIDI-CI discovery receipt for a selected instrument, not a current heartbeat, provider connection, admitted registry entry, grant or inference. Source and artifact identity must be independently bound to the observation. A declared operation is not callable."
       }
     }
   },

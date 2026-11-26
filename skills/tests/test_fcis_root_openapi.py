@@ -207,7 +207,16 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.7.0")
+        self.assertEqual(a["info"]["version"], "0.7.1")
+        page = a["components"]["schemas"]["OwnerReasoningClientPage"]
+        self.assertNotIn("instrumentObservations", page["required"])
+        self.assertEqual(page["properties"]["items"]["items"], {"$ref": "#/components/schemas/OwnerReasoningClient"})
+        observation = a["components"]["schemas"]["OwnerInstrumentObservation"]
+        self.assertFalse(observation["additionalProperties"])
+        self.assertEqual(set(observation["required"]), set(observation["properties"]))
+        self.assertEqual(observation["properties"]["admission"], {"const": "not-established"})
+        self.assertEqual(observation["properties"]["callable"], {"const": False})
+        self.assertEqual(observation["properties"]["reasoningEligible"], {"const": False})
         # Preserve every predecessor operation byte-semantically except the
         # reviewed status GET Origin clarification. Restore that exact two-field
         # delta before comparing the original 0.4.0 compatibility digest.
