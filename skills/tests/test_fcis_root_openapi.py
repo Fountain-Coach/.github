@@ -207,7 +207,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.8.1")
+        self.assertEqual(a["info"]["version"], "0.8.2")
         page = a["components"]["schemas"]["OwnerReasoningClientPage"]
         self.assertNotIn("instrumentObservations", page["required"])
         self.assertEqual(page["properties"]["items"]["items"], {"$ref": "#/components/schemas/OwnerReasoningClient"})
@@ -254,10 +254,38 @@ class FCISRootOpenAPITests(unittest.TestCase):
         resource = next(p for p in baseline["/oauth/authorize"]["get"]["parameters"] if p["name"] == "resource")
         self.assertEqual(resource["description"], "Exact FCIS resource URL: /mcp (existing default when omitted) or explicit /oauth/skills; no audience substitution.")
         resource["description"] = "Exact FCIS MCP resource URL"
+        # Reviewed 0.8.2 delta: additive metadata, never a registration grant.
+        registration = baseline["/oauth/register"]["post"]
+        self.assertTrue(registration["description"].startswith("Dynamic client registration; server validates exact redirect schemes/origins. Registration is not an execution grant."))
+        registration["description"] = "Dynamic client registration; server validates exact redirect schemes/origins. Registration is not an execution grant."
+        schemas = json.loads(json.dumps({n: a["components"]["schemas"][n] for n in BASELINE_SCHEMAS}))
+        for name in ("token_endpoint_auth_method", "grant_types", "response_types", "scope"):
+            del schemas["OAuthClientRegistration"]["properties"][name]
+        for name in ("client_name", "grant_types", "response_types"):
+            del schemas["OAuthClientRegistrationResult"]["properties"][name]
+        schemas["OAuthClientRegistrationResult"]["required"] = ["client_id", "redirect_uris"]
         self.assertEqual(digest(baseline), BASELINE_PATHS_SHA256)
-        self.assertEqual(digest({n: a["components"]["schemas"][n] for n in BASELINE_SCHEMAS}), BASELINE_SCHEMAS_SHA256)
+        self.assertEqual(digest(schemas), BASELINE_SCHEMAS_SHA256)
         self.assertEqual(digest(a["components"]["securitySchemes"]), BASELINE_SECURITY_SHA256)
         self.assertEqual(sum(len(v) for v in a["paths"].values()), 64)
+
+    def test_dcr_public_client_metadata_profile_is_additive_not_authority(self):
+        a = self.api
+        schemas = a["components"]["schemas"]
+        req = schemas["OAuthClientRegistration"]
+        result = schemas["OAuthClientRegistrationResult"]
+        self.assertFalse(req["additionalProperties"])
+        self.assertEqual(req["required"], ["redirect_uris"])
+        self.assertEqual(set(req["properties"]), {"redirect_uris", "client_name", "token_endpoint_auth_method", "grant_types", "response_types", "scope"})
+        self.assertEqual(req["properties"]["token_endpoint_auth_method"]["const"], "none")
+        self.assertEqual(req["properties"]["grant_types"]["contains"], {"const": "authorization_code"})
+        self.assertTrue(req["properties"]["grant_types"]["uniqueItems"])
+        self.assertEqual(req["properties"]["response_types"]["items"], {"type": "string", "const": "code"})
+        self.assertEqual(result["properties"]["grant_types"]["const"], ["authorization_code", "refresh_token"])
+        self.assertEqual(result["properties"]["response_types"]["const"], ["code"])
+        self.assertFalse({"scope", "access_token", "refresh_token", "client_secret"} & set(result["properties"]))
+        self.assertEqual(a["paths"]["/oauth/register"]["post"]["security"], [])
+        self.assertIn("explicit resource-bound owner consent", a["paths"]["/oauth/register"]["post"]["description"])
 
     def test_skill_admin_and_delivery_security_are_separate(self):
         operations = [(path, method, op) for path, methods in self.api["paths"].items()
