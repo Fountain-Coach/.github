@@ -47,10 +47,10 @@
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "f0f44317c0daf9de802f51a938e298f30b9e6737",
+      "ref": "387cfa37cf23cadf0a4e0274db8fe7046ef07372",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "078bf70f129647f45311cc0875fe7243d5abb3ec",
-      "url": "https://github.com/Fountain-Coach/.github/blob/f0f44317c0daf9de802f51a938e298f30b9e6737/FCIS-OPENAPI.json"
+      "blobSha": "cc435afb255ea4d2352e91d720fac1d97e064940",
+      "url": "https://github.com/Fountain-Coach/.github/blob/387cfa37cf23cadf0a4e0274db8fe7046ef07372/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.8.1",
+      "version": "0.8.2",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -2049,8 +2049,8 @@
       }
     },
     "inputContractDigests": {
-      "fcisOpenAPI": "0.8.1",
-      "fcisOpenAPIBlob": "078bf70f129647f45311cc0875fe7243d5abb3ec",
+      "fcisOpenAPI": "0.8.2",
+      "fcisOpenAPIBlob": "cc435afb255ea4d2352e91d720fac1d97e064940",
       "architectureBlob": "0fab287f4cbe9542801c7f747a7e995ac665ff3a",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
@@ -4961,8 +4961,8 @@
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.8.1",
-    "apiBlobSha": "078bf70f129647f45311cc0875fe7243d5abb3ec",
+    "httpContractVersion": "0.8.2",
+    "apiBlobSha": "cc435afb255ea4d2352e91d720fac1d97e064940",
     "stackBlobSha": "0fab287f4cbe9542801c7f747a7e995ac665ff3a",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
