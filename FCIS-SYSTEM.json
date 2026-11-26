@@ -40,17 +40,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "1fc4f2e8ac02068b0c51a6628381c1638d9050c0",
+      "ref": "72799286b5c686dab746d7b4ba2331e0f10553ba",
       "path": "FCIS-STACK.md",
-      "blobSha": "1d592a78d30a6daf3bc9cda58078785235bdc558",
-      "url": "https://github.com/Fountain-Coach/.github/blob/1fc4f2e8ac02068b0c51a6628381c1638d9050c0/FCIS-STACK.md"
+      "blobSha": "69faf3f1b62d30d888e60ea79370708263b96e25",
+      "url": "https://github.com/Fountain-Coach/.github/blob/72799286b5c686dab746d7b4ba2331e0f10553ba/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "1fc4f2e8ac02068b0c51a6628381c1638d9050c0",
+      "ref": "72799286b5c686dab746d7b4ba2331e0f10553ba",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "2402d66722e625981da1178f7f0c6743d270f267",
-      "url": "https://github.com/Fountain-Coach/.github/blob/1fc4f2e8ac02068b0c51a6628381c1638d9050c0/FCIS-OPENAPI.json"
+      "blobSha": "7333699ac95dca9da62323df18ab128933b50246",
+      "url": "https://github.com/Fountain-Coach/.github/blob/72799286b5c686dab746d7b4ba2331e0f10553ba/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.7.0",
+      "version": "0.7.1",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -1429,7 +1429,8 @@
         "OwnerReasoningTurnCancel",
         "OwnerDomainResourceRef",
         "OwnerSituatedContext",
-        "OwnerDomainContextBinding"
+        "OwnerDomainContextBinding",
+        "OwnerInstrumentObservation"
       ],
       "securitySchemes": [
         "ownerPasskeySession",
@@ -1993,9 +1994,9 @@
       }
     },
     "inputContractDigests": {
-      "fcisOpenAPI": "0.7.0",
-      "fcisOpenAPIBlob": "2402d66722e625981da1178f7f0c6743d270f267",
-      "architectureBlob": "1d592a78d30a6daf3bc9cda58078785235bdc558",
+      "fcisOpenAPI": "0.7.1",
+      "fcisOpenAPIBlob": "7333699ac95dca9da62323df18ab128933b50246",
+      "architectureBlob": "69faf3f1b62d30d888e60ea79370708263b96e25",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
     "requirementCatalog": [
@@ -4869,9 +4870,9 @@
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.7.0",
-    "apiBlobSha": "2402d66722e625981da1178f7f0c6743d270f267",
-    "stackBlobSha": "1d592a78d30a6daf3bc9cda58078785235bdc558",
+    "httpContractVersion": "0.7.1",
+    "apiBlobSha": "7333699ac95dca9da62323df18ab128933b50246",
+    "stackBlobSha": "69faf3f1b62d30d888e60ea79370708263b96e25",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },
@@ -4950,7 +4951,7 @@
       },
       {
         "id": "instrument-evidence",
-        "requirement": "Keep execution permission independent of selected reasoning client. Link independently verified execution/receipt records to turns without converting model prose to execution evidence. Follow FCIS-LEARN-01 for private review, signed admission and subsequent real improvement."
+        "requirement": "Keep execution permission independent of selected reasoning client. Link independently verified execution/receipt records to turns without converting model prose to execution evidence. Follow FCIS-LEARN-01 for private review, signed admission and subsequent real improvement. For discovery, use the existing fcis.receipts collection with actual observed profile/source/artifact, correlation, committed sequence and digest; verify independent readback and corresponding Console accessibility/reload. No reasoning turn or grant inferred."
       },
       {
         "id": "privacy-deletion",
@@ -4958,7 +4959,7 @@
       },
       {
         "id": "owner-ux",
-        "requirement": "Existing React Console Chat and Integrations show current history, selected reasoning connection/model, actual availability, context consent, committed messages, evidence and learning links; native send unavailable when unsupported. Stable object selection after reload, sign-in and disconnect, accessible iPad list/detail. No second UI authority, service or Store."
+        "requirement": "Existing React Console Chat and Integrations show current history, selected reasoning connection/model, actual availability, context consent, committed messages, evidence and learning links; native send unavailable when unsupported. Stable object selection after reload, sign-in and disconnect, accessible iPad list/detail. No second UI authority, service or Store. The Composer engraves participant identity, role, relation and actual outcome from the same typed evidence the agent reads; optional separate instrumentObservations on the existing reasoning-client page shows dated verified presence, not admission or eligible clients; absence stays unavailable. Accessible human and independently readable machine projections of one observation, with receipt details on demand, no raw telemetry or invented motion."
       },
       {
         "id": "publication-boundary",
