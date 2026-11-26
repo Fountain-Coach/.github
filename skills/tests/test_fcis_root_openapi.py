@@ -207,7 +207,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.7.1")
+        self.assertEqual(a["info"]["version"], "0.8.0")
         page = a["components"]["schemas"]["OwnerReasoningClientPage"]
         self.assertNotIn("instrumentObservations", page["required"])
         self.assertEqual(page["properties"]["items"]["items"], {"$ref": "#/components/schemas/OwnerReasoningClient"})
@@ -249,15 +249,20 @@ class FCISRootOpenAPITests(unittest.TestCase):
         self.assertEqual(witness["properties"]["state"], {"const": "channel-observed-unadmitted"})
         self.assertEqual(witness["properties"]["terminal"], {"const": True})
         self.assertEqual(witness["properties"]["observedAt"], {"$ref": "#/components/schemas/FoundationDateSeconds"})
+        # Reviewed 0.8.0 delta: the existing issuer accepts the separately
+        # consented Skill audience, not a new authentication mechanism.
+        resource = next(p for p in baseline["/oauth/authorize"]["get"]["parameters"] if p["name"] == "resource")
+        self.assertEqual(resource["description"], "Exact FCIS resource URL: /mcp (existing default when omitted) or explicit /oauth/skills; no audience substitution.")
+        resource["description"] = "Exact FCIS MCP resource URL"
         self.assertEqual(digest(baseline), BASELINE_PATHS_SHA256)
         self.assertEqual(digest({n: a["components"]["schemas"][n] for n in BASELINE_SCHEMAS}), BASELINE_SCHEMAS_SHA256)
         self.assertEqual(digest(a["components"]["securitySchemes"]), BASELINE_SECURITY_SHA256)
-        self.assertEqual(sum(len(v) for v in a["paths"].values()), 60)
+        self.assertEqual(sum(len(v) for v in a["paths"].values()), 63)
 
     def test_skill_admin_and_delivery_security_are_separate(self):
         operations = [(path, method, op) for path, methods in self.api["paths"].items()
                       for method, op in methods.items() if method in METHODS and "x-fcis-phase" in op]
-        self.assertEqual(len(operations), 19)
+        self.assertEqual(len(operations), 22)
         for path, method, op in operations:
             with self.subTest(operation=op["operationId"]):
                 params = op.get("parameters", [])
@@ -275,7 +280,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
                 elif path.startswith("/oauth/skills/"):
                     self.assertEqual(op["security"], [{"oauthBearer": []}])
                     self.assertEqual(op["x-fcis-resource"], "{issuerOrigin}/oauth/skills")
-                    self.assertIn(op["x-fcis-required-scope"], ("skills.read", "skills.acquire"))
+                    self.assertIn(op["x-fcis-required-scope"], ("skills.read", "skills.acquire", "skills.owned.read"))
                     self.assertIn("WWW-Authenticate", op["responses"]["401"]["headers"])
                 else:
                     self.assertIn(path, ("/catalog/skills", "/.well-known/oauth-protected-resource/oauth/skills"))
@@ -288,6 +293,33 @@ class FCISRootOpenAPITests(unittest.TestCase):
                     self.assertTrue(op["requestBody"]["required"])
         self.assertEqual(sum(op["x-fcis-phase"] == "skill-management" for _, _, op in operations), 7)
         self.assertEqual(self.api["paths"]["/oauth/skills/releases/{releaseId}"]["get"]["x-fcis-required-scope"], "skills.read")
+
+    def test_owned_active_skill_resource_is_independent_and_current_only(self):
+        paths = self.api["paths"]
+        owned = [(p, v["get"]) for p, v in paths.items() if p.startswith("/oauth/skills/owned")]
+        self.assertEqual(len(owned), 3)
+        for path, op in owned:
+            self.assertEqual(op["security"], [{"oauthBearer": []}])
+            self.assertEqual(op["x-fcis-resource"], "{issuerOrigin}/oauth/skills")
+            self.assertEqual(op["x-fcis-required-scope"], "skills.owned.read")
+            self.assertEqual(op["x-fcis-go-target-state"], "specified-only-not-deployed")
+            self.assertEqual(list(paths[path]), ["get"])
+        schemas = self.api["components"]["schemas"]
+        entry = schemas["OwnedActiveSkillEntry"]["properties"]
+        self.assertEqual(entry["draftHead"], {"type": "null"})
+        self.assertEqual(entry["activeReleaseId"]["type"], "string")
+        detail = schemas["OwnedActiveSkillDetail"]["properties"]
+        self.assertEqual(detail["drafts"]["maxItems"], 0)
+        self.assertEqual(detail["releases"]["maxItems"], 1)
+        self.assertEqual(detail["releases"]["minItems"], 1)
+        self.assertEqual(detail["nextCursor"], {"type": "null"})
+        delivery = paths["/oauth/skills/owned/{skillName}/releases/{releaseId}"]["get"]
+        self.assertTrue(delivery["responses"]["200"]["headers"]["X-FCIS-Receipt-ID"]["required"])
+        self.assertIn("409", delivery["responses"])
+        self.assertEqual(paths["/oauth/skills/releases/{releaseId}"]["get"]["x-fcis-required-scope"], "skills.read")
+        self.assertEqual(paths["/oauth/owner/skills"]["get"]["security"], [{"ownerPasskeySession": []}])
+        self.assertEqual(set(schemas["SkillProtectedResourceMetadata"]["properties"]["scopes_supported"]["items"]["enum"]), {"skills.read", "skills.acquire", "skills.owned.read"})
+        self.assertIn("future active revisions", self.api["x-fcis-skill-distribution"]["clientResource"])
 
     def test_skill_custody_public_catalogue_and_paid_receipt_shapes(self):
         schemas = self.api["components"]["schemas"]

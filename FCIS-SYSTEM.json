@@ -40,17 +40,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "72799286b5c686dab746d7b4ba2331e0f10553ba",
+      "ref": "44aff7a2018bc4df014db9b336fefa3a25c83650",
       "path": "FCIS-STACK.md",
-      "blobSha": "69faf3f1b62d30d888e60ea79370708263b96e25",
-      "url": "https://github.com/Fountain-Coach/.github/blob/72799286b5c686dab746d7b4ba2331e0f10553ba/FCIS-STACK.md"
+      "blobSha": "666c73c0938812dae471f9a37b2b24187a674555",
+      "url": "https://github.com/Fountain-Coach/.github/blob/44aff7a2018bc4df014db9b336fefa3a25c83650/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "72799286b5c686dab746d7b4ba2331e0f10553ba",
+      "ref": "44aff7a2018bc4df014db9b336fefa3a25c83650",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "7333699ac95dca9da62323df18ab128933b50246",
-      "url": "https://github.com/Fountain-Coach/.github/blob/72799286b5c686dab746d7b4ba2331e0f10553ba/FCIS-OPENAPI.json"
+      "blobSha": "6f175d0f998db32e3c82361bae3386e499011e5b",
+      "url": "https://github.com/Fountain-Coach/.github/blob/44aff7a2018bc4df014db9b336fefa3a25c83650/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.7.1",
+      "version": "0.8.0",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -1344,6 +1344,45 @@
           ],
           "status": "specified",
           "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1turns~1{turnId}~1cancel/post"
+        },
+        {
+          "id": "listOwnedActiveSkills",
+          "method": "GET",
+          "path": "/oauth/skills/owned",
+          "summary": "Discover authorized active owner Skills",
+          "security": [
+            {
+              "oauthBearer": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1skills~1owned/get"
+        },
+        {
+          "id": "readOwnedActiveSkill",
+          "method": "GET",
+          "path": "/oauth/skills/owned/{skillName}",
+          "summary": "Inspect current active owner Skill",
+          "security": [
+            {
+              "oauthBearer": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1skills~1owned~1{skillName}/get"
+        },
+        {
+          "id": "readOwnedActiveSkillRelease",
+          "method": "GET",
+          "path": "/oauth/skills/owned/{skillName}/releases/{releaseId}",
+          "summary": "Retrieve exact current signed owner Skill",
+          "security": [
+            {
+              "oauthBearer": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1skills~1owned~1{skillName}~1releases~1{releaseId}/get"
         }
       ],
       "schemas": [
@@ -1430,7 +1469,10 @@
         "OwnerDomainResourceRef",
         "OwnerSituatedContext",
         "OwnerDomainContextBinding",
-        "OwnerInstrumentObservation"
+        "OwnerInstrumentObservation",
+        "OwnedActiveSkillEntry",
+        "OwnedActiveSkillInventoryPage",
+        "OwnedActiveSkillDetail"
       ],
       "securitySchemes": [
         "ownerPasskeySession",
@@ -1933,9 +1975,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 310,
+      "expectedRequirementCount": 314,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 310,
+      "minimumAtomicRequirementCount": 314,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -4087,6 +4129,34 @@
         "sourcePointer": "/reasoningAndConversationSystem/refusals/5",
         "proofClass": "chat-refusal",
         "name": "chat-refusal: stale-domain-context"
+      },
+      {
+        "id": "HTTP-listOwnedActiveSkills",
+        "name": "/oauth/skills/owned GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1skills~1owned/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOwnedActiveSkill",
+        "name": "/oauth/skills/owned/{skillName} GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1skills~1owned~1{skillName}/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOwnedActiveSkillRelease",
+        "name": "/oauth/skills/owned/{skillName}/releases/{releaseId} GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1skills~1owned~1{skillName}~1releases~1{releaseId}/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "SKILL-DISTRIBUTION-OWNERCLIENTACCEPTANCE",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/distribution/ownerClientAcceptance",
+        "proofClass": "skill-distribution",
+        "name": "skill-distribution: ownerClientAcceptance"
       }
     ]
   },
@@ -4123,7 +4193,7 @@
   },
   "knownSpecificationLimitations": [],
   "coverageBaseline": {
-    "fcisHTTP": 60,
+    "fcisHTTP": 63,
     "fountainStoreHTTP": 24,
     "secretStoreHTTP": 4,
     "frontendFiles": 8,
@@ -4145,7 +4215,7 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 310,
+    "atomicRequirementCount": 314,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
@@ -4160,7 +4230,7 @@
       "frontend-bind": 4,
       "adoption": 10,
       "generation": 8,
-      "skill-distribution": 11,
+      "skill-distribution": 12,
       "owner-policy": 10,
       "bootstrap": 10,
       "learning-stage": 6,
@@ -4687,14 +4757,15 @@
       "decision": "FountainStore canonical private custody; FCIS API primary distribution authority; GitHub/ChatGPT optional explicitly approved adapters. Existing FCIS-GO public projection unchanged.",
       "ownerProfile": "Version 2 signed Skill admission is only current single owner/default tenant; admin operations derive actor/tenant from authorized session, no caller-selected tenant. Reject unavailable additional tenant admission/signing; commercial customer flow requires separately admitted customer principal and grant, not owner session impersonation. Current version-2 CLI admission is retained and does not require a pre-existing browser draft; the new browser admission must verify the referenced reviewed draft. Existing admitted private v2 releases are readable without manufactured draft history.",
       "security": "Owner writes require exact same-origin session, specific X-Fountain-Owner-Intent and explicit confirmation; signed admission and offer use existing trusted owner signer, exact immutable bytes. No new signer, public write route, bearer fallback or arbitrary tenant ID. Reject unknown fields, duplicate keys, wrong signatures and oversized decoded inputs.",
-      "clientResource": "Exact installation-bound {issuerOrigin}/oauth/skills; existing OAuth authorization code PKCE S256 and explicit resource consent. Scope skills.read or skills.acquire independently; tokens for /mcp, expired/revoked grants, unadmitted principals and unrelated audiences refused. Customer identity derived from verified server-side binding, no owner grant converted to customer licence.",
+      "clientResource": "Exact installation-bound {issuerOrigin}/oauth/skills; existing OAuth authorization code PKCE S256 and explicit resource consent. Scope skills.read or skills.acquire independently; tokens for /mcp, expired/revoked grants, unadmitted principals and unrelated audiences refused. Customer identity derived from verified server-side binding, no owner grant converted to customer licence. Separate owner-client scope skills.owned.read requires explicit consent for the current owner's active library including future active revisions, uses the existing issuer and durable grant, and must not be combined with commercial or Host scopes. Never reuse cookies or grant customer rights. Inspect and revoke via existing owner management; revalidate before every protected request and refresh; no drafts or history. Exact signed release delivery requires redacted durable receipt before disclosure; actual authorized client verification and use remain separate.",
       "transactions": "Tenant+actor+operation+idempotencyKey binds canonical request digest. Identical replay returns original receipt/status; changed payload returns 409; re-evaluate current access before disclosing protected replay. Compare expected revisions; no duplicate mutations or charge. Atomic immutable revisions, active pointers, offer/entitlement states and receipts. No source bytes in telemetry; authenticated responses and refusals no-store. For draft create receipt.subjectId is the draftId; for admission it is releaseId; for offer release it is offerId; for review/withdraw/revoke it is the changed object's exact ID. recordRevision is that object's committed revision. A verified receipt remains independently readable via the corresponding protected resource, with audit references.",
       "commercial": "Phase two, not first release or P0 prerequisite. Price and terms immutable per offer; new price requires new signed offer. Zero-price offers require explicit terms acceptance; paid entitlement only after verified instrument terminal receipt exact amount, currency, customer, offer and acquisition. Provider checkout is hosted; no live charges authorized, no UI redirect proof. Refunds are separate approved instrument actions, entitlement changes only under accepted terms and reconciled receipts. Unlisted is non-enumerated metadata, not a confidentiality or access grant; customer may inspect an exact known offer before accepting terms. Restricted bespoke audience/recurring or metered plans require a later explicit contract; this version supports one-time exact-release licensing only.",
       "delivery": "Only exact authorized source bytes and license are delivered, never public projection by default. No guarantee of provider installation, DRM or deletion of previously delivered copies. A client adapter may consume delivered instructions only with customer consent and separately proven supported integration. Tenant-derived knowledge remains customer-owned.",
       "lifecycle": "Draft -> verified evidence where applicable -> reviewed -> signed admitted revision; separate signed offer releases/withdrawals govern distribution, not source visibility. Restore is a fresh signed admission; withdrawal and entitlement revocation do not delete immutable history.",
-      "httpContract": "FCIS-OPENAPI.json 0.5.0 defines exact typed HTTP operations and private/offer manifest schemas. Existing v1/v2 CLI signed custody remains compatible; all added HTTP operations specified only.",
+      "httpContract": "FCIS-OPENAPI.json 0.8.0 defines owner management, explicitly consented active owner library reads, and separately licensed commercial distribution. Existing v1/v2 CLI signed custody remains compatible; added owner-client reads specified only.",
       "collections": "Existing native Store and its logical collections in persistence.skillCollections, one writer and verified readback. No new database, identity service, external marketplace or runtime prerequisite.",
-      "phases": "Owner-private management first; commercial distribution and customer admission/payment priority two. No change to existing P0 owner-independence or first-install DoD."
+      "phases": "Owner-private management first; commercial distribution and customer admission/payment priority two. No change to existing P0 owner-independence or first-install DoD.",
+      "ownerClientAcceptance": "FCIS-SKILL-ACCESS-02: prove explicit owner consent, current resource-bound owner grant, unnamed active inventory, exact signed current read, redacted durable delivery receipt, refusal on wrong scope/audience/identity, stale pointer, draft/history, revocation and refresh denial after restart. Actual fresh authorized client verification and consumption are independent; founding gate remains inactive until owner acceptance. No provider billing."
     },
     "learningAcceptance": {
       "scenarioId": "FCIS-LEARN-01",
@@ -4870,9 +4941,9 @@
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.7.1",
-    "apiBlobSha": "7333699ac95dca9da62323df18ab128933b50246",
-    "stackBlobSha": "69faf3f1b62d30d888e60ea79370708263b96e25",
+    "httpContractVersion": "0.8.0",
+    "apiBlobSha": "6f175d0f998db32e3c82361bae3386e499011e5b",
+    "stackBlobSha": "666c73c0938812dae471f9a37b2b24187a674555",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },
@@ -4931,7 +5002,7 @@
       },
       {
         "id": "external-mcp",
-        "requirement": "Connect the external reasoning client through existing OAuth/PKCE and MCP; expose only scoped instruments, and keep private Skill delivery separately authorized through the existing resource. External model session initiation and complete chat history are not supplied by MCP. No owner-cookie transfer or invented token exchange."
+        "requirement": "Connect the external reasoning client through existing OAuth/PKCE and MCP; expose only scoped instruments, and keep private Skill delivery separately authorized through the existing resource. External model session initiation and complete chat history are not supplied by MCP. No owner-cookie transfer or invented token exchange. Owned active-library delivery uses separate skills.owned.read consent on /oauth/skills; no drafts, history, licensed entitlement, or Host scope."
       },
       {
         "id": "native-adapter",
