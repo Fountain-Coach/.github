@@ -10923,7 +10923,7 @@
           },
           "scope": {
             "type": "string",
-            "pattern": "^(host[.]describe|skills[.]owned[.]read)( (host[.]describe|skills[.]owned[.]read))?$",
+            "pattern": "^(host[.]describe( skills[.]owned[.]read)?|skills[.]owned[.]read( host[.]describe)?)$",
             "description": "Optional requested-scope hint; only distinct supported names, space-separated. Not persisted as authorization and not echoed as a grant. Exact resource/scope consent remains required."
           }
         },
