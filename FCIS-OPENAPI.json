@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.7.1",
-    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference.",
+    "version": "0.8.0",
+    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference. Version 0.8.0 specifies separately consented read-only owner-library discovery and exact active signed revision delivery through the existing Skill resource; no production or provider acceptance is implied.",
     "contact": {
       "name": "Fountain Coach FCIS",
       "url": "https://github.com/Fountain-Coach/.github"
@@ -1647,7 +1647,7 @@
             "name": "resource",
             "in": "query",
             "required": false,
-            "description": "Exact FCIS MCP resource URL",
+            "description": "Exact FCIS resource URL: /mcp (existing default when omitted) or explicit /oauth/skills; no audience substitution.",
             "schema": {
               "type": "string",
               "format": "uri"
@@ -5945,11 +5945,11 @@
     "/.well-known/oauth-protected-resource/oauth/skills": {
       "get": {
         "operationId": "readSkillProtectedResourceMetadata",
-        "summary": "Discover FCIS licensed Skill resource authorization",
+        "summary": "Discover FCIS Skill resource authorization",
         "tags": [
           "Discovery"
         ],
-        "description": "RFC 9728 metadata for exact installation-bound {issuerOrigin}/oauth/skills resource and existing issuer; this path-specific metadata is not an entitlement or proof of supported provider-native Skill installation.",
+        "description": "RFC 9728 metadata for the exact installation-bound Skill resource and existing issuer; advertise only actually available scopes; no entitlement, private disclosure or provider installation implied.",
         "security": [],
         "responses": {
           "200": {
@@ -5988,7 +5988,7 @@
         "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
         "x-fcis-implementation-state": "go-target-specified-only",
         "x-fcis-reasoning": {
-          "useWhen": "Discover licensed Skill resource and authorization server.",
+          "useWhen": "Discover the Skill resource and authorization server.",
           "notFor": "Grant issuance, delivery, marketplace installation or billing.",
           "effect": "read-only metadata",
           "evidence": "Exact resource and issuer metadata."
@@ -9105,6 +9105,594 @@
         },
         "x-fcis-owner-intent": "fountaincoach/chat.cancelOwnerReasoningTurn"
       }
+    },
+    "/oauth/skills/owned": {
+      "get": {
+        "operationId": "listOwnedActiveSkills",
+        "summary": "Discover authorized active owner Skills",
+        "description": "Return only active owner-owned Skill metadata, without source, draft identifiers or historical revisions. Bound pagination to the authenticated owner, tenant, client, grant event, route, query and current inventory. Explicit owner-library consent includes future active revisions; no implicit grant or commercial entitlement.",
+        "tags": [
+          "Skills"
+        ],
+        "security": [
+          {
+            "oauthBearer": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-phase": "owned-skill-client",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "description": "limit"
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "description": "Opaque bounded cursor bound to actor, tenant, filters and collection; refuse invalid or foreign cursor."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnedActiveSkillInventoryPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, parameters or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Required authentication absent or invalid",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              },
+              "WWW-Authenticate": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Bearer challenge with exact issuer-bound resource_metadata URI for /oauth/skills. Do not disclose private objects before authorization."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stale revision or conflicting idempotency binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required operation, proof or Store unavailable; no success claimed",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Discover authorized active owner Skills",
+          "notFor": "Drafts, historical source, other tenants, customer entitlement, provider installation, execution or spending.",
+          "effect": "read-only knowledge; redacted delivery evidence only where applicable",
+          "evidence": "Current scoped Store readback; signed active binding and durable delivery receipt before private bytes; independent client consumption proof separate."
+        },
+        "x-fcis-resource": "{issuerOrigin}/oauth/skills",
+        "x-fcis-required-scope": "skills.owned.read"
+      }
+    },
+    "/oauth/skills/owned/{skillName}": {
+      "get": {
+        "operationId": "readOwnedActiveSkill",
+        "summary": "Inspect current active owner Skill",
+        "description": "Read one active owner-owned Skill and its current release metadata only; drafts and historical entries are excluded. Recheck current scoped owner grant and active pointer. Unknown names return 404.",
+        "tags": [
+          "Skills"
+        ],
+        "security": [
+          {
+            "oauthBearer": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-phase": "owned-skill-client",
+        "parameters": [
+          {
+            "name": "skillName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+              "maxLength": 96
+            },
+            "description": "skillName"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "description": "limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnedActiveSkillDetail"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, parameters or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Required authentication absent or invalid",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              },
+              "WWW-Authenticate": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Bearer challenge with exact issuer-bound resource_metadata URI for /oauth/skills. Do not disclose private objects before authorization."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stale revision or conflicting idempotency binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required operation, proof or Store unavailable; no success claimed",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Inspect current active owner Skill",
+          "notFor": "Drafts, historical source, other tenants, customer entitlement, provider installation, execution or spending.",
+          "effect": "read-only knowledge; redacted delivery evidence only where applicable",
+          "evidence": "Current scoped Store readback; signed active binding and durable delivery receipt before private bytes; independent client consumption proof separate."
+        },
+        "x-fcis-resource": "{issuerOrigin}/oauth/skills",
+        "x-fcis-required-scope": "skills.owned.read"
+      }
+    },
+    "/oauth/skills/owned/{skillName}/releases/{releaseId}": {
+      "get": {
+        "operationId": "readOwnedActiveSkillRelease",
+        "summary": "Retrieve exact current signed owner Skill",
+        "description": "Read only the selected current active signed release after current owner/client/resource grant, identity, active pointer, exact manifest and trusted signature verification. Recheck active pointer and grant before delivery. Stale selection returns 409, never historical source. Commit and independently read back redacted delivery receipt before disclosing exact signed bytes. Delivery is not proof of model use.",
+        "tags": [
+          "Skills"
+        ],
+        "security": [
+          {
+            "oauthBearer": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-phase": "owned-skill-client",
+        "parameters": [
+          {
+            "name": "skillName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+              "maxLength": 96
+            },
+            "description": "skillName"
+          },
+          {
+            "name": "releaseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "description": "releaseId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              },
+              "X-FCIS-Receipt-ID": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "description": "Redacted durable delivery evidence ID; not proof of model consumption."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillSignedRelease"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, parameters or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Required authentication absent or invalid",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              },
+              "WWW-Authenticate": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Bearer challenge with exact issuer-bound resource_metadata URI for /oauth/skills. Do not disclose private objects before authorization."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stale revision or conflicting idempotency binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required operation, proof or Store unavailable; no success claimed",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillAdminError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Retrieve exact current signed owner Skill",
+          "notFor": "Drafts, historical source, other tenants, customer entitlement, provider installation, execution or spending.",
+          "effect": "read-only knowledge; redacted delivery evidence only where applicable",
+          "evidence": "Current scoped Store readback; signed active binding and durable delivery receipt before private bytes; independent client consumption proof separate."
+        },
+        "x-fcis-resource": "{issuerOrigin}/oauth/skills",
+        "x-fcis-required-scope": "skills.owned.read"
+      }
     }
   },
   "components": {
@@ -12043,12 +12631,14 @@
               "type": "string",
               "enum": [
                 "skills.read",
-                "skills.acquire"
+                "skills.acquire",
+                "skills.owned.read"
               ]
             },
-            "minItems": 2,
-            "maxItems": 2,
-            "uniqueItems": true
+            "minItems": 1,
+            "maxItems": 3,
+            "uniqueItems": true,
+            "description": "Advertise only currently implemented/admitted scopes for this resource; specification does not establish runtime availability."
           }
         },
         "required": [
@@ -13220,6 +13810,123 @@
           }
         },
         "description": "Last independently Store-verified read-only MIDI-CI discovery receipt for a selected instrument, not a current heartbeat, provider connection, admitted registry entry, grant or inference. Source and artifact identity must be independently bound to the observation. A declared operation is not callable."
+      },
+      "OwnedActiveSkillEntry": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "skillName",
+          "owner",
+          "visibility",
+          "draftHead",
+          "activeReleaseId",
+          "version",
+          "sourceSHA256",
+          "updatedAt"
+        ],
+        "properties": {
+          "skillName": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+            "maxLength": 96
+          },
+          "owner": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "private",
+              "public"
+            ]
+          },
+          "draftHead": {
+            "type": "null"
+          },
+          "activeReleaseId": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+            "maxLength": 64
+          },
+          "sourceSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "description": "Current active owner-owned Skill only; draftHead is always null."
+      },
+      "OwnedActiveSkillInventoryPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OwnedActiveSkillEntry"
+            },
+            "maxItems": 100
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "OwnedActiveSkillDetail": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "skill",
+          "drafts",
+          "releases",
+          "nextCursor"
+        ],
+        "properties": {
+          "skill": {
+            "$ref": "#/components/schemas/OwnedActiveSkillEntry"
+          },
+          "drafts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillDraftMetadata"
+            },
+            "maxItems": 0
+          },
+          "releases": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillReleaseMetadata"
+            },
+            "maxItems": 1,
+            "minItems": 1
+          },
+          "nextCursor": {
+            "type": "null"
+          }
+        },
+        "description": "Current active-only projection, using existing kit-compatible shape; no drafts, history or continuation."
       }
     }
   },
@@ -13317,7 +14024,7 @@
       "$ref": "#/components/schemas/SkillOfferManifest"
     },
     "security": "Owner writes require exact same-origin session, specific X-Fountain-Owner-Intent and explicit confirmation; signed admission and offer use existing trusted owner signer, exact immutable bytes. No new signer, public write route, bearer fallback or arbitrary tenant ID. Reject unknown fields, duplicate keys, wrong signatures and oversized decoded inputs.",
-    "clientResource": "Exact installation-bound {issuerOrigin}/oauth/skills; existing OAuth authorization code PKCE S256 and explicit resource consent. Scope skills.read or skills.acquire independently; tokens for /mcp, expired/revoked grants, unadmitted principals and unrelated audiences refused. Customer identity derived from verified server-side binding, no owner grant converted to customer licence.",
+    "clientResource": "Exact installation-bound {issuerOrigin}/oauth/skills; existing OAuth authorization code PKCE S256 and explicit resource consent. Scope skills.read or skills.acquire independently; tokens for /mcp, expired/revoked grants, unadmitted principals and unrelated audiences refused. Customer identity derived from verified server-side binding, no owner grant converted to customer licence. Separate owner-client scope skills.owned.read requires explicit consent for the current owner's active library including future active revisions, uses the existing issuer and durable grant, and must not be combined with commercial or Host scopes. Never reuse cookies or grant customer rights. Inspect and revoke via existing owner management; revalidate before every protected request and refresh; no drafts or history. Exact signed release delivery requires redacted durable receipt before disclosure; actual authorized client verification and use remain separate.",
     "transactions": "Tenant+actor+operation+idempotencyKey binds canonical request digest. Identical replay returns original receipt/status; changed payload returns 409; re-evaluate current access before disclosing protected replay. Compare expected revisions; no duplicate mutations or charge. Atomic immutable revisions, active pointers, offer/entitlement states and receipts. No source bytes in telemetry; authenticated responses and refusals no-store. For draft create receipt.subjectId is the draftId; for admission it is releaseId; for offer release it is offerId; for review/withdraw/revoke it is the changed object's exact ID. recordRevision is that object's committed revision. A verified receipt remains independently readable via the corresponding protected resource, with audit references.",
     "commercial": "Phase two, not first release or P0 prerequisite. Price and terms immutable per offer; new price requires new signed offer. Zero-price offers require explicit terms acceptance; paid entitlement only after verified instrument terminal receipt exact amount, currency, customer, offer and acquisition. Provider checkout is hosted; no live charges authorized, no UI redirect proof. Refunds are separate approved instrument actions, entitlement changes only under accepted terms and reconciled receipts. Unlisted is non-enumerated metadata, not a confidentiality or access grant; customer may inspect an exact known offer before accepting terms. Restricted bespoke audience/recurring or metered plans require a later explicit contract; this version supports one-time exact-release licensing only.",
     "delivery": "Only exact authorized source bytes and license are delivered, never public projection by default. No guarantee of provider installation, DRM or deletion of previously delivered copies. A client adapter may consume delivered instructions only with customer consent and separately proven supported integration. Tenant-derived knowledge remains customer-owned.",
