@@ -47,10 +47,10 @@
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "f121df4fdbfff4d656f32a7a09185a27b0d0a7c6",
+      "ref": "412de480ef856f0173bd8aef7991f4432768b49f",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "01ea2fc034ac1a581bcc7ccf1a60beedb2a16a03",
-      "url": "https://github.com/Fountain-Coach/.github/blob/f121df4fdbfff4d656f32a7a09185a27b0d0a7c6/FCIS-OPENAPI.json"
+      "blobSha": "d4d4211deab39c89df13a7d099869bd1d3ef2582",
+      "url": "https://github.com/Fountain-Coach/.github/blob/412de480ef856f0173bd8aef7991f4432768b49f/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.9.1",
+      "version": "0.9.2",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -946,7 +946,12 @@
           "method": "POST",
           "path": "/oauth/host/session/frame",
           "summary": "Exchange an authenticated bounded Host session frame",
-          "security": [],
+          "security": [
+            {},
+            {
+              "oauthBearer": []
+            }
+          ],
           "status": "specified",
           "sourcePointer": "/paths/~1oauth~1host~1session~1frame/post"
         },
@@ -2096,8 +2101,8 @@
       }
     },
     "inputContractDigests": {
-      "fcisOpenAPI": "0.9.1",
-      "fcisOpenAPIBlob": "01ea2fc034ac1a581bcc7ccf1a60beedb2a16a03",
+      "fcisOpenAPI": "0.9.2",
+      "fcisOpenAPIBlob": "d4d4211deab39c89df13a7d099869bd1d3ef2582",
       "architectureBlob": "5708913cf90f46709f3f7ae1fadc9f82670da71b",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
@@ -5029,8 +5034,8 @@
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.9.1",
-    "apiBlobSha": "01ea2fc034ac1a581bcc7ccf1a60beedb2a16a03",
+    "httpContractVersion": "0.9.2",
+    "apiBlobSha": "d4d4211deab39c89df13a7d099869bd1d3ef2582",
     "stackBlobSha": "5708913cf90f46709f3f7ae1fadc9f82670da71b",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"

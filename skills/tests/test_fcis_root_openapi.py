@@ -207,7 +207,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.9.1")
+        self.assertEqual(a["info"]["version"], "0.9.2")
         page = a["components"]["schemas"]["OwnerReasoningClientPage"]
         self.assertNotIn("instrumentObservations", page["required"])
         self.assertEqual(page["properties"]["items"]["items"], {"$ref": "#/components/schemas/OwnerReasoningClient"})
@@ -264,6 +264,19 @@ class FCISRootOpenAPITests(unittest.TestCase):
         for name in ("client_name", "grant_types", "response_types"):
             del schemas["OAuthClientRegistrationResult"]["properties"][name]
         schemas["OAuthClientRegistrationResult"]["required"] = ["client_id", "redirect_uris"]
+        # Reviewed 0.9.2 extension: conditional Voice-only bearer and signed
+        # machine binding. Normalize ONLY those reviewed additions for the
+        # immutable compatibility digest; leave every other old field checked.
+        frame = baseline["/oauth/host/session/frame"]["post"]
+        old_description = "Only admitted target and authenticated session/sequence/nonce permitted. Typed Host frame is not arbitrary remote shell, and response requires actual terminal evidence."
+        self.assertTrue(frame["description"].startswith(old_description + " Existing Describe and Go Build session modes are unchanged."))
+        frame["description"] = old_description
+        self.assertEqual(frame["security"], [{}, {"oauthBearer": []}])
+        frame["security"] = []
+        self.assertIn("Authorization MUST be absent for existing Describe and Go Build modes", frame["requestBody"]["description"])
+        frame["requestBody"]["description"] = "Machine-signed JSON body; Origin, Cookie and Authorization MUST be absent"
+        self.assertTrue(frame.pop("x-fcis-voice-session-mode")["requiresExplicitOwnerPeerAdmission"])
+        del schemas["HostSessionFrame"]["properties"]["sessionID"]["description"]
         self.assertEqual(digest(baseline), BASELINE_PATHS_SHA256)
         self.assertEqual(digest(schemas), BASELINE_SCHEMAS_SHA256)
         self.assertEqual(digest(a["components"]["securitySchemes"]), BASELINE_SECURITY_SHA256)
@@ -291,7 +304,22 @@ class FCISRootOpenAPITests(unittest.TestCase):
         schemas = a["components"]["schemas"]
         for name in ("OwnerVoiceComposition", "OwnerVoiceArrangementCreate", "OwnerVoiceAdmissionDecision"):
             self.assertFalse(schemas[name]["additionalProperties"])
-            self.assertEqual(set(schemas[name]["required"]), set(schemas[name]["properties"]) - ({"contentExchange"} if name == "OwnerVoiceAdmissionDecision" else set()))
+            self.assertEqual(set(schemas[name]["required"]), set(schemas[name]["properties"]) - ({"contentExchange", "peerTargetId"} if name == "OwnerVoiceAdmissionDecision" else set()))
+
+    def test_native_voice_carrier_does_not_widen_legacy_machine_authority(self):
+        a = self.api
+        op = a["paths"]["/oauth/host/session/frame"]["post"]
+        mode = op["x-fcis-voice-session-mode"]
+        self.assertTrue(op["x-fcis-machine-signed-body"])
+        self.assertTrue(mode["requiresMachineSignature"])
+        self.assertTrue(mode["requiresCurrentScopedBearer"])
+        self.assertTrue(mode["requiresExplicitOwnerPeerAdmission"])
+        self.assertEqual(mode["legacyAuthorizationHeader"], "forbidden")
+        self.assertTrue(mode["carrierOnly"])
+        for name in ("OwnerVoiceAdmissionDecision", "OwnerVoiceAdmission"):
+            schema = a["components"]["schemas"][name]
+            self.assertNotIn("peerTargetId", schema["required"])
+            self.assertEqual(schema["properties"]["peerTargetId"]["$ref"], "#/components/schemas/HostTargetID")
 
     def test_voice_text_exchange_is_explicit_and_additive(self):
         schemas = self.api["components"]["schemas"]
