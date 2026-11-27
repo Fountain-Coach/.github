@@ -207,7 +207,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.8.2")
+        self.assertEqual(a["info"]["version"], "0.9.0")
         page = a["components"]["schemas"]["OwnerReasoningClientPage"]
         self.assertNotIn("instrumentObservations", page["required"])
         self.assertEqual(page["properties"]["items"]["items"], {"$ref": "#/components/schemas/OwnerReasoningClient"})
@@ -267,7 +267,31 @@ class FCISRootOpenAPITests(unittest.TestCase):
         self.assertEqual(digest(baseline), BASELINE_PATHS_SHA256)
         self.assertEqual(digest(schemas), BASELINE_SCHEMAS_SHA256)
         self.assertEqual(digest(a["components"]["securitySchemes"]), BASELINE_SECURITY_SHA256)
-        self.assertEqual(sum(len(v) for v in a["paths"].values()), 64)
+        self.assertEqual(sum(len(v) for v in a["paths"].values()), 67)
+
+    def test_voice_composer_projection_remains_private_and_owner_mediated(self):
+        a = self.api
+        base = "/oauth/owner/conversations/{conversationId}/voices"
+        for path, method, operation, intent in (
+            (base, "get", "readOwnerVoiceComposition", None),
+            (base, "post", "arrangeOwnerVoices", "fountaincoach/voice.arrange"),
+            (base + "/admissions", "post", "decideOwnerVoiceAdmission", "fountaincoach/voice.admit"),
+        ):
+            op = a["paths"][path][method]
+            self.assertEqual(op["operationId"], operation)
+            self.assertEqual(op["security"], [{"ownerPasskeySession": []}])
+            self.assertEqual(op["x-fcis-go-target-state"], "specified-only-not-deployed")
+            for r in op["responses"].values():
+                self.assertEqual(r["headers"]["Cache-Control"]["schema"]["const"], "no-store")
+            if intent is not None:
+                self.assertEqual(op["x-fcis-owner-intent"], intent)
+                headers = {x["name"]: x for x in op["parameters"] if x["in"] == "header"}
+                self.assertTrue(headers["Origin"]["required"])
+                self.assertEqual(headers["X-Fountain-Owner-Intent"]["schema"]["const"], intent)
+        schemas = a["components"]["schemas"]
+        for name in ("OwnerVoiceComposition", "OwnerVoiceArrangementCreate", "OwnerVoiceAdmissionDecision"):
+            self.assertFalse(schemas[name]["additionalProperties"])
+            self.assertEqual(set(schemas[name]["required"]), set(schemas[name]["properties"]))
 
     def test_dcr_public_client_metadata_profile_is_additive_not_authority(self):
         a = self.api
