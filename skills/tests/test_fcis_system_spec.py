@@ -93,7 +93,7 @@ class FCISWholeSystemContractTests(unittest.TestCase):
     def test_learning_missing_stage_refusal_and_premature_acceptance(self):
         verifier, doc, _ = self._atomic_fixture()
         api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
-        for field in ("stages", "evidence", "refusals"):
+        for field in ("stages", "evidence", "refusals", "continuousBehavior"):
             candidate = copy.deepcopy(doc)
             candidate["skillAndScenarioSystem"]["learningAcceptance"][field].pop()
             with self.assertRaisesRegex(ValueError, "learning .* coverage/order drift"):
@@ -102,6 +102,22 @@ class FCISWholeSystemContractTests(unittest.TestCase):
         candidate["skillAndScenarioSystem"]["learningAcceptance"]["status"] = "LIVE-ACCEPTED"
         with self.assertRaisesRegex(ValueError, "premature acceptance"):
             verifier.check_learning_acceptance(candidate, api)
+
+    def test_continuous_learning_cannot_be_reduced_to_one_example(self):
+        verifier, doc, base = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
+        candidate = copy.deepcopy(doc)
+        rows = candidate["skillAndScenarioSystem"]["learningAcceptance"]["continuousBehavior"]
+        rows[-1]["id"] = "single-manual-example"
+        with self.assertRaisesRegex(ValueError, "learning continuousBehavior coverage/order drift"):
+            verifier.check_learning_acceptance(candidate, api)
+        candidate = copy.deepcopy(doc)
+        candidate["generation"]["requirementCatalog"] = [
+            row for row in candidate["generation"]["requirementCatalog"]
+            if row["id"] != "LEARN-CYCLE-DEFAULT-ASSESSMENT"]
+        with self.assertRaisesRegex(ValueError, "coverage catalog mismatch"):
+            verifier.check_atomic_coverage(candidate, base)
+        verifier.check_learning_acceptance(doc, api)
 
     def test_learning_cannot_substitute_source_review_or_drop_authority(self):
         verifier, doc, _ = self._atomic_fixture()
