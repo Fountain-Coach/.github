@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.8.2",
-    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference. Version 0.8.0 specifies separately consented read-only owner-library discovery and exact active signed revision delivery through the existing Skill resource; no production or provider acceptance is implied. Version 0.8.1 specifies the missing MCP transport projection at the existing owner Skill resource. No new scope, issuer, custody, underlying operation, provider account or production acceptance is implied.",
+    "version": "0.9.0",
+    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference. Version 0.8.0 specifies separately consented read-only owner-library discovery and exact active signed revision delivery through the existing Skill resource; no production or provider acceptance is implied. Version 0.8.1 specifies the missing MCP transport projection at the existing owner Skill resource. No new scope, issuer, custody, underlying operation, provider account or production acceptance is implied. Version 0.9.0 specifies private owner Voice arrangement, admission decisions and composition readback for the Composer. The HTTP surface is a Console projection of existing owned Voice and Host mediation, not a new instrument command plane, provider adapter, execution grant or production acceptance.",
     "contact": {
       "name": "Fountain Coach FCIS",
       "url": "https://github.com/Fountain-Coach/.github"
@@ -10058,6 +10058,592 @@
           "status": "specified-only-not-deployed"
         }
       }
+    },
+    "/oauth/owner/conversations/{conversationId}/voices": {
+      "get": {
+        "operationId": "readOwnerVoiceComposition",
+        "summary": "Read private Voice composition",
+        "description": "Read current named voices, exact selected content, registered client inventory, admissions and independently checked contribution receipts. No mutation or model invocation.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact owner-scoped object ID."
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified scoped Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerVoiceComposition"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Read private Voice composition",
+          "notFor": "Automatic client authorization, inferred model availability, provider dispatch or new instrument operations.",
+          "effect": "Private owner Store projection or bounded owner decision; no external inference.",
+          "evidence": "Current owner session and exact FountainStore readback; commit receipt for mutations."
+        }
+      },
+      "post": {
+        "operationId": "arrangeOwnerVoices",
+        "summary": "Arrange persistent voices",
+        "description": "Create the first owner-selected arrangement in the existing conversation with exact revision, named instances, initial presence and committed sources. No new reasoning account or grant.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact owner-scoped object ID."
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          },
+          {
+            "name": "X-Fountain-Owner-Intent",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "const": "fountaincoach/voice.arrange"
+            },
+            "description": "Exact owner mutation intent; authenticated session and current authority still required."
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Verified scoped Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Arrange persistent voices",
+          "notFor": "Automatic client authorization, inferred model availability, provider dispatch or new instrument operations.",
+          "effect": "Private owner Store projection or bounded owner decision; no external inference.",
+          "evidence": "Current owner session and exact FountainStore readback; commit receipt for mutations."
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerVoiceArrangementCreate"
+              }
+            }
+          }
+        },
+        "x-fcis-owner-intent": "fountaincoach/voice.arrange"
+      }
+    },
+    "/oauth/owner/conversations/{conversationId}/voices/admissions": {
+      "post": {
+        "operationId": "decideOwnerVoiceAdmission",
+        "summary": "Decide Voice client admission",
+        "description": "Admit or withdraw an exact registered client, selected operations and current composition context through owner authorization. Existing OAuth consent remains separate.",
+        "tags": [
+          "Conversations"
+        ],
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-chat-phase": "owner-chat",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "description": "Exact owner-scoped object ID."
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Same-origin session read; refuse foreign or ambiguous origin and credentialed foreign CORS."
+          },
+          {
+            "name": "X-Fountain-Owner-Intent",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "const": "fountaincoach/voice.admit"
+            },
+            "description": "Exact owner mutation intent; authenticated session and current authority still required."
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Verified scoped Store readback",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationReceipt"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or binding",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Current owner session required",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin, intent, scope or policy refused",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inaccessible scoped object",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision, lifecycle or idempotency conflict",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required provider, proof or Store unavailable; no positive claim",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerConversationError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-reasoning": {
+          "useWhen": "Decide Voice client admission",
+          "notFor": "Automatic client authorization, inferred model availability, provider dispatch or new instrument operations.",
+          "effect": "Private owner Store projection or bounded owner decision; no external inference.",
+          "evidence": "Current owner session and exact FountainStore readback; commit receipt for mutations."
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerVoiceAdmissionDecision"
+              }
+            }
+          }
+        },
+        "x-fcis-owner-intent": "fountaincoach/voice.admit"
+      }
     }
   },
   "components": {
@@ -14347,6 +14933,394 @@
           }
         },
         "description": "Current active-only projection, using existing kit-compatible shape; no drafts, history or continuation."
+      },
+      "OwnerVoiceInstance": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "presence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+          },
+          "presence": {
+            "type": "string",
+            "enum": [
+              "available",
+              "silent"
+            ]
+          }
+        }
+      },
+      "OwnerVoiceSelectedSource": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "sha256",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64000
+          }
+        },
+        "description": "Owner-private selected immutable human source, never an inferred model response."
+      },
+      "OwnerVoiceRegisteredClient": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "description": "Registered public OAuth client; registration does not prove a connection, consent or inference eligibility."
+      },
+      "OwnerVoiceAdmission": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "clientId",
+          "contextSHA256",
+          "manifestSHA256",
+          "operations",
+          "revoked"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "clientId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+          },
+          "contextSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "manifestSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "operations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "voice.read",
+                "voice.receive",
+                "voice.articulate",
+                "voice.presence"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "revoked": {
+            "type": "boolean"
+          }
+        }
+      },
+      "OwnerVoiceContribution": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sequence",
+          "voiceId",
+          "contributionId",
+          "kind",
+          "contentRef",
+          "contentSHA256",
+          "targetVoiceId",
+          "targetContributionId",
+          "clientId",
+          "receiptId",
+          "createdAt"
+        ],
+        "properties": {
+          "sequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "voiceId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+          },
+          "contributionId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "intention",
+              "proposal",
+              "address",
+              "reply",
+              "objection",
+              "agreement",
+              "revision"
+            ]
+          },
+          "contentRef": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+          },
+          "contentSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "targetVoiceId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "targetContributionId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "clientId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "receiptId": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "description": "An attributed reference to selected content, not a fabricated assistant message. Client identity means authenticated client, not model attestation."
+      },
+      "OwnerVoiceComposition": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "conversationId",
+          "revision",
+          "state",
+          "contextSHA256",
+          "sourceDocumentId",
+          "voices",
+          "selectedSources",
+          "registeredClients",
+          "admissions",
+          "contributions"
+        ],
+        "properties": {
+          "conversationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "active",
+              "archived"
+            ]
+          },
+          "contextSHA256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sourceDocumentId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "voices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OwnerVoiceInstance"
+            }
+          },
+          "selectedSources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OwnerVoiceSelectedSource"
+            }
+          },
+          "registeredClients": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OwnerVoiceRegisteredClient"
+            }
+          },
+          "admissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OwnerVoiceAdmission"
+            }
+          },
+          "contributions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OwnerVoiceContribution"
+            }
+          }
+        },
+        "description": "Current private owner projection of the exact persisted arrangement and contribution receipts. Empty arrangement is valid. Neither an admission nor a registered client proves an effective OAuth grant or model availability."
+      },
+      "OwnerVoiceArrangementCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expectedRevision",
+          "instances",
+          "contentIds",
+          "idempotencyKey",
+          "correlationId"
+        ],
+        "properties": {
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OwnerVoiceInstance"
+            },
+            "minItems": 1,
+            "maxItems": 64
+          },
+          "contentIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+            },
+            "minItems": 1,
+            "maxItems": 64,
+            "uniqueItems": true
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+          },
+          "correlationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+          }
+        },
+        "description": "Explicit first arrangement only, with chosen stable voice IDs and committed sources. No automatic client admission."
+      },
+      "OwnerVoiceAdmissionDecision": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expectedRevision",
+          "contextSHA256",
+          "clientId",
+          "operations",
+          "revoke",
+          "idempotencyKey",
+          "correlationId"
+        ],
+        "properties": {
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "contextSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "clientId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+          },
+          "operations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "voice.read",
+                "voice.receive",
+                "voice.articulate",
+                "voice.presence"
+              ]
+            },
+            "maxItems": 4,
+            "uniqueItems": true
+          },
+          "revoke": {
+            "type": "boolean"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+          },
+          "correlationId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$"
+          }
+        },
+        "description": "Owner selects nonempty operation set to admit or empty operation set to withdraw the exact client admission. OAuth consent remains separate."
       }
     }
   },
@@ -14480,7 +15454,10 @@
       "appendOwnerMessage",
       "startOwnerReasoningTurn",
       "readOwnerReasoningTurn",
-      "cancelOwnerReasoningTurn"
+      "cancelOwnerReasoningTurn",
+      "readOwnerVoiceComposition",
+      "arrangeOwnerVoices",
+      "decideOwnerVoiceAdmission"
     ],
     "additionalInferenceChargeCeilingMinor": 0,
     "permittedExternalChargeBasis": "included-subscription",

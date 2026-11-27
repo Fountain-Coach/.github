@@ -348,7 +348,8 @@ def check_owner_chat(system: dict, api: dict) -> None:
     operations = ["listOwnerReasoningClients", "listOwnerConversations", "createOwnerConversation",
         "readOwnerConversation", "updateOwnerConversation", "deleteOwnerConversation",
         "listOwnerConversationMessages", "appendOwnerMessage", "startOwnerReasoningTurn",
-        "readOwnerReasoningTurn", "cancelOwnerReasoningTurn"]
+        "readOwnerReasoningTurn", "cancelOwnerReasoningTurn",
+        "readOwnerVoiceComposition", "arrangeOwnerVoices", "decideOwnerVoiceAdmission"]
     if (chat["operationIds"] != operations or ext["operationIds"] != operations
             or ext["canonicalContract"] != "FCIS-SYSTEM.json#/reasoningAndConversationSystem"):
         reject("owner chat operation binding drift")
