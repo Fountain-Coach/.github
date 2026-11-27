@@ -5,7 +5,7 @@
   "status": "NORMATIVE_SPECIFICATION_CANDIDATE__NOT_GENERATED",
   "generatedAtUTC": "2026-11-19",
   "owner": "Fountain Coach",
-  "architectureVersion": "1.5",
+  "architectureVersion": "1.6",
   "scope": {
     "goal": "Specify, generate and independently install the entire native-Go FCIS Instruction System with no preexisting Fountain Coach runtime, including secure first-owner bootstrap, native FountainStore and SecretStore, OAuth/WebAuthn, MCP, typed Host/MIDI2 instrument registry, FCIS Skills/scenario learning, existing Fountain Press Access UX and independent release lifecycle. Optionally adopt an existing installation with separate continuity verification.",
     "included": [
@@ -40,10 +40,10 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "f75d16191b8a783125bb45d66b3e3ddcd19e5049",
+      "ref": "53cb6ae8c35d59b1ea8b0281739a2480598df272",
       "path": "FCIS-STACK.md",
-      "blobSha": "987ebc16255484a562c9a094b01c04ae9751fb41",
-      "url": "https://github.com/Fountain-Coach/.github/blob/f75d16191b8a783125bb45d66b3e3ddcd19e5049/FCIS-STACK.md"
+      "blobSha": "5708913cf90f46709f3f7ae1fadc9f82670da71b",
+      "url": "https://github.com/Fountain-Coach/.github/blob/53cb6ae8c35d59b1ea8b0281739a2480598df272/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
@@ -2051,7 +2051,7 @@
     "inputContractDigests": {
       "fcisOpenAPI": "0.8.2",
       "fcisOpenAPIBlob": "cc435afb255ea4d2352e91d720fac1d97e064940",
-      "architectureBlob": "987ebc16255484a562c9a094b01c04ae9751fb41",
+      "architectureBlob": "5708913cf90f46709f3f7ae1fadc9f82670da71b",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
     "requirementCatalog": [
@@ -4963,7 +4963,7 @@
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
     "httpContractVersion": "0.8.2",
     "apiBlobSha": "cc435afb255ea4d2352e91d720fac1d97e064940",
-    "stackBlobSha": "987ebc16255484a562c9a094b01c04ae9751fb41",
+    "stackBlobSha": "5708913cf90f46709f3f7ae1fadc9f82670da71b",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },
@@ -5022,7 +5022,7 @@
       },
       {
         "id": "external-mcp",
-        "requirement": "Connect the external reasoning client through existing OAuth/PKCE and MCP; expose only scoped instruments, and keep private Skill delivery separately authorized through the existing resource. External model session initiation and complete chat history are not supplied by MCP. No owner-cookie transfer or invented token exchange. Owned active-library delivery uses separate skills.owned.read consent on /oauth/skills; no drafts, history, licensed entitlement, or Host scope. FCIS-POLYPHONY-01 uses Desktop Commander's demonstrated short-call, asynchronous-work, correlated progress/result and intervention interaction contract through the existing owned MIDI2 instruments. Each semantic voice MUST be a first-class, independently addressable MIDI2 instrument instance under the existing MIDI-CI discovery and typed MIDI2/FCIS-KIT invocation and lifecycle contract. An eligible ordinary external ChatGPT conversation can articulate several distinct voices without a native outbound inference adapter, Codex, Copilot or separate provider threads."
+        "requirement": "The native FCIS plane MUST represent the LLM/reasoning runtime, each semantic voice, authorization, Composer and FountainStore persistence as governed MIDI2 instruments, discovered through MIDI-CI and communicating through typed UMP over admitted transports, including local software peers. Authorization is mandatory for protected effects; preserve existing owner, admission, consent and grant policy, and encapsulate OAuth/WebAuthn and provider-specific protocols behind the relevant instrument boundary. Existing external OAuth/PKCE and MCP are optional compatibility projections, not a native dependency or prerequisite to polyphony; expose only scoped instruments and retain existing permitted recovery paths until replacements are proven. Keep private Skill delivery separately authorized through the existing resource. External model session initiation and complete chat history are not supplied by MCP. No owner-cookie transfer or invented token exchange. Owned active-library delivery uses separate skills.owned.read consent on /oauth/skills; no drafts, history, licensed entitlement, or Host scope. FCIS-POLYPHONY-01 uses Desktop Commander's demonstrated short-call, asynchronous-work, correlated progress/result and intervention interaction contract through the existing owned MIDI2 instruments. Each semantic voice MUST be a first-class, independently addressable MIDI2 instrument instance under the existing MIDI-CI discovery and typed MIDI2/FCIS-KIT invocation and lifecycle contract. An eligible ordinary external ChatGPT conversation can articulate several distinct voices without a native outbound inference adapter, Codex, Copilot or separate provider threads."
       },
       {
         "id": "native-adapter",
@@ -5099,7 +5099,7 @@
         "requirement": "Refuse unavailable domain, unknown source or foreign reference, unconfirmed or stale required Grounding, stale arrangement/selection, unapproved resolved content, mismatched expected digest, invalid current Skill or capability scope before transmission or effect. No invented source fact or domain-wide permission; a previously committed historical answer retains its original lineage, not current validity."
       }
     ],
-    "acceptance": "Live acceptance requires actual owner Console journey, independently committed and restarted history, genuine scoped external MCP work, an actual native returned answer only from an independently verified eligible subscription-only adapter, distinct linked instrument proof, provider disconnect and continuity, authorized export/archive/delete/restore, and witnessed no-dispatch negative cases. If provider support is absent, native mode remains NOT_ESTABLISHED; deterministic FCIS and history remain operable. FCIS-LEARN-01 remains its separate real two-attempt proof. Situated Reframe reference subcase: resolve actual selected manuscript/passage, confirmed Grounding, exact active signed Skills, authorized source revisions and admitted operation identities; observe actual context consumption and independently source-grounded response plus separate receipts where effects occur. Change selection/Grounding, verify stale or unauthorized binding refusal, preserve historical lineage, reopen conversation, distinguish unwired and empty context, and preserve unscoped and deterministic operations while the provider is unavailable. FCIS-POLYPHONY-01 interactive subcase: ordinary eligible external reasoning, distinct persistent voice instruments independently discovered and addressed in a shared scenario, articulated by one eligible reasoning client, real scoped asynchronous MIDI2 instrument invocation and correlated retrieval/intervention, disagreement or revision, authorized contribution and evidence recovery after reconnect and physical iPad Composer observation. Native adapter or separate model-thread absence does not block this independent subcase.",
-    "boundaries": "No new database, identity, billing subsystem, automatic Skill promotion, hidden provider entitlement, extra marketplace Skill, public private source, or new P0 first-install dependency. Public interface obligations are distinct from confidential implementation. Existing commercial FCIS service entitlement is separate from prohibited additional reasoning charges. Domain composition and provenance reuse existing sources and private turn custody; no new endpoint, new Store collection, registry, runtime or additional P0 gate. No mandatory native outbound inference, Codex/Copilot, multiple model sessions or new P0 gate for FCIS-POLYPHONY-01. Missing optional provider lanes do not disable other independently authorized work."
+    "acceptance": "Live acceptance requires actual owner Console journey, independently committed and restarted history, genuine scoped native MIDI2 instrument work without MCP, authorization refusal and independent Store receipt readback, separate compatibility verification of retained external MCP paths, an actual native returned answer only from an independently verified eligible subscription-only adapter, distinct linked instrument proof, provider disconnect and continuity, authorized export/archive/delete/restore, and witnessed no-dispatch negative cases. If provider support is absent, native mode remains NOT_ESTABLISHED; deterministic FCIS and history remain operable. FCIS-LEARN-01 remains its separate real two-attempt proof. Situated Reframe reference subcase: resolve actual selected manuscript/passage, confirmed Grounding, exact active signed Skills, authorized source revisions and admitted operation identities; observe actual context consumption and independently source-grounded response plus separate receipts where effects occur. Change selection/Grounding, verify stale or unauthorized binding refusal, preserve historical lineage, reopen conversation, distinguish unwired and empty context, and preserve unscoped and deterministic operations while the provider is unavailable. FCIS-POLYPHONY-01 interactive subcase: ordinary eligible external reasoning, distinct persistent voice instruments independently discovered and addressed in a shared scenario, articulated by one eligible reasoning client, real scoped asynchronous MIDI2 instrument invocation and correlated retrieval/intervention, disagreement or revision, authorized contribution and evidence recovery after reconnect and physical iPad Composer observation. Native adapter or separate model-thread absence does not block independently authorized alternative work. The native polyphony subcase must independently witness actual eligible reasoning contribution, mandatory authorization, voice discovery and addressing, Composer and FountainStore communication over the owned MIDI2 plane without MCP.",
+    "boundaries": "No new database, identity, billing subsystem, automatic Skill promotion, hidden provider entitlement, extra marketplace Skill, public private source, or new P0 first-install dependency. Public interface obligations are distinct from confidential implementation. Existing commercial FCIS service entitlement is separate from prohibited additional reasoning charges. Domain composition and provenance reuse existing sources and private turn custody; no new endpoint, new Store collection, registry, runtime or additional P0 gate. No mandatory MCP, native outbound provider interface, Codex/Copilot, multiple model sessions, new service, new registry or new P0 gate for FCIS-POLYPHONY-01. The native instrument requirement does not alter independent first-owner bootstrap, recovery or deterministic operation. Missing optional provider lanes do not disable other independently authorized work."
   }
 }
