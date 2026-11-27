@@ -207,7 +207,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.9.0")
+        self.assertEqual(a["info"]["version"], "0.9.1")
         page = a["components"]["schemas"]["OwnerReasoningClientPage"]
         self.assertNotIn("instrumentObservations", page["required"])
         self.assertEqual(page["properties"]["items"]["items"], {"$ref": "#/components/schemas/OwnerReasoningClient"})
@@ -291,7 +291,18 @@ class FCISRootOpenAPITests(unittest.TestCase):
         schemas = a["components"]["schemas"]
         for name in ("OwnerVoiceComposition", "OwnerVoiceArrangementCreate", "OwnerVoiceAdmissionDecision"):
             self.assertFalse(schemas[name]["additionalProperties"])
-            self.assertEqual(set(schemas[name]["required"]), set(schemas[name]["properties"]))
+            self.assertEqual(set(schemas[name]["required"]), set(schemas[name]["properties"]) - ({"contentExchange"} if name == "OwnerVoiceAdmissionDecision" else set()))
+
+    def test_voice_text_exchange_is_explicit_and_additive(self):
+        schemas = self.api["components"]["schemas"]
+        for name in ("OwnerVoiceAdmission", "OwnerVoiceAdmissionDecision"):
+            schema = schemas[name]
+            self.assertNotIn("contentExchange", schema["required"])
+            self.assertEqual(schema["properties"]["contentExchange"]["type"], "boolean")
+        contribution = schemas["OwnerVoiceContribution"]
+        self.assertNotIn("clientText", contribution["required"])
+        self.assertEqual(contribution["properties"]["clientText"]["type"], "string")
+        self.assertEqual(sum(len(v) for v in self.api["paths"].values()), 67)
 
     def test_dcr_public_client_metadata_profile_is_additive_not_authority(self):
         a = self.api
