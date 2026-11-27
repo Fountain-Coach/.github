@@ -47,10 +47,10 @@
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "387cfa37cf23cadf0a4e0274db8fe7046ef07372",
+      "ref": "c686cedfac4b3935012bef1fb560c9d319b26301",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "cc435afb255ea4d2352e91d720fac1d97e064940",
-      "url": "https://github.com/Fountain-Coach/.github/blob/387cfa37cf23cadf0a4e0274db8fe7046ef07372/FCIS-OPENAPI.json"
+      "blobSha": "f535193baf3b3da76e8f329536fc6d7bbff53f2d",
+      "url": "https://github.com/Fountain-Coach/.github/blob/c686cedfac4b3935012bef1fb560c9d319b26301/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.8.2",
+      "version": "0.9.0",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -1396,6 +1396,45 @@
           ],
           "status": "specified",
           "sourcePointer": "/paths/~1oauth~1skills/post"
+        },
+        {
+          "id": "readOwnerVoiceComposition",
+          "method": "GET",
+          "path": "/oauth/owner/conversations/{conversationId}/voices",
+          "summary": "Read private Voice composition",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1voices/get"
+        },
+        {
+          "id": "arrangeOwnerVoices",
+          "method": "POST",
+          "path": "/oauth/owner/conversations/{conversationId}/voices",
+          "summary": "Arrange persistent voices",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1voices/post"
+        },
+        {
+          "id": "decideOwnerVoiceAdmission",
+          "method": "POST",
+          "path": "/oauth/owner/conversations/{conversationId}/voices/admissions",
+          "summary": "Decide Voice client admission",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1voices~1admissions/post"
         }
       ],
       "schemas": [
@@ -1485,7 +1524,15 @@
         "OwnerInstrumentObservation",
         "OwnedActiveSkillEntry",
         "OwnedActiveSkillInventoryPage",
-        "OwnedActiveSkillDetail"
+        "OwnedActiveSkillDetail",
+        "OwnerVoiceInstance",
+        "OwnerVoiceSelectedSource",
+        "OwnerVoiceRegisteredClient",
+        "OwnerVoiceAdmission",
+        "OwnerVoiceContribution",
+        "OwnerVoiceComposition",
+        "OwnerVoiceArrangementCreate",
+        "OwnerVoiceAdmissionDecision"
       ],
       "securitySchemes": [
         "ownerPasskeySession",
@@ -1988,9 +2035,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 315,
+      "expectedRequirementCount": 318,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 315,
+      "minimumAtomicRequirementCount": 318,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -2049,8 +2096,8 @@
       }
     },
     "inputContractDigests": {
-      "fcisOpenAPI": "0.8.2",
-      "fcisOpenAPIBlob": "cc435afb255ea4d2352e91d720fac1d97e064940",
+      "fcisOpenAPI": "0.9.0",
+      "fcisOpenAPIBlob": "f535193baf3b3da76e8f329536fc6d7bbff53f2d",
       "architectureBlob": "5708913cf90f46709f3f7ae1fadc9f82670da71b",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
@@ -4177,6 +4224,27 @@
         "mandatory": true,
         "pointer": "/paths/~1oauth~1skills/post",
         "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readOwnerVoiceComposition",
+        "name": "/oauth/owner/conversations/{conversationId}/voices GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1voices/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-arrangeOwnerVoices",
+        "name": "/oauth/owner/conversations/{conversationId}/voices POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1voices/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-decideOwnerVoiceAdmission",
+        "name": "/oauth/owner/conversations/{conversationId}/voices/admissions POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1voices~1admissions/post",
+        "source": "FCIS-OPENAPI.json"
       }
     ]
   },
@@ -4213,7 +4281,7 @@
   },
   "knownSpecificationLimitations": [],
   "coverageBaseline": {
-    "fcisHTTP": 64,
+    "fcisHTTP": 67,
     "fountainStoreHTTP": 24,
     "secretStoreHTTP": 4,
     "frontendFiles": 8,
@@ -4235,7 +4303,7 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 315,
+    "atomicRequirementCount": 318,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
@@ -4961,8 +5029,8 @@
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.8.2",
-    "apiBlobSha": "cc435afb255ea4d2352e91d720fac1d97e064940",
+    "httpContractVersion": "0.9.0",
+    "apiBlobSha": "f535193baf3b3da76e8f329536fc6d7bbff53f2d",
     "stackBlobSha": "5708913cf90f46709f3f7ae1fadc9f82670da71b",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
@@ -4984,7 +5052,10 @@
       "appendOwnerMessage",
       "startOwnerReasoningTurn",
       "readOwnerReasoningTurn",
-      "cancelOwnerReasoningTurn"
+      "cancelOwnerReasoningTurn",
+      "readOwnerVoiceComposition",
+      "arrangeOwnerVoices",
+      "decideOwnerVoiceAdmission"
     ],
     "policy": {
       "additionalInferenceChargeCeilingMinor": 0,
@@ -5050,7 +5121,7 @@
       },
       {
         "id": "owner-ux",
-        "requirement": "Existing React Console Chat and Integrations show current history, selected reasoning connection/model, actual availability, context consent, committed messages, evidence and learning links; native send unavailable when unsupported. Stable object selection after reload, sign-in and disconnect, accessible iPad list/detail. No second UI authority, service or Store. The Composer engraves participant identity, role, relation and actual outcome from the same typed evidence the agent reads; optional separate instrumentObservations on the existing reasoning-client page shows dated verified presence, not admission or eligible clients; absence stays unavailable. Accessible human and independently readable machine projections of one observation, with receipt details on demand, no raw telemetry or invented motion. FCIS-POLYPHONY-01: preserve distinct persistent personified voice identities and attributed contributions, replies, objections, revisions and linked actual evidence within a shared scenario; voice is independent of provider, model and thread. Its persistent instance identity is distinct from its capability version, transport address, provider session, contribution and execution; the Composer engraves the same authorized typed contributions and relations retained by FountainStore. Engrave the composition without prescribed workflow; presence need not consume inference."
+        "requirement": "Existing React Console Chat and Integrations show current history, selected reasoning connection/model, actual availability, context consent, committed messages, evidence and learning links; native send unavailable when unsupported. Stable object selection after reload, sign-in and disconnect, accessible iPad list/detail. No second UI authority, service or Store. The Composer engraves participant identity, role, relation and actual outcome from the same typed evidence the agent reads; optional separate instrumentObservations on the existing reasoning-client page shows dated verified presence, not admission or eligible clients; absence stays unavailable. Accessible human and independently readable machine projections of one observation, with receipt details on demand, no raw telemetry or invented motion. FCIS-POLYPHONY-01: preserve distinct persistent personified voice identities and attributed contributions, replies, objections, revisions and linked actual evidence within a shared scenario; voice is independent of provider, model and thread. Its persistent instance identity is distinct from its capability version, transport address, provider session, contribution and execution; the Composer engraves the same authorized typed contributions and relations retained by FountainStore. Engrave the composition without prescribed workflow; presence need not consume inference. Composer exposes optional owner arrangement, selected immutable source references, persistent Voice presence, current admission decisions and independently read-back contributions; never implies consent or provider availability."
       },
       {
         "id": "publication-boundary",
