@@ -211,6 +211,7 @@ def expected_atomic(system: dict) -> dict[str, dict[str, str]]:
         ("stages", "LEARN-STAGE-", "learning-stage"),
         ("evidence", "LEARN-EVIDENCE-", "learning-evidence"),
         ("refusals", "LEARN-REFUSAL-", "learning-refusal"),
+        ("continuousBehavior", "LEARN-CYCLE-", "learning-cycle"),
     ):
         array(stem, "/skillAndScenarioSystem/learningAcceptance/" + field,
               lambda x, i: _slug(x["id"]), lambda x, i: f"{cls}: {x['id']}", cls)
@@ -286,6 +287,7 @@ def check_learning_acceptance(system: dict, api: dict) -> None:
         "evidence": ["baseline-run", "learned-draft", "release-chain", "consumption", "next-run"],
         "refusals": ["invalid-evidence", "invalid-promotion", "invalid-consumption",
                      "invalid-improvement", "privacy-or-scope"],
+        "continuousBehavior": ['episode-closure', 'default-assessment', 'domain-independence', 'polyphonic-reflection', 'durable-disposition', 'proposal-before-promotion', 'next-attempt-consumption', 'general-acceptance'],
     }
     for field, identities in required.items():
         if [x["id"] for x in lesson[field]] != identities:

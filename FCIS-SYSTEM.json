@@ -42,7 +42,7 @@
       "repository": "Fountain-Coach/.github",
       "ref": "53cb6ae8c35d59b1ea8b0281739a2480598df272",
       "path": "FCIS-STACK.md",
-      "blobSha": "5708913cf90f46709f3f7ae1fadc9f82670da71b",
+      "blobSha": "7506c4efe070f1e93bf1a236d5ba8df16125725c",
       "url": "https://github.com/Fountain-Coach/.github/blob/53cb6ae8c35d59b1ea8b0281739a2480598df272/FCIS-STACK.md"
     },
     "fcisHTTP": {
@@ -2040,9 +2040,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 318,
+      "expectedRequirementCount": 326,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 318,
+      "minimumAtomicRequirementCount": 326,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -2063,6 +2063,7 @@
         "learning-stage",
         "learning-evidence",
         "learning-refusal",
+        "learning-cycle",
         "chat-requirement",
         "chat-refusal"
       ],
@@ -4250,6 +4251,62 @@
         "mandatory": true,
         "pointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1voices~1admissions/post",
         "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "LEARN-CYCLE-EPISODE-CLOSURE",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/continuousBehavior/0",
+        "proofClass": "learning-cycle",
+        "name": "learning-cycle: episode-closure"
+      },
+      {
+        "id": "LEARN-CYCLE-DEFAULT-ASSESSMENT",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/continuousBehavior/1",
+        "proofClass": "learning-cycle",
+        "name": "learning-cycle: default-assessment"
+      },
+      {
+        "id": "LEARN-CYCLE-DOMAIN-INDEPENDENCE",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/continuousBehavior/2",
+        "proofClass": "learning-cycle",
+        "name": "learning-cycle: domain-independence"
+      },
+      {
+        "id": "LEARN-CYCLE-POLYPHONIC-REFLECTION",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/continuousBehavior/3",
+        "proofClass": "learning-cycle",
+        "name": "learning-cycle: polyphonic-reflection"
+      },
+      {
+        "id": "LEARN-CYCLE-DURABLE-DISPOSITION",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/continuousBehavior/4",
+        "proofClass": "learning-cycle",
+        "name": "learning-cycle: durable-disposition"
+      },
+      {
+        "id": "LEARN-CYCLE-PROPOSAL-BEFORE-PROMOTION",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/continuousBehavior/5",
+        "proofClass": "learning-cycle",
+        "name": "learning-cycle: proposal-before-promotion"
+      },
+      {
+        "id": "LEARN-CYCLE-NEXT-ATTEMPT-CONSUMPTION",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/continuousBehavior/6",
+        "proofClass": "learning-cycle",
+        "name": "learning-cycle: next-attempt-consumption"
+      },
+      {
+        "id": "LEARN-CYCLE-GENERAL-ACCEPTANCE",
+        "mandatory": true,
+        "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/continuousBehavior/7",
+        "proofClass": "learning-cycle",
+        "name": "learning-cycle: general-acceptance"
       }
     ]
   },
@@ -4272,7 +4329,8 @@
       "OAuth/MCP and Host signed receipts",
       "FCIS-LEARN-01: actual scenario-evidence review and distinct supported reasoning invocation consuming exact active revised private Skill; independent two-attempt improvement and all refusal predicates per skillAndScenarioSystem.learningAcceptance.",
       "FCIS-CHAT-01: actual private owner history, restart, cross-provider continuity, exact authorized context, verified included subscription and no-extra-charge refusal before dispatch, actual response/receipt, export, deletion/tombstone and physical owner UX; unsupported native transport remains unavailable. FCIS-POLYPHONY-01 interactive subcase independently verifies discovery and addressing of first-class personified voice instruments, real admitted instrument execution and recoverable attributed discourse/evidence without mandatory native inference or separate provider threads.",
-      "FCIS-CHAT-01 situated Reframe reference subcase: actual domain selection, confirmed Grounding, derived Situation, reviewed digest-bound current context, independently witnessed reasoning consumption and results, refusal for stale/foreign/unconfirmed inputs, and unaffected unscoped/deterministic operation."
+      "FCIS-CHAT-01 situated Reframe reference subcase: actual domain selection, confirmed Grounding, derived Situation, reviewed digest-bound current context, independently witnessed reasoning consumption and results, refusal for stale/foreign/unconfirmed inputs, and unaffected unscoped/deterministic operation.",
+      "FCIS-LEARN-01 continuous behavior: ordinary work closure initiates assessment without a maintenance request; independently verify general-acceptance across distinct admitted domains, actual useful and no-lesson outcomes, recovery, refusal, and subsequent consumption under existing authority."
     ],
     "production": [
       "fresh-install may be deployed independently on any supported Linux host; optional current Hetzner migration is a distinct deployment profile",
@@ -4308,7 +4366,7 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 318,
+    "atomicRequirementCount": 326,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
@@ -4329,6 +4387,7 @@
       "learning-stage": 6,
       "learning-evidence": 5,
       "learning-refusal": 5,
+      "learning-cycle": 8,
       "chat-requirement": 15,
       "chat-refusal": 6
     }
@@ -4841,7 +4900,7 @@
       "RELEASED",
       "RETIRED"
     ],
-    "learning": "A scenario may propose a new Skill revision or instrument extension. It must record input source, observed outcome, executable constraints and bounded counterexamples; proposals have no execution grant until reviewed and admitted.",
+    "learning": "Continuous assessment is the default continuation of admitted work episodes. Independently established reusable lessons may become private Skill revision proposals through existing authorized custody; proposals have no execution grant or promotion authority. The system retains evidence, constraints and bounded counterexamples, or settles no-lesson/insufficient-evidence/pending without invented success.",
     "promotion": "owner/tenant policy controls explicit signed version promotion, immutable release manifest and independent terminal evidence; a model cannot self-admit a proposed Skill",
     "recovery": "Skill revision and scenario provenance persist in tenant Store and signed export; Git is a synchronized publication copy, not a required operational database",
     "privacy": "tenant scenario data never becomes shared training or globally published Skill automatically",
@@ -4942,8 +5001,42 @@
           "requirement": "Never disclose private source or tenant evidence via public Git, marketplace, unauthorized provider, or telemetry; never derive Host, provider, spend, commercial or publication authority from learning."
         }
       ],
-      "completion": "LIVE-ACCEPTED only after all six stages and evidence/refusal obligations have real, independently read-back proof in one correlated two-attempt scenario. Source schema, tests, Git merge, provider sync, standalone admission or a successful deterministic task are separate milestones; any missing predicate remains NOT_ESTABLISHED.",
-      "boundaries": "Retain existing fcis.skills, Store collections and owner/client/Host/provider contracts. No new endpoint for the learning scenario itself, signer, database, permission system, marketplace Skill, automatic Git elevation, auto-admission or provider entitlement. This is a product acceptance gate, not a new first-install, P0 deterministic operation, or commercial prerequisite. Proposals and reviewed private learning remain distinct from suspended automatic promotion."
+      "completion": "A positive learning episode is LIVE-ACCEPTED only after all six stages and evidence/refusal obligations have independently read-back proof in a correlated two-attempt scenario. Continuous system behavior requires the additional general-acceptance requirements across distinct ordinary work episodes. Source schema, tests, Git merge, provider sync, standalone admission or a successful deterministic task are separate milestones; any missing predicate remains NOT_ESTABLISHED.",
+      "boundaries": "Retain existing fcis.skills, Store collections and owner/client/Host/provider contracts. No new endpoint for the learning scenario itself, signer, database, permission system, marketplace Skill, automatic Git elevation, auto-admission or provider entitlement. This is a product acceptance gate, not a new first-install, P0 deterministic operation, or commercial prerequisite. Proposals and reviewed private learning remain distinct from suspended automatic promotion.",
+      "continuousBehavior": [
+        {
+          "id": "episode-closure",
+          "requirement": "At ordinary admitted work-episode closure, not each tool invocation or chat message, resolve the owning scenario/task, tenant, actual input/source, participating clients and Voices, instruction releases, terminal receipts and independent outcome witness. Accepted, failed, cancelled, incomplete and unresolved are distinct; a low-level successful receipt alone is never acceptance."
+        },
+        {
+          "id": "default-assessment",
+          "requirement": "Assessment is a default continuation of ordinary work, not a separately requested Skill maintenance task. Within the already authorized reasoning context evaluate whether an independently established outcome or correction is non-trivial, reusable and bounded; otherwise explicitly settle no-lesson, insufficient-evidence or assessment-pending. Unavailable reasoning leaves resumable pending state, never a fabricated lesson or a prerequisite for deterministic authorized work. No additional inference spend or provider entitlement."
+        },
+        {
+          "id": "domain-independence",
+          "requirement": "Apply the same lifecycle to every participating admitted work/scenario domain and dynamically selected owned Skill, without a fixed Skill name, hard-coded correction, domain-specific keyword classifier or provider dependency. If no applicable existing Skill is established, retain a proposal for resolution under existing authority, never silently create an active identity."
+        },
+        {
+          "id": "polyphonic-reflection",
+          "requirement": "Reasoning Voices may contribute observations, counterexamples, objections and a bounded proposed lesson through the existing independently addressable Voice plane. Preserve attribution and dissent, distinguish evidence from inference, and do not equate agreement, a contribution, or a model assertion with independent acceptance. Multiple model sessions are optional."
+        },
+        {
+          "id": "durable-disposition",
+          "requirement": "Use existing tenant-owned execution, conversation, scenario, receipt and Skill custody to bind one recoverable disposition to the exact work episode and active instruction baseline. Correlated retries resume the same assessment or proposal, do not duplicate effects, and resolve current state before continuing. Retain only the necessary private evidence/references, not wholesale conversation transcripts or external training data."
+        },
+        {
+          "id": "proposal-before-promotion",
+          "requirement": "A reusable lesson is a bounded attributed proposal with a current Skill predecessor, independently witnessed evidence, constraints, counterexamples and a subsequent-task predicate. Use the existing authorized draft/review/admission path when its authority exists; otherwise retain an attributed private proposal, not an admitted revision. No reasoning client may impersonate owner intent, review itself, widen grants, or automatically publish/promote."
+        },
+        {
+          "id": "next-attempt-consumption",
+          "requirement": "For each participating subsequent governed reasoning task, discover by task and consume the exact authorized current Skill release before work under the existing proven-client transition rule. Bind actual effective instruction inclusion and distinct invocation to later independently observed results; retrieval alone does not prove use. Preserve stale/refused/revoked handling and the existing founding transition."
+        },
+        {
+          "id": "general-acceptance",
+          "requirement": "Prove the default lifecycle on distinct ordinary actual work episodes in more than one admitted domain, including independently verified useful change and next-attempt improvement, no-lesson and insufficient-evidence outcomes, interruption/recovery without duplicate effects, stale/refused authority and unchanged unrelated Skills. A one-off manually requested revision, migration, isolated fixture, synthetic correction, or source gate does not establish continuous learning. The existing FCIS-LEARN-01 six-stage evidence chain applies to each positive learning case."
+        }
+      ]
     }
   },
   "specificationClosure": {
@@ -5036,7 +5129,7 @@
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
     "httpContractVersion": "0.9.2",
     "apiBlobSha": "d4d4211deab39c89df13a7d099869bd1d3ef2582",
-    "stackBlobSha": "5708913cf90f46709f3f7ae1fadc9f82670da71b",
+    "stackBlobSha": "7506c4efe070f1e93bf1a236d5ba8df16125725c",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },

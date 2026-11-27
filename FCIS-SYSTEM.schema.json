@@ -572,7 +572,8 @@
             "evidence",
             "refusals",
             "completion",
-            "boundaries"
+            "boundaries",
+            "continuousBehavior"
           ],
           "properties": {
             "scenarioId": {
@@ -676,6 +677,30 @@
             "boundaries": {
               "type": "string",
               "minLength": 20
+            },
+            "continuousBehavior": {
+              "type": "array",
+              "minItems": 8,
+              "maxItems": 8,
+              "uniqueItems": true,
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "requirement"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9-]+$"
+                  },
+                  "requirement": {
+                    "type": "string",
+                    "minLength": 20
+                  }
+                }
+              }
             }
           }
         }
