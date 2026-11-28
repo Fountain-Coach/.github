@@ -40,10 +40,10 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "53cb6ae8c35d59b1ea8b0281739a2480598df272",
+      "ref": "f630239afd556338b3ff43582666863e7d586eb8",
       "path": "FCIS-STACK.md",
-      "blobSha": "7506c4efe070f1e93bf1a236d5ba8df16125725c",
-      "url": "https://github.com/Fountain-Coach/.github/blob/53cb6ae8c35d59b1ea8b0281739a2480598df272/FCIS-STACK.md"
+      "blobSha": "07265ddddf1c37578d337cc789c64b600c92c314",
+      "url": "https://github.com/Fountain-Coach/.github/blob/f630239afd556338b3ff43582666863e7d586eb8/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
@@ -5129,7 +5129,7 @@
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
     "httpContractVersion": "0.9.2",
     "apiBlobSha": "d4d4211deab39c89df13a7d099869bd1d3ef2582",
-    "stackBlobSha": "7506c4efe070f1e93bf1a236d5ba8df16125725c",
+    "stackBlobSha": "07265ddddf1c37578d337cc789c64b600c92c314",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },

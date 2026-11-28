@@ -1,3 +1,18 @@
+## 28 November 2026 — single FCIS bridge (owner-confirmed; supersedes CLI-first proposal)
+
+Retain the existing FCIS Execution ChatGPT registration and its identity; integrate the existing owner Skill discovery/read capability into the same bridge, using the established passkey-backed OAuth issuer and an explicitly approved finite owner grant profile. No new plugin, issuer, signer, registry or Store. Keep actual resource, scope, client, revocation, Host admission and operation checks; authentication is not automatic universal privilege. Existing native readback remains diagnostics/recovery, not a substitute for the owner's session. The source-only candidate PR #302 does not prove the required owner flow. Do not activate it as the ordinary authorization solution.
+
+Observed plugin administration returned not_installed for owner-confirmed removal of FCIS Reasoning Adapter and FCIS-GO. Retain FCIS Skill Access until actual replacement through FCIS Execution is proven here, then remove that exact registration as approved. Personal custom catalogue completeness and the retained registration's current settings remain unverified. No private Skills or releases are deleted. No new provider installation.
+
+Acceptance: one real passkey-backed authorization relationship from the retained registration, actual current Store-backed Skill and admitted instrument discovery, exact release retrieval, separately authorized invocation with independent receipt, denial/revocation/recovery, then retirement of the redundant FCIS connection. First real work is Setzerkunst: the engraving repertoire and source-preserving Midsummer proof, with craft-gap ledger retained in private Fountain Press commit 0f8e2068449026640772d9db4afae39c73252ba6. Do not confuse connection success with task acceptance or expand the critical path beyond it.
+
+- Chapters read: 07 goal fidelity and replacement before deletion; 08 independent artifact-specific evidence; 91 admitted instrument plane; 161 explicit finite resource-bound grants and revocation; 160 owned instruction continuity.
+- Forbidden: implicit grant escalation, new plugin, external consent bypass, Git as owned inventory, CLI as substitute for login, deleting private knowledge during retirement.
+- Conflicts: none; one plugin may mediate multiple existing resource scopes without collapsing their authority checks. Exact protocol adaptation remains to be specified and tested.
+- Excluded: actual new grants, live activation, personal catalogue mutation beyond confirmed removals, and unreviewed public disclosure.
+
+Source consistency correction: PR #161's existing stack prose change invalidated FCIS-SYSTEM.json's immutable stack source binding. Re-pin the exact already committed stack blob from f630239afd556338b3ff43582666863e7d586eb8; do not change HTTP contract version or claim a CI pass until independently observed.
+
 ## FCIS-SKILL-ACCESS-05 — bounded public-client DCR interoperability (26 November 2026)
 
 Chapters read: 07 bounded phase before implementation, 08 observed/inferred and independent Store witnesses, 161 registration is not consent; existing owner-approved Skill sovereignty order in AGENTS.md. Contract authority FCIS-OPENAPI 0.8.1; live a769eaf native runtime, Store sequence 92. Actual ChatGPT Safari screenshots show discovered DCR, exact resource and scope, but creation absent in personal/workspace catalogues and no owner consent. Native disposable fixture against all 252 deployed source blobs reproduced 400 for standard public-client metadata token_endpoint_auth_method=none, grant_types=[authorization_code,refresh_token], response_types=[code], individually and combined; minimal request 201. Actual provider rejection cause not established; no request log retained.
