@@ -40,17 +40,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "152641f776506178c908675a8c2488e963ae3693",
+      "ref": "cb1359728cbd5c0e6346ea9c6297261a538e3bff",
       "path": "FCIS-STACK.md",
-      "blobSha": "ed35f4d15fe37177c51900fba5620af98d20fdb2",
-      "url": "https://github.com/Fountain-Coach/.github/blob/152641f776506178c908675a8c2488e963ae3693/FCIS-STACK.md"
+      "blobSha": "568370570a91c33e64dc9d0290603968034bd817",
+      "url": "https://github.com/Fountain-Coach/.github/blob/cb1359728cbd5c0e6346ea9c6297261a538e3bff/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "152641f776506178c908675a8c2488e963ae3693",
+      "ref": "cb1359728cbd5c0e6346ea9c6297261a538e3bff",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "130c1ba9eb8a96214bcbe35ecae1a3e30cdf5f93",
-      "url": "https://github.com/Fountain-Coach/.github/blob/152641f776506178c908675a8c2488e963ae3693/FCIS-OPENAPI.json"
+      "blobSha": "f1e429f22b18f26d2d0002cdbc39160285fffa1f",
+      "url": "https://github.com/Fountain-Coach/.github/blob/cb1359728cbd5c0e6346ea9c6297261a538e3bff/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.10.0",
+      "version": "0.10.2",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -1693,7 +1693,8 @@
         "RuntimeDeploymentActivateInput",
         "RuntimeDeploymentState",
         "RuntimeDeploymentEvidence",
-        "RuntimeDeploymentReceipt"
+        "RuntimeDeploymentReceipt",
+        "FCISConnectionRefusal"
       ],
       "securitySchemes": [
         "ownerPasskeySession",
@@ -2401,9 +2402,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 413,
+      "expectedRequirementCount": 429,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 413,
+      "minimumAtomicRequirementCount": 429,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -2413,6 +2414,8 @@
         "mcp-transport",
         "connection-discovery",
         "owner-admin",
+        "connection-result",
+        "connection-refusal",
         "host-wire",
         "host-receipt",
         "store-wire",
@@ -5282,6 +5285,118 @@
         "sourcePointer": "/authorityAndIdentity/runtimeDeployment/acceptance",
         "proofClass": "runtime-deployment",
         "name": "runtime-deployment: acceptance"
+      },
+      {
+        "id": "CONNECTION-RESULT-SCENARIOID",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/scenarioId",
+        "proofClass": "connection-result",
+        "name": "connection-result: scenarioId"
+      },
+      {
+        "id": "CONNECTION-RESULT-SCHEMA",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/schema",
+        "proofClass": "connection-result",
+        "name": "connection-result: schema"
+      },
+      {
+        "id": "CONNECTION-RESULT-TRANSPORT",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/transport",
+        "proofClass": "connection-result",
+        "name": "connection-result: transport"
+      },
+      {
+        "id": "CONNECTION-RESULT-CODES",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes",
+        "proofClass": "connection-result",
+        "name": "connection-result: codes"
+      },
+      {
+        "id": "CONNECTION-RESULT-AUTHORITY",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/authority",
+        "proofClass": "connection-result",
+        "name": "connection-result: authority"
+      },
+      {
+        "id": "CONNECTION-RESULT-PROTOCOLBOUNDARY",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/protocolBoundary",
+        "proofClass": "connection-result",
+        "name": "connection-result: protocolBoundary"
+      },
+      {
+        "id": "CONNECTION-RESULT-COMPATIBILITY",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/compatibility",
+        "proofClass": "connection-result",
+        "name": "connection-result: compatibility"
+      },
+      {
+        "id": "CONNECTION-RESULT-ACCEPTANCE",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/acceptance",
+        "proofClass": "connection-result",
+        "name": "connection-result: acceptance"
+      },
+      {
+        "id": "CONNECTION-REFUSAL-CAPABILITY-REFUSED",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes/capability_refused",
+        "proofClass": "connection-refusal",
+        "name": "connection-refusal: capability_refused"
+      },
+      {
+        "id": "CONNECTION-REFUSAL-SKILL-REVISION-CONFLICT",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes/skill_revision_conflict",
+        "proofClass": "connection-refusal",
+        "name": "connection-refusal: skill_revision_conflict"
+      },
+      {
+        "id": "CONNECTION-REFUSAL-SKILL-UNAVAILABLE",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes/skill_unavailable",
+        "proofClass": "connection-refusal",
+        "name": "connection-refusal: skill_unavailable"
+      },
+      {
+        "id": "CONNECTION-REFUSAL-CAPABILITY-NOT-ADMITTED",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes/capability_not_admitted",
+        "proofClass": "connection-refusal",
+        "name": "connection-refusal: capability_not_admitted"
+      },
+      {
+        "id": "CONNECTION-REFUSAL-ADMIN-POLICY-CONFLICT",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes/admin_policy_conflict",
+        "proofClass": "connection-refusal",
+        "name": "connection-refusal: admin_policy_conflict"
+      },
+      {
+        "id": "CONNECTION-REFUSAL-ADMIN-IDEMPOTENCY-CONFLICT",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes/admin_idempotency_conflict",
+        "proofClass": "connection-refusal",
+        "name": "connection-refusal: admin_idempotency_conflict"
+      },
+      {
+        "id": "CONNECTION-REFUSAL-ADMIN-REQUEST-NOT-FOUND",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes/admin_request_not_found",
+        "proofClass": "connection-refusal",
+        "name": "connection-refusal: admin_request_not_found"
+      },
+      {
+        "id": "CONNECTION-REFUSAL-ADMIN-REQUEST-CAPACITY",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes/admin_request_capacity",
+        "proofClass": "connection-refusal",
+        "name": "connection-refusal: admin_request_capacity"
       }
     ]
   },
@@ -5346,7 +5461,7 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 413,
+    "atomicRequirementCount": 429,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
@@ -5356,6 +5471,8 @@
       "mcp-transport": 4,
       "connection-discovery": 6,
       "owner-admin": 15,
+      "connection-result": 8,
+      "connection-refusal": 8,
       "host-wire": 13,
       "host-receipt": 10,
       "store-wire": 6,
@@ -6012,6 +6129,49 @@
               "owner.admin.request": "OwnerAdminRequestState",
               "owner.admin.status": "OwnerAdminRequestState"
             }
+          },
+          "refusalResult": {
+            "scenarioId": "FCIS-CONNECTION-RESULT-01",
+            "schema": "#/components/schemas/FCISConnectionRefusal",
+            "transport": "HTTP 200 JSON-RPC result with isError false and structuredContent matching FCISConnectionRefusal; modern transport retains resultType complete. This is a normal negative domain outcome, not operation success.",
+            "codes": {
+              "capability_refused": {
+                "message": "This connection does not currently authorize the requested capability.",
+                "nextAction": "inspect_connection_policy"
+              },
+              "skill_revision_conflict": {
+                "message": "The selected Skill release or inventory revision is no longer current. No source was delivered.",
+                "nextAction": "refresh_skill_inventory"
+              },
+              "skill_unavailable": {
+                "message": "The requested active Skill is not available. No source was delivered.",
+                "nextAction": "refresh_skill_inventory"
+              },
+              "capability_not_admitted": {
+                "message": "The requested capability is not admitted for this connection. A permission grant alone cannot make it callable.",
+                "nextAction": "inspect_capability_admission"
+              },
+              "admin_policy_conflict": {
+                "message": "The connection policy has changed or the proposed policy is already current.",
+                "nextAction": "inspect_connection_policy"
+              },
+              "admin_idempotency_conflict": {
+                "message": "This request identity is already bound to different proposal data.",
+                "nextAction": "inspect_existing_request"
+              },
+              "admin_request_not_found": {
+                "message": "The requested proposal is not available to this connection.",
+                "nextAction": "inspect_connection_policy"
+              },
+              "admin_request_capacity": {
+                "message": "The connection has reached its pending or recent proposal limit.",
+                "nextAction": "wait_and_review_pending_requests"
+              }
+            },
+            "authority": "Only an authenticated, resource-bound current connection and well-formed admitted message vocabulary can receive a normal refusal. Existing protected-operation authorization and disclosure checks are unchanged. Recheck the base connection before projecting a capability denial. Never disclose private content, grant rights, or report a terminal execution receipt in a refusal.",
+            "protocolBoundary": "Malformed requests, unknown kinds, unexpected fields, direct tool names, invalid origin, invalid or expired or revoked bearer, and transport errors retain existing error semantics. Unclassified internal or uncertain-effect failures are not converted to a known no-effect outcome; inspect durable evidence before retry.",
+            "compatibility": "Successful result shapes, native HTTP and legacy Skill OAuth handlers, external input descriptor, sole fcis.connect tool and scope remain unchanged. A refused result reports no protected output or execution success; audit evidence may exist. No mandatory reconnect or new OAuth ceremony for a valid domain refusal.",
+            "acceptance": "Reproduce valid stale selection, missing permission and bounded admin refusal with exact reason/next action; no unintended Store effect or private disclosure; same bearer subsequently completes a permitted operation; revoked bearer and malformed messages still fail closed. Live client acceptance separate from source and test evidence."
           }
         }
       }
@@ -6330,9 +6490,9 @@
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.10.0",
-    "apiBlobSha": "130c1ba9eb8a96214bcbe35ecae1a3e30cdf5f93",
-    "stackBlobSha": "ed35f4d15fe37177c51900fba5620af98d20fdb2",
+    "httpContractVersion": "0.10.2",
+    "apiBlobSha": "f1e429f22b18f26d2d0002cdbc39160285fffa1f",
+    "stackBlobSha": "568370570a91c33e64dc9d0290603968034bd817",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },

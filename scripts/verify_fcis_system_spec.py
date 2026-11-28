@@ -192,6 +192,8 @@ def expected_atomic(system: dict) -> dict[str, dict[str, str]]:
           lambda x, i: _slug(x), lambda x, i: f"MCP method {x}", "mcp-transport")
     fields("MCP-PROFILE-", "/capabilitySystem/mcp/connectionDiscovery", "connection-discovery")
     fields("OWNER-ADMIN-", "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin", "owner-admin")
+    fields("CONNECTION-RESULT-", "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult", "connection-result")
+    fields("CONNECTION-REFUSAL-", "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes", "connection-refusal")
     array("HOST-CONTROL-", "/capabilitySystem/hostTransport/control/required",
           lambda x, i: _slug(x), lambda x, i: f"Host signed request field {x}", "host-wire")
     array("HOST-RECEIPT-", "/capabilitySystem/hostTransport/receipts/required",
@@ -488,6 +490,26 @@ def check_connection_discovery(system: dict, api: dict) -> None:
             or set(message["inputSchema"]["properties"]["kind"]["enum"]) != set(message["fieldsByKind"])
             or discovery["otherDefinitions"] != "never externally exposed on /mcp"):
         reject("FCIS single callable connection boundary drift")
+    refusal = message["refusalResult"]
+    schema = api["components"]["schemas"]["FCISConnectionRefusal"]
+    codes = refusal["codes"]
+    expected = {"capability_refused", "skill_revision_conflict", "skill_unavailable",
+                "capability_not_admitted", "admin_policy_conflict", "admin_idempotency_conflict",
+                "admin_request_not_found", "admin_request_capacity"}
+    if (refusal["scenarioId"] != "FCIS-CONNECTION-RESULT-01"
+            or refusal["schema"] != "#/components/schemas/FCISConnectionRefusal"
+            or set(codes) != expected or schema["additionalProperties"] is not False
+            or set(schema["required"]) != {"outcome", "code", "message", "nextAction"}
+            or schema["properties"]["outcome"]["const"] != "refused"
+            or set(schema["properties"]["code"]["enum"]) != expected
+            or set(schema["properties"]["nextAction"]["enum"]) != {v["nextAction"] for v in codes.values()}
+            or any(set(v) != {"message", "nextAction"} or not v["message"] or len(v["message"]) > 256 for v in codes.values())
+            or "HTTP 200" not in refusal["transport"]
+            or "revoked bearer" not in refusal["protocolBoundary"]
+            or "uncertain-effect" not in refusal["protocolBoundary"]
+            or "Recheck the base connection" not in refusal["authority"]
+            or "input descriptor" not in refusal["compatibility"]):
+        reject("FCIS connection refusal contract drift")
     migration = profile["legacyScopeTransition"]
     if (migration["requestedPair"] != ["host.describe", "workstation.go.verify"]
             or migration["onlyWhenNoLongerGrantable"] is not True or migration["resource"] != "/mcp"
