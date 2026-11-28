@@ -40,17 +40,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "1264825848d9eaac61be0cba122be12b0845e009",
+      "ref": "d3e2fbb704ea201c014ffe84890a2eaf037b4bc1",
       "path": "FCIS-STACK.md",
-      "blobSha": "764446c2ba8e12530ba60783b17bf60d5a28d7ae",
-      "url": "https://github.com/Fountain-Coach/.github/blob/1264825848d9eaac61be0cba122be12b0845e009/FCIS-STACK.md"
+      "blobSha": "5426726bf4b139ba5a20eec3ea59e5426f5bc3c6",
+      "url": "https://github.com/Fountain-Coach/.github/blob/d3e2fbb704ea201c014ffe84890a2eaf037b4bc1/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "1264825848d9eaac61be0cba122be12b0845e009",
+      "ref": "a7e563f7d0e2c1ad4776e7ea412f28e3dc069fbf",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "8bc0190f7716ccca25f34a3b736eb154f7ae8cf9",
-      "url": "https://github.com/Fountain-Coach/.github/blob/1264825848d9eaac61be0cba122be12b0845e009/FCIS-OPENAPI.json"
+      "blobSha": "8e7205486db4d548ba3c2e9ac34cf847959676fd",
+      "url": "https://github.com/Fountain-Coach/.github/blob/a7e563f7d0e2c1ad4776e7ea412f28e3dc069fbf/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.9.7",
+      "version": "0.9.10",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -726,6 +726,19 @@
           ],
           "status": "specified",
           "sourcePointer": "/paths/~1oauth~1owner~1grants/get"
+        },
+        {
+          "id": "decideOwnerConnectionPolicy",
+          "method": "POST",
+          "path": "/oauth/owner/grants",
+          "summary": "Set the current FCIS-managed capability policy of one connection",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1grants/post"
         },
         {
           "id": "revokeOwnerGrant",
@@ -1440,6 +1453,28 @@
           ],
           "status": "specified",
           "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1voices~1admissions/post"
+        },
+        {
+          "id": "evaluateAuthZENAccess",
+          "method": "POST",
+          "path": "/access/v1/evaluation",
+          "summary": "Evaluate one access request through the AuthZEN PDP",
+          "security": [
+            {
+              "oauthBearer": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1access~1v1~1evaluation/post"
+        },
+        {
+          "id": "readAuthZENMetadata",
+          "method": "GET",
+          "path": "/.well-known/authzen-configuration",
+          "summary": "Discover the AuthZEN PDP evaluation endpoint",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1.well-known~1authzen-configuration/get"
         }
       ],
       "schemas": [
@@ -1537,7 +1572,13 @@
         "OwnerVoiceContribution",
         "OwnerVoiceComposition",
         "OwnerVoiceArrangementCreate",
-        "OwnerVoiceAdmissionDecision"
+        "OwnerVoiceAdmissionDecision",
+        "AuthZENSubject",
+        "AuthZENResource",
+        "AuthZENAction",
+        "AuthZENEvaluationRequest",
+        "AuthZENDecision",
+        "AuthZENMetadata"
       ],
       "securitySchemes": [
         "ownerPasskeySession",
@@ -1846,7 +1887,8 @@
         "expiry",
         "replay and counter rollback"
       ],
-      "privateAuthenticatorKeys": "never export or transfer"
+      "privateAuthenticatorKeys": "never export or transfer",
+      "normativeBaseline": "https://www.w3.org/TR/2021/REC-webauthn-2-20210408/"
     },
     "oauth": {
       "protocol": [
@@ -1854,7 +1896,10 @@
         "RFC 8414",
         "RFC 8707",
         "RFC 9728",
-        "authorization code PKCE S256"
+        "authorization code PKCE S256",
+        "RFC 6749",
+        "RFC 7636",
+        "RFC 7591"
       ],
       "preserve": [
         "clients",
@@ -1905,6 +1950,59 @@
         "refused",
         "unverified"
       ]
+    },
+    "authorizationDecision": {
+      "status": "specified-only-not-deployed",
+      "normativeSource": "https://openid.net/specs/authorization-api-1_0-final.html",
+      "edition": "1.0 Final, January 2026",
+      "sections": [
+        "5",
+        "6",
+        "9",
+        "10",
+        "11"
+      ],
+      "pep": "FCIS Bridge and native protected-operation adapters",
+      "pdp": "existing Go authorization engine backed by FountainStore",
+      "supportedTarget": [
+        "access_evaluation_endpoint",
+        "policy_decision_point_metadata"
+      ],
+      "notAdvertised": [
+        "access_evaluations_endpoint",
+        "search_subject_endpoint",
+        "search_resource_endpoint",
+        "search_action_endpoint",
+        "signed_metadata",
+        "capabilities"
+      ],
+      "ownerAdministration": "decideOwnerConnectionPolicy; FCIS-specific, not AuthZEN",
+      "payment": "existing separately admitted Payment Instrument; verified entitlement only",
+      "policyModel": "NIST SP 800-162 updated 2019-08-02",
+      "rightsModel": "W3C ODRL 2.2 Recommendations 2018-02-15; commercial evaluation separately implemented",
+      "externalConnectionScope": "fcis.connect",
+      "defaultCapabilities": [],
+      "requireCurrentPolicy": true,
+      "unknownFields": "ignore",
+      "denyStatus": 200,
+      "decisionEvidence": "redacted correlation and current policy revision; effect receipt separate",
+      "noConformanceClaim": true,
+      "pepOAuth": {
+        "resource": "configured HTTPS origin + /access/v1/evaluation",
+        "scope": "authzen.evaluate",
+        "ownerConsent": true,
+        "externalBridgeScope": false,
+        "authority": "current same-owner connection policy evaluation only, never execution or disclosure"
+      },
+      "connectionEvaluationProfile": {
+        "subjectType": "fcis.oauth-connection",
+        "subjectID": "authorization event ID",
+        "resourceType": "fcis.bridge",
+        "resourceID": "exact /mcp audience",
+        "action": "admitted internal operation scope",
+        "callerProperties": "ignored for authority",
+        "tokenAuthentication": "PEP responsibility; native path checks actual bearer; no raw subject token in payload"
+      }
     }
   },
   "persistence": {
@@ -2040,9 +2138,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 326,
+      "expectedRequirementCount": 351,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 326,
+      "minimumAtomicRequirementCount": 351,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -2059,6 +2157,7 @@
         "generation",
         "skill-distribution",
         "owner-policy",
+        "authorization-decision",
         "bootstrap",
         "learning-stage",
         "learning-evidence",
@@ -2102,9 +2201,9 @@
       }
     },
     "inputContractDigests": {
-      "fcisOpenAPI": "0.9.7",
-      "fcisOpenAPIBlob": "8bc0190f7716ccca25f34a3b736eb154f7ae8cf9",
-      "architectureBlob": "5708913cf90f46709f3f7ae1fadc9f82670da71b",
+      "fcisOpenAPI": "0.9.10",
+      "fcisOpenAPIBlob": "8e7205486db4d548ba3c2e9ac34cf847959676fd",
+      "architectureBlob": "5426726bf4b139ba5a20eec3ea59e5426f5bc3c6",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
     "requirementCatalog": [
@@ -4307,6 +4406,181 @@
         "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/continuousBehavior/7",
         "proofClass": "learning-cycle",
         "name": "learning-cycle: general-acceptance"
+      },
+      {
+        "id": "HTTP-decideOwnerConnectionPolicy",
+        "name": "/oauth/owner/grants POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1grants/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-evaluateAuthZENAccess",
+        "name": "/access/v1/evaluation POST",
+        "mandatory": true,
+        "pointer": "/paths/~1access~1v1~1evaluation/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readAuthZENMetadata",
+        "name": "/.well-known/authzen-configuration GET",
+        "mandatory": true,
+        "pointer": "/paths/~1.well-known~1authzen-configuration/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "OWNER-POLICY-AUTHORIZATIONSTANDARDS",
+        "mandatory": true,
+        "sourcePointer": "/ownerAndTenancy/authorizationStandards",
+        "proofClass": "owner-policy",
+        "name": "owner-policy: authorizationStandards"
+      },
+      {
+        "id": "AUTHZEN-STATUS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/status",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: status"
+      },
+      {
+        "id": "AUTHZEN-NORMATIVESOURCE",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/normativeSource",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: normativeSource"
+      },
+      {
+        "id": "AUTHZEN-EDITION",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/edition",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: edition"
+      },
+      {
+        "id": "AUTHZEN-SECTIONS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/sections",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: sections"
+      },
+      {
+        "id": "AUTHZEN-PEP",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/pep",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: pep"
+      },
+      {
+        "id": "AUTHZEN-PDP",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/pdp",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: pdp"
+      },
+      {
+        "id": "AUTHZEN-SUPPORTEDTARGET",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/supportedTarget",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: supportedTarget"
+      },
+      {
+        "id": "AUTHZEN-NOTADVERTISED",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/notAdvertised",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: notAdvertised"
+      },
+      {
+        "id": "AUTHZEN-OWNERADMINISTRATION",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/ownerAdministration",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: ownerAdministration"
+      },
+      {
+        "id": "AUTHZEN-PAYMENT",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/payment",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: payment"
+      },
+      {
+        "id": "AUTHZEN-POLICYMODEL",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/policyModel",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: policyModel"
+      },
+      {
+        "id": "AUTHZEN-RIGHTSMODEL",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/rightsModel",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: rightsModel"
+      },
+      {
+        "id": "AUTHZEN-EXTERNALCONNECTIONSCOPE",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/externalConnectionScope",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: externalConnectionScope"
+      },
+      {
+        "id": "AUTHZEN-DEFAULTCAPABILITIES",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/defaultCapabilities",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: defaultCapabilities"
+      },
+      {
+        "id": "AUTHZEN-REQUIRECURRENTPOLICY",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/requireCurrentPolicy",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: requireCurrentPolicy"
+      },
+      {
+        "id": "AUTHZEN-UNKNOWNFIELDS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/unknownFields",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: unknownFields"
+      },
+      {
+        "id": "AUTHZEN-DENYSTATUS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/denyStatus",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: denyStatus"
+      },
+      {
+        "id": "AUTHZEN-DECISIONEVIDENCE",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/decisionEvidence",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: decisionEvidence"
+      },
+      {
+        "id": "AUTHZEN-NOCONFORMANCECLAIM",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/noConformanceClaim",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: noConformanceClaim"
+      },
+      {
+        "id": "AUTHZEN-PEPOAUTH",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/pepOAuth",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: pepOAuth"
+      },
+      {
+        "id": "AUTHZEN-CONNECTIONEVALUATIONPROFILE",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/connectionEvaluationProfile",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: connectionEvaluationProfile"
       }
     ]
   },
@@ -4330,7 +4604,8 @@
       "FCIS-LEARN-01: actual scenario-evidence review and distinct supported reasoning invocation consuming exact active revised private Skill; independent two-attempt improvement and all refusal predicates per skillAndScenarioSystem.learningAcceptance.",
       "FCIS-CHAT-01: actual private owner history, restart, cross-provider continuity, exact authorized context, verified included subscription and no-extra-charge refusal before dispatch, actual response/receipt, export, deletion/tombstone and physical owner UX; unsupported native transport remains unavailable. FCIS-POLYPHONY-01 interactive subcase independently verifies discovery and addressing of first-class personified voice instruments, real admitted instrument execution and recoverable attributed discourse/evidence without mandatory native inference or separate provider threads.",
       "FCIS-CHAT-01 situated Reframe reference subcase: actual domain selection, confirmed Grounding, derived Situation, reviewed digest-bound current context, independently witnessed reasoning consumption and results, refusal for stale/foreign/unconfirmed inputs, and unaffected unscoped/deterministic operation.",
-      "FCIS-LEARN-01 continuous behavior: ordinary work closure initiates assessment without a maintenance request; independently verify general-acceptance across distinct admitted domains, actual useful and no-lesson outcomes, recovery, refusal, and subsequent consumption under existing authority."
+      "FCIS-LEARN-01 continuous behavior: ordinary work closure initiates assessment without a maintenance request; independently verify general-acceptance across distinct admitted domains, actual useful and no-lesson outcomes, recovery, refusal, and subsequent consumption under existing authority.",
+      "AuthZEN single-evaluation HTTPS and metadata interoperability; positive and negative current Store-backed decision, separate PEP authentication, deny 200 false, malformed 400, unauthorized 401/403, PDP failure 500, unknown fields, request ID echo, no unsupported metadata, same-token policy change and exact Skill/Host terminal receipt; no commercial rights conformance or live payment claim."
     ],
     "production": [
       "fresh-install may be deployed independently on any supported Linux host; optional current Hetzner migration is a distinct deployment profile",
@@ -4344,7 +4619,7 @@
   },
   "knownSpecificationLimitations": [],
   "coverageBaseline": {
-    "fcisHTTP": 67,
+    "fcisHTTP": 70,
     "fountainStoreHTTP": 24,
     "secretStoreHTTP": 4,
     "frontendFiles": 8,
@@ -4366,7 +4641,7 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 326,
+    "atomicRequirementCount": 351,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
@@ -4382,7 +4657,8 @@
       "adoption": 10,
       "generation": 8,
       "skill-distribution": 12,
-      "owner-policy": 10,
+      "owner-policy": 11,
+      "authorization-decision": 21,
       "bootstrap": 10,
       "learning-stage": 6,
       "learning-evidence": 5,
@@ -4745,7 +5021,13 @@
     "learningRights": "source Skill licensing unchanged; tenant-authored scenario evidence, extensions and new Skills belong to the author/tenant unless an explicit license transfers rights; no silent transfer of customer IP to FCIS operator",
     "portability": "versioned encrypted tenant Store snapshot and Skill/scenario provenance can be exported via owner-authenticated operation; import validates schema and rights; export never includes third-party credentials or raw keys",
     "sharing": "Tenant explicitly approves signed offers for exact admitted revisions with rights, terms and price; private source stays private, approved metadata only is listed; client delivery requires current resource consent and exact entitlement. Git and providers optional.",
-    "billing": "Optional phase-two payment instrument; customer acquisition/entitlement must reconcile exact verified terminal receipts for paid offers; startup and core usage never require Stripe."
+    "billing": "Optional phase-two payment instrument; customer acquisition/entitlement must reconcile exact verified terminal receipts for paid offers; startup and core usage never require Stripe.",
+    "authorizationStandards": {
+      "decision": "OpenID AuthZEN Authorization API 1.0 Final 2026-01-11",
+      "access": "NIST SP 800-162 update 2019-08-02",
+      "rights": "W3C ODRL 2.2 Recommendations 2018-02-15",
+      "payment": "Separate specified Payment Instrument; settlement is not authorization"
+    }
   },
   "capabilitySystem": {
     "registry": {
@@ -4909,15 +5191,15 @@
       "decision": "FountainStore canonical private custody; FCIS API primary distribution authority; GitHub/ChatGPT optional explicitly approved adapters. Existing FCIS-GO public projection unchanged.",
       "ownerProfile": "Version 2 signed Skill admission is only current single owner/default tenant; admin operations derive actor/tenant from authorized session, no caller-selected tenant. Reject unavailable additional tenant admission/signing; commercial customer flow requires separately admitted customer principal and grant, not owner session impersonation. Current version-2 CLI admission is retained and does not require a pre-existing browser draft; the new browser admission must verify the referenced reviewed draft. Existing admitted private v2 releases are readable without manufactured draft history.",
       "security": "Owner writes require exact same-origin session, specific X-Fountain-Owner-Intent and explicit confirmation; signed admission and offer use existing trusted owner signer, exact immutable bytes. No new signer, public write route, bearer fallback or arbitrary tenant ID. Reject unknown fields, duplicate keys, wrong signatures and oversized decoded inputs.",
-      "clientResource": "The existing issuer uses OAuth authorization code PKCE S256, explicit client/resource/scope consent, and durable revocable grants. The compatibility resource {issuerOrigin}/oauth/skills keeps exact independent skills.owned.read (owner) or skills.read or skills.acquire (commercial) scopes; no token for /mcp may be replayed there. Commercial operations remain separate and derive the customer identity server-side; no owner grant becomes a customer licence. The single external owner bridge is {issuerOrigin}/mcp: explicit skills.owned.read consent for the current owner’s active library including future active revisions may coexist with independently approved, actually admitted instrument scopes on the same /mcp grant. No wildcard, automatic widening, commercial scope, cross-audience token exchange or owner-cookie forwarding. Skill reads require skills.owned.read and owner/tenant/client binding; Host operations require their own effective scope and admission. Inspect and revoke through existing management; revalidate on every protected call and refresh, including active pointer, exact signature and independent redacted durable receipt before source delivery; no drafts or history. Existing grants and the Skill-only compatibility resource remain valid until proven replacement and deliberate retirement. Actual client verification and use remain separate. For the existing /mcp bridge, sanitized generic Skill Access tool schemas are reviewable by a valid current /mcp participant with at least one effective admitted scope, before granting the specific Skill scope. This is definition discovery only: no private Skill identity, source, release, receipt, grant, or actual callable authority. Anonymous, invalid, wrong-audience, expired or revoked discovery remains refused. Calling a known Skill tool without its required scope returns an exact resource-bound insufficient_scope authentication challenge; any new permission requires explicit consent. Keep /oauth/skills discovery and all data/dispatch checks unchanged. External definitions must honestly disclose operation effects, closed typed input schemas and required OAuth scopes; no generic arbitrary-operation executor or concealed review bypass. Internal implementations may evolve behind the same reviewed contract; genuinely new or materially changed external operations use the provider's supported metadata update/review process. FCIS marketplace acquisition, payment and licence administration stay outside the ChatGPT bridge; later eligible licensed consumption is separate from owner rights and requires independent entitlement and consent. No automatic review approval, new grant, customer admission, purchase or public publication is established.",
+      "clientResource": "Connect — establish a resource-bound, explicitly owner-consented relationship. The single external /mcp OAuth scope is fcis.connect; it conveys connection authentication and permission to consult FCIS-managed grants, not ambient owner privilege. No capability is granted merely by connecting. A new connection starts with an empty capability policy. FCIS owner management changes the effective operation permissions on the current authorization family under verified owner session, same-origin intent, explicit confirmation, expected policy revision and durable receipt. Both discovery and every dispatch independently intersect that policy with current signed/admitted capability, owner, client, tenant, resource, target, operation and effect checks. Removing permission takes effect on the same token, including replay; adding an explicitly allowed operation does not require an OAuth scope or registration change. All exposed tool definitions remain typed, explicit and reviewable; no generic executor. The internal skill permission skills.owned.read retains signed active-source checks and durable delivery evidence, not an external scope of this bridge. New/materially changed exposed tool definitions may need provider review independently. Existing individual-scope /mcp grants and legacy /oauth/skills remain isolated compatibility during replacement, not the target design; do not broaden old tokens or retire recovery before independently proving the new connection. No commercial grant, payment, inference, automatic policy expansion or private data before authorization. Active owner library delivery includes future active revisions under explicit current internal rights; exact active pointer, source signature, audience, owner and tenant binding remain mandatory. Legacy Skill-only resource retains its exact independent scope and audience; no cross-resource token exchange.",
       "transactions": "Tenant+actor+operation+idempotencyKey binds canonical request digest. Identical replay returns original receipt/status; changed payload returns 409; re-evaluate current access before disclosing protected replay. Compare expected revisions; no duplicate mutations or charge. Atomic immutable revisions, active pointers, offer/entitlement states and receipts. No source bytes in telemetry; authenticated responses and refusals no-store. For draft create receipt.subjectId is the draftId; for admission it is releaseId; for offer release it is offerId; for review/withdraw/revoke it is the changed object's exact ID. recordRevision is that object's committed revision. A verified receipt remains independently readable via the corresponding protected resource, with audit references.",
       "commercial": "Phase two, not first release or P0 prerequisite. Price and terms immutable per offer; new price requires new signed offer. Zero-price offers require explicit terms acceptance; paid entitlement only after verified instrument terminal receipt exact amount, currency, customer, offer and acquisition. Provider checkout is hosted; no live charges authorized, no UI redirect proof. Refunds are separate approved instrument actions, entitlement changes only under accepted terms and reconciled receipts. Unlisted is non-enumerated metadata, not a confidentiality or access grant; customer may inspect an exact known offer before accepting terms. Restricted bespoke audience/recurring or metered plans require a later explicit contract; this version supports one-time exact-release licensing only.",
       "delivery": "Only exact authorized source bytes and license are delivered, never public projection by default. No guarantee of provider installation, DRM or deletion of previously delivered copies. A client adapter may consume delivered instructions only with customer consent and separately proven supported integration. Tenant-derived knowledge remains customer-owned.",
       "lifecycle": "Draft -> verified evidence where applicable -> reviewed -> signed admitted revision; separate signed offer releases/withdrawals govern distribution, not source visibility. Restore is a fresh signed admission; withdrawal and entitlement revocation do not delete immutable history.",
-      "httpContract": "FCIS-OPENAPI.json 0.8.0 defines owner management, explicitly consented active owner library reads, and separately licensed commercial distribution. Existing v1/v2 CLI signed custody remains compatible; added owner-client reads specified only. HTTP 0.8.1 adds the same-resource MCP projection of existing Skill Access read operations; no new grant or underlying operation. HTTP 0.9.3 adds the single owner bridge projection on the existing /mcp operation, preserving exact independent Skill/Host authorization and the old resource for compatibility. HTTP 0.9.7 specifies reviewable generic Skill definitions and a missing-scope challenge on the already authorized bridge, not pre-consent private data or calls.",
+      "httpContract": "FCIS-OPENAPI.json 0.8.0 defines owner management, explicitly consented active owner library reads, and separately licensed commercial distribution. Existing v1/v2 CLI signed custody remains compatible; added owner-client reads specified only. HTTP 0.8.1 adds the same-resource MCP projection of existing Skill Access read operations; no new grant or underlying operation. HTTP 0.9.9 specifies fcis.connect as the sole target /mcp connection permission and a distinct FCIS-owned, revocable capability policy; old scoped grants are compatibility only until live replacement.",
       "collections": "Existing native Store and its logical collections in persistence.skillCollections, one writer and verified readback. No new database, identity service, external marketplace or runtime prerequisite.",
       "phases": "Owner-private management first; commercial distribution and customer admission/payment priority two. No change to existing P0 owner-independence or first-install DoD.",
-      "ownerClientAcceptance": "FCIS-SKILL-ACCESS-02: prove explicit owner consent, current resource-bound owner grant, unnamed active inventory, exact signed current read, redacted durable delivery receipt, refusal on wrong scope/audience/identity, stale pointer, draft/history, revocation and refresh denial after restart. Actual fresh authorized client verification and consumption are independent; founding gate remains inactive until owner acceptance. No provider billing. The supported MCP client must discover the two projected operations under the exact Skill audience and scope, receive matching verified UTF-8 source, exact signed bytes and durable delivery receipt, and independently prove actual use and refusal. No provider or Host authority inferred. FCIS-OWNER-BRIDGE-01: on the retained client identity and /mcp audience, explicit owner consent for selected admitted instrument scopes plus skills.owned.read allows current active inventory, signed release read and one real permitted instrument result, with independent Store receipts. Prove skill-only and instrument-only isolation, ungranted, expired/revoked, wrong-audience, stale and commercial refusals. No retirement until fresh real client use of both and owner acceptance. Transparent review continuation: a valid Host-only /mcp grant discovers both sanitized generic Skill definitions without retrieving private data or mutating Store; missing scope challenges; explicit mixed consent remains necessary; wrong audience and revoked/expired tokens refuse. Legacy Skill endpoint unchanged. Provider review and actual client use remain independent."
+      "ownerClientAcceptance": "FCIS-SKILL-ACCESS-02: prove explicit owner consent, current resource-bound owner grant, unnamed active inventory, exact signed current read, redacted durable delivery receipt, refusal on wrong scope/audience/identity, stale pointer, draft/history, revocation and refresh denial after restart. Actual fresh authorized client verification and consumption are independent; founding gate remains inactive until owner acceptance. No provider billing. The supported MCP client must discover the two projected operations under the exact Skill audience and scope, receive matching verified UTF-8 source, exact signed bytes and durable delivery receipt, and independently prove actual use and refusal. No provider or Host authority inferred. FCIS-OWNER-BRIDGE-01: establish the exact connection using fcis.connect; no default operation grants. Owner policy changes use same-origin passkey authority, expected revision, explicit confirmation and durable receipt. The same bearer observes additions and withdrawals without reauthorization, with exact signed Skill retrieval and actual Host receipt. Prove isolation, revocation, expiry, stale selection, no hidden dispatch and legacy preservation before deliberate retirement."
     },
     "learningAcceptance": {
       "scenarioId": "FCIS-LEARN-01",
@@ -5127,9 +5409,9 @@
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.9.7",
-    "apiBlobSha": "8bc0190f7716ccca25f34a3b736eb154f7ae8cf9",
-    "stackBlobSha": "764446c2ba8e12530ba60783b17bf60d5a28d7ae",
+    "httpContractVersion": "0.9.10",
+    "apiBlobSha": "8e7205486db4d548ba3c2e9ac34cf847959676fd",
+    "stackBlobSha": "5426726bf4b139ba5a20eec3ea59e5426f5bc3c6",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },

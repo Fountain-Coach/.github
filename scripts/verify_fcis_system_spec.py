@@ -206,6 +206,7 @@ def expected_atomic(system: dict) -> dict[str, dict[str, str]]:
           two, lambda x, i: f"Generated deliverable {x}", "generation")
     fields("SKILL-DISTRIBUTION-", "/skillAndScenarioSystem/distribution", "skill-distribution")
     fields("OWNER-POLICY-", "/ownerAndTenancy", "owner-policy")
+    fields("AUTHZEN-", "/authorityAndIdentity/authorizationDecision", "authorization-decision")
     fields("BOOTSTRAP-", "/initialization/setupTicket", "bootstrap")
     for field, stem, cls in (
         ("stages", "LEARN-STAGE-", "learning-stage"),
@@ -424,7 +425,46 @@ def check_situated_context(system: dict, api: dict) -> None:
             or not any("situated Reframe" in x for x in system["acceptance"]["postGenerationTesting"])):
         reject("situated scope or acceptance drift")
 
+def check_authzen(system: dict, api: dict) -> None:
+    profile = api["x-fcis-authzen"]
+    if profile != system["authorityAndIdentity"]["authorizationDecision"]:
+        reject("AuthZEN profile drift")
+    if (profile["normativeSource"] != "https://openid.net/specs/authorization-api-1_0-final.html"
+            or profile["externalConnectionScope"] != "fcis.connect"
+            or profile["defaultCapabilities"] != [] or profile["denyStatus"] != 200
+            or not profile["requireCurrentPolicy"] or not profile["noConformanceClaim"]
+            or profile["status"] != "specified-only-not-deployed"
+            or profile["unknownFields"] != "ignore"):
+        reject("AuthZEN authority or acceptance drift")
+    pep = profile.get("pepOAuth", {})
+    if (pep.get("scope") != "authzen.evaluate" or pep.get("externalBridgeScope") is not False
+            or pep.get("ownerConsent") is not True):
+        reject("AuthZEN separate PEP authorization drift")
+    op = api["paths"]["/access/v1/evaluation"]["post"]
+    if not op["security"] or set(op["responses"]) != {"200", "400", "401", "403", "500"}:
+        reject("AuthZEN protected evaluation or status drift")
+    if op["requestBody"]["content"]["application/json"]["schema"] != {"$ref": "#/components/schemas/AuthZENEvaluationRequest"}:
+        reject("AuthZEN request wire drift")
+    schemas = api["components"]["schemas"]
+    for name, keys in {
+        "AuthZENSubject": {"type", "id"}, "AuthZENResource": {"type", "id"},
+        "AuthZENAction": {"name"}, "AuthZENEvaluationRequest": {"subject", "resource", "action"},
+        "AuthZENDecision": {"decision"}, "AuthZENMetadata": {"policy_decision_point", "access_evaluation_endpoint"},
+    }.items():
+        if set(schemas[name]["required"]) != keys or schemas[name]["additionalProperties"] is not True:
+            reject("AuthZEN required/extension wire drift: " + name)
+    if schemas["AuthZENDecision"]["properties"]["decision"] != {"type": "boolean"}:
+        reject("AuthZEN decision must be boolean")
+    meta = api["paths"]["/.well-known/authzen-configuration"]["get"]
+    if meta["security"] != [] or set(schemas["AuthZENMetadata"]["properties"]) != set(schemas["AuthZENMetadata"]["required"]):
+        reject("AuthZEN metadata exposure drift")
+    for name in profile["notAdvertised"]:
+        if name in schemas["AuthZENMetadata"]["properties"]:
+            reject("AuthZEN unsupported feature advertised")
+
+
 def check(system: dict, api: dict) -> None:
+    check_authzen(system, api)
     check_learning_acceptance(system, api)
     check_owner_chat(system, api)
     if system["sourcePinPolicy"]["httpContractVersion"] != api["info"]["version"]:
