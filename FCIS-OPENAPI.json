@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.9.9",
-    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference. Version 0.8.0 specifies separately consented read-only owner-library discovery and exact active signed revision delivery through the existing Skill resource; no production or provider acceptance is implied. Version 0.8.1 specifies the missing MCP transport projection at the existing owner Skill resource. No new scope, issuer, custody, underlying operation, provider account or production acceptance is implied. Version 0.9.0 specifies private owner Voice arrangement, admission decisions and composition readback for the Composer. The HTTP surface is a Console projection of existing owned Voice and Host mediation, not a new instrument command plane, provider adapter, execution grant or production acceptance. Version 0.9.1 adds optional owner-authorized Voice text exchange and client-authored contribution readback to the existing private Composer projection. No new operation, grant scope, provider or native instrument contract. Version 0.9.2 adds an optional owner-selected enrolled peer for the existing Voice admission and a separately authenticated Voice session mode on the existing signed Host frame carrier. The native Voice IDL, operation set, and provider boundary remain unchanged. Version 0.9.3 specifies the single owner-authorized MCP bridge on the existing /mcp endpoint: independently consented owner Skill and admitted instrument scopes may share one resource without widening existing grants. No new HTTP operation or production claim. Version 0.9.7 separates sanitized operation definitions from actual Skill authority for an already authorized /mcp participant; no new HTTP operation or grant. Version 0.9.9 separates external fcis.connect consent from FCIS-managed mutable capability grants.",
+    "version": "0.9.10",
+    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference. Version 0.8.0 specifies separately consented read-only owner-library discovery and exact active signed revision delivery through the existing Skill resource; no production or provider acceptance is implied. Version 0.8.1 specifies the missing MCP transport projection at the existing owner Skill resource. No new scope, issuer, custody, underlying operation, provider account or production acceptance is implied. Version 0.9.0 specifies private owner Voice arrangement, admission decisions and composition readback for the Composer. The HTTP surface is a Console projection of existing owned Voice and Host mediation, not a new instrument command plane, provider adapter, execution grant or production acceptance. Version 0.9.1 adds optional owner-authorized Voice text exchange and client-authored contribution readback to the existing private Composer projection. No new operation, grant scope, provider or native instrument contract. Version 0.9.2 adds an optional owner-selected enrolled peer for the existing Voice admission and a separately authenticated Voice session mode on the existing signed Host frame carrier. The native Voice IDL, operation set, and provider boundary remain unchanged. Version 0.9.3 specifies the single owner-authorized MCP bridge on the existing /mcp endpoint: independently consented owner Skill and admitted instrument scopes may share one resource without widening existing grants. No new HTTP operation or production claim. Version 0.9.7 separates sanitized operation definitions from actual Skill authority for an already authorized /mcp participant; no new HTTP operation or grant. Version 0.9.9 separates external fcis.connect consent from FCIS-managed mutable capability grants. Version 0.9.10 pins the adopted AuthZEN 1.0 final single-evaluation HTTPS decision projection, separate from connection and owner policy administration.",
     "contact": {
       "name": "Fountain Coach FCIS",
       "url": "https://github.com/Fountain-Coach/.github"
@@ -75,6 +75,10 @@
     {
       "name": "Conversations",
       "description": "Owner-private native chat and subscription-only reasoning availability, specified-only."
+    },
+    {
+      "name": "Authorization",
+      "description": "AuthZEN PDP decision projection; no effect, grants or payment."
     }
   ],
   "x-fcis-exposure": "organization-canonical-source-target-contract",
@@ -94,7 +98,15 @@
     "midi2": "Fountain-Coach/midi-backplane IDL and MIDI-CI, not OpenAPI",
     "kit": "FCIS-KIT typed capabilities and mechanical constraints, not generated HTTP endpoints",
     "store": "Fountain-Coach/Fountain-Store storage format, transactional record/evidence semantics",
-    "providerAdapters": "Official upstream OpenAPI pinned separately; Stripe not an FCIS core endpoint"
+    "providerAdapters": "Official upstream OpenAPI pinned separately; Stripe not an FCIS core endpoint",
+    "oauthCore": "RFC 6749; PKCE RFC 7636; DCR RFC 7591; resource indicators RFC 8707",
+    "webAuthn": "https://www.w3.org/TR/2021/REC-webauthn-2-20210408/",
+    "authorizationDecisions": "https://openid.net/specs/authorization-api-1_0-final.html",
+    "accessPolicy": "https://csrc.nist.gov/pubs/sp/800/162/upd2/final",
+    "digitalRights": [
+      "https://www.w3.org/TR/2018/REC-odrl-model-20180215/",
+      "https://www.w3.org/TR/2018/REC-odrl-vocab-20180215/"
+    ]
   },
   "x-fcis-not-admitted": [
     "automatic online/health/last-seen monitoring",
@@ -10895,6 +10907,182 @@
         },
         "x-fcis-owner-intent": "fountaincoach/voice.admit"
       }
+    },
+    "/access/v1/evaluation": {
+      "post": {
+        "operationId": "evaluateAuthZENAccess",
+        "summary": "Evaluate one access request through the AuthZEN PDP",
+        "tags": [
+          "Authorization"
+        ],
+        "description": "AuthZEN 1.0 final sections 5, 6, 10, 11. Authenticated admitted PEP only; external fcis.connect or legacy client token is not PEP authentication. Exact PEP audience, authoritative Store state, no effects, unknown fields ignored. HTTPS only.",
+        "security": [
+          {
+            "oauthBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthZENEvaluationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Valid allow or deny; false is not a transport error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthZENDecision"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "description": "Echo exact request identifier when supplied",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed or missing required data",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "description": "Echo exact request identifier when supplied",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "PEP authentication failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "description": "Echo exact request identifier when supplied",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated PEP not authorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "description": "Echo exact request identifier when supplied",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "PDP processing failure",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "description": "Echo exact request identifier when supplied",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only"
+      }
+    },
+    "/.well-known/authzen-configuration": {
+      "get": {
+        "operationId": "readAuthZENMetadata",
+        "summary": "Discover the AuthZEN PDP evaluation endpoint",
+        "tags": [
+          "Authorization"
+        ],
+        "description": "AuthZEN 1.0 final section 9; HTTPS PDP identifier must exactly match configured origin. No private policies or unsupported feature metadata.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "PDP metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthZENMetadata"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "PDP processing failure",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-ID": {
+                "description": "Echo exact request identifier when supplied",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only"
+      }
     }
   },
   "components": {
@@ -15615,6 +15803,122 @@
           }
         },
         "description": "Owner selects nonempty operation set to admit or empty operation set to withdraw the exact client admission. OAuth consent remains separate."
+      },
+      "AuthZENSubject": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "AuthZENResource": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "AuthZENAction": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "AuthZENEvaluationRequest": {
+        "type": "object",
+        "required": [
+          "subject",
+          "resource",
+          "action"
+        ],
+        "properties": {
+          "subject": {
+            "$ref": "#/components/schemas/AuthZENSubject"
+          },
+          "resource": {
+            "$ref": "#/components/schemas/AuthZENResource"
+          },
+          "action": {
+            "$ref": "#/components/schemas/AuthZENAction"
+          },
+          "context": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "AuthZENDecision": {
+        "type": "object",
+        "required": [
+          "decision"
+        ],
+        "properties": {
+          "decision": {
+            "type": "boolean"
+          },
+          "context": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "AuthZENMetadata": {
+        "type": "object",
+        "required": [
+          "policy_decision_point",
+          "access_evaluation_endpoint"
+        ],
+        "properties": {
+          "policy_decision_point": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "access_evaluation_endpoint": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          }
+        },
+        "additionalProperties": true
       }
     }
   },
@@ -15766,5 +16070,42 @@
       "newOperations": [],
       "status": "specified-only-not-deployed"
     }
+  },
+  "x-fcis-authzen": {
+    "status": "specified-only-not-deployed",
+    "normativeSource": "https://openid.net/specs/authorization-api-1_0-final.html",
+    "edition": "1.0 Final, January 2026",
+    "sections": [
+      "5",
+      "6",
+      "9",
+      "10",
+      "11"
+    ],
+    "pep": "FCIS Bridge and native protected-operation adapters",
+    "pdp": "existing Go authorization engine backed by FountainStore",
+    "supportedTarget": [
+      "access_evaluation_endpoint",
+      "policy_decision_point_metadata"
+    ],
+    "notAdvertised": [
+      "access_evaluations_endpoint",
+      "search_subject_endpoint",
+      "search_resource_endpoint",
+      "search_action_endpoint",
+      "signed_metadata",
+      "capabilities"
+    ],
+    "ownerAdministration": "decideOwnerConnectionPolicy; FCIS-specific, not AuthZEN",
+    "payment": "existing separately admitted Payment Instrument; verified entitlement only",
+    "policyModel": "NIST SP 800-162 updated 2019-08-02",
+    "rightsModel": "W3C ODRL 2.2 Recommendations 2018-02-15; commercial evaluation separately implemented",
+    "externalConnectionScope": "fcis.connect",
+    "defaultCapabilities": [],
+    "requireCurrentPolicy": true,
+    "unknownFields": "ignore",
+    "denyStatus": 200,
+    "decisionEvidence": "redacted correlation and current policy revision; effect receipt separate",
+    "noConformanceClaim": true
   }
 }
