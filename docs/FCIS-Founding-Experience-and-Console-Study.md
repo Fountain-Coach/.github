@@ -38,6 +38,24 @@ Use the current working Press UI as the before-study baseline. Capture ordinary 
 
 ## 3. Proposed experience: the FCIS Console
 
+**Design shorthand (owner-approved, 25 November 2026): FCIS Style.** “Render in FCIS Style” means use the existing FCIS Console visual language for interfaces, architectural illustrations and publications: Linear-inspired, responsive, iPad-first, using Fountain Coach CSS design tokens, restrained sans-serif typography, clear hierarchy, quiet modular surfaces and precise diagrams. This is a shorthand for the existing design direction, not a new design system or implementation gate.
+
+### FCIS Style — reusable rendering prompt
+
+**Trigger:** “FCIS Style” or “Render in FCIS Style”.
+
+> Render the supplied content in the established FCIS Console visual language: Linear-inspired, responsive, iPad-first, with Fountain Coach's own design tokens. For publications, translate that language into a quiet A4 editorial book layout, not a screenshot of a dashboard.
+>
+> Use true A4 portrait (210 × 297 mm), a narrow editorial measure of approximately 141 mm, mirrored left/right margins of 32 and 37 mm, and generous vertical breathing room. Place a small running header near 25 mm from the top, begin the principal content around 45 mm, and retain an unobtrusive footer and page number near the bottom. Keep the principal text and illustrations compact; leave substantial white space rather than stretching, enlarging or distributing content merely to occupy the page.
+>
+> Use Inter or the Console's sans-serif fallback, approximately 11 pt body type with comfortable leading, restrained medium-weight titles around 27 pt, and small muted captions. Draw from the Console light palette: white paper, near-black #20252e, muted #626b79, fine gray #e0e4ea, blue #294fce used sparingly for meaningful connections and emphasis. Avoid heavy bold typography, large hero banners, ornamental rules, gradients, dense card grids, oversized icons and enclosing boxes around every object. Keep the composition readable, understated and pleasant to hold or view on an iPad.
+>
+> Compose one clear argument per page: title, short deck or opening paragraph, a modest integrated illustration with a figure caption, and a concise conclusion. Use fine vector linework, small outline symbols and meaningful labels; distinguish relationships or states with solid/dashed lines when appropriate. Illustrations explain rather than decorate. Preserve the author's supplied meaning and distinguish proposed architecture from verified functionality.
+>
+> For a short illustrated social-media publication, use no more than two pages unless explicitly requested otherwise. Produce a selectable-text PDF with vector artwork, then export each complete A4 page as a high-resolution PNG directly from the final PDF, preserving its margins and aspect ratio. Render and inspect every page at normal reading scale and thumbnail scale: no clipping, overlap, orphaned captions, illegible labels or forced page filling. When rendering an application instead of a publication, retain the existing adaptive Console components and touch/keyboard accessibility; the A4 rules apply only to editorial output.
+
+**Approved visual reference (25 November 2026):** the two-page FCIS Bridge A4 editorial edition, “FCIS Bridge” and “Elastic computing.” The owner approved the generous book margins and compact composition after rejecting Linotype, dashboard-like panels and page-filling treatments. The editorial measurements and typography above are reusable defaults derived from that approved treatment; they do not impose fixed content or a separate design system.
+
 Investigate an adaptive, object-centred operating environment, retaining the existing Go service, issuer, owner identity, grants, native Store and instrument contracts. Fountain Press remains the reading and publication environment and a place to explain the system. Preserve the brand without forcing book pagination or editorial navigation onto operating tasks.
 
 Proposed navigation: Overview, Chat, Skills, Instruments, Hosts, Access, Integrations; Account/Billing, Usage, Activity and Settings. Show only capabilities available to the current role. This is an information architecture hypothesis, not an endpoint list or permission grant. Do not create a second identity, Store, control plane, payment authority, or marketplace as a consequence of the study. A separate customer-facing workspace is a design question, not an implementation prerequisite.
