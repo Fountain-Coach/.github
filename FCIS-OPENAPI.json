@@ -10915,7 +10915,7 @@
         "tags": [
           "Authorization"
         ],
-        "description": "AuthZEN 1.0 final sections 5, 6, 10, 11. Authenticated admitted PEP only; external fcis.connect or legacy client token is not PEP authentication. Exact PEP audience, authoritative Store state, no effects, unknown fields ignored. HTTPS only.",
+        "description": "AuthZEN 1.0 final sections 5, 6, 10, 11. Authenticated admitted PEP only; external fcis.connect or legacy client token is not PEP authentication. Exact PEP audience, authoritative Store state, no effects, unknown fields ignored. HTTPS only. Dedicated owner-consented OAuth PEP audience is the configured HTTPS origin plus this endpoint and exact scope authzen.evaluate; never a /mcp permission. The PEP authenticates the acting connection; the PDP evaluates its durable grant event and current owner/admission. Decision is not token-validity or effect proof.",
         "security": [
           {
             "oauthBearer": []
@@ -16106,6 +16106,22 @@
     "unknownFields": "ignore",
     "denyStatus": 200,
     "decisionEvidence": "redacted correlation and current policy revision; effect receipt separate",
-    "noConformanceClaim": true
+    "noConformanceClaim": true,
+    "pepOAuth": {
+      "resource": "configured HTTPS origin + /access/v1/evaluation",
+      "scope": "authzen.evaluate",
+      "ownerConsent": true,
+      "externalBridgeScope": false,
+      "authority": "current same-owner connection policy evaluation only, never execution or disclosure"
+    },
+    "connectionEvaluationProfile": {
+      "subjectType": "fcis.oauth-connection",
+      "subjectID": "authorization event ID",
+      "resourceType": "fcis.bridge",
+      "resourceID": "exact /mcp audience",
+      "action": "admitted internal operation scope",
+      "callerProperties": "ignored for authority",
+      "tokenAuthentication": "PEP responsibility; native path checks actual bearer; no raw subject token in payload"
+    }
   }
 }
