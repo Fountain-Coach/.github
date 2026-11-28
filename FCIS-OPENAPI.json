@@ -3166,13 +3166,18 @@
               "operation": "connection.policy.update",
               "inspect": "Only current verified requesting connection; derive tenant, subject, client, resource, event and current policy from Store under lock; never expose other clients or private Skill contents.",
               "request": "Authenticated current connection may propose a complete replacement capability set for its own grant. Explicit expected policy revision, bounded reason, idempotency; preserve incumbent in request. Validate admitted operations, reject no-op, unknown and self-grant operation names, stale revision and conflicting replay. Request alone has no grant or execution effect.",
-              "requestIdentity": "Server-selected 64 lowercase hex request ID from tenant, authorization event and idempotency key, domain-separated and length-delimited; server stores immutable request object and SHA-256 of exact canonical JSON bytes (UTF-8, sorted keys, no insignificant whitespace, no trailing newline). No caller-supplied principal, target, request URL or timestamp.",
+              "requestIdentity": "Server-selected 64 lowercase hex request ID from tenant, authorization event and idempotency key, domain-separated and length-delimited; store the immutable request object and SHA-256 of its RFC 8785 JSON Canonicalization Scheme (JCS) UTF-8 bytes. No caller-supplied principal, target, request URL or timestamp.",
               "lifecycle": "Pending only until 15 minutes after creation or original connection expiry, whichever is earlier. Owner can explicitly approve or decline; stale and expired pending records never apply. Status is own-connection only and requires current valid bearer; revoked/expired callers are refused. Owner may inspect exact own-tenant request even after connection revocation.",
-              "approval": "Owner GET exact request then POST exact digest, explicit approve or decline, confirm true, idempotency, same issuer Origin and X-Fountain-Owner-Intent fountaincoach/authorization.admin-decision. Display verified client/resource, before/after policy, effects, expiry and reason as untrusted text. Link locates a request and grants nothing; never auto-approve, execute on GET or use chat text as passkey proof.",
+              "approval": "Owner GET exact request then POST exact digest, explicit approve or decline, confirm true, idempotency, same issuer Origin and X-Fountain-Owner-Intent fountaincoach/authorization.admin-decision. Display verified client/resource, before/after policy, effects, expiry and reason as untrusted text. Link locates a request and grants nothing; never auto-approve, execute on GET or use chat text as passkey proof. Owner responses and proposal status must be non-cacheable. Return a same-issuer owner-console locator only, never a credential or arbitrary redirect.",
               "atomicity": "Reuse current grant policy predicate and atomic grant/receipt commit; approving also commits terminal request and decision receipt in the same Store transaction. Recheck current owner/session/client/event/resource/revision/admission and expiry; failure leaves policy unchanged. Declining commits request and decision receipt with no policy effect. Matching replay returns exact terminal decision; conflicting digest, revision, decision or key refuses. No second grant authority.",
-              "custody": "FountainStore fcis.owner-admin-requests holds immutable request binding and lifecycle, existing fcis.oauth.grants holds policy and existing fcis.receipts holds decision evidence; no tokens or passkey secrets in responses or records. Bound request rate and pending inventory; preserve old records through restart.",
+              "custody": "FountainStore fcis.owner-admin-requests holds immutable request binding and lifecycle, existing fcis.oauth.grants holds policy and existing fcis.receipts holds decision evidence; no tokens or passkey secrets in responses or records. Bound request rate and pending inventory; preserve old records through restart. At most eight pending unexpired proposals and eight distinct creations in a rolling sixty-second interval per connection; identical replays return the original without consuming another slot. Return a bounded typed refusal when a limit is reached.",
               "result": "Pending and proposal are not approval or effect. Terminal approval binds only the applied policy revision, not future permissions or successful Skill execution. Same bearer is evaluated against current policy on every subsequent call. Separate signed Skill delivery receipt remains required.",
-              "acceptance": "Actual retained client inspect, request missing skills.owned.read without grant effect, explicit owner approval, same bearer status and signed Skill read; decline, stale revision, expired, conflicting replay, wrong connection, revoked bearer, wrong Origin/session and arbitrary operation refusal without effects. Source fixture is not live acceptance."
+              "acceptance": "Actual retained client inspect, request missing skills.owned.read without grant effect, explicit owner approval, same bearer status and signed Skill read; decline, stale revision, expired, conflicting replay, wrong connection, revoked bearer, wrong Origin/session and arbitrary operation refusal without effects. Source fixture is not live acceptance.",
+              "resultsByKind": {
+                "owner.admin.inspect": "OwnerAdminConnectionSnapshot",
+                "owner.admin.request": "OwnerAdminRequestState",
+                "owner.admin.status": "OwnerAdminRequestState"
+              }
             }
           }
         }
@@ -11387,6 +11392,13 @@
                   "$ref": "#/components/schemas/OwnerAdminRequestState"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "400": {
@@ -11395,6 +11407,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
                 }
               }
             }
@@ -11407,6 +11426,13 @@
                   "$ref": "#/components/schemas/OwnerError"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "403": {
@@ -11415,6 +11441,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
                 }
               }
             }
@@ -11427,6 +11460,13 @@
                   "$ref": "#/components/schemas/OwnerError"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "409": {
@@ -11435,6 +11475,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
                 }
               }
             }
@@ -11447,6 +11494,13 @@
                   "$ref": "#/components/schemas/OwnerError"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "429": {
@@ -11457,6 +11511,13 @@
                   "$ref": "#/components/schemas/OwnerError"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "503": {
@@ -11465,6 +11526,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
                 }
               }
             }
@@ -11541,6 +11609,13 @@
                   "$ref": "#/components/schemas/OwnerAdminRequestState"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "400": {
@@ -11549,6 +11624,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
                 }
               }
             }
@@ -11561,6 +11643,13 @@
                   "$ref": "#/components/schemas/OwnerError"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "403": {
@@ -11569,6 +11658,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
                 }
               }
             }
@@ -11581,6 +11677,13 @@
                   "$ref": "#/components/schemas/OwnerError"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "409": {
@@ -11589,6 +11692,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
                 }
               }
             }
@@ -11601,6 +11711,13 @@
                   "$ref": "#/components/schemas/OwnerError"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "429": {
@@ -11611,6 +11728,13 @@
                   "$ref": "#/components/schemas/OwnerError"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "503": {
@@ -11619,6 +11743,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
                 }
               }
             }
