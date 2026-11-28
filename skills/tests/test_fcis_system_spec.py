@@ -169,6 +169,24 @@ class FCISWholeSystemContractTests(unittest.TestCase):
             verifier.check_machine_renewal(doc, candidate)
 
 
+    def test_connection_domain_refusal_preserves_protocol_boundary(self):
+        verifier, doc, _ = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text())
+        verifier.check_connection_discovery(doc, api)
+        for mutate in (
+            lambda p, a: p["refusalResult"]["codes"].pop("skill_revision_conflict"),
+            lambda p, a: p["refusalResult"].update(protocolBoundary="always HTTP 200"),
+            lambda p, a: a["components"]["schemas"]["FCISConnectionRefusal"].update(additionalProperties=True),
+            lambda p, a: p["refusalResult"].update(authority="no authorization needed"),
+        ):
+            bad = copy.deepcopy(api)
+            sysdoc = copy.deepcopy(doc)
+            message = bad["paths"]["/mcp"]["post"]["x-fcis-connect"]["connectionMessage"]
+            mutate(message, bad)
+            sysdoc["capabilitySystem"]["mcp"]["connectionDiscovery"]["connectionMessage"] = copy.deepcopy(message)
+            with self.assertRaisesRegex(ValueError, "connection refusal contract drift"):
+                verifier.check_connection_discovery(sysdoc, bad)
+
     def test_owner_admin_requires_explicit_golden_key_decision(self):
         verifier, doc, _ = self._atomic_fixture()
         api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
