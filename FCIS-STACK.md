@@ -300,6 +300,14 @@ Keep the existing GitHub `build` branch rule intact until a replacement owned-or
 
 **Observed predecessor (18 November 2026):** The Hetzner Go candidate was running read-only on localhost `18363`, while public OAuth/MCP Caddy routing still used Swift processes on `18361`/`18362`. That candidate used JSON authority state and a migration-dependent writable path. Its existence is implementation evidence **only**; it does not satisfy the clean target or production DoD.
 
+### 7.1 FCIS-DEPLOYMENT-01 — immutable runtime activation
+
+An upgrade is a first-class owner-administrative operation of the native Go FCIS, not an ad hoc script or a new trust system. Canonical HTTP types and transitions are defined by [FCIS-OPENAPI.json](FCIS-OPENAPI.json) (0.10.0, source only); the system composition carries their evidence and requirement mapping.
+
+One stable, restart-independent local Go executor consumes exact approved immutable release manifests, never caller-chosen commands or paths. A new release changes only the staged artifact and signed manifest, not the activation program. Prepare validates artifact provenance, actual predecessor, space, compatible rollback and Store prefix. An explicit Golden Key decision plus the existing release signature authorizes that exact manifest. AuthZEN evaluates current authorization; the owner decision and signature remain distinct. Dispatch is idempotent and asynchronous with respect to issuer restart, not terminal success. The executor runs without a public listener and is supervised independently from the issuer. A bounded fsynced local transition journal bridges issuer downtime; only the native FountainStore writer reconciles and commits authoritative receipts. No second writer or independent grant authority.
+
+Install immutably under the single target fence; verify actual process, HTTPS, Console, OAuth metadata, current authority state and original Store prefix. Any rollback restores the exact authorized predecessor executable without rewinding Store or reviving revocations. Refuse incompatible releases and keep failed recovery fenced. No new gateway, signer, root, DNS or Caddy change. Manual rollback is a new prepared and owner-approved deployment; automatic rollback is strictly within the approved manifest. The single fcis.connect tool may later project separately admitted typed preparation and own-status inspection; current permissions and descriptor remain unchanged, and a bearer cannot authorize activation. Actual retained client and external Host acceptance are separate from release activation.
+
 ## 8. Scale without inventing a second stack
 
 **Initial:** single Go process, dedicated Store, one owner/tenant, small fleet.
