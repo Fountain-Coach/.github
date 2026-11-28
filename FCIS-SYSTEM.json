@@ -40,17 +40,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "1c08345712c3aa138df0d07491b58b23fd9ce51c",
+      "ref": "6cb4600e7136dfa3964943d8083cfc61aa8d9b95",
       "path": "FCIS-STACK.md",
-      "blobSha": "0ac478ac084cd0f8067f49ae43d3aeb24898a2d3",
-      "url": "https://github.com/Fountain-Coach/.github/blob/1c08345712c3aa138df0d07491b58b23fd9ce51c/FCIS-STACK.md"
+      "blobSha": "965eb9497105367e1e116e99ff8c8af7ecbefa22",
+      "url": "https://github.com/Fountain-Coach/.github/blob/6cb4600e7136dfa3964943d8083cfc61aa8d9b95/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "1c08345712c3aa138df0d07491b58b23fd9ce51c",
+      "ref": "6cb4600e7136dfa3964943d8083cfc61aa8d9b95",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "7a11eff411f001ba96ebf2e0126ca4ed8a257f9d",
-      "url": "https://github.com/Fountain-Coach/.github/blob/1c08345712c3aa138df0d07491b58b23fd9ce51c/FCIS-OPENAPI.json"
+      "blobSha": "6c6b4a6d19b7c6bb9e04c440217db20f2e255b6b",
+      "url": "https://github.com/Fountain-Coach/.github/blob/6cb4600e7136dfa3964943d8083cfc61aa8d9b95/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.9.12",
+      "version": "0.9.14",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -2147,9 +2147,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 357,
+      "expectedRequirementCount": 358,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 357,
+      "minimumAtomicRequirementCount": 358,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -2211,9 +2211,9 @@
       }
     },
     "inputContractDigests": {
-      "fcisOpenAPI": "0.9.12",
-      "fcisOpenAPIBlob": "7a11eff411f001ba96ebf2e0126ca4ed8a257f9d",
-      "architectureBlob": "0ac478ac084cd0f8067f49ae43d3aeb24898a2d3",
+      "fcisOpenAPI": "0.9.14",
+      "fcisOpenAPIBlob": "6c6b4a6d19b7c6bb9e04c440217db20f2e255b6b",
+      "architectureBlob": "965eb9497105367e1e116e99ff8c8af7ecbefa22",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
     "requirementCatalog": [
@@ -4633,6 +4633,13 @@
         "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/legacyScopeTransition",
         "proofClass": "connection-discovery",
         "name": "connection-discovery: legacyScopeTransition"
+      },
+      {
+        "id": "MCP-PROFILE-CONNECTIONMESSAGE",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage",
+        "proofClass": "connection-discovery",
+        "name": "connection-discovery: connectionMessage"
       }
     ]
   },
@@ -4658,7 +4665,7 @@
       "FCIS-CHAT-01 situated Reframe reference subcase: actual domain selection, confirmed Grounding, derived Situation, reviewed digest-bound current context, independently witnessed reasoning consumption and results, refusal for stale/foreign/unconfirmed inputs, and unaffected unscoped/deterministic operation.",
       "FCIS-LEARN-01 continuous behavior: ordinary work closure initiates assessment without a maintenance request; independently verify general-acceptance across distinct admitted domains, actual useful and no-lesson outcomes, recovery, refusal, and subsequent consumption under existing authority.",
       "AuthZEN single-evaluation HTTPS and metadata interoperability; positive and negative current Store-backed decision, separate PEP authentication, deny 200 false, malformed 400, unauthorized 401/403, PDP failure 500, unknown fields, request ID echo, no unsupported metadata, same-token policy change and exact Skill/Host terminal receipt; no commercial rights conformance or live payment claim.",
-      "FCIS schema discovery independent of empty and withdrawn capability policy; sanitized stable schemas, no private data, no effect on denial, only fcis.connect advertised at RFC 9728 resource path, exact stale-scope transition with explicit owner consent, no inherited permissions, actual token scope and unchanged legacy refresh."
+      "Exactly one external fcis.connect definition, empty/granted/withdrawn policy invariant; typed connection acknowledgement without effect; direct old names and legacy bearers refused, unknown kinds and extra arguments refused; existing typed Host and Skill paths with current policy, receipts and same-bearer withdrawal; actual provider acceptance independent of local source and runtime tests."
     ],
     "production": [
       "fresh-install may be deployed independently on any supported Linux host; optional current Hetzner migration is a distinct deployment profile",
@@ -4694,7 +4701,7 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 357,
+    "atomicRequirementCount": 358,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
@@ -4702,7 +4709,7 @@
       "principal-type": 6,
       "store-schema": 21,
       "mcp-transport": 4,
-      "connection-discovery": 5,
+      "connection-discovery": 6,
       "host-wire": 13,
       "host-receipt": 10,
       "store-wire": 6,
@@ -5159,8 +5166,8 @@
         "tools/list",
         "tools/call"
       ],
-      "toolList": "valid fcis.connect lists stable sanitized definitions independently of effective policy; additional/private definitions, effective capability inventory and dispatch require current grants and admission",
-      "calls": "typed instrument names with revision and bounded arguments; caller identity never inferred from a model's prose",
+      "toolList": "exactly one external tool fcis.connect for every valid connection; no direct instrument definitions regardless of internal policy or admission",
+      "calls": "only fcis.connect accepts bounded typed connection messages; internal adapters resolve existing admitted typed operations; current AuthZEN at dispatch and effect; no direct instrument calls, legacy bearer execution or arbitrary executor",
       "result": "structured terminal receipt or typed refusal; pending job cannot be called success",
       "versionNegotiation": "must explicitly validate negotiated protocol version; refuse unsupported version, no silent protocol downgrade",
       "connectionDiscovery": {
@@ -5172,14 +5179,12 @@
         "schemaDiscovery": {
           "requiresValidConnection": true,
           "stableDefinitions": [
-            "fountain_host_describe",
-            "fountain_skills_inventory",
-            "fountain_skills_read_active"
+            "fcis.connect"
           ],
           "requiresCapabilityGrant": false,
           "privateBindings": false,
           "executionAuthority": false,
-          "otherDefinitions": "current admission and policy only"
+          "otherDefinitions": "never externally exposed on /mcp"
         },
         "legacyScopeTransition": {
           "requestedPair": [
@@ -5193,6 +5198,102 @@
           "actualTokenScopeReturned": true,
           "transferCapabilities": false,
           "unknownScopeFallback": false
+        },
+        "connectionMessage": {
+          "name": "fcis.connect",
+          "description": "Connect to FCIS and exchange a typed message through its current owner-authorized internal flow. Connect alone has no effect. Host inspection and signed Skill delivery may record audit receipts. No arbitrary execution.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "connect",
+                  "host.describe",
+                  "skills.inventory",
+                  "skills.read-active"
+                ],
+                "description": "Typed connection message kind; not an external tool or grant."
+              },
+              "correlationID": {
+                "type": "string",
+                "minLength": 8,
+                "maxLength": 96
+              },
+              "idempotencyKey": {
+                "type": "string",
+                "minLength": 8,
+                "maxLength": 96
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "cursor": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "skillName": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+                "maxLength": 96
+              },
+              "releaseId": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "additionalProperties": false
+          },
+          "fieldsByKind": {
+            "connect": {
+              "required": [],
+              "optional": []
+            },
+            "host.describe": {
+              "required": [
+                "correlationID",
+                "idempotencyKey"
+              ],
+              "optional": []
+            },
+            "skills.inventory": {
+              "required": [],
+              "optional": [
+                "limit",
+                "cursor"
+              ]
+            },
+            "skills.read-active": {
+              "required": [
+                "skillName",
+                "releaseId"
+              ],
+              "optional": []
+            }
+          },
+          "securitySchemes": [
+            {
+              "type": "oauth2",
+              "scopes": [
+                "fcis.connect"
+              ]
+            }
+          ],
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": false
+          },
+          "directInstrumentCalls": false,
+          "legacyBearerCalls": false,
+          "currentPolicyAtDispatchAndEffect": true,
+          "acknowledgeWithoutEffect": true
         }
       }
     },
@@ -5277,7 +5378,7 @@
       "decision": "FountainStore canonical private custody; FCIS API primary distribution authority; GitHub/ChatGPT optional explicitly approved adapters. Existing FCIS-GO public projection unchanged.",
       "ownerProfile": "Version 2 signed Skill admission is only current single owner/default tenant; admin operations derive actor/tenant from authorized session, no caller-selected tenant. Reject unavailable additional tenant admission/signing; commercial customer flow requires separately admitted customer principal and grant, not owner session impersonation. Current version-2 CLI admission is retained and does not require a pre-existing browser draft; the new browser admission must verify the referenced reviewed draft. Existing admitted private v2 releases are readable without manufactured draft history.",
       "security": "Owner writes require exact same-origin session, specific X-Fountain-Owner-Intent and explicit confirmation; signed admission and offer use existing trusted owner signer, exact immutable bytes. No new signer, public write route, bearer fallback or arbitrary tenant ID. Reject unknown fields, duplicate keys, wrong signatures and oversized decoded inputs.",
-      "clientResource": "Connect — establish a resource-bound, explicitly owner-consented relationship. The single external /mcp OAuth scope is fcis.connect; it conveys connection authentication and permission to consult FCIS-managed grants, not ambient owner privilege. No capability is granted merely by connecting. A new connection starts with an empty capability policy. FCIS owner management changes the effective operation permissions on the current authorization family under verified owner session, same-origin intent, explicit confirmation, expected policy revision and durable receipt. Both discovery and every dispatch independently intersect that policy with current signed/admitted capability, owner, client, tenant, resource, target, operation and effect checks. Removing permission takes effect on the same token, including replay; adding an explicitly allowed operation does not require an OAuth scope or registration change. All exposed tool definitions remain typed, explicit and reviewable; no generic executor. The internal skill permission skills.owned.read retains signed active-source checks and durable delivery evidence, not an external scope of this bridge. New/materially changed exposed tool definitions may need provider review independently. Existing individual-scope /mcp grants and legacy /oauth/skills remain isolated compatibility during replacement, not the target design; do not broaden old tokens or retire recovery before independently proving the new connection. No commercial grant, payment, inference, automatic policy expansion or private data before authorization. Active owner library delivery includes future active revisions under explicit current internal rights; exact active pointer, source signature, audience, owner and tenant binding remain mandatory. Legacy Skill-only resource retains its exact independent scope and audience; no cross-resource token exchange.",
+      "clientResource": "Connect — establish a resource-bound, explicitly owner-consented relationship. Exactly one externally callable MCP tool is named fcis.connect, and its sole external OAuth scope is separately fcis.connect. The external tools/list response contains exactly this one definition for every valid connection, independently of internal policy and admission; direct externally named instrument calls are refused even with an internal grant. The connection exchanges typed, bounded messages: connect (acknowledge the verified connection without effect), host.describe (existing Host snapshot/terminal receipt), skills.inventory (bounded current owner library metadata), skills.read-active (exact signed active release and delivery receipt). These are message kinds inside one connection, not MCP tools, OAuth scopes, arbitrary commands or additional provider registrations. The initial message vocabulary is deliberately bounded to the existing verified operations; new effects require a reviewed typed message contract, not arbitrary routing. The source-owned internal adapter selects the exact existing handlers and checks current FCIS policy before dispatch and again at effects or disclosure; identity, tenant, client, resource, target and operation come from verified state, never caller assertions. Unknown kinds, extra fields, invalid arguments and direct operation tool names fail closed. No automatic grant, private data before permission, generic executor, commercial acquisition, payment or inference. Connecting acknowledges the relationship only, with no execution or policy mutation. Removing permission takes effect on the same token, including replay. Internal Skill permission skills.owned.read retains signature and durable delivery evidence. No second external plugin or per-instrument provider registration. Legacy individually scoped /mcp tokens retain their records for recovery but cannot discover or invoke direct tools on the single bridge; they must use the existing explicit connection authorization flow. Legacy /oauth/skills remains isolated compatibility, never registered as another plugin. Active owner library delivery includes future active revisions under explicit current internal rights; exact active pointer, source signature, audience, owner and tenant binding remain mandatory. Legacy Skill-only resource retains its exact independent scope and audience; no cross-resource token exchange.",
       "transactions": "Tenant+actor+operation+idempotencyKey binds canonical request digest. Identical replay returns original receipt/status; changed payload returns 409; re-evaluate current access before disclosing protected replay. Compare expected revisions; no duplicate mutations or charge. Atomic immutable revisions, active pointers, offer/entitlement states and receipts. No source bytes in telemetry; authenticated responses and refusals no-store. For draft create receipt.subjectId is the draftId; for admission it is releaseId; for offer release it is offerId; for review/withdraw/revoke it is the changed object's exact ID. recordRevision is that object's committed revision. A verified receipt remains independently readable via the corresponding protected resource, with audit references.",
       "commercial": "Phase two, not first release or P0 prerequisite. Price and terms immutable per offer; new price requires new signed offer. Zero-price offers require explicit terms acceptance; paid entitlement only after verified instrument terminal receipt exact amount, currency, customer, offer and acquisition. Provider checkout is hosted; no live charges authorized, no UI redirect proof. Refunds are separate approved instrument actions, entitlement changes only under accepted terms and reconciled receipts. Unlisted is non-enumerated metadata, not a confidentiality or access grant; customer may inspect an exact known offer before accepting terms. Restricted bespoke audience/recurring or metered plans require a later explicit contract; this version supports one-time exact-release licensing only.",
       "delivery": "Only exact authorized source bytes and license are delivered, never public projection by default. No guarantee of provider installation, DRM or deletion of previously delivered copies. A client adapter may consume delivered instructions only with customer consent and separately proven supported integration. Tenant-derived knowledge remains customer-owned.",
@@ -5495,9 +5596,9 @@
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.9.12",
-    "apiBlobSha": "7a11eff411f001ba96ebf2e0126ca4ed8a257f9d",
-    "stackBlobSha": "0ac478ac084cd0f8067f49ae43d3aeb24898a2d3",
+    "httpContractVersion": "0.9.14",
+    "apiBlobSha": "6c6b4a6d19b7c6bb9e04c440217db20f2e255b6b",
+    "stackBlobSha": "965eb9497105367e1e116e99ff8c8af7ecbefa22",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },

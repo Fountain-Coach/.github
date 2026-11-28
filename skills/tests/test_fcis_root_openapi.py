@@ -207,7 +207,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.9.12")
+        self.assertEqual(a["info"]["version"], "0.9.14")
         page = a["components"]["schemas"]["OwnerReasoningClientPage"]
         self.assertNotIn("instrumentObservations", page["required"])
         self.assertEqual(page["properties"]["items"]["items"], {"$ref": "#/components/schemas/OwnerReasoningClient"})
@@ -463,6 +463,15 @@ class FCISRootOpenAPITests(unittest.TestCase):
         self.assertEqual(c["defaultCapabilities"], [])
         self.assertEqual(c["advertisedResourceScopes"], ["fcis.connect"])
         self.assertEqual(c["authenticationChallengeScope"], "fcis.connect")
+        self.assertEqual(c["schemaDiscovery"]["stableDefinitions"], ["fcis.connect"])
+        self.assertEqual(c["schemaDiscovery"]["otherDefinitions"], "never externally exposed on /mcp")
+        m = c["connectionMessage"]
+        self.assertEqual(m["name"], "fcis.connect")
+        self.assertFalse(m["directInstrumentCalls"])
+        self.assertFalse(m["legacyBearerCalls"])
+        self.assertTrue(m["currentPolicyAtDispatchAndEffect"])
+        self.assertTrue(m["acknowledgeWithoutEffect"])
+        self.assertFalse(m["inputSchema"]["additionalProperties"])
         self.assertTrue(c["schemaDiscovery"]["requiresValidConnection"])
         self.assertFalse(c["schemaDiscovery"]["requiresCapabilityGrant"])
         self.assertFalse(c["schemaDiscovery"]["executionAuthority"])
