@@ -436,6 +436,10 @@ def check_authzen(system: dict, api: dict) -> None:
             or profile["status"] != "specified-only-not-deployed"
             or profile["unknownFields"] != "ignore"):
         reject("AuthZEN authority or acceptance drift")
+    pep = profile.get("pepOAuth", {})
+    if (pep.get("scope") != "authzen.evaluate" or pep.get("externalBridgeScope") is not False
+            or pep.get("ownerConsent") is not True):
+        reject("AuthZEN separate PEP authorization drift")
     op = api["paths"]["/access/v1/evaluation"]["post"]
     if not op["security"] or set(op["responses"]) != {"200", "400", "401", "403", "500"}:
         reject("AuthZEN protected evaluation or status drift")

@@ -252,7 +252,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
         # Reviewed 0.8.0 delta: the existing issuer accepts the separately
         # consented Skill audience, not a new authentication mechanism.
         resource = next(p for p in baseline["/oauth/authorize"]["get"]["parameters"] if p["name"] == "resource")
-        self.assertEqual(resource["description"], "Exact FCIS resource URL: /mcp (existing default when omitted) or explicit /oauth/skills; no audience substitution.")
+        self.assertEqual(resource["description"], "Exact FCIS resource URL: /mcp (existing default when omitted), explicit /oauth/skills, or the separate configured HTTPS /access/v1/evaluation for authzen.evaluate; no audience substitution.")
         resource["description"] = "Exact FCIS MCP resource URL"
         # Reviewed 0.8.2 delta: additive metadata, never a registration grant.
         registration = baseline["/oauth/register"]["post"]
@@ -264,6 +264,8 @@ class FCISRootOpenAPITests(unittest.TestCase):
         for name in ("client_name", "grant_types", "response_types"):
             del schemas["OAuthClientRegistrationResult"]["properties"][name]
         schemas["OAuthClientRegistrationResult"]["required"] = ["client_id", "redirect_uris"]
+        del schemas["OAuthServerMetadata"]["properties"]["scopes_supported"]
+        del schemas["ProtectedResourceMetadata"]["properties"]["bearer_methods_supported"]
         # Reviewed 0.9.2 extension: conditional Voice-only bearer and signed
         # machine binding. Normalize ONLY those reviewed additions for the
         # immutable compatibility digest; leave every other old field checked.
@@ -353,6 +355,10 @@ class FCISRootOpenAPITests(unittest.TestCase):
         self.assertEqual(req["properties"]["grant_types"]["contains"], {"const": "authorization_code"})
         self.assertTrue(req["properties"]["grant_types"]["uniqueItems"])
         self.assertEqual(req["properties"]["response_types"]["items"], {"type": "string", "const": "code"})
+        pattern = req["properties"]["scope"]["pattern"]
+        self.assertIsNotNone(re.fullmatch(pattern, "authzen.evaluate"))
+        self.assertIsNone(re.fullmatch(pattern, "fcis.connect authzen.evaluate"))
+        self.assertIsNone(re.fullmatch(pattern, "authzen.evaluate host.describe"))
         self.assertEqual(result["properties"]["grant_types"]["const"], ["authorization_code", "refresh_token"])
         self.assertEqual(result["properties"]["response_types"]["const"], ["code"])
         self.assertFalse({"scope", "access_token", "refresh_token", "client_secret"} & set(result["properties"]))

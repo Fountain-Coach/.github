@@ -1883,7 +1883,7 @@
             "name": "resource",
             "in": "query",
             "required": false,
-            "description": "Exact FCIS resource URL: /mcp (existing default when omitted) or explicit /oauth/skills; no audience substitution.",
+            "description": "Exact FCIS resource URL: /mcp (existing default when omitted), explicit /oauth/skills, or the separate configured HTTPS /access/v1/evaluation for authzen.evaluate; no audience substitution.",
             "schema": {
               "type": "string",
               "format": "uri"
@@ -10993,6 +10993,12 @@
                 "schema": {
                   "type": "string"
                 }
+              },
+              "WWW-Authenticate": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Bearer challenge for missing or invalid PEP credentials."
               }
             }
           },
@@ -11071,6 +11077,16 @@
             "headers": {
               "X-Request-ID": {
                 "description": "Echo exact request identifier when supplied",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The configured HTTPS PDP origin or transport was not established.",
+            "content": {
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -11822,6 +11838,13 @@
             "items": {
               "type": "string"
             }
+          },
+          "scopes_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Issuer-supported scopes across separately bound resources, including authzen.evaluate only for the HTTPS PDP; not a grant or a /mcp scope inventory."
           }
         },
         "required": [
@@ -11853,6 +11876,15 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          },
+          "bearer_methods_supported": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "header"
+              ]
             }
           }
         },
@@ -11963,8 +11995,8 @@
           },
           "scope": {
             "type": "string",
-            "pattern": "^(fcis[.]connect|host[.]describe( skills[.]owned[.]read)?|skills[.]owned[.]read( host[.]describe)?)$",
-            "description": "Optional requested-scope hint; only distinct supported names, space-separated. Not persisted as authorization and not echoed as a grant. Exact resource/scope consent remains required."
+            "pattern": "^(fcis[.]connect|authzen[.]evaluate|host[.]describe( skills[.]owned[.]read)?|skills[.]owned[.]read( host[.]describe)?)$",
+            "description": "Optional requested-scope hint; only distinct supported names, space-separated. Not persisted as authorization and not echoed as a grant. Exact resource/scope consent remains required. authzen.evaluate is a separate owner-consented PEP evaluation resource hint only; it never authorizes or combines with /mcp."
           }
         },
         "required": [
