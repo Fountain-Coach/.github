@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.9.10",
-    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference. Version 0.8.0 specifies separately consented read-only owner-library discovery and exact active signed revision delivery through the existing Skill resource; no production or provider acceptance is implied. Version 0.8.1 specifies the missing MCP transport projection at the existing owner Skill resource. No new scope, issuer, custody, underlying operation, provider account or production acceptance is implied. Version 0.9.0 specifies private owner Voice arrangement, admission decisions and composition readback for the Composer. The HTTP surface is a Console projection of existing owned Voice and Host mediation, not a new instrument command plane, provider adapter, execution grant or production acceptance. Version 0.9.1 adds optional owner-authorized Voice text exchange and client-authored contribution readback to the existing private Composer projection. No new operation, grant scope, provider or native instrument contract. Version 0.9.2 adds an optional owner-selected enrolled peer for the existing Voice admission and a separately authenticated Voice session mode on the existing signed Host frame carrier. The native Voice IDL, operation set, and provider boundary remain unchanged. Version 0.9.3 specifies the single owner-authorized MCP bridge on the existing /mcp endpoint: independently consented owner Skill and admitted instrument scopes may share one resource without widening existing grants. No new HTTP operation or production claim. Version 0.9.7 separates sanitized operation definitions from actual Skill authority for an already authorized /mcp participant; no new HTTP operation or grant. Version 0.9.9 separates external fcis.connect consent from FCIS-managed mutable capability grants. Version 0.9.10 pins the adopted AuthZEN 1.0 final single-evaluation HTTPS decision projection, separate from connection and owner policy administration.",
+    "version": "0.9.12",
+    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference. Version 0.8.0 specifies separately consented read-only owner-library discovery and exact active signed revision delivery through the existing Skill resource; no production or provider acceptance is implied. Version 0.8.1 specifies the missing MCP transport projection at the existing owner Skill resource. No new scope, issuer, custody, underlying operation, provider account or production acceptance is implied. Version 0.9.0 specifies private owner Voice arrangement, admission decisions and composition readback for the Composer. The HTTP surface is a Console projection of existing owned Voice and Host mediation, not a new instrument command plane, provider adapter, execution grant or production acceptance. Version 0.9.1 adds optional owner-authorized Voice text exchange and client-authored contribution readback to the existing private Composer projection. No new operation, grant scope, provider or native instrument contract. Version 0.9.2 adds an optional owner-selected enrolled peer for the existing Voice admission and a separately authenticated Voice session mode on the existing signed Host frame carrier. The native Voice IDL, operation set, and provider boundary remain unchanged. Version 0.9.3 specifies the single owner-authorized MCP bridge on the existing /mcp endpoint: independently consented owner Skill and admitted instrument scopes may share one resource without widening existing grants. No new HTTP operation or production claim. Version 0.9.7 separates sanitized operation definitions from actual Skill authority for an already authorized /mcp participant; no new HTTP operation or grant. Version 0.9.9 separates external fcis.connect consent from FCIS-managed mutable capability grants. Version 0.9.10 pins the adopted AuthZEN 1.0 final single-evaluation HTTPS decision projection, separate from connection and owner policy administration. Version 0.9.12 separates authenticated schema discovery from effective operation authorization and pins the resource-specific connection negotiation.",
     "contact": {
       "name": "Fountain Coach FCIS",
       "url": "https://github.com/Fountain-Coach/.github"
@@ -2825,7 +2825,7 @@
         "tags": [
           "MCP"
         ],
-        "description": "JSON-RPC initialize, ping, tools/list and tools/call over MCP Streamable HTTP. Method-specific capability dispatch and typed instrument constraints are owned by admitted FCIS-KIT runtime, not this OpenAPI. Client bearer scope and current Host admission must be enforced. Connect — establish a resource-bound, explicitly owner-consented relationship. The single external /mcp OAuth scope is fcis.connect; it conveys connection authentication and permission to consult FCIS-managed grants, not ambient owner privilege. No capability is granted merely by connecting. A new connection starts with an empty capability policy. FCIS owner management changes the effective operation permissions on the current authorization family under verified owner session, same-origin intent, explicit confirmation, expected policy revision and durable receipt. Both discovery and every dispatch independently intersect that policy with current signed/admitted capability, owner, client, tenant, resource, target, operation and effect checks. Removing permission takes effect on the same token, including replay; adding an explicitly allowed operation does not require an OAuth scope or registration change. All exposed tool definitions remain typed, explicit and reviewable; no generic executor. The internal skill permission skills.owned.read retains signed active-source checks and durable delivery evidence, not an external scope of this bridge. New/materially changed exposed tool definitions may need provider review independently. Existing individual-scope /mcp grants and legacy /oauth/skills remain isolated compatibility during replacement, not the target design; do not broaden old tokens or retire recovery before independently proving the new connection. No commercial grant, payment, inference, automatic policy expansion or private data before authorization.",
+        "description": "JSON-RPC initialize, ping, tools/list and tools/call over MCP Streamable HTTP. Method-specific capability dispatch and typed instrument constraints are owned by admitted FCIS-KIT runtime, not this OpenAPI. Client bearer scope and current Host admission must be enforced. Connect — establish a resource-bound, explicitly owner-consented relationship. The single external /mcp OAuth scope is fcis.connect; it conveys connection authentication and permission to consult FCIS-managed grants, not ambient owner privilege. No capability is granted merely by connecting. A new connection starts with an empty capability policy. FCIS owner management changes the effective operation permissions on the current authorization family under verified owner session, same-origin intent, explicit confirmation, expected policy revision and durable receipt. Effective capability inventory and every dispatch independently intersect that policy with current signed/admitted capability, owner, client, tenant, resource, target, operation and effect checks. Authenticated schema discovery of the stable sanitized Host and Skill definitions does not grant operations. Removing permission takes effect on the same token, including replay; adding an explicitly allowed operation does not require an OAuth scope or registration change. All exposed tool definitions remain typed, explicit and reviewable; no generic executor. The internal skill permission skills.owned.read retains signed active-source checks and durable delivery evidence, not an external scope of this bridge. New/materially changed exposed tool definitions may need provider review independently. Existing individual-scope /mcp grants and legacy /oauth/skills remain isolated compatibility during replacement, not the target design; do not broaden old tokens or retire recovery before independently proving the new connection. No commercial grant, payment, inference, automatic policy expansion or private data before authorization.",
         "security": [
           {
             "oauthBearer": []
@@ -2890,6 +2890,14 @@
                 "schema": {
                   "$ref": "#/components/schemas/OAuthError"
                 }
+              }
+            },
+            "headers": {
+              "WWW-Authenticate": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Bearer challenge for fcis.connect and resource-specific RFC 9728 metadata; no grant."
               }
             }
           },
@@ -2976,7 +2984,37 @@
           "automaticGrant": false,
           "genericExecutor": false,
           "providerReview": "explicit typed definitions; supported provider review of material changes",
-          "status": "specified-only-not-deployed"
+          "status": "specified-only-not-deployed",
+          "resourceMetadataPath": "/.well-known/oauth-protected-resource/mcp",
+          "advertisedResourceScopes": [
+            "fcis.connect"
+          ],
+          "authenticationChallengeScope": "fcis.connect",
+          "schemaDiscovery": {
+            "requiresValidConnection": true,
+            "stableDefinitions": [
+              "fountain_host_describe",
+              "fountain_skills_inventory",
+              "fountain_skills_read_active"
+            ],
+            "requiresCapabilityGrant": false,
+            "privateBindings": false,
+            "executionAuthority": false,
+            "otherDefinitions": "current admission and policy only"
+          },
+          "legacyScopeTransition": {
+            "requestedPair": [
+              "host.describe",
+              "workstation.go.verify"
+            ],
+            "onlyWhenNoLongerGrantable": true,
+            "resource": "/mcp",
+            "offeredScope": "fcis.connect",
+            "explicitOwnerConsent": true,
+            "actualTokenScopeReturned": true,
+            "transferCapabilities": false,
+            "unknownScopeFallback": false
+          }
         }
       }
     },
@@ -11098,6 +11136,59 @@
         "x-fcis-production-state": "NOT_ESTABLISHED_GO",
         "x-fcis-runtime-authority": "Source contract only; HTTPS and Store acceptance separately required",
         "x-fcis-implementation-state": "go-target-specified-only"
+      }
+    },
+    "/.well-known/oauth-protected-resource/mcp": {
+      "get": {
+        "operationId": "discoverMCPConnectionResource",
+        "summary": "Discover the resource-specific FCIS connection authorization metadata",
+        "tags": [
+          "Discovery"
+        ],
+        "description": "RFC 9728 sections 3 and 5. Exact /mcp resource; scopes_supported contains only fcis.connect. Root metadata is a compatibility alias, not a second resource or operation grant.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Resource metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProtectedResourceMetadata"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "405 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "503 — typed rejection; never report success on refusal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-runtime-authority": "Source contract only; HTTPS and Store/Host acceptance separately required",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Discover FCIS MCP resource and authorization servers",
+          "notFor": "Proof of execution, current grant or automatically callable instrument",
+          "effect": "read-only",
+          "evidence": "Runtime/Store witness required independently"
+        }
       }
     }
   },

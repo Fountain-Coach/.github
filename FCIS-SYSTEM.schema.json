@@ -519,8 +519,41 @@
             "methods",
             "toolList",
             "calls",
-            "result"
-          ]
+            "result",
+            "connectionDiscovery"
+          ],
+          "properties": {
+            "connectionDiscovery": {
+              "type": "object",
+              "required": [
+                "resourceMetadataPath",
+                "advertisedResourceScopes",
+                "authenticationChallengeScope",
+                "schemaDiscovery",
+                "legacyScopeTransition"
+              ],
+              "properties": {
+                "resourceMetadataPath": {
+                  "const": "/.well-known/oauth-protected-resource/mcp"
+                },
+                "advertisedResourceScopes": {
+                  "const": [
+                    "fcis.connect"
+                  ]
+                },
+                "authenticationChallengeScope": {
+                  "const": "fcis.connect"
+                },
+                "schemaDiscovery": {
+                  "type": "object"
+                },
+                "legacyScopeTransition": {
+                  "type": "object"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
         }
       }
     },

@@ -40,17 +40,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "d3e2fbb704ea201c014ffe84890a2eaf037b4bc1",
+      "ref": "1c08345712c3aa138df0d07491b58b23fd9ce51c",
       "path": "FCIS-STACK.md",
-      "blobSha": "5426726bf4b139ba5a20eec3ea59e5426f5bc3c6",
-      "url": "https://github.com/Fountain-Coach/.github/blob/d3e2fbb704ea201c014ffe84890a2eaf037b4bc1/FCIS-STACK.md"
+      "blobSha": "0ac478ac084cd0f8067f49ae43d3aeb24898a2d3",
+      "url": "https://github.com/Fountain-Coach/.github/blob/1c08345712c3aa138df0d07491b58b23fd9ce51c/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "a7e563f7d0e2c1ad4776e7ea412f28e3dc069fbf",
+      "ref": "1c08345712c3aa138df0d07491b58b23fd9ce51c",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "8e7205486db4d548ba3c2e9ac34cf847959676fd",
-      "url": "https://github.com/Fountain-Coach/.github/blob/a7e563f7d0e2c1ad4776e7ea412f28e3dc069fbf/FCIS-OPENAPI.json"
+      "blobSha": "7a11eff411f001ba96ebf2e0126ca4ed8a257f9d",
+      "url": "https://github.com/Fountain-Coach/.github/blob/1c08345712c3aa138df0d07491b58b23fd9ce51c/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.9.10",
+      "version": "0.9.12",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -1475,6 +1475,15 @@
           "security": [],
           "status": "specified",
           "sourcePointer": "/paths/~1.well-known~1authzen-configuration/get"
+        },
+        {
+          "id": "discoverMCPConnectionResource",
+          "method": "GET",
+          "path": "/.well-known/oauth-protected-resource/mcp",
+          "summary": "Discover the resource-specific FCIS connection authorization metadata",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1.well-known~1oauth-protected-resource~1mcp/get"
         }
       ],
       "schemas": [
@@ -2138,9 +2147,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 351,
+      "expectedRequirementCount": 357,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 351,
+      "minimumAtomicRequirementCount": 357,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -2148,6 +2157,7 @@
         "principal-type",
         "store-schema",
         "mcp-transport",
+        "connection-discovery",
         "host-wire",
         "host-receipt",
         "store-wire",
@@ -2201,9 +2211,9 @@
       }
     },
     "inputContractDigests": {
-      "fcisOpenAPI": "0.9.10",
-      "fcisOpenAPIBlob": "8e7205486db4d548ba3c2e9ac34cf847959676fd",
-      "architectureBlob": "5426726bf4b139ba5a20eec3ea59e5426f5bc3c6",
+      "fcisOpenAPI": "0.9.12",
+      "fcisOpenAPIBlob": "7a11eff411f001ba96ebf2e0126ca4ed8a257f9d",
+      "architectureBlob": "0ac478ac084cd0f8067f49ae43d3aeb24898a2d3",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
     "requirementCatalog": [
@@ -4581,6 +4591,48 @@
         "sourcePointer": "/authorityAndIdentity/authorizationDecision/connectionEvaluationProfile",
         "proofClass": "authorization-decision",
         "name": "authorization-decision: connectionEvaluationProfile"
+      },
+      {
+        "id": "HTTP-discoverMCPConnectionResource",
+        "name": "/.well-known/oauth-protected-resource/mcp GET",
+        "mandatory": true,
+        "pointer": "/paths/~1.well-known~1oauth-protected-resource~1mcp/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "MCP-PROFILE-RESOURCEMETADATAPATH",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/resourceMetadataPath",
+        "proofClass": "connection-discovery",
+        "name": "connection-discovery: resourceMetadataPath"
+      },
+      {
+        "id": "MCP-PROFILE-ADVERTISEDRESOURCESCOPES",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/advertisedResourceScopes",
+        "proofClass": "connection-discovery",
+        "name": "connection-discovery: advertisedResourceScopes"
+      },
+      {
+        "id": "MCP-PROFILE-AUTHENTICATIONCHALLENGESCOPE",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/authenticationChallengeScope",
+        "proofClass": "connection-discovery",
+        "name": "connection-discovery: authenticationChallengeScope"
+      },
+      {
+        "id": "MCP-PROFILE-SCHEMADISCOVERY",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/schemaDiscovery",
+        "proofClass": "connection-discovery",
+        "name": "connection-discovery: schemaDiscovery"
+      },
+      {
+        "id": "MCP-PROFILE-LEGACYSCOPETRANSITION",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/legacyScopeTransition",
+        "proofClass": "connection-discovery",
+        "name": "connection-discovery: legacyScopeTransition"
       }
     ]
   },
@@ -4605,7 +4657,8 @@
       "FCIS-CHAT-01: actual private owner history, restart, cross-provider continuity, exact authorized context, verified included subscription and no-extra-charge refusal before dispatch, actual response/receipt, export, deletion/tombstone and physical owner UX; unsupported native transport remains unavailable. FCIS-POLYPHONY-01 interactive subcase independently verifies discovery and addressing of first-class personified voice instruments, real admitted instrument execution and recoverable attributed discourse/evidence without mandatory native inference or separate provider threads.",
       "FCIS-CHAT-01 situated Reframe reference subcase: actual domain selection, confirmed Grounding, derived Situation, reviewed digest-bound current context, independently witnessed reasoning consumption and results, refusal for stale/foreign/unconfirmed inputs, and unaffected unscoped/deterministic operation.",
       "FCIS-LEARN-01 continuous behavior: ordinary work closure initiates assessment without a maintenance request; independently verify general-acceptance across distinct admitted domains, actual useful and no-lesson outcomes, recovery, refusal, and subsequent consumption under existing authority.",
-      "AuthZEN single-evaluation HTTPS and metadata interoperability; positive and negative current Store-backed decision, separate PEP authentication, deny 200 false, malformed 400, unauthorized 401/403, PDP failure 500, unknown fields, request ID echo, no unsupported metadata, same-token policy change and exact Skill/Host terminal receipt; no commercial rights conformance or live payment claim."
+      "AuthZEN single-evaluation HTTPS and metadata interoperability; positive and negative current Store-backed decision, separate PEP authentication, deny 200 false, malformed 400, unauthorized 401/403, PDP failure 500, unknown fields, request ID echo, no unsupported metadata, same-token policy change and exact Skill/Host terminal receipt; no commercial rights conformance or live payment claim.",
+      "FCIS schema discovery independent of empty and withdrawn capability policy; sanitized stable schemas, no private data, no effect on denial, only fcis.connect advertised at RFC 9728 resource path, exact stale-scope transition with explicit owner consent, no inherited permissions, actual token scope and unchanged legacy refresh."
     ],
     "production": [
       "fresh-install may be deployed independently on any supported Linux host; optional current Hetzner migration is a distinct deployment profile",
@@ -4619,7 +4672,7 @@
   },
   "knownSpecificationLimitations": [],
   "coverageBaseline": {
-    "fcisHTTP": 70,
+    "fcisHTTP": 71,
     "fountainStoreHTTP": 24,
     "secretStoreHTTP": 4,
     "frontendFiles": 8,
@@ -4641,7 +4694,7 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 351,
+    "atomicRequirementCount": 357,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
@@ -4649,6 +4702,7 @@
       "principal-type": 6,
       "store-schema": 21,
       "mcp-transport": 4,
+      "connection-discovery": 5,
       "host-wire": 13,
       "host-receipt": 10,
       "store-wire": 6,
@@ -5105,10 +5159,42 @@
         "tools/list",
         "tools/call"
       ],
-      "toolList": "admitted registry intersected with tenant, client, token audience and current effective grants; no static host.describe capability ceiling",
+      "toolList": "valid fcis.connect lists stable sanitized definitions independently of effective policy; additional/private definitions, effective capability inventory and dispatch require current grants and admission",
       "calls": "typed instrument names with revision and bounded arguments; caller identity never inferred from a model's prose",
       "result": "structured terminal receipt or typed refusal; pending job cannot be called success",
-      "versionNegotiation": "must explicitly validate negotiated protocol version; refuse unsupported version, no silent protocol downgrade"
+      "versionNegotiation": "must explicitly validate negotiated protocol version; refuse unsupported version, no silent protocol downgrade",
+      "connectionDiscovery": {
+        "resourceMetadataPath": "/.well-known/oauth-protected-resource/mcp",
+        "advertisedResourceScopes": [
+          "fcis.connect"
+        ],
+        "authenticationChallengeScope": "fcis.connect",
+        "schemaDiscovery": {
+          "requiresValidConnection": true,
+          "stableDefinitions": [
+            "fountain_host_describe",
+            "fountain_skills_inventory",
+            "fountain_skills_read_active"
+          ],
+          "requiresCapabilityGrant": false,
+          "privateBindings": false,
+          "executionAuthority": false,
+          "otherDefinitions": "current admission and policy only"
+        },
+        "legacyScopeTransition": {
+          "requestedPair": [
+            "host.describe",
+            "workstation.go.verify"
+          ],
+          "onlyWhenNoLongerGrantable": true,
+          "resource": "/mcp",
+          "offeredScope": "fcis.connect",
+          "explicitOwnerConsent": true,
+          "actualTokenScopeReturned": true,
+          "transferCapabilities": false,
+          "unknownScopeFallback": false
+        }
+      }
     },
     "hostTransport": {
       "default": "same-process in-memory typed software Host; no MIDI2 hardware required",
@@ -5409,9 +5495,9 @@
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.9.10",
-    "apiBlobSha": "8e7205486db4d548ba3c2e9ac34cf847959676fd",
-    "stackBlobSha": "5426726bf4b139ba5a20eec3ea59e5426f5bc3c6",
+    "httpContractVersion": "0.9.12",
+    "apiBlobSha": "7a11eff411f001ba96ebf2e0126ca4ed8a257f9d",
+    "stackBlobSha": "0ac478ac084cd0f8067f49ae43d3aeb24898a2d3",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },

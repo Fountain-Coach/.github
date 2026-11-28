@@ -207,7 +207,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.9.10")
+        self.assertEqual(a["info"]["version"], "0.9.12")
         page = a["components"]["schemas"]["OwnerReasoningClientPage"]
         self.assertNotIn("instrumentObservations", page["required"])
         self.assertEqual(page["properties"]["items"]["items"], {"$ref": "#/components/schemas/OwnerReasoningClient"})
@@ -287,11 +287,12 @@ class FCISRootOpenAPITests(unittest.TestCase):
         self.assertEqual(bridge.pop("x-fcis-connect")["externalScope"], "fcis.connect")
         old_mcp = "JSON-RPC initialize, ping, tools/list and tools/call over MCP Streamable HTTP. Method-specific capability dispatch and typed instrument constraints are owned by admitted FCIS-KIT runtime, not this OpenAPI. Client bearer scope and current Host admission must be enforced."
         self.assertTrue(bridge["description"].startswith(old_mcp + " Connect"))
+        del bridge["responses"]["401"]["headers"]
         bridge["description"] = old_mcp
         self.assertEqual(digest(baseline), BASELINE_PATHS_SHA256)
         self.assertEqual(digest(schemas), BASELINE_SCHEMAS_SHA256)
         self.assertEqual(digest(a["components"]["securitySchemes"]), BASELINE_SECURITY_SHA256)
-        self.assertEqual(sum(len(v) for v in a["paths"].values()), 70)
+        self.assertEqual(sum(len(v) for v in a["paths"].values()), 71)
 
     def test_voice_composer_projection_remains_private_and_owner_mediated(self):
         a = self.api
@@ -341,7 +342,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
         contribution = schemas["OwnerVoiceContribution"]
         self.assertNotIn("clientText", contribution["required"])
         self.assertEqual(contribution["properties"]["clientText"]["type"], "string")
-        self.assertEqual(sum(len(v) for v in self.api["paths"].values()), 70)
+        self.assertEqual(sum(len(v) for v in self.api["paths"].values()), 71)
 
     def test_dcr_public_client_metadata_profile_is_additive_not_authority(self):
         a = self.api
@@ -460,6 +461,17 @@ class FCISRootOpenAPITests(unittest.TestCase):
         c = paths["/mcp"]["post"]["x-fcis-connect"]
         self.assertEqual(c["externalScope"], "fcis.connect")
         self.assertEqual(c["defaultCapabilities"], [])
+        self.assertEqual(c["advertisedResourceScopes"], ["fcis.connect"])
+        self.assertEqual(c["authenticationChallengeScope"], "fcis.connect")
+        self.assertTrue(c["schemaDiscovery"]["requiresValidConnection"])
+        self.assertFalse(c["schemaDiscovery"]["requiresCapabilityGrant"])
+        self.assertFalse(c["schemaDiscovery"]["executionAuthority"])
+        self.assertFalse(c["schemaDiscovery"]["privateBindings"])
+        self.assertTrue(c["legacyScopeTransition"]["explicitOwnerConsent"])
+        self.assertFalse(c["legacyScopeTransition"]["transferCapabilities"])
+        self.assertFalse(c["legacyScopeTransition"]["unknownScopeFallback"])
+        self.assertEqual(paths[c["resourceMetadataPath"]]["get"]["security"], [])
+
         self.assertTrue(c["currentPolicyOnEveryCall"])
         self.assertFalse(c["automaticGrant"])
         self.assertFalse(c["genericExecutor"])
