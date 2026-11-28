@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.9.18",
-    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference. Version 0.8.0 specifies separately consented read-only owner-library discovery and exact active signed revision delivery through the existing Skill resource; no production or provider acceptance is implied. Version 0.8.1 specifies the missing MCP transport projection at the existing owner Skill resource. No new scope, issuer, custody, underlying operation, provider account or production acceptance is implied. Version 0.9.0 specifies private owner Voice arrangement, admission decisions and composition readback for the Composer. The HTTP surface is a Console projection of existing owned Voice and Host mediation, not a new instrument command plane, provider adapter, execution grant or production acceptance. Version 0.9.1 adds optional owner-authorized Voice text exchange and client-authored contribution readback to the existing private Composer projection. No new operation, grant scope, provider or native instrument contract. Version 0.9.2 adds an optional owner-selected enrolled peer for the existing Voice admission and a separately authenticated Voice session mode on the existing signed Host frame carrier. The native Voice IDL, operation set, and provider boundary remain unchanged. Version 0.9.3 specifies the single owner-authorized MCP bridge on the existing /mcp endpoint: independently consented owner Skill and admitted instrument scopes may share one resource without widening existing grants. No new HTTP operation or production claim. Version 0.9.7 separates sanitized operation definitions from actual Skill authority for an already authorized /mcp participant; no new HTTP operation or grant. Version 0.9.9 separates external fcis.connect consent from FCIS-managed mutable capability grants. Version 0.9.10 pins the adopted AuthZEN 1.0 final single-evaluation HTTPS decision projection, separate from connection and owner policy administration. Version 0.9.12 separates authenticated schema discovery from effective operation authorization and pins the resource-specific connection negotiation. Version 0.9.14 supersedes the three-definition projection with the single callable fcis.connect boundary. Version 0.9.16 specifies collaborative Golden Key-mediated Owner Admin requests inside the one existing fcis.connect relationship; first operation is connection policy update. No new identity, external tool or scope, automatic permission, runtime or deployment claim. Version 0.9.18 completes the source specification of the existing machine grant renewal operation, with exact signed predecessor and issuer receipt, bounded lease and owner authority, durable replay recovery and local verification. No new route, trust root, external scope, grant or deployment claim.",
+    "version": "0.10.0",
+    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference. Version 0.8.0 specifies separately consented read-only owner-library discovery and exact active signed revision delivery through the existing Skill resource; no production or provider acceptance is implied. Version 0.8.1 specifies the missing MCP transport projection at the existing owner Skill resource. No new scope, issuer, custody, underlying operation, provider account or production acceptance is implied. Version 0.9.0 specifies private owner Voice arrangement, admission decisions and composition readback for the Composer. The HTTP surface is a Console projection of existing owned Voice and Host mediation, not a new instrument command plane, provider adapter, execution grant or production acceptance. Version 0.9.1 adds optional owner-authorized Voice text exchange and client-authored contribution readback to the existing private Composer projection. No new operation, grant scope, provider or native instrument contract. Version 0.9.2 adds an optional owner-selected enrolled peer for the existing Voice admission and a separately authenticated Voice session mode on the existing signed Host frame carrier. The native Voice IDL, operation set, and provider boundary remain unchanged. Version 0.9.3 specifies the single owner-authorized MCP bridge on the existing /mcp endpoint: independently consented owner Skill and admitted instrument scopes may share one resource without widening existing grants. No new HTTP operation or production claim. Version 0.9.7 separates sanitized operation definitions from actual Skill authority for an already authorized /mcp participant; no new HTTP operation or grant. Version 0.9.9 separates external fcis.connect consent from FCIS-managed mutable capability grants. Version 0.9.10 pins the adopted AuthZEN 1.0 final single-evaluation HTTPS decision projection, separate from connection and owner policy administration. Version 0.9.12 separates authenticated schema discovery from effective operation authorization and pins the resource-specific connection negotiation. Version 0.9.14 supersedes the three-definition projection with the single callable fcis.connect boundary. Version 0.9.16 specifies collaborative Golden Key-mediated Owner Admin requests inside the one existing fcis.connect relationship; first operation is connection policy update. No new identity, external tool or scope, automatic permission, runtime or deployment claim. Version 0.9.18 completes the source specification of the existing machine grant renewal operation, with exact signed predecessor and issuer receipt, bounded lease and owner authority, durable replay recovery and local verification. No new route, trust root, external scope, grant or deployment claim. Version 0.10.0 specifies FCIS-DEPLOYMENT-01, an additive owner-authorized runtime deployment lifecycle with a restart-independent local executor, exact signed manifests, durable receipts and revocation-safe rollback. Source only; no deployment or new grant is implied.",
     "contact": {
       "name": "Fountain Coach FCIS",
       "url": "https://github.com/Fountain-Coach/.github"
@@ -11870,6 +11870,1028 @@
           "evidence": "Durable request state and decision receipt, independent readback."
         }
       }
+    },
+    "/oauth/owner/deployments": {
+      "post": {
+        "operationId": "prepareRuntimeDeployment",
+        "summary": "Prepare an immutable runtime deployment",
+        "tags": [
+          "Owner"
+        ],
+        "description": "Resolve an already staged immutable release by ID using the local admitted target; verify source, artifact/asset hashes, signer trust, current service, disk capacity, Store and rollback compatibility. Derive owner/target from verified installation and session. No installation or policy change. Mode rollback selects a retained verified predecessor and uses this same separate approval lifecycle.",
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          {
+            "name": "X-Fountain-Owner-Intent",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "const": "fountaincoach/deployment.prepare"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Exact typed result; pending or queued is not verified deployment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeDeploymentState"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Prepare an immutable runtime deployment",
+          "notFor": "Arbitrary execution, new authority or production proof from source alone",
+          "effect": "bounded deployment lifecycle only",
+          "evidence": "Independent terminal Store and service verification required"
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RuntimeDeploymentPrepareInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth/owner/deployments/{deploymentId}": {
+      "get": {
+        "operationId": "readRuntimeDeployment",
+        "summary": "Inspect an exact runtime deployment",
+        "tags": [
+          "Owner"
+        ],
+        "description": "Read current durable deployment state and exact manifest. Owner-only; no approval or activation on GET.",
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "deploymentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exact typed result; pending or queued is not verified deployment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeDeploymentState"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Inspect an exact runtime deployment",
+          "notFor": "Arbitrary execution, new authority or production proof from source alone",
+          "effect": "bounded deployment lifecycle only",
+          "evidence": "Independent terminal Store and service verification required"
+        }
+      }
+    },
+    "/oauth/owner/deployments/{deploymentId}/decision": {
+      "post": {
+        "operationId": "decideRuntimeDeployment",
+        "summary": "Approve or decline an exact signed runtime deployment",
+        "tags": [
+          "Owner"
+        ],
+        "description": "Explicit Golden Key owner decision, same-origin session, exact manifest digest and revision. Approval also requires verification of the existing owner release signature over RFC 8785 canonical manifest bytes; decline has no execution effect. Atomically record decision and receipt. Never treat chat, bearer, locator or passkey sign-in alone as release signature.",
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "deploymentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          {
+            "name": "X-Fountain-Owner-Intent",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "const": "fountaincoach/deployment.decision"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exact typed result; pending or queued is not verified deployment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeDeploymentState"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Approve or decline an exact signed runtime deployment",
+          "notFor": "Arbitrary execution, new authority or production proof from source alone",
+          "effect": "bounded deployment lifecycle only",
+          "evidence": "Independent terminal Store and service verification required"
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RuntimeDeploymentDecisionInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth/owner/deployments/{deploymentId}/activate": {
+      "post": {
+        "operationId": "activateRuntimeDeployment",
+        "summary": "Dispatch the exact authorized deployment",
+        "tags": [
+          "Owner"
+        ],
+        "description": "Recheck current owner, authorization, manifest, expiry, target and predecessor under lock. Atomically queue an already approved intent; return 202 with durable state, not deployment success. The fixed local executor revalidates the same signed manifest and effect fences before acting. Exact retry reconciles; no second restart.",
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "deploymentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          {
+            "name": "X-Fountain-Owner-Intent",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "const": "fountaincoach/deployment.activate"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Exact typed result; pending or queued is not verified deployment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeDeploymentState"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Dispatch the exact authorized deployment",
+          "notFor": "Arbitrary execution, new authority or production proof from source alone",
+          "effect": "bounded deployment lifecycle only",
+          "evidence": "Independent terminal Store and service verification required"
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RuntimeDeploymentActivateInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth/owner/deployments/{deploymentId}/receipt": {
+      "get": {
+        "operationId": "readRuntimeDeploymentReceipt",
+        "summary": "Read independent terminal deployment evidence",
+        "tags": [
+          "Owner"
+        ],
+        "description": "Read exact immutable terminal receipt after reconciliation by the native Store writer. Nonterminal request returns 409; unavailable evidence cannot be success.",
+        "security": [
+          {
+            "ownerPasskeySession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "deploymentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exact typed result; pending or queued is not verified deployment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeDeploymentReceipt"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Typed refusal; no unauthorized effect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
+            }
+          }
+        },
+        "x-fcis-go-target-state": "specified-only-not-deployed",
+        "x-fcis-production-state": "NOT_ESTABLISHED_GO",
+        "x-fcis-implementation-state": "go-target-specified-only",
+        "x-fcis-reasoning": {
+          "useWhen": "Read independent terminal deployment evidence",
+          "notFor": "Arbitrary execution, new authority or production proof from source alone",
+          "effect": "bounded deployment lifecycle only",
+          "evidence": "Independent terminal Store and service verification required"
+        }
+      }
     }
   },
   "components": {
@@ -17029,6 +18051,555 @@
           "expiresAtMilliseconds",
           "evidence"
         ]
+      },
+      "RuntimeDeploymentPrepareInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "mode",
+          "releaseId",
+          "reason",
+          "idempotencyKey"
+        ],
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "activate",
+              "rollback"
+            ]
+          },
+          "releaseId": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 96
+          }
+        }
+      },
+      "RuntimeDeploymentArtifact": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "sha256",
+          "bytes"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "fcis-go",
+              "owner-openapi",
+              "console-js",
+              "console-css"
+            ]
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        }
+      },
+      "RuntimeDeploymentStoreAnchor": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "instanceId",
+          "sequence",
+          "prefixSHA256",
+          "authorityStateSHA256"
+        ],
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "prefixSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "authorityStateSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      },
+      "RuntimeDeploymentManifest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "deploymentId",
+          "mode",
+          "issuerOrigin",
+          "targetId",
+          "ownerId",
+          "releaseId",
+          "gitRevision",
+          "moduleTree",
+          "canonicalContractRevision",
+          "privateOpenAPISHA256",
+          "artifacts",
+          "predecessorReleaseId",
+          "predecessorBinarySHA256",
+          "rollbackBinarySHA256",
+          "executorSHA256",
+          "unitSHA256",
+          "trustSHA256",
+          "providerRootSHA256",
+          "edgeConfigurationSHA256",
+          "store",
+          "createdAt",
+          "expiresAt"
+        ],
+        "properties": {
+          "kind": {
+            "const": "fountaincoach.fcis.runtime-deployment/1"
+          },
+          "deploymentId": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "activate",
+              "rollback"
+            ]
+          },
+          "issuerOrigin": {
+            "type": "string",
+            "format": "uri"
+          },
+          "targetId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "ownerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "releaseId": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "gitRevision": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "moduleTree": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "canonicalContractRevision": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "privateOpenAPISHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "artifacts": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/components/schemas/RuntimeDeploymentArtifact"
+            }
+          },
+          "predecessorReleaseId": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "predecessorBinarySHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "rollbackBinarySHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "executorSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "unitSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "trustSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "providerRootSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "edgeConfigurationSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "store": {
+            "$ref": "#/components/schemas/RuntimeDeploymentStoreAnchor"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "RuntimeDeploymentDecisionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "manifestSHA256",
+          "expectedRevision",
+          "decision",
+          "confirm",
+          "idempotencyKey",
+          "releaseSignature"
+        ],
+        "properties": {
+          "manifestSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "approve",
+              "decline"
+            ]
+          },
+          "confirm": {
+            "const": true
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 96
+          },
+          "releaseSignature": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384,
+                "contentEncoding": "base64"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "decision": {
+                  "const": "approve"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "releaseSignature": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384,
+                  "contentEncoding": "base64"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "releaseSignature": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "RuntimeDeploymentActivateInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "manifestSHA256",
+          "expectedRevision",
+          "idempotencyKey"
+        ],
+        "properties": {
+          "manifestSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 96
+          }
+        }
+      },
+      "RuntimeDeploymentState": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "deploymentId",
+          "manifest",
+          "manifestSHA256",
+          "revision",
+          "phase",
+          "terminal",
+          "decisionReceiptId",
+          "terminalReceiptId",
+          "failureCode"
+        ],
+        "properties": {
+          "deploymentId": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "manifest": {
+            "$ref": "#/components/schemas/RuntimeDeploymentManifest"
+          },
+          "manifestSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "phase": {
+            "type": "string",
+            "enum": [
+              "prepared",
+              "declined",
+              "expired",
+              "authorized",
+              "queued",
+              "fenced",
+              "installed",
+              "started",
+              "verifying",
+              "verified",
+              "rollback-running",
+              "rolled-back",
+              "failed-closed"
+            ]
+          },
+          "terminal": {
+            "type": "boolean"
+          },
+          "decisionReceiptId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "terminalReceiptId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "failureCode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "description": "Terminal exactly for declined, expired, verified, rolled-back or failed-closed; only verified proves successful selected-release activation. Missing terminal evidence remains nonterminal or failed-closed; never infer success."
+      },
+      "RuntimeDeploymentEvidence": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "sha256",
+          "observedAt",
+          "verified"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "artifact",
+              "service",
+              "https",
+              "store-prefix",
+              "authority-state",
+              "signed-skills",
+              "oauth-metadata",
+              "rollback",
+              "refusal"
+            ]
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "observedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "verified": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RuntimeDeploymentReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "receiptId",
+          "deploymentId",
+          "manifestSHA256",
+          "outcome",
+          "terminal",
+          "observedAt",
+          "actualBinarySHA256",
+          "storeBefore",
+          "storeAfter",
+          "evidence",
+          "failureCode"
+        ],
+        "properties": {
+          "receiptId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "deploymentId": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "manifestSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "declined",
+              "expired",
+              "verified",
+              "rolled-back",
+              "failed-closed"
+            ]
+          },
+          "terminal": {
+            "const": true
+          },
+          "observedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actualBinarySHA256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "storeBefore": {
+            "$ref": "#/components/schemas/RuntimeDeploymentStoreAnchor"
+          },
+          "storeAfter": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RuntimeDeploymentStoreAnchor"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "items": {
+              "$ref": "#/components/schemas/RuntimeDeploymentEvidence"
+            }
+          },
+          "failureCode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "description": "Independent terminal evidence, not the decision receipt. Verified requires exact live candidate digest, HTTPS protocol and Store continuity witnesses; rolled-back requires independently observed exact predecessor and preserved Store; missing verification is failed-closed. A receipt is immutable and exact replay returns its existing identity."
       }
     }
   },
@@ -17233,5 +18804,106 @@
       "callerProperties": "ignored for authority",
       "tokenAuthentication": "PEP responsibility; native path checks actual bearer; no raw subject token in payload"
     }
+  },
+  "x-fcis-runtime-deployment": {
+    "scenarioId": "FCIS-DEPLOYMENT-01",
+    "status": "specified-only-not-deployed",
+    "operationIds": [
+      "prepareRuntimeDeployment",
+      "readRuntimeDeployment",
+      "decideRuntimeDeployment",
+      "activateRuntimeDeployment",
+      "readRuntimeDeploymentReceipt"
+    ],
+    "authority": "Current existing Golden Key owner decision, current AuthZEN permit and separately verified existing release signature are necessary; never owner authority from a bearer, conversational confirmation alone, link, signature alone or previous approval. No new credential, signer, trust root, external MCP tool or scope.",
+    "manifest": "Server derives exact single configured issuer, owner, target, source revision, module tree, source contract revision, all four role-distinct immutable artifact hashes and sizes, current predecessor, exact rollback binary, stable local executor digest, unit/trust/provider/edge digests and verified Store anchor. Release ID resolves to an admitted immutable staging record, never a caller-supplied path, shell, argv, service or URL. Reject duplicates, unknown fields, missing roles, unreviewed or incompatible artifacts, insufficient space and wrong architecture. Store SHA-256 over RFC 8785 canonical JSON UTF-8 bytes; exact signature verification uses namespace fcis-go-service-release and signer fountain-owner with the existing authorized_signers trust file in the incumbent installation.",
+    "approval": "Owner Console and established RUN ceremony display exact manifest, source, target, predecessor, effect, rollback and expiry. Approval binds digest, current revision, owner and existing signature; prepare has no effect. Prepared proposal expires no later than ten minutes after creation; activation must acquire its fence before expiry. No second approval for automatic rollback of the same failed activation within the approved rollback target; later manual rollback requires a fresh prepared, signed and approved manifest. Decline or expiry cannot queue work.",
+    "stateFence": "Recheck under a single target activation lock and native Store CAS. Before fencing, require unchanged instance, issuer, owner, trust, predecessor executable, unit, edge configuration and authority-state digest covering owner/passkeys, clients/grants/revocations, Hosts/admissions, instruments and active signed Skills. Preserve the exact committed WAL prefix and its sequence. Permit only this deployment lifecycle records and explicitly specified non-authority append-only records, independently verified against the anchor; other drift requires re-prepare. Own lifecycle writes do not invalidate their own anchor. Recheck authorization and expiry before irrevocable dispatch. Only one deployment may be active per target.",
+    "executor": "One versioned native Go local executor supervised independently of the FCIS issuer process; no public listener, MCP tool, generic shell, arbitrary service selector, artifact code as root, new gateway or credential. Fixed service profile and allowlisted paths; immutable installation by digest, fsync and atomic service selection, single-writer fencing before offline readback. Use attached volume where configured; never delete unrelated state. Before activation prove current Store compatibility with both candidate and predecessor, including all permitted writes before terminal verification. Refuse unsupported migration or rollback compatibility rather than rewind Store. The executor must survive issuer replacement and interruption; a crashed executor resumes from durable transition evidence without repeating irreversible actions.",
+    "transitions": {
+      "prepared": [
+        "authorized",
+        "declined",
+        "expired"
+      ],
+      "authorized": [
+        "queued",
+        "expired"
+      ],
+      "queued": [
+        "fenced",
+        "failed-closed"
+      ],
+      "fenced": [
+        "installed",
+        "rollback-running",
+        "failed-closed"
+      ],
+      "installed": [
+        "started",
+        "rollback-running",
+        "failed-closed"
+      ],
+      "started": [
+        "verifying",
+        "rollback-running",
+        "failed-closed"
+      ],
+      "verifying": [
+        "verified",
+        "rollback-running",
+        "failed-closed"
+      ],
+      "rollback-running": [
+        "rolled-back",
+        "failed-closed"
+      ],
+      "verified": [],
+      "rolled-back": [],
+      "failed-closed": [],
+      "declined": [],
+      "expired": []
+    },
+    "custody": "Existing native FountainStore owns deployment records in fcis.deployments and immutable fcis.receipts. Under the Store writer, atomically record intent, exact decision, queue and receipt identity. While issuer is stopped, the privileged local executor uses a bounded append-only fsynced transition journal with deployment ID, manifest digest, phase sequence, previous entry digest, exact observed evidence and crash reconciliation. The journal is evidence transport, not a second grant authority or independent Store writer. On restart the native Store writer validates and idempotently imports ordered events/receipts; no terminal success until independently read back. A stopped/unrecoverable issuer leaves local evidence and explicit pending recovery; never claim a FountainStore receipt before import.",
+    "replay": "One immutable intent per owner/target/idempotency key and canonical input; exact retry returns original identity/state, conflicting key/digest/revision refuses. Activation consumes the exact authorized intent once; after restart reconcile actual service selection and journal before taking further effects. A lost response never authorizes a new deployment.",
+    "verification": "Verify actual executable and service identity, unchanged public HTTPS issuer and OAuth/MCP/resource metadata, exact served Console/OpenAPI assets, anonymous refusal, Store prefix and authority-state continuity including current revocations and exact active signed Skill manifests/signatures. Independent owner/client/Host acceptance remains separate from activation: one-tool connection, signed Skill delivery and external Host receipt if applicable. Do not infer a production timed renewal.",
+    "rollback": "On activation failure after a possible effect, use only the explicitly bound predecessor under the same fence. Restore service selection without rewinding, truncating or replacing Store, or reviving revoked authority. Independently verify predecessor digest, HTTPS and retained Store state. If compatibility or recovery is not verified, keep effects fenced and record failed-closed. A manual rollback is a new deployment of a retained verified release; never implicit arbitrary downgrade.",
+    "projection": {
+      "externalTool": "fcis.connect",
+      "externalScope": "fcis.connect",
+      "status": "specified-only-not-deployed",
+      "messageKinds": {
+        "deployment.prepare": {
+          "inputSchema": {
+            "$ref": "#/components/schemas/RuntimeDeploymentPrepareInput"
+          },
+          "resultSchema": {
+            "$ref": "#/components/schemas/RuntimeDeploymentState"
+          },
+          "capability": "deployment.prepare"
+        },
+        "deployment.inspect": {
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "deploymentId"
+            ],
+            "properties": {
+              "deploymentId": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          },
+          "resultSchema": {
+            "$ref": "#/components/schemas/RuntimeDeploymentState"
+          },
+          "capability": "deployment.inspect"
+        }
+      },
+      "boundary": "Future closed typed projection of the same owner administration lifecycle only after separate admission, explicit current AuthZEN policy grant and supported in-place provider descriptor refresh. No current connection policy changes, no new tool, no owner cookie forwarding, no decision, activation or rollback authority through the bearer. Inspect only the proposing connection own request. The current static descriptor remains unchanged until this projection is implemented and reviewed."
+    },
+    "acceptance": "Two successive immutable issuer releases with no executor edits; actual exact signature/approval, invalid signature and stale state refusal, replay and lost-response one effect, crash at each transition, bounded storage and symlink/path refusal, successful independent HTTPS and Store readback, health failure rollback without rewind, incompatible rollback fail-closed, original owner, grants, revocations and signed Skills unchanged, existing retained conversational connection and signed Skill delivery independently exercised. Source, isolated Go fixture, provider exposure and real production activation are separate evidence."
   }
 }

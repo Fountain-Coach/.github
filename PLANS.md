@@ -1,3 +1,16 @@
+## FCIS-DEPLOYMENT-01 — restart-independent signed runtime deployment (28 November 2026; SOURCE CANDIDATE)
+
+**Owner decision:** make production deployment of FCIS itself a first-class canonical OpenAPI contract. The existing machine renewal implementation remains a separate ready-to-activate release; this source task does not activate it.
+
+**Reading record:** Governance 07 (finite plan, scope and repository hygiene), 08 (named independent evidence, negative cases), 43 (named build and release allow-list), 94 (separate signed installation and explicit owner consent, target verification and rollback). Canonical FCIS-STACK section 7, existing owner admin and AuthZEN profiles and the retained signed activation procedure resolved.
+- Forbidden: per-release executable generation, caller-supplied shell/path/unit/target, bearer self-approval, new signing identity, cross-tenant inspection, concurrent Store writers, Store rewind, unverified terminal success.
+- Conflict: restart-independent local executor must not become an external gateway or second authority; its crash journal is evidence transport only and is reconciled by the existing native Store writer. Golden Key decision does not substitute for the existing release signature.
+- Excluded: DNS/Caddy changes, machine pairing/renewal or instrument grants, current connection policy changes, new tools, credentials, migrations, live activation, and commercial effects.
+
+**Finite acceptance:** exact staged source and artifact manifest; owner decision and existing release signature; current-state CAS, deterministic restart-independent executor and idempotent activation; independent HTTPS and Store continuity; fail-closed replay, tampering, stale state, insufficient disk, crash at every transition, failed health and rollback with no Store rewind. Verify two successive immutable releases without editing the executor, preserve existing owner/client/grant/revocation/Skill identities; separately prove the existing conversational connection and signed Skill read. Canonical source validation precedes native implementation and live acceptance.
+
+---
+
 ## FCIS-MACHINE-RENEWAL-01 — bounded existing Host lease renewal (28 November 2026; ACTIVE source candidate)
 
 **Requested outcome:** an existing enrolled Host remains operational across lease renewals without repeated pairing or signing a different executable. The existing owner authority remains independently bounded and revocable. Complete only the existing renewMachineGrant route; preserve the single external fcis.connect tool.

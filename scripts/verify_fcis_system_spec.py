@@ -210,6 +210,7 @@ def expected_atomic(system: dict) -> dict[str, dict[str, str]]:
     fields("OWNER-POLICY-", "/ownerAndTenancy", "owner-policy")
     fields("AUTHZEN-", "/authorityAndIdentity/authorizationDecision", "authorization-decision")
     fields("MACHINE-RENEWAL-", "/authorityAndIdentity/hosts/machineGrantRenewal", "machine-renewal")
+    fields("RUNTIME-DEPLOYMENT-", "/authorityAndIdentity/runtimeDeployment", "runtime-deployment")
     fields("BOOTSTRAP-", "/initialization/setupTicket", "bootstrap")
     for field, stem, cls in (
         ("stages", "LEARN-STAGE-", "learning-stage"),
@@ -645,7 +646,80 @@ def check_machine_renewal(system: dict, api: dict) -> None:
         reject("machine renewal acceptance missing")
 
 
+def check_runtime_deployment(system: dict, api: dict) -> None:
+    """Signed, bounded, restart-independent deployment is a distinct owner lifecycle."""
+    p = api["x-fcis-runtime-deployment"]
+    if p != system["authorityAndIdentity"]["runtimeDeployment"]:
+        reject("runtime deployment profile drift")
+    if p["scenarioId"] != "FCIS-DEPLOYMENT-01" or p["status"] != "specified-only-not-deployed":
+        reject("runtime deployment authority or source-only status drift")
+    base = "/oauth/owner/deployments"
+    ident = base + "/{deploymentId}"
+    expected = [
+        (base, "post", "prepareRuntimeDeployment", "RuntimeDeploymentPrepareInput", "RuntimeDeploymentState", "201", "prepare"),
+        (ident, "get", "readRuntimeDeployment", None, "RuntimeDeploymentState", "200", None),
+        (ident + "/decision", "post", "decideRuntimeDeployment", "RuntimeDeploymentDecisionInput", "RuntimeDeploymentState", "200", "decision"),
+        (ident + "/activate", "post", "activateRuntimeDeployment", "RuntimeDeploymentActivateInput", "RuntimeDeploymentState", "202", "activate"),
+        (ident + "/receipt", "get", "readRuntimeDeploymentReceipt", None, "RuntimeDeploymentReceipt", "200", None),
+    ]
+    if p["operationIds"] != [x[2] for x in expected]:
+        reject("runtime deployment operation inventory drift")
+    for path, method, opid, body, out, success, intent in expected:
+        op = api["paths"][path][method]
+        if (op["operationId"] != opid or op["security"] != [{"ownerPasskeySession": []}]
+                or op["x-fcis-go-target-state"] != "specified-only-not-deployed"
+                or set(op["responses"]) != {success, "400", "401", "403", "404", "409", "410", "429", "503"}
+                or any(r["headers"]["Cache-Control"]["schema"] != {"const": "no-store"} for r in op["responses"].values())
+                or op["responses"][success]["content"]["application/json"]["schema"] != {"$ref": "#/components/schemas/" + out}):
+            reject("runtime deployment owner route or receipt drift")
+        if body and op["requestBody"]["content"]["application/json"]["schema"] != {"$ref": "#/components/schemas/" + body}:
+            reject("runtime deployment request drift")
+        if intent:
+            headers = {x["name"]: x for x in op["parameters"] if x["in"] == "header"}
+            if set(headers) != {"Origin", "X-Fountain-Owner-Intent"} or not all(x["required"] for x in headers.values()) or headers["X-Fountain-Owner-Intent"]["schema"] != {"const": "fountaincoach/deployment." + intent}:
+                reject("runtime deployment mutation intent drift")
+    schemas = api["components"]["schemas"]
+    for name in ("RuntimeDeploymentPrepareInput", "RuntimeDeploymentArtifact", "RuntimeDeploymentStoreAnchor", "RuntimeDeploymentManifest", "RuntimeDeploymentDecisionInput", "RuntimeDeploymentActivateInput", "RuntimeDeploymentState", "RuntimeDeploymentEvidence", "RuntimeDeploymentReceipt"):
+        schema = schemas[name]
+        if schema["additionalProperties"] is not False or set(schema["required"]) != set(schema["properties"]):
+            reject("runtime deployment closed schema drift")
+    manifest = schemas["RuntimeDeploymentManifest"]["properties"]
+    if set(manifest) != {"kind","deploymentId","mode","issuerOrigin","targetId","ownerId","releaseId","gitRevision","moduleTree","canonicalContractRevision","privateOpenAPISHA256","artifacts","predecessorReleaseId","predecessorBinarySHA256","rollbackBinarySHA256","executorSHA256","unitSHA256","trustSHA256","providerRootSHA256","edgeConfigurationSHA256","store","createdAt","expiresAt"}:
+        reject("runtime deployment immutable manifest binding drift")
+    if schemas["RuntimeDeploymentDecisionInput"]["properties"]["confirm"] != {"const": True} or not schemas["RuntimeDeploymentDecisionInput"].get("allOf"):
+        reject("runtime deployment explicit decision/signature drift")
+    phases = p["transitions"]
+    terminal = {"verified", "rolled-back", "failed-closed", "declined", "expired"}
+    if (set(phases) != set(schemas["RuntimeDeploymentState"]["properties"]["phase"]["enum"])
+            or {k for k, v in phases.items() if not v} != terminal
+            or phases["prepared"] != ["authorized", "declined", "expired"]
+            or phases["authorized"] != ["queued", "expired"]
+            or any(x not in phases for v in phases.values() for x in v)
+            or "verified" in phases["queued"]):
+        reject("runtime deployment transition or terminal drift")
+    projection = p["projection"]
+    if (projection["externalTool"] != "fcis.connect" or projection["externalScope"] != "fcis.connect"
+            or projection["status"] != "specified-only-not-deployed"
+            or set(projection["messageKinds"]) != {"deployment.prepare", "deployment.inspect"}
+            or "No current connection policy changes" not in projection["boundary"]):
+        reject("runtime deployment projection authority drift")
+    for field, required in {
+        "authority": ["Golden Key", "AuthZEN", "existing release signature", "No new credential"],
+        "manifest": ["RFC 8785", "fcis-go-service-release", "fountain-owner", "never a caller-supplied path"],
+        "stateFence": ["exact committed WAL prefix", "Only one deployment"],
+        "executor": ["no public listener", "single-writer fencing", "candidate and predecessor"],
+        "custody": ["native Store writer", "not a second grant authority", "never claim a FountainStore receipt before import"],
+        "rollback": ["without rewinding", "revoked authority", "failed-closed"],
+        "acceptance": ["Two successive immutable issuer releases", "crash at each transition"],
+    }.items():
+        if any(fragment not in p[field] for fragment in required):
+            reject("runtime deployment invariant drift: " + field)
+    if "fcis.deployments" not in system["persistence"]["logicalCollections"] or not any("FCIS-DEPLOYMENT-01" in x for x in system["acceptance"]["postGenerationTesting"]):
+        reject("runtime deployment custody or acceptance missing")
+
+
 def check(system: dict, api: dict) -> None:
+    check_runtime_deployment(system, api)
     check_machine_renewal(system, api)
     check_owner_admin(system, api)
     check_connection_discovery(system, api)
