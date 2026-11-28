@@ -104,6 +104,35 @@ class FCISWholeSystemContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "wire drift"):
             verifier.check_authzen(doc, candidate)
 
+    def test_owner_admin_requires_explicit_golden_key_decision(self):
+        verifier, doc, _ = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
+        verifier.check_owner_admin(doc, api)
+        base = "/oauth/owner/admin/requests/{requestId}/decision"
+        bad = copy.deepcopy(api)
+        bad["paths"][base]["post"]["security"] = [{"oauthBearer": []}]
+        with self.assertRaisesRegex(ValueError, "Golden Key"):
+            verifier.check_owner_admin(doc, bad)
+        bad = copy.deepcopy(api)
+        bad["components"]["schemas"]["OwnerAdminDecisionInput"]["properties"]["confirm"] = {"type": "boolean"}
+        with self.assertRaisesRegex(ValueError, "approve/decline"):
+            verifier.check_owner_admin(doc, bad)
+        bad = copy.deepcopy(api)
+        m = bad["paths"]["/mcp"]["post"]["x-fcis-connect"]["connectionMessage"]
+        m["inputSchema"]["properties"]["ownerSession"] = {"type": "string"}
+        with self.assertRaisesRegex(ValueError, "caller authority"):
+            verifier.check_owner_admin(doc, bad)
+        bad = copy.deepcopy(api)
+        bad["paths"][base]["post"]["responses"]["200"]["headers"] = {}
+        with self.assertRaisesRegex(ValueError, "caching"):
+            verifier.check_owner_admin(doc, bad)
+
+    def test_owner_admin_proposal_custody_cannot_be_removed(self):
+        verifier, doc, base = self._atomic_fixture()
+        doc["persistence"]["logicalCollections"].remove("fcis.owner-admin-requests")
+        with self.assertRaisesRegex(ValueError, "coverage catalog mismatch"):
+            verifier.check_atomic_coverage(doc, base)
+
     def test_learning_acceptance_contract(self):
         verifier, doc, base = self._atomic_fixture()
         api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))

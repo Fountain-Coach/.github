@@ -40,17 +40,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "0d3de162db2bef6e751d6813f20d1d57c4396f9b",
+      "ref": "28c2385f06d4c651c1a810689f45493286493b05",
       "path": "FCIS-STACK.md",
-      "blobSha": "45d0de10b6d557e5c5a3e051421ceae4704a4f79",
-      "url": "https://github.com/Fountain-Coach/.github/blob/0d3de162db2bef6e751d6813f20d1d57c4396f9b/FCIS-STACK.md"
+      "blobSha": "6a3fdbd06a943c97288fefb22747cc465f85cc7f",
+      "url": "https://github.com/Fountain-Coach/.github/blob/28c2385f06d4c651c1a810689f45493286493b05/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "6cb4600e7136dfa3964943d8083cfc61aa8d9b95",
+      "ref": "28c2385f06d4c651c1a810689f45493286493b05",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "6c6b4a6d19b7c6bb9e04c440217db20f2e255b6b",
-      "url": "https://github.com/Fountain-Coach/.github/blob/6cb4600e7136dfa3964943d8083cfc61aa8d9b95/FCIS-OPENAPI.json"
+      "blobSha": "1a2a55aaf40b447f767e07257728803e23bb5c60",
+      "url": "https://github.com/Fountain-Coach/.github/blob/28c2385f06d4c651c1a810689f45493286493b05/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.9.14",
+      "version": "0.9.16",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -1484,6 +1484,32 @@
           "security": [],
           "status": "specified",
           "sourcePointer": "/paths/~1.well-known~1oauth-protected-resource~1mcp/get"
+        },
+        {
+          "id": "readOwnerAdminRequest",
+          "method": "GET",
+          "path": "/oauth/owner/admin/requests/{requestId}",
+          "summary": "Inspect an exact owner administrative proposal",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1admin~1requests~1{requestId}/get"
+        },
+        {
+          "id": "decideOwnerAdminRequest",
+          "method": "POST",
+          "path": "/oauth/owner/admin/requests/{requestId}/decision",
+          "summary": "Explicitly approve or decline an exact administrative proposal",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1admin~1requests~1{requestId}~1decision/post"
         }
       ],
       "schemas": [
@@ -1587,7 +1613,11 @@
         "AuthZENAction",
         "AuthZENEvaluationRequest",
         "AuthZENDecision",
-        "AuthZENMetadata"
+        "AuthZENMetadata",
+        "OwnerAdminConnectionSnapshot",
+        "OwnerAdminRequest",
+        "OwnerAdminRequestState",
+        "OwnerAdminDecisionInput"
       ],
       "securitySchemes": [
         "ownerPasskeySession",
@@ -2037,7 +2067,8 @@
       "fcis.skill-entitlements",
       "fcis.conversations",
       "fcis.messages",
-      "fcis.reasoning-turns"
+      "fcis.reasoning-turns",
+      "fcis.owner-admin-requests"
     ],
     "correctness": [
       "single writer with fencing",
@@ -2147,9 +2178,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 358,
+      "expectedRequirementCount": 376,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 358,
+      "minimumAtomicRequirementCount": 376,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -2174,7 +2205,8 @@
         "learning-refusal",
         "learning-cycle",
         "chat-requirement",
-        "chat-refusal"
+        "chat-refusal",
+        "owner-admin"
       ],
       "generatorReceipt": {
         "artifact": "generation-coverage.json",
@@ -2211,9 +2243,9 @@
       }
     },
     "inputContractDigests": {
-      "fcisOpenAPI": "0.9.14",
-      "fcisOpenAPIBlob": "6c6b4a6d19b7c6bb9e04c440217db20f2e255b6b",
-      "architectureBlob": "45d0de10b6d557e5c5a3e051421ceae4704a4f79",
+      "fcisOpenAPI": "0.9.16",
+      "fcisOpenAPIBlob": "1a2a55aaf40b447f767e07257728803e23bb5c60",
+      "architectureBlob": "6a3fdbd06a943c97288fefb22747cc465f85cc7f",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
     "requirementCatalog": [
@@ -4640,6 +4672,132 @@
         "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage",
         "proofClass": "connection-discovery",
         "name": "connection-discovery: connectionMessage"
+      },
+      {
+        "id": "HTTP-readOwnerAdminRequest",
+        "name": "/oauth/owner/admin/requests/{requestId} GET",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1admin~1requests~1{requestId}/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-decideOwnerAdminRequest",
+        "name": "/oauth/owner/admin/requests/{requestId}/decision POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1admin~1requests~1{requestId}~1decision/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "COLLECTION-FCIS-OWNER-ADMIN-REQUESTS",
+        "mandatory": true,
+        "sourcePointer": "/persistence/logicalCollections/21",
+        "proofClass": "store-schema",
+        "name": "FountainStore collection fcis.owner-admin-requests"
+      },
+      {
+        "id": "OWNER-ADMIN-SCENARIOID",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/scenarioId",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: scenarioId"
+      },
+      {
+        "id": "OWNER-ADMIN-STATUS",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/status",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: status"
+      },
+      {
+        "id": "OWNER-ADMIN-OWNERAUTHORITY",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/ownerAuthority",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: ownerAuthority"
+      },
+      {
+        "id": "OWNER-ADMIN-TRANSPORT",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/transport",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: transport"
+      },
+      {
+        "id": "OWNER-ADMIN-OPERATION",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/operation",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: operation"
+      },
+      {
+        "id": "OWNER-ADMIN-INSPECT",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/inspect",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: inspect"
+      },
+      {
+        "id": "OWNER-ADMIN-REQUEST",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/request",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: request"
+      },
+      {
+        "id": "OWNER-ADMIN-REQUESTIDENTITY",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/requestIdentity",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: requestIdentity"
+      },
+      {
+        "id": "OWNER-ADMIN-LIFECYCLE",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/lifecycle",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: lifecycle"
+      },
+      {
+        "id": "OWNER-ADMIN-APPROVAL",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/approval",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: approval"
+      },
+      {
+        "id": "OWNER-ADMIN-ATOMICITY",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/atomicity",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: atomicity"
+      },
+      {
+        "id": "OWNER-ADMIN-CUSTODY",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/custody",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: custody"
+      },
+      {
+        "id": "OWNER-ADMIN-RESULT",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/result",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: result"
+      },
+      {
+        "id": "OWNER-ADMIN-ACCEPTANCE",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/acceptance",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: acceptance"
+      },
+      {
+        "id": "OWNER-ADMIN-RESULTSBYKIND",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/resultsByKind",
+        "proofClass": "owner-admin",
+        "name": "owner-admin: resultsByKind"
       }
     ]
   },
@@ -4665,7 +4823,8 @@
       "FCIS-CHAT-01 situated Reframe reference subcase: actual domain selection, confirmed Grounding, derived Situation, reviewed digest-bound current context, independently witnessed reasoning consumption and results, refusal for stale/foreign/unconfirmed inputs, and unaffected unscoped/deterministic operation.",
       "FCIS-LEARN-01 continuous behavior: ordinary work closure initiates assessment without a maintenance request; independently verify general-acceptance across distinct admitted domains, actual useful and no-lesson outcomes, recovery, refusal, and subsequent consumption under existing authority.",
       "AuthZEN single-evaluation HTTPS and metadata interoperability; positive and negative current Store-backed decision, separate PEP authentication, deny 200 false, malformed 400, unauthorized 401/403, PDP failure 500, unknown fields, request ID echo, no unsupported metadata, same-token policy change and exact Skill/Host terminal receipt; no commercial rights conformance or live payment claim.",
-      "Exactly one external fcis.connect definition, empty/granted/withdrawn policy invariant; typed connection acknowledgement without effect; direct old names and legacy bearers refused, unknown kinds and extra arguments refused; existing typed Host and Skill paths with current policy, receipts and same-bearer withdrawal; actual provider acceptance independent of local source and runtime tests."
+      "Exactly one external fcis.connect definition, empty/granted/withdrawn policy invariant; typed connection acknowledgement without effect; direct old names and legacy bearers refused, unknown kinds and extra arguments refused; existing typed Host and Skill paths with current policy, receipts and same-bearer withdrawal; actual provider acceptance independent of local source and runtime tests.",
+      "Actual retained client inspect, request missing skills.owned.read without grant effect, explicit owner approval, same bearer status and signed Skill read; decline, stale revision, expired, conflicting replay, wrong connection, revoked bearer, wrong Origin/session and arbitrary operation refusal without effects. Source fixture is not live acceptance."
     ],
     "production": [
       "fresh-install may be deployed independently on any supported Linux host; optional current Hetzner migration is a distinct deployment profile",
@@ -4679,7 +4838,7 @@
   },
   "knownSpecificationLimitations": [],
   "coverageBaseline": {
-    "fcisHTTP": 71,
+    "fcisHTTP": 73,
     "fountainStoreHTTP": 24,
     "secretStoreHTTP": 4,
     "frontendFiles": 8,
@@ -4701,13 +4860,13 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 358,
+    "atomicRequirementCount": 376,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
       "skill-lifecycle": 6,
       "principal-type": 6,
-      "store-schema": 21,
+      "store-schema": 22,
       "mcp-transport": 4,
       "connection-discovery": 6,
       "host-wire": 13,
@@ -4726,7 +4885,8 @@
       "learning-refusal": 5,
       "learning-cycle": 8,
       "chat-requirement": 15,
-      "chat-refusal": 6
+      "chat-refusal": 6,
+      "owner-admin": 15
     }
   },
   "nonClaims": [
@@ -5167,7 +5327,7 @@
         "tools/call"
       ],
       "toolList": "exactly one external tool fcis.connect for every valid connection; no direct instrument definitions regardless of internal policy or admission",
-      "calls": "only fcis.connect accepts bounded typed connection messages; internal adapters resolve existing admitted typed operations; current AuthZEN at dispatch and effect; no direct instrument calls, legacy bearer execution or arbitrary executor",
+      "calls": "only fcis.connect accepts bounded typed connection messages; internal adapters resolve existing admitted typed operations; current AuthZEN at dispatch and effect; no direct instrument calls, legacy bearer execution or arbitrary executor The three owner.admin message kinds mediate only the current connection's exact typed proposal and status. Explicit owner decision uses the passkey-only API, not MCP.",
       "result": "structured terminal receipt or typed refusal; pending job cannot be called success",
       "versionNegotiation": "must explicitly validate negotiated protocol version; refuse unsupported version, no silent protocol downgrade",
       "connectionDiscovery": {
@@ -5201,7 +5361,7 @@
         },
         "connectionMessage": {
           "name": "fcis.connect",
-          "description": "Connect to FCIS and exchange a typed message through its current owner-authorized internal flow. Connect alone has no effect. Host inspection and signed Skill delivery may record audit receipts. No arbitrary execution.",
+          "description": "Connect to FCIS and exchange a typed message through its current owner-authorized internal flow. Connect alone has no effect. Host inspection and signed Skill delivery may record audit receipts. No arbitrary execution. Owner administration can inspect the current connection and prepare or observe a bounded policy proposal; proposals do not grant rights. Only explicit Golden Key owner approval may change policy.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -5211,7 +5371,10 @@
                   "connect",
                   "host.describe",
                   "skills.inventory",
-                  "skills.read-active"
+                  "skills.read-active",
+                  "owner.admin.inspect",
+                  "owner.admin.request",
+                  "owner.admin.status"
                 ],
                 "description": "Typed connection message kind; not an external tool or grant."
               },
@@ -5241,6 +5404,33 @@
                 "maxLength": 96
               },
               "releaseId": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "adminOperation": {
+                "type": "string",
+                "const": "connection.policy.update"
+              },
+              "expectedPolicyRevision": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "capabilityScopes": {
+                "type": "array",
+                "maxItems": 32,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9._:-]{0,95}$"
+                }
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "requestId": {
                 "type": "string",
                 "pattern": "^[0-9a-f]{64}$"
               }
@@ -5275,6 +5465,26 @@
                 "releaseId"
               ],
               "optional": []
+            },
+            "owner.admin.inspect": {
+              "required": [],
+              "optional": []
+            },
+            "owner.admin.request": {
+              "required": [
+                "adminOperation",
+                "expectedPolicyRevision",
+                "capabilityScopes",
+                "reason",
+                "idempotencyKey"
+              ],
+              "optional": []
+            },
+            "owner.admin.status": {
+              "required": [
+                "requestId"
+              ],
+              "optional": []
             }
           },
           "securitySchemes": [
@@ -5293,7 +5503,28 @@
           "directInstrumentCalls": false,
           "legacyBearerCalls": false,
           "currentPolicyAtDispatchAndEffect": true,
-          "acknowledgeWithoutEffect": true
+          "acknowledgeWithoutEffect": true,
+          "ownerAdmin": {
+            "scenarioId": "FCIS-OWNER-ADMIN-01",
+            "status": "specified-only-not-deployed",
+            "ownerAuthority": "Existing Golden Key WebAuthn owner identity and current same-origin passkey session; explicit exact request decision; conversation, bearer, request link and previous approval never authorize a new decision.",
+            "transport": "One reviewed fcis.connect tool and existing issuer owner HTTP API; no arbitrary method/path/tool dispatch, new scope, token issuance or delegated owner cookie.",
+            "operation": "connection.policy.update",
+            "inspect": "Only current verified requesting connection; derive tenant, subject, client, resource, event and current policy from Store under lock; never expose other clients or private Skill contents.",
+            "request": "Authenticated current connection may propose a complete replacement capability set for its own grant. Explicit expected policy revision, bounded reason, idempotency; preserve incumbent in request. Validate admitted operations, reject no-op, unknown and self-grant operation names, stale revision and conflicting replay. Request alone has no grant or execution effect.",
+            "requestIdentity": "Server-selected 64 lowercase hex request ID from tenant, authorization event and idempotency key, domain-separated and length-delimited; store the immutable request object and SHA-256 of its RFC 8785 JSON Canonicalization Scheme (JCS) UTF-8 bytes. No caller-supplied principal, target, request URL or timestamp.",
+            "lifecycle": "Pending only until 15 minutes after creation or original connection expiry, whichever is earlier. Owner can explicitly approve or decline; stale and expired pending records never apply. Status is own-connection only and requires current valid bearer; revoked/expired callers are refused. Owner may inspect exact own-tenant request even after connection revocation.",
+            "approval": "Owner GET exact request then POST exact digest, explicit approve or decline, confirm true, idempotency, same issuer Origin and X-Fountain-Owner-Intent fountaincoach/authorization.admin-decision. Display verified client/resource, before/after policy, effects, expiry and reason as untrusted text. Link locates a request and grants nothing; never auto-approve, execute on GET or use chat text as passkey proof. Owner responses and proposal status must be non-cacheable. Return a same-issuer owner-console locator only, never a credential or arbitrary redirect.",
+            "atomicity": "Reuse current grant policy predicate and atomic grant/receipt commit; approving also commits terminal request and decision receipt in the same Store transaction. Recheck current owner/session/client/event/resource/revision/admission and expiry; failure leaves policy unchanged. Declining commits request and decision receipt with no policy effect. Matching replay returns exact terminal decision; conflicting digest, revision, decision or key refuses. No second grant authority.",
+            "custody": "FountainStore fcis.owner-admin-requests holds immutable request binding and lifecycle, existing fcis.oauth.grants holds policy and existing fcis.receipts holds decision evidence; no tokens or passkey secrets in responses or records. Bound request rate and pending inventory; preserve old records through restart. At most eight pending unexpired proposals and eight distinct creations in a rolling sixty-second interval per connection; identical replays return the original without consuming another slot. Return a bounded typed refusal when a limit is reached.",
+            "result": "Pending and proposal are not approval or effect. Terminal approval binds only the applied policy revision, not future permissions or successful Skill execution. Same bearer is evaluated against current policy on every subsequent call. Separate signed Skill delivery receipt remains required.",
+            "acceptance": "Actual retained client inspect, request missing skills.owned.read without grant effect, explicit owner approval, same bearer status and signed Skill read; decline, stale revision, expired, conflicting replay, wrong connection, revoked bearer, wrong Origin/session and arbitrary operation refusal without effects. Source fixture is not live acceptance.",
+            "resultsByKind": {
+              "owner.admin.inspect": "OwnerAdminConnectionSnapshot",
+              "owner.admin.request": "OwnerAdminRequestState",
+              "owner.admin.status": "OwnerAdminRequestState"
+            }
+          }
         }
       }
     },
@@ -5592,13 +5823,18 @@
       "scope": "0.7.0 existing owner conversation and subscription-only reasoning with optional situated domain context; no implementation or production claim",
       "sourceRevision": "1fc4f2e8ac02068b0c51a6628381c1638d9050c0",
       "status": "private source candidate; prior validation receipts apply only to exact predecessors"
+    },
+    "currentOwnerAdmin": {
+      "scope": "0.9.16 source-only collaborative owner administration; first typed operation connection.policy.update",
+      "sourceRevision": "28c2385f06d4c651c1a810689f45493286493b05",
+      "status": "source validation pending; no Go implementation or live acceptance claimed"
     }
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.9.14",
-    "apiBlobSha": "6c6b4a6d19b7c6bb9e04c440217db20f2e255b6b",
-    "stackBlobSha": "45d0de10b6d557e5c5a3e051421ceae4704a4f79",
+    "httpContractVersion": "0.9.16",
+    "apiBlobSha": "1a2a55aaf40b447f767e07257728803e23bb5c60",
+    "stackBlobSha": "6a3fdbd06a943c97288fefb22747cc465f85cc7f",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },
