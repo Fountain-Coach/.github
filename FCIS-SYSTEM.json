@@ -47,10 +47,10 @@
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "d3e2fbb704ea201c014ffe84890a2eaf037b4bc1",
+      "ref": "a7e563f7d0e2c1ad4776e7ea412f28e3dc069fbf",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "4a6f7d75ac36daf0daac64a5b3dda25a2887e9fc",
-      "url": "https://github.com/Fountain-Coach/.github/blob/d3e2fbb704ea201c014ffe84890a2eaf037b4bc1/FCIS-OPENAPI.json"
+      "blobSha": "8e7205486db4d548ba3c2e9ac34cf847959676fd",
+      "url": "https://github.com/Fountain-Coach/.github/blob/a7e563f7d0e2c1ad4776e7ea412f28e3dc069fbf/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -2202,7 +2202,7 @@
     },
     "inputContractDigests": {
       "fcisOpenAPI": "0.9.10",
-      "fcisOpenAPIBlob": "4a6f7d75ac36daf0daac64a5b3dda25a2887e9fc",
+      "fcisOpenAPIBlob": "8e7205486db4d548ba3c2e9ac34cf847959676fd",
       "architectureBlob": "5426726bf4b139ba5a20eec3ea59e5426f5bc3c6",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
@@ -5410,7 +5410,7 @@
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
     "httpContractVersion": "0.9.10",
-    "apiBlobSha": "4a6f7d75ac36daf0daac64a5b3dda25a2887e9fc",
+    "apiBlobSha": "8e7205486db4d548ba3c2e9ac34cf847959676fd",
     "stackBlobSha": "5426726bf4b139ba5a20eec3ea59e5426f5bc3c6",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
