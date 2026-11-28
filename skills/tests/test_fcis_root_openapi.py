@@ -207,7 +207,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.9.2")
+        self.assertEqual(a["info"]["version"], "0.9.3")
         page = a["components"]["schemas"]["OwnerReasoningClientPage"]
         self.assertNotIn("instrumentObservations", page["required"])
         self.assertEqual(page["properties"]["items"]["items"], {"$ref": "#/components/schemas/OwnerReasoningClient"})
@@ -277,6 +277,12 @@ class FCISRootOpenAPITests(unittest.TestCase):
         frame["requestBody"]["description"] = "Machine-signed JSON body; Origin, Cookie and Authorization MUST be absent"
         self.assertTrue(frame.pop("x-fcis-voice-session-mode")["requiresExplicitOwnerPeerAdmission"])
         del schemas["HostSessionFrame"]["properties"]["sessionID"]["description"]
+        # Reviewed 0.9.3 additive owner bridge projection on the existing resource.
+        bridge = baseline["/mcp"]["post"]
+        self.assertEqual(bridge.pop("x-fcis-owner-bridge")["scenario"], "FCIS-OWNER-BRIDGE-01")
+        old_mcp = "JSON-RPC initialize, ping, tools/list and tools/call over MCP Streamable HTTP. Method-specific capability dispatch and typed instrument constraints are owned by admitted FCIS-KIT runtime, not this OpenAPI. Client bearer scope and current Host admission must be enforced."
+        self.assertTrue(bridge["description"].startswith(old_mcp + " The single owner bridge"))
+        bridge["description"] = old_mcp
         self.assertEqual(digest(baseline), BASELINE_PATHS_SHA256)
         self.assertEqual(digest(schemas), BASELINE_SCHEMAS_SHA256)
         self.assertEqual(digest(a["components"]["securitySchemes"]), BASELINE_SECURITY_SHA256)
@@ -439,6 +445,26 @@ class FCISRootOpenAPITests(unittest.TestCase):
         for t in p["tools"]:
             self.assertFalse(t["inputSchema"]["additionalProperties"])
         self.assertEqual(paths["/mcp"]["post"]["operationId"], "invokeMCPProtocol")
+
+    def test_single_owner_bridge_preserves_individual_grant_and_legacy_boundary(self):
+        paths = self.api["paths"]
+        bridge = paths["/mcp"]["post"]["x-fcis-owner-bridge"]
+        self.assertEqual(bridge["resource"], "{issuerOrigin}/mcp")
+        self.assertEqual(bridge["skillScope"], "skills.owned.read")
+        self.assertEqual(bridge["skillInstrument"], "fountaincoach.skill-access@0.2.0")
+        self.assertEqual(bridge["skillProjectionRef"], "#/paths/~1oauth~1skills/post/x-fcis-transport-projection")
+        self.assertTrue(bridge["allowExplicitMixedOwnerScopes"])
+        for key in ("allowCommercialScopes", "automaticGrant", "metadataBeforeGrant", "legacyGrantMigration"):
+            self.assertFalse(bridge[key])
+        self.assertEqual(bridge["legacyResource"], "{issuerOrigin}/oauth/skills")
+        self.assertEqual(bridge["status"], "specified-only-not-deployed")
+        legacy = paths["/oauth/skills"]["post"]
+        self.assertEqual(legacy["x-fcis-resource"], bridge["legacyResource"])
+        self.assertEqual(legacy["x-fcis-required-scope"], bridge["skillScope"])
+        self.assertEqual(legacy["x-fcis-transport-projection"]["instrument"], bridge["skillInstrument"])
+        system = json.loads((ROOT / "FCIS-SYSTEM.json").read_text())
+        self.assertEqual(self.api["x-fcis-skill-distribution"]["clientResource"], system["skillAndScenarioSystem"]["distribution"]["clientResource"])
+        self.assertIn("Single owner authorization bridge", STACK.read_text())
 
     def test_skill_custody_public_catalogue_and_paid_receipt_shapes(self):
         schemas = self.api["components"]["schemas"]
