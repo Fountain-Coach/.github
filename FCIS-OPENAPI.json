@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.9.16",
-    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference. Version 0.8.0 specifies separately consented read-only owner-library discovery and exact active signed revision delivery through the existing Skill resource; no production or provider acceptance is implied. Version 0.8.1 specifies the missing MCP transport projection at the existing owner Skill resource. No new scope, issuer, custody, underlying operation, provider account or production acceptance is implied. Version 0.9.0 specifies private owner Voice arrangement, admission decisions and composition readback for the Composer. The HTTP surface is a Console projection of existing owned Voice and Host mediation, not a new instrument command plane, provider adapter, execution grant or production acceptance. Version 0.9.1 adds optional owner-authorized Voice text exchange and client-authored contribution readback to the existing private Composer projection. No new operation, grant scope, provider or native instrument contract. Version 0.9.2 adds an optional owner-selected enrolled peer for the existing Voice admission and a separately authenticated Voice session mode on the existing signed Host frame carrier. The native Voice IDL, operation set, and provider boundary remain unchanged. Version 0.9.3 specifies the single owner-authorized MCP bridge on the existing /mcp endpoint: independently consented owner Skill and admitted instrument scopes may share one resource without widening existing grants. No new HTTP operation or production claim. Version 0.9.7 separates sanitized operation definitions from actual Skill authority for an already authorized /mcp participant; no new HTTP operation or grant. Version 0.9.9 separates external fcis.connect consent from FCIS-managed mutable capability grants. Version 0.9.10 pins the adopted AuthZEN 1.0 final single-evaluation HTTPS decision projection, separate from connection and owner policy administration. Version 0.9.12 separates authenticated schema discovery from effective operation authorization and pins the resource-specific connection negotiation. Version 0.9.14 supersedes the three-definition projection with the single callable fcis.connect boundary. Version 0.9.16 specifies collaborative Golden Key-mediated Owner Admin requests inside the one existing fcis.connect relationship; first operation is connection policy update. No new identity, external tool or scope, automatic permission, runtime or deployment claim.",
+    "version": "0.9.18",
+    "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference. Version 0.8.0 specifies separately consented read-only owner-library discovery and exact active signed revision delivery through the existing Skill resource; no production or provider acceptance is implied. Version 0.8.1 specifies the missing MCP transport projection at the existing owner Skill resource. No new scope, issuer, custody, underlying operation, provider account or production acceptance is implied. Version 0.9.0 specifies private owner Voice arrangement, admission decisions and composition readback for the Composer. The HTTP surface is a Console projection of existing owned Voice and Host mediation, not a new instrument command plane, provider adapter, execution grant or production acceptance. Version 0.9.1 adds optional owner-authorized Voice text exchange and client-authored contribution readback to the existing private Composer projection. No new operation, grant scope, provider or native instrument contract. Version 0.9.2 adds an optional owner-selected enrolled peer for the existing Voice admission and a separately authenticated Voice session mode on the existing signed Host frame carrier. The native Voice IDL, operation set, and provider boundary remain unchanged. Version 0.9.3 specifies the single owner-authorized MCP bridge on the existing /mcp endpoint: independently consented owner Skill and admitted instrument scopes may share one resource without widening existing grants. No new HTTP operation or production claim. Version 0.9.7 separates sanitized operation definitions from actual Skill authority for an already authorized /mcp participant; no new HTTP operation or grant. Version 0.9.9 separates external fcis.connect consent from FCIS-managed mutable capability grants. Version 0.9.10 pins the adopted AuthZEN 1.0 final single-evaluation HTTPS decision projection, separate from connection and owner policy administration. Version 0.9.12 separates authenticated schema discovery from effective operation authorization and pins the resource-specific connection negotiation. Version 0.9.14 supersedes the three-definition projection with the single callable fcis.connect boundary. Version 0.9.16 specifies collaborative Golden Key-mediated Owner Admin requests inside the one existing fcis.connect relationship; first operation is connection policy update. No new identity, external tool or scope, automatic permission, runtime or deployment claim. Version 0.9.18 completes the source specification of the existing machine grant renewal operation, with exact signed predecessor and issuer receipt, bounded lease and owner authority, durable replay recovery and local verification. No new route, trust root, external scope, grant or deployment claim.",
     "contact": {
       "name": "Fountain Coach FCIS",
       "url": "https://github.com/Fountain-Coach/.github"
@@ -3369,7 +3369,7 @@
         "tags": [
           "Host Transport"
         ],
-        "description": "Only an already owner-trusted matching machine can renew its bounded grant. Refuse altered key, scope, replay, expiry and stale authority.",
+        "description": "Renew only a current unexpired, non-revoked bilateral machine lease within the existing explicitly authorized signed release policy ceiling. Preserve exact enrolled key, owner, issuer, audience, scope and release; verify the signed predecessor and nonce; commit and independently read back the successor. Exact retry may only read the still-current original receipt. Never revive expired or revoked authority.",
         "security": [],
         "requestBody": {
           "required": true,
@@ -3377,18 +3377,25 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MachineSignedRequest"
+                "$ref": "#/components/schemas/MachineGrantRenewalRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Authenticated target result; execution and admission still separately verified",
+            "description": "Verified committed bilateral lease renewal or exact still-current committed response recovery; not routing or execution evidence",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MachineGrantReceipt"
+                  "$ref": "#/components/schemas/MachineGrantRenewalReceipt"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
                 }
               }
             }
@@ -3401,6 +3408,13 @@
                   "$ref": "#/components/schemas/OAuthError"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "401": {
@@ -3409,6 +3423,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
                 }
               }
             }
@@ -3421,6 +3442,13 @@
                   "$ref": "#/components/schemas/OAuthError"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "404": {
@@ -3429,6 +3457,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
                 }
               }
             }
@@ -3441,6 +3476,13 @@
                   "$ref": "#/components/schemas/OAuthError"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "410": {
@@ -3449,6 +3491,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
                 }
               }
             }
@@ -3461,6 +3510,13 @@
                   "$ref": "#/components/schemas/OAuthError"
                 }
               }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
+                }
+              }
             }
           },
           "503": {
@@ -3469,6 +3525,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OAuthError"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "const": "no-store"
                 }
               }
             }
@@ -3484,6 +3547,51 @@
           "notFor": "Proof of execution, current grant or automatically callable instrument",
           "effect": "bounded HTTP effect per contract",
           "evidence": "Runtime/Store witness required independently"
+        },
+        "x-fcis-machine-renewal": {
+          "scenarioId": "FCIS-MACHINE-RENEWAL-01",
+          "status": "specified-only-not-deployed",
+          "operationId": "renewMachineGrant",
+          "ownerCeiling": "Existing explicitly authorized provider-signed GitReleasePolicy bound to the owner, issuer, target, machine key and publisher; maximum 30 days; preserve the existing 24-hour default unless a longer period is explicitly selected through the existing owner-authorized signing procedure. Neither a machine nor a connected agent may extend this ceiling.",
+          "maximumLeaseMilliseconds": 86400000,
+          "proofFreshnessMilliseconds": 30000,
+          "requestTranscript": {
+            "encoding": "UTF-8 LF-delimited fields in this exact order, with one final LF; no CR, whitespace normalization or optional fields",
+            "fields": [
+              "fountain-host-grant-renew/1",
+              "exact configured HTTPS issuer origin",
+              "targetID",
+              "canonical standard padded base64 nonce (32 bytes)",
+              "signedAtMilliseconds as canonical decimal integer",
+              "previousAdmissionSHA256"
+            ],
+            "signature": "Ed25519 using the existing enrolled machine key; requestSHA256 is SHA-256 of these exact transcript bytes",
+            "digest": "Lowercase hexadecimal SHA-256 over RFC 8785 canonical JSON of the exact typed MachineAdmissionReceipt"
+          },
+          "authority": "Revalidate current owner and machine trust, exact signed release and policy, exact current non-revoked bilateral admissions, issuer/audience/peer/key/scope and artifact bindings under the existing Store write fence. Both the existing lease and signed owner ceiling must remain unexpired. No caller-selected scope, duration, key, artifact or new authorization.",
+          "transition": "Only advance a current bilateral lease to min(issuer now plus 24 hours, signed policy expiry); require a strictly later expiry. Preserve owner, machine, issuer, audience, peer constraints, revocation reference, exact allowed capabilities and release/authority binding; issue new admission identities. Never change the signed policy or release. Refuse no extension, expired or stale state.",
+          "receiptTranscript": {
+            "encoding": "UTF-8 LF-delimited fields in this exact order, with one final LF",
+            "fields": [
+              "fountain-host-grant-renewal-receipt/1",
+              "exact configured HTTPS issuer origin",
+              "targetID",
+              "receiptID",
+              "requestSHA256",
+              "previousAdmissionSHA256",
+              "policySHA256",
+              "releaseSHA256",
+              "admissionSHA256",
+              "expiresAtMilliseconds as canonical decimal integer"
+            ],
+            "signature": "Ed25519 using the existing pinned issuer FCIS peer key; policySHA256 and releaseSHA256 hash RFC 8785 canonical JSON of the exact signed policy and release manifest; admissionSHA256 hashes the exact successor MachineAdmissionReceipt by the same rule"
+          },
+          "atomicity": "Under the current native issuer Store writer and exact revision fences, persist the old receipt lineage, replace both current peer grants and the corresponding current machine release receipt, reserve the signed nonce and commit the immutable renewal evidence in one transaction; independently read back all committed records before responding. No new authority or parallel grants table.",
+          "replay": "A previously committed identical signed request may read back only its original receipt, with no new lease effect, while that exact successor is still current and unexpired and all authority remains valid. Reject conflicting nonce, stale predecessor, superseded receipt, expired authority and revoked state. Persist the pending signed request locally before sending so a lost response can be reconciled with exactly that request; never execute again on ambiguous delivery.",
+          "hostImport": "Use the existing machine key and issuer pin. Independently verify issuer signature, exact request digest, current predecessor, signed policy and release digests, all unchanged admission bindings and strictly later bounded expiry; commit both local grants and receipt atomically and read them back. Refuse a mismatched or superseded receipt. Exact local receipt reconciliation is idempotent and does not alter authority.",
+          "supervision": "Renew before lease expiry while current authority remains valid. Use the verified current local receipt rather than an old static systemd timestamp for startup and runtime checks. If renewal is refused or cannot be reconciled before expiry, stop effects; require the existing explicit signed successor/recovery path. No automatic extension of owner authority or re-enrollment.",
+          "independentInstruments": "A machine lease is not an instrument grant, a client scope, routability or proof of execution. Independently admitted instrument grants remain separately verified; this operation must not renew or create them implicitly.",
+          "acceptance": "Use isolated current signed authority spanning at least two leases; prove repeated pre-expiry renewal without owner interaction or executable/key/scope change, exact signed receipt and bilateral Store readback on issuer and Host, restart, loss/retry with one effect, stale/foreign/revoked/expired/ceiling refusal, and actual host.describe under the renewed lease. Production signing, deployment and real Host acceptance remain distinct."
         }
       }
     },
@@ -16814,6 +16922,113 @@
             "const": true
           }
         }
+      },
+      "MachineGrantRenewalRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "targetID": {
+            "$ref": "#/components/schemas/HostTargetID"
+          },
+          "nonce": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{43}=$",
+            "description": "Fresh 32-byte cryptographic nonce, canonical standard padded base64; decode and re-encode identically."
+          },
+          "signedAtMilliseconds": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "previousAdmissionSHA256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "signature": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9+/]{86}==$",
+            "description": "Canonical standard padded base64 encoding of 64 Ed25519 signature bytes; decode and re-encode identically."
+          }
+        },
+        "required": [
+          "targetID",
+          "nonce",
+          "signedAtMilliseconds",
+          "previousAdmissionSHA256",
+          "signature"
+        ]
+      },
+      "MachineGrantRenewalReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "targetID": {
+            "$ref": "#/components/schemas/HostTargetID"
+          },
+          "state": {
+            "const": "renewed-not-routed"
+          },
+          "expiresAtMilliseconds": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "receiptID": {
+                "type": "string",
+                "pattern": "^machine-renewal-[0-9a-f]{64}$",
+                "description": "Deterministic existing Store receipt ID: machine-renewal- plus requestSHA256."
+              },
+              "requestSHA256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "previousAdmissionSHA256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "policySHA256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "releaseSHA256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "admissionSHA256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "admission": {
+                "$ref": "#/components/schemas/MachineAdmissionReceipt"
+              },
+              "issuerSignature": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9+/]{86}==$",
+                "description": "Canonical standard padded base64 encoding of 64 Ed25519 signature bytes; decode and re-encode identically."
+              }
+            },
+            "required": [
+              "receiptID",
+              "requestSHA256",
+              "previousAdmissionSHA256",
+              "policySHA256",
+              "releaseSHA256",
+              "admissionSHA256",
+              "admission",
+              "issuerSignature"
+            ]
+          }
+        },
+        "required": [
+          "targetID",
+          "state",
+          "expiresAtMilliseconds",
+          "evidence"
+        ]
       }
     }
   },

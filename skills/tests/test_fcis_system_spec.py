@@ -104,6 +104,41 @@ class FCISWholeSystemContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "wire drift"):
             verifier.check_authzen(doc, candidate)
 
+    def test_machine_renewal_owner_ceiling_signed_receipt_and_refusals(self):
+        verifier, doc, _ = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
+        verifier.check_machine_renewal(doc, api)
+        path = "/oauth/host/grants/renew"
+        for key, value in (
+            ("maximumLeaseMilliseconds", 86400001),
+            ("proofFreshnessMilliseconds", 0),
+            ("ownerCeiling", "automatic unlimited owner authority"),
+            ("authority", "renew expired grants"),
+            ("atomicity", "write each grant separately"),
+            ("replay", "renew again on any nonce"),
+            ("supervision", "use old expiry"),
+        ):
+            candidate = copy.deepcopy(api)
+            bad_doc = copy.deepcopy(doc)
+            profile = candidate["paths"][path]["post"]["x-fcis-machine-renewal"]
+            profile[key] = value
+            bad_doc["authorityAndIdentity"]["hosts"]["machineGrantRenewal"] = profile
+            with self.assertRaisesRegex(ValueError, "machine renewal"):
+                verifier.check_machine_renewal(bad_doc, candidate)
+        candidate = copy.deepcopy(api)
+        candidate["components"]["schemas"]["MachineGrantRenewalRequest"]["properties"]["scope"] = {"type": "string"}
+        with self.assertRaisesRegex(ValueError, "closed wire schema"):
+            verifier.check_machine_renewal(doc, candidate)
+        candidate = copy.deepcopy(api)
+        candidate["components"]["schemas"]["MachineGrantRenewalReceipt"]["properties"]["evidence"]["properties"].pop("issuerSignature")
+        with self.assertRaisesRegex(ValueError, "closed wire schema"):
+            verifier.check_machine_renewal(doc, candidate)
+        candidate = copy.deepcopy(api)
+        candidate["paths"][path]["post"]["security"] = [{"oauthBearer": []}]
+        with self.assertRaisesRegex(ValueError, "authority or route"):
+            verifier.check_machine_renewal(doc, candidate)
+
+
     def test_owner_admin_requires_explicit_golden_key_decision(self):
         verifier, doc, _ = self._atomic_fixture()
         api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))

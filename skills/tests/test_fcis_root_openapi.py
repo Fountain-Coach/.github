@@ -207,7 +207,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.9.16")
+        self.assertEqual(a["info"]["version"], "0.9.18")
         page = a["components"]["schemas"]["OwnerReasoningClientPage"]
         self.assertNotIn("instrumentObservations", page["required"])
         self.assertEqual(page["properties"]["items"]["items"], {"$ref": "#/components/schemas/OwnerReasoningClient"})
@@ -289,6 +289,21 @@ class FCISRootOpenAPITests(unittest.TestCase):
         self.assertTrue(bridge["description"].startswith(old_mcp + " Connect"))
         del bridge["responses"]["401"]["headers"]
         bridge["description"] = old_mcp
+        # Reviewed 0.9.18 delta: complete only the previously unspecified
+        # machine renewal wire. Preserve the predecessor route/schema hash.
+        renewal = baseline["/oauth/host/grants/renew"]["post"]
+        self.assertEqual(renewal.pop("x-fcis-machine-renewal")["operationId"], "renewMachineGrant")
+        self.assertEqual(renewal["requestBody"]["content"]["application/json"]["schema"],
+                         {"$ref": "#/components/schemas/MachineGrantRenewalRequest"})
+        self.assertEqual(renewal["responses"]["200"]["content"]["application/json"]["schema"],
+                         {"$ref": "#/components/schemas/MachineGrantRenewalReceipt"})
+        self.assertIn("unexpired, non-revoked bilateral machine lease", renewal["description"])
+        renewal["description"] = "Only an already owner-trusted matching machine can renew its bounded grant. Refuse altered key, scope, replay, expiry and stale authority."
+        renewal["requestBody"]["content"]["application/json"]["schema"] = {"$ref": "#/components/schemas/MachineSignedRequest"}
+        renewal["responses"]["200"]["description"] = "Authenticated target result; execution and admission still separately verified"
+        renewal["responses"]["200"]["content"]["application/json"]["schema"] = {"$ref": "#/components/schemas/MachineGrantReceipt"}
+        for response in renewal["responses"].values():
+            self.assertEqual(response.pop("headers"), {"Cache-Control": {"schema": {"const": "no-store"}}})
         self.assertEqual(digest(baseline), BASELINE_PATHS_SHA256)
         self.assertEqual(digest(schemas), BASELINE_SCHEMAS_SHA256)
         self.assertEqual(digest(a["components"]["securitySchemes"]), BASELINE_SECURITY_SHA256)

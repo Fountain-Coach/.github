@@ -209,6 +209,7 @@ def expected_atomic(system: dict) -> dict[str, dict[str, str]]:
     fields("SKILL-DISTRIBUTION-", "/skillAndScenarioSystem/distribution", "skill-distribution")
     fields("OWNER-POLICY-", "/ownerAndTenancy", "owner-policy")
     fields("AUTHZEN-", "/authorityAndIdentity/authorizationDecision", "authorization-decision")
+    fields("MACHINE-RENEWAL-", "/authorityAndIdentity/hosts/machineGrantRenewal", "machine-renewal")
     fields("BOOTSTRAP-", "/initialization/setupTicket", "bootstrap")
     for field, stem, cls in (
         ("stages", "LEARN-STAGE-", "learning-stage"),
@@ -567,7 +568,85 @@ def check_owner_admin(system: dict, api: dict) -> None:
         reject("owner-admin immutable request binding drift")
 
 
+def check_machine_renewal(system: dict, api: dict) -> None:
+    """The existing renewal route cannot mint owner authority or execute work."""
+    op = api["paths"]["/oauth/host/grants/renew"]["post"]
+    p = op["x-fcis-machine-renewal"]
+    if p != system["authorityAndIdentity"]["hosts"]["machineGrantRenewal"]:
+        reject("machine renewal profile drift")
+    if (p["scenarioId"] != "FCIS-MACHINE-RENEWAL-01"
+            or p["status"] != "specified-only-not-deployed"
+            or p["operationId"] != op["operationId"] or op["operationId"] != "renewMachineGrant"
+            or p["maximumLeaseMilliseconds"] != 86400000
+            or p["proofFreshnessMilliseconds"] != 30000
+            or op["security"] != [] or op["x-fcis-machine-signed-body"] is not True
+            or "Origin, Cookie and Authorization MUST be absent" not in op["requestBody"]["description"]):
+        reject("machine renewal authority or route drift")
+    if ("maximum 30 days" not in p["ownerCeiling"]
+            or "24-hour default" not in p["ownerCeiling"]
+            or "explicitly selected" not in p["ownerCeiling"]
+            or "Both the existing lease and signed owner ceiling must remain unexpired" not in p["authority"]
+            or "No caller-selected scope" not in p["authority"]
+            or "strictly later expiry" not in p["transition"]
+            or "Never change the signed policy or release" not in p["transition"]
+            or "one transaction" not in p["atomicity"]
+            or "with no new lease effect" not in p["replay"]
+            or "current and unexpired" not in p["replay"]
+            or "atomically" not in p["hostImport"]
+            or "rather than an old static systemd timestamp" not in p["supervision"]
+            or "must not renew or create them implicitly" not in p["independentInstruments"]):
+        reject("machine renewal owner ceiling, replay or atomicity drift")
+    req_fields = ["fountain-host-grant-renew/1", "exact configured HTTPS issuer origin",
+                  "targetID", "canonical standard padded base64 nonce (32 bytes)",
+                  "signedAtMilliseconds as canonical decimal integer", "previousAdmissionSHA256"]
+    receipt_fields = ["fountain-host-grant-renewal-receipt/1", "exact configured HTTPS issuer origin",
+                      "targetID", "receiptID", "requestSHA256", "previousAdmissionSHA256",
+                      "policySHA256", "releaseSHA256", "admissionSHA256",
+                      "expiresAtMilliseconds as canonical decimal integer"]
+    if (p["requestTranscript"]["fields"] != req_fields
+            or p["receiptTranscript"]["fields"] != receipt_fields
+            or "Ed25519 using the existing enrolled machine key" not in p["requestTranscript"]["signature"]
+            or "Ed25519 using the existing pinned issuer FCIS peer key" not in p["receiptTranscript"]["signature"]
+            or "RFC 8785" not in p["requestTranscript"]["digest"]
+            or "RFC 8785" not in p["receiptTranscript"]["signature"]
+            or any("one final LF" not in p[k]["encoding"] for k in ("requestTranscript", "receiptTranscript"))):
+        reject("machine renewal signed transcript drift")
+    if (op["requestBody"]["content"]["application/json"]["schema"] != {"$ref": "#/components/schemas/MachineGrantRenewalRequest"}
+            or op["responses"]["200"]["content"]["application/json"]["schema"] != {"$ref": "#/components/schemas/MachineGrantRenewalReceipt"}
+            or set(op["responses"]) != {"200", "400", "401", "403", "404", "409", "410", "429", "503"}
+            or any(r.get("headers", {}).get("Cache-Control", {}).get("schema") != {"const": "no-store"} for r in op["responses"].values())):
+        reject("machine renewal typed request/receipt/refusal drift")
+    schemas = api["components"]["schemas"]
+    req = schemas["MachineGrantRenewalRequest"]
+    out = schemas["MachineGrantRenewalReceipt"]
+    evidence = out["properties"]["evidence"]
+    for schema, keys in (
+        (req, {"targetID", "nonce", "signedAtMilliseconds", "previousAdmissionSHA256", "signature"}),
+        (out, {"targetID", "state", "expiresAtMilliseconds", "evidence"}),
+        (evidence, {"receiptID", "requestSHA256", "previousAdmissionSHA256", "policySHA256",
+                    "releaseSHA256", "admissionSHA256", "admission", "issuerSignature"}),
+    ):
+        if schema["additionalProperties"] is not False or set(schema["required"]) != keys or set(schema["properties"]) != keys:
+            reject("machine renewal closed wire schema drift")
+    r = req["properties"]
+    e = evidence["properties"]
+    if (r["targetID"] != {"$ref": "#/components/schemas/HostTargetID"}
+            or out["properties"]["targetID"] != r["targetID"]
+            or r["nonce"]["pattern"] != "^[A-Za-z0-9+/]{43}=$"
+            or r["signature"]["pattern"] != "^[A-Za-z0-9+/]{86}==$"
+            or e["issuerSignature"]["pattern"] != r["signature"]["pattern"]
+            or e["receiptID"]["pattern"] != "^machine-renewal-[0-9a-f]{64}$"
+            or any(x.get("pattern") != "^[0-9a-f]{64}$" for x in
+                   [r["previousAdmissionSHA256"]] + [v for k, v in e.items() if k.endswith("SHA256")])
+            or e["admission"] != {"$ref": "#/components/schemas/MachineAdmissionReceipt"}
+            or out["properties"]["state"] != {"const": "renewed-not-routed"}):
+        reject("machine renewal binding or signature schema drift")
+    if not any("FCIS-MACHINE-RENEWAL-01" in x for x in system["acceptance"]["postGenerationTesting"]):
+        reject("machine renewal acceptance missing")
+
+
 def check(system: dict, api: dict) -> None:
+    check_machine_renewal(system, api)
     check_owner_admin(system, api)
     check_connection_discovery(system, api)
     check_authzen(system, api)
