@@ -40,17 +40,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "1264825848d9eaac61be0cba122be12b0845e009",
+      "ref": "0cff63709abf0d822ec4c5326453410b34ff7ca3",
       "path": "FCIS-STACK.md",
-      "blobSha": "764446c2ba8e12530ba60783b17bf60d5a28d7ae",
-      "url": "https://github.com/Fountain-Coach/.github/blob/1264825848d9eaac61be0cba122be12b0845e009/FCIS-STACK.md"
+      "blobSha": "f68137b048117dd61790abcc76ad9418631d9332",
+      "url": "https://github.com/Fountain-Coach/.github/blob/0cff63709abf0d822ec4c5326453410b34ff7ca3/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "1264825848d9eaac61be0cba122be12b0845e009",
+      "ref": "0cff63709abf0d822ec4c5326453410b34ff7ca3",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "8bc0190f7716ccca25f34a3b736eb154f7ae8cf9",
-      "url": "https://github.com/Fountain-Coach/.github/blob/1264825848d9eaac61be0cba122be12b0845e009/FCIS-OPENAPI.json"
+      "blobSha": "1c85a300715bdcd0cf042a3b415da3cfc0cd8769",
+      "url": "https://github.com/Fountain-Coach/.github/blob/0cff63709abf0d822ec4c5326453410b34ff7ca3/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.9.7",
+      "version": "0.9.9",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -726,6 +726,19 @@
           ],
           "status": "specified",
           "sourcePointer": "/paths/~1oauth~1owner~1grants/get"
+        },
+        {
+          "id": "decideOwnerConnectionPolicy",
+          "method": "POST",
+          "path": "/oauth/owner/grants",
+          "summary": "Set the current FCIS-managed capability policy of one connection",
+          "security": [
+            {
+              "ownerPasskeySession": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1oauth~1owner~1grants/post"
         },
         {
           "id": "revokeOwnerGrant",
@@ -4344,7 +4357,7 @@
   },
   "knownSpecificationLimitations": [],
   "coverageBaseline": {
-    "fcisHTTP": 67,
+    "fcisHTTP": 68,
     "fountainStoreHTTP": 24,
     "secretStoreHTTP": 4,
     "frontendFiles": 8,
@@ -4909,15 +4922,15 @@
       "decision": "FountainStore canonical private custody; FCIS API primary distribution authority; GitHub/ChatGPT optional explicitly approved adapters. Existing FCIS-GO public projection unchanged.",
       "ownerProfile": "Version 2 signed Skill admission is only current single owner/default tenant; admin operations derive actor/tenant from authorized session, no caller-selected tenant. Reject unavailable additional tenant admission/signing; commercial customer flow requires separately admitted customer principal and grant, not owner session impersonation. Current version-2 CLI admission is retained and does not require a pre-existing browser draft; the new browser admission must verify the referenced reviewed draft. Existing admitted private v2 releases are readable without manufactured draft history.",
       "security": "Owner writes require exact same-origin session, specific X-Fountain-Owner-Intent and explicit confirmation; signed admission and offer use existing trusted owner signer, exact immutable bytes. No new signer, public write route, bearer fallback or arbitrary tenant ID. Reject unknown fields, duplicate keys, wrong signatures and oversized decoded inputs.",
-      "clientResource": "The existing issuer uses OAuth authorization code PKCE S256, explicit client/resource/scope consent, and durable revocable grants. The compatibility resource {issuerOrigin}/oauth/skills keeps exact independent skills.owned.read (owner) or skills.read or skills.acquire (commercial) scopes; no token for /mcp may be replayed there. Commercial operations remain separate and derive the customer identity server-side; no owner grant becomes a customer licence. The single external owner bridge is {issuerOrigin}/mcp: explicit skills.owned.read consent for the current owner’s active library including future active revisions may coexist with independently approved, actually admitted instrument scopes on the same /mcp grant. No wildcard, automatic widening, commercial scope, cross-audience token exchange or owner-cookie forwarding. Skill reads require skills.owned.read and owner/tenant/client binding; Host operations require their own effective scope and admission. Inspect and revoke through existing management; revalidate on every protected call and refresh, including active pointer, exact signature and independent redacted durable receipt before source delivery; no drafts or history. Existing grants and the Skill-only compatibility resource remain valid until proven replacement and deliberate retirement. Actual client verification and use remain separate. For the existing /mcp bridge, sanitized generic Skill Access tool schemas are reviewable by a valid current /mcp participant with at least one effective admitted scope, before granting the specific Skill scope. This is definition discovery only: no private Skill identity, source, release, receipt, grant, or actual callable authority. Anonymous, invalid, wrong-audience, expired or revoked discovery remains refused. Calling a known Skill tool without its required scope returns an exact resource-bound insufficient_scope authentication challenge; any new permission requires explicit consent. Keep /oauth/skills discovery and all data/dispatch checks unchanged. External definitions must honestly disclose operation effects, closed typed input schemas and required OAuth scopes; no generic arbitrary-operation executor or concealed review bypass. Internal implementations may evolve behind the same reviewed contract; genuinely new or materially changed external operations use the provider's supported metadata update/review process. FCIS marketplace acquisition, payment and licence administration stay outside the ChatGPT bridge; later eligible licensed consumption is separate from owner rights and requires independent entitlement and consent. No automatic review approval, new grant, customer admission, purchase or public publication is established.",
+      "clientResource": "Connect — establish a resource-bound, explicitly owner-consented relationship. The single external /mcp OAuth scope is fcis.connect; it conveys connection authentication and permission to consult FCIS-managed grants, not ambient owner privilege. No capability is granted merely by connecting. A new connection starts with an empty capability policy. FCIS owner management changes the effective operation permissions on the current authorization family under verified owner session, same-origin intent, explicit confirmation, expected policy revision and durable receipt. Both discovery and every dispatch independently intersect that policy with current signed/admitted capability, owner, client, tenant, resource, target, operation and effect checks. Removing permission takes effect on the same token, including replay; adding an explicitly allowed operation does not require an OAuth scope or registration change. All exposed tool definitions remain typed, explicit and reviewable; no generic executor. The internal skill permission skills.owned.read retains signed active-source checks and durable delivery evidence, not an external scope of this bridge. New/materially changed exposed tool definitions may need provider review independently. Existing individual-scope /mcp grants and legacy /oauth/skills remain isolated compatibility during replacement, not the target design; do not broaden old tokens or retire recovery before independently proving the new connection. No commercial grant, payment, inference, automatic policy expansion or private data before authorization. Active owner library delivery includes future active revisions under explicit current internal rights; exact active pointer, source signature, audience, owner and tenant binding remain mandatory. Legacy Skill-only resource retains its exact independent scope and audience; no cross-resource token exchange.",
       "transactions": "Tenant+actor+operation+idempotencyKey binds canonical request digest. Identical replay returns original receipt/status; changed payload returns 409; re-evaluate current access before disclosing protected replay. Compare expected revisions; no duplicate mutations or charge. Atomic immutable revisions, active pointers, offer/entitlement states and receipts. No source bytes in telemetry; authenticated responses and refusals no-store. For draft create receipt.subjectId is the draftId; for admission it is releaseId; for offer release it is offerId; for review/withdraw/revoke it is the changed object's exact ID. recordRevision is that object's committed revision. A verified receipt remains independently readable via the corresponding protected resource, with audit references.",
       "commercial": "Phase two, not first release or P0 prerequisite. Price and terms immutable per offer; new price requires new signed offer. Zero-price offers require explicit terms acceptance; paid entitlement only after verified instrument terminal receipt exact amount, currency, customer, offer and acquisition. Provider checkout is hosted; no live charges authorized, no UI redirect proof. Refunds are separate approved instrument actions, entitlement changes only under accepted terms and reconciled receipts. Unlisted is non-enumerated metadata, not a confidentiality or access grant; customer may inspect an exact known offer before accepting terms. Restricted bespoke audience/recurring or metered plans require a later explicit contract; this version supports one-time exact-release licensing only.",
       "delivery": "Only exact authorized source bytes and license are delivered, never public projection by default. No guarantee of provider installation, DRM or deletion of previously delivered copies. A client adapter may consume delivered instructions only with customer consent and separately proven supported integration. Tenant-derived knowledge remains customer-owned.",
       "lifecycle": "Draft -> verified evidence where applicable -> reviewed -> signed admitted revision; separate signed offer releases/withdrawals govern distribution, not source visibility. Restore is a fresh signed admission; withdrawal and entitlement revocation do not delete immutable history.",
-      "httpContract": "FCIS-OPENAPI.json 0.8.0 defines owner management, explicitly consented active owner library reads, and separately licensed commercial distribution. Existing v1/v2 CLI signed custody remains compatible; added owner-client reads specified only. HTTP 0.8.1 adds the same-resource MCP projection of existing Skill Access read operations; no new grant or underlying operation. HTTP 0.9.3 adds the single owner bridge projection on the existing /mcp operation, preserving exact independent Skill/Host authorization and the old resource for compatibility. HTTP 0.9.7 specifies reviewable generic Skill definitions and a missing-scope challenge on the already authorized bridge, not pre-consent private data or calls.",
+      "httpContract": "FCIS-OPENAPI.json 0.8.0 defines owner management, explicitly consented active owner library reads, and separately licensed commercial distribution. Existing v1/v2 CLI signed custody remains compatible; added owner-client reads specified only. HTTP 0.8.1 adds the same-resource MCP projection of existing Skill Access read operations; no new grant or underlying operation. HTTP 0.9.9 specifies fcis.connect as the sole target /mcp connection permission and a distinct FCIS-owned, revocable capability policy; old scoped grants are compatibility only until live replacement.",
       "collections": "Existing native Store and its logical collections in persistence.skillCollections, one writer and verified readback. No new database, identity service, external marketplace or runtime prerequisite.",
       "phases": "Owner-private management first; commercial distribution and customer admission/payment priority two. No change to existing P0 owner-independence or first-install DoD.",
-      "ownerClientAcceptance": "FCIS-SKILL-ACCESS-02: prove explicit owner consent, current resource-bound owner grant, unnamed active inventory, exact signed current read, redacted durable delivery receipt, refusal on wrong scope/audience/identity, stale pointer, draft/history, revocation and refresh denial after restart. Actual fresh authorized client verification and consumption are independent; founding gate remains inactive until owner acceptance. No provider billing. The supported MCP client must discover the two projected operations under the exact Skill audience and scope, receive matching verified UTF-8 source, exact signed bytes and durable delivery receipt, and independently prove actual use and refusal. No provider or Host authority inferred. FCIS-OWNER-BRIDGE-01: on the retained client identity and /mcp audience, explicit owner consent for selected admitted instrument scopes plus skills.owned.read allows current active inventory, signed release read and one real permitted instrument result, with independent Store receipts. Prove skill-only and instrument-only isolation, ungranted, expired/revoked, wrong-audience, stale and commercial refusals. No retirement until fresh real client use of both and owner acceptance. Transparent review continuation: a valid Host-only /mcp grant discovers both sanitized generic Skill definitions without retrieving private data or mutating Store; missing scope challenges; explicit mixed consent remains necessary; wrong audience and revoked/expired tokens refuse. Legacy Skill endpoint unchanged. Provider review and actual client use remain independent."
+      "ownerClientAcceptance": "FCIS-SKILL-ACCESS-02: prove explicit owner consent, current resource-bound owner grant, unnamed active inventory, exact signed current read, redacted durable delivery receipt, refusal on wrong scope/audience/identity, stale pointer, draft/history, revocation and refresh denial after restart. Actual fresh authorized client verification and consumption are independent; founding gate remains inactive until owner acceptance. No provider billing. The supported MCP client must discover the two projected operations under the exact Skill audience and scope, receive matching verified UTF-8 source, exact signed bytes and durable delivery receipt, and independently prove actual use and refusal. No provider or Host authority inferred. FCIS-OWNER-BRIDGE-01: establish the exact connection using fcis.connect; no default operation grants. Owner policy changes use same-origin passkey authority, expected revision, explicit confirmation and durable receipt. The same bearer observes additions and withdrawals without reauthorization, with exact signed Skill retrieval and actual Host receipt. Prove isolation, revocation, expiry, stale selection, no hidden dispatch and legacy preservation before deliberate retirement."
     },
     "learningAcceptance": {
       "scenarioId": "FCIS-LEARN-01",
@@ -5127,9 +5140,9 @@
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.9.7",
-    "apiBlobSha": "8bc0190f7716ccca25f34a3b736eb154f7ae8cf9",
-    "stackBlobSha": "764446c2ba8e12530ba60783b17bf60d5a28d7ae",
+    "httpContractVersion": "0.9.9",
+    "apiBlobSha": "1c85a300715bdcd0cf042a3b415da3cfc0cd8769",
+    "stackBlobSha": "f68137b048117dd61790abcc76ad9418631d9332",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },
