@@ -191,6 +191,7 @@ def expected_atomic(system: dict) -> dict[str, dict[str, str]]:
     array("MCP-METHOD-", "/capabilitySystem/mcp/methods",
           lambda x, i: _slug(x), lambda x, i: f"MCP method {x}", "mcp-transport")
     fields("MCP-PROFILE-", "/capabilitySystem/mcp/connectionDiscovery", "connection-discovery")
+    fields("OWNER-ADMIN-", "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin", "owner-admin")
     array("HOST-CONTROL-", "/capabilitySystem/hostTransport/control/required",
           lambda x, i: _slug(x), lambda x, i: f"Host signed request field {x}", "host-wire")
     array("HOST-RECEIPT-", "/capabilitySystem/hostTransport/receipts/required",
@@ -497,7 +498,77 @@ def check_connection_discovery(system: dict, api: dict) -> None:
         reject("FCIS resource-specific metadata drift")
 
 
+def check_owner_admin(system: dict, api: dict) -> None:
+    message = api["paths"]["/mcp"]["post"]["x-fcis-connect"]["connectionMessage"]
+    profile = message["ownerAdmin"]
+    if profile != system["capabilitySystem"]["mcp"]["connectionDiscovery"]["connectionMessage"]["ownerAdmin"]:
+        reject("owner-admin source projection drift")
+    kinds = {"connect", "host.describe", "skills.inventory", "skills.read-active",
+             "owner.admin.inspect", "owner.admin.request", "owner.admin.status"}
+    fields = message["fieldsByKind"]
+    props = message["inputSchema"]["properties"]
+    if set(fields) != kinds or set(props["kind"]["enum"]) != kinds:
+        reject("owner-admin closed message inventory drift")
+    required = {"adminOperation", "expectedPolicyRevision", "capabilityScopes", "reason", "idempotencyKey"}
+    if (fields["owner.admin.inspect"] != {"required": [], "optional": []}
+            or fields["owner.admin.status"] != {"required": ["requestId"], "optional": []}
+            or set(fields["owner.admin.request"]["required"]) != required
+            or fields["owner.admin.request"]["optional"]
+            or props["adminOperation"].get("const") != "connection.policy.update"
+            or set(props) != {"kind", "correlationID", "idempotencyKey", "limit", "cursor",
+                              "skillName", "releaseId", "adminOperation", "expectedPolicyRevision",
+                              "capabilityScopes", "reason", "requestId"}):
+        reject("owner-admin request must not carry caller authority or arbitrary operation")
+    if (profile["status"] != "specified-only-not-deployed"
+            or profile["scenarioId"] != "FCIS-OWNER-ADMIN-01"
+            or profile["operation"] != "connection.policy.update"
+            or "15 minutes" not in profile["lifecycle"]
+            or "RFC 8785" not in profile["requestIdentity"]
+            or "same Store transaction" not in profile["atomicity"]
+            or "request alone" not in profile["request"].lower()
+            or "no grant or execution effect" not in profile["request"]
+            or "never authorize" not in profile["ownerAuthority"]
+            or "fcis.owner-admin-requests" not in system["persistence"]["logicalCollections"]):
+        reject("owner-admin authority, lifecycle or durable custody drift")
+    if profile["resultsByKind"] != {"owner.admin.inspect": "OwnerAdminConnectionSnapshot",
+            "owner.admin.request": "OwnerAdminRequestState", "owner.admin.status": "OwnerAdminRequestState"}:
+        reject("owner-admin typed result drift")
+    base = "/oauth/owner/admin/requests/{requestId}"
+    for path, method, opid in ((base, "get", "readOwnerAdminRequest"),
+                              (base + "/decision", "post", "decideOwnerAdminRequest")):
+        op = api["paths"][path][method]
+        if op["security"] != [{"ownerPasskeySession": []}] or op["operationId"] != opid:
+            reject("owner-admin decision requires Golden Key owner session")
+        if any(r.get("headers", {}).get("Cache-Control", {}).get("schema") != {"const": "no-store"}
+               for r in op["responses"].values()):
+            reject("owner-admin response caching forbidden")
+    decision = api["paths"][base + "/decision"]["post"]
+    headers = {x["name"]: x for x in decision["parameters"] if x["in"] == "header"}
+    if (set(headers) != {"Origin", "X-Fountain-Owner-Intent"}
+            or not all(x["required"] for x in headers.values())
+            or headers["X-Fountain-Owner-Intent"]["schema"] != {"const": "fountaincoach/authorization.admin-decision"}
+            or decision["requestBody"]["content"]["application/json"]["schema"] != {"$ref": "#/components/schemas/OwnerAdminDecisionInput"}):
+        reject("owner-admin exact owner decision fence drift")
+    schemas = api["components"]["schemas"]
+    for name in ("OwnerAdminConnectionSnapshot", "OwnerAdminRequest", "OwnerAdminRequestState", "OwnerAdminDecisionInput"):
+        schema = schemas[name]
+        if schema["additionalProperties"] is not False or set(schema["required"]) != set(schema["properties"]):
+            reject("owner-admin typed closed schema drift: " + name)
+    inp = schemas["OwnerAdminDecisionInput"]["properties"]
+    if (set(inp) != {"requestSHA256", "decision", "idempotencyKey", "confirm"}
+            or inp["confirm"] != {"const": True}
+            or set(inp["decision"]["enum"]) != {"approve", "decline"}
+            or inp["requestSHA256"]["pattern"] != "^[0-9a-f]{64}$"):
+        reject("owner-admin explicit digest-bound approve/decline required")
+    state = schemas["OwnerAdminRequestState"]["properties"]
+    if set(state["state"]["enum"]) != {"pending", "approved", "declined", "expired", "stale"}:
+        reject("owner-admin request state drift")
+    if state["request"] != {"$ref": "#/components/schemas/OwnerAdminRequest"}:
+        reject("owner-admin immutable request binding drift")
+
+
 def check(system: dict, api: dict) -> None:
+    check_owner_admin(system, api)
     check_connection_discovery(system, api)
     check_authzen(system, api)
     check_learning_acceptance(system, api)
