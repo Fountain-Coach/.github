@@ -357,12 +357,20 @@ class FCISRootOpenAPITests(unittest.TestCase):
         contribution = schemas["OwnerVoiceContribution"]
         self.assertNotIn("clientText", contribution["required"])
         self.assertEqual(contribution["properties"]["clientText"]["type"], "string")
-        # Preserve the preceding HTTP surface, excluding only the two reviewed Owner Admin additions.
+        # Preserve the preceding HTTP surface, excluding only the exact
+        # reviewed Owner Admin and runtime deployment additions.
         admin_paths = {"/oauth/owner/admin/requests/{requestId}",
                        "/oauth/owner/admin/requests/{requestId}/decision"}
-        self.assertTrue(admin_paths.issubset(self.api["paths"]))
+        deployment_paths = {"/oauth/owner/deployments",
+                            "/oauth/owner/deployments/{deploymentId}",
+                            "/oauth/owner/deployments/{deploymentId}/decision",
+                            "/oauth/owner/deployments/{deploymentId}/activate",
+                            "/oauth/owner/deployments/{deploymentId}/receipt"}
+        self.assertTrue((admin_paths | deployment_paths).issubset(self.api["paths"]))
         self.assertEqual(sum(len(v) for p, v in self.api["paths"].items()
-                             if p not in admin_paths), 71)
+                             if p in deployment_paths), 5)
+        self.assertEqual(sum(len(v) for p, v in self.api["paths"].items()
+                             if p not in admin_paths | deployment_paths), 71)
 
     def test_dcr_public_client_metadata_profile_is_additive_not_authority(self):
         a = self.api
