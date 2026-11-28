@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Fountain Coach FCIS — Standalone Go HTTP API",
-    "version": "0.10.2",
+    "version": "0.10.4",
     "description": "Canonical FCIS-owned OpenAPI 3.1 contract, peer to FCIS-STACK.md in the Fountain-Coach/.github organization root. Describes the proposed standalone Go HTTPS/OAuth/WebAuthn/MCP/Host HTTP protocol and inherited owner/machine administration shapes. All operations are target specifications, not evidence of a deployed or callable Go service; runtime availability, grants, instrument admission, and terminal FountainStore evidence must be observed separately. MIDI2 IDL, FCIS-KIT executable instruments, FountainStore format and Stripe's provider API retain independent owners. The complete system is prerequisite-free: a clean installation initializes its own Store, vault, owner and local UI; any existing-instance import is optional and governed by FCIS-SYSTEM.json. Version 0.5.0 adds the FCIS-owned Skill management and licensed distribution target. All new operations are specified only; the existing 0.4.0 runtime remains an independent accepted predecessor. Commercial operations are phase two. Version 0.5.1 clarifies only the read-only pairing-status Origin check for a same-origin browser; no mutation or grant authority changes. Version 0.5.2 corrects the two specified-only channel-contact responses to the existing signed channel receipt; contact is not admission, session establishment or a host.describe result. Version 0.6.0 specifies owner-native conversation custody and the subscription-only reasoning-client boundary. The new routes are target-only and make no provider entitlement or production claim. Version 0.7.0 adds optional situated domain binding to existing owner reasoning turns. No new HTTP operation, inference entitlement or execution grant. Version 0.7.1 adds a separate optional read-only instrument-observation projection to the existing owner reasoning-client page; no new operation or change to eligible clients, grants or inference. Version 0.8.0 specifies separately consented read-only owner-library discovery and exact active signed revision delivery through the existing Skill resource; no production or provider acceptance is implied. Version 0.8.1 specifies the missing MCP transport projection at the existing owner Skill resource. No new scope, issuer, custody, underlying operation, provider account or production acceptance is implied. Version 0.9.0 specifies private owner Voice arrangement, admission decisions and composition readback for the Composer. The HTTP surface is a Console projection of existing owned Voice and Host mediation, not a new instrument command plane, provider adapter, execution grant or production acceptance. Version 0.9.1 adds optional owner-authorized Voice text exchange and client-authored contribution readback to the existing private Composer projection. No new operation, grant scope, provider or native instrument contract. Version 0.9.2 adds an optional owner-selected enrolled peer for the existing Voice admission and a separately authenticated Voice session mode on the existing signed Host frame carrier. The native Voice IDL, operation set, and provider boundary remain unchanged. Version 0.9.3 specifies the single owner-authorized MCP bridge on the existing /mcp endpoint: independently consented owner Skill and admitted instrument scopes may share one resource without widening existing grants. No new HTTP operation or production claim. Version 0.9.7 separates sanitized operation definitions from actual Skill authority for an already authorized /mcp participant; no new HTTP operation or grant. Version 0.9.9 separates external fcis.connect consent from FCIS-managed mutable capability grants. Version 0.9.10 pins the adopted AuthZEN 1.0 final single-evaluation HTTPS decision projection, separate from connection and owner policy administration. Version 0.9.12 separates authenticated schema discovery from effective operation authorization and pins the resource-specific connection negotiation. Version 0.9.14 supersedes the three-definition projection with the single callable fcis.connect boundary. Version 0.9.16 specifies collaborative Golden Key-mediated Owner Admin requests inside the one existing fcis.connect relationship; first operation is connection policy update. No new identity, external tool or scope, automatic permission, runtime or deployment claim. Version 0.9.18 completes the source specification of the existing machine grant renewal operation, with exact signed predecessor and issuer receipt, bounded lease and owner authority, durable replay recovery and local verification. No new route, trust root, external scope, grant or deployment claim. Version 0.10.0 specifies FCIS-DEPLOYMENT-01, an additive owner-authorized runtime deployment lifecycle with a restart-independent local executor, exact signed manifests, durable receipts and revocation-safe rollback. Source only; no deployment or new grant is implied.",
     "contact": {
       "name": "Fountain Coach FCIS",
@@ -3015,7 +3015,7 @@
           },
           "connectionMessage": {
             "name": "fcis.connect",
-            "description": "Connect to FCIS and exchange a typed message through its current owner-authorized internal flow. Connect alone has no effect. Host inspection and signed Skill delivery may record audit receipts. No arbitrary execution. Owner administration can inspect the current connection and prepare or observe a bounded policy proposal; proposals do not grant rights. Only explicit Golden Key owner approval may change policy.",
+            "description": "Connect to FCIS and exchange a typed message through its current owner-authorized internal flow. Connect alone has no effect. Host inspection and signed Skill delivery may record audit receipts. No arbitrary execution. Owner administration can inspect the current connection and prepare or observe a bounded policy proposal; proposals do not grant rights. Only explicit Golden Key owner approval may change policy. With separately approved capability grants, prepare an immutable staged runtime release for owner review, inspect that connection’s own deployment, or read its terminal receipt. No approval, activation or rollback authority.",
             "inputSchema": {
               "type": "object",
               "properties": {
@@ -3028,7 +3028,10 @@
                     "skills.read-active",
                     "owner.admin.inspect",
                     "owner.admin.request",
-                    "owner.admin.status"
+                    "owner.admin.status",
+                    "deployment.prepare",
+                    "deployment.inspect",
+                    "deployment.receipt"
                   ],
                   "description": "Typed connection message kind; not an external tool or grant."
                 },
@@ -3087,6 +3090,15 @@
                 "requestId": {
                   "type": "string",
                   "pattern": "^[0-9a-f]{64}$"
+                },
+                "mode": {
+                  "type": "string",
+                  "const": "activate",
+                  "description": "Conversational preparation selects a staged activation release only; rollback stays owner-only."
+                },
+                "deploymentId": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
                 }
               },
               "required": [
@@ -3137,6 +3149,27 @@
               "owner.admin.status": {
                 "required": [
                   "requestId"
+                ],
+                "optional": []
+              },
+              "deployment.prepare": {
+                "required": [
+                  "mode",
+                  "releaseId",
+                  "reason",
+                  "idempotencyKey"
+                ],
+                "optional": []
+              },
+              "deployment.inspect": {
+                "required": [
+                  "deploymentId"
+                ],
+                "optional": []
+              },
+              "deployment.receipt": {
+                "required": [
+                  "deploymentId"
                 ],
                 "optional": []
               }
@@ -3215,12 +3248,115 @@
                 "admin_request_capacity": {
                   "message": "The connection has reached its pending or recent proposal limit.",
                   "nextAction": "wait_and_review_pending_requests"
+                },
+                "deployment_not_found": {
+                  "message": "This deployment is not available to the current connection.",
+                  "nextAction": "inspect_connection_policy"
+                },
+                "deployment_conflict": {
+                  "message": "The deployment request conflicts with an existing intent or its preconditions. Review the exact existing request before retrying.",
+                  "nextAction": "inspect_existing_deployment"
+                },
+                "deployment_receipt_pending": {
+                  "message": "The deployment has no terminal receipt yet. Inspect the same deployment for its current state.",
+                  "nextAction": "inspect_existing_deployment"
+                },
+                "deployment_refused": {
+                  "message": "The staged release could not be prepared under the current deployment rules. Review the staged release and deployment status.",
+                  "nextAction": "review_staged_release"
                 }
               },
               "authority": "Only an authenticated, resource-bound current connection and well-formed admitted message vocabulary can receive a normal refusal. Existing protected-operation authorization and disclosure checks are unchanged. Recheck the base connection before projecting a capability denial. Never disclose private content, grant rights, or report a terminal execution receipt in a refusal.",
               "protocolBoundary": "Malformed requests, unknown kinds, unexpected fields, direct tool names, invalid origin, invalid or expired or revoked bearer, and transport errors retain existing error semantics. Unclassified internal or uncertain-effect failures are not converted to a known no-effect outcome; inspect durable evidence before retry.",
-              "compatibility": "Successful result shapes, native HTTP and legacy Skill OAuth handlers, external input descriptor, sole fcis.connect tool and scope remain unchanged. A refused result reports no protected output or execution success; audit evidence may exist. No mandatory reconnect or new OAuth ceremony for a valid domain refusal.",
+              "compatibility": "Existing successful result shapes, native HTTP and legacy Skill OAuth handlers, sole fcis.connect tool and external scope remain unchanged. The refusal-only correction preserved the input descriptor; the separately specified deployment handoff extends only its closed message vocabulary after provider review. A refusal reports no protected output or execution success; audit evidence may exist. No mandatory reconnect or new OAuth ceremony for a valid domain refusal.",
               "acceptance": "Reproduce valid stale selection, missing permission and bounded admin refusal with exact reason/next action; no unintended Store effect or private disclosure; same bearer subsequently completes a permitted operation; revoked bearer and malformed messages still fail closed. Live client acceptance separate from source and test evidence."
+            },
+            "deploymentHandoff": {
+              "externalTool": "fcis.connect",
+              "externalScope": "fcis.connect",
+              "status": "specified-only-not-deployed",
+              "messageKinds": {
+                "deployment.prepare": {
+                  "inputSchema": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "mode",
+                      "releaseId",
+                      "reason",
+                      "idempotencyKey"
+                    ],
+                    "properties": {
+                      "mode": {
+                        "type": "string",
+                        "const": "activate",
+                        "description": "Conversational preparation selects a staged activation release only; rollback stays owner-only."
+                      },
+                      "releaseId": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      },
+                      "reason": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 512
+                      },
+                      "idempotencyKey": {
+                        "type": "string",
+                        "minLength": 8,
+                        "maxLength": 96
+                      }
+                    }
+                  },
+                  "resultSchema": {
+                    "$ref": "#/components/schemas/RuntimeDeploymentReview"
+                  },
+                  "capability": "deployment.prepare"
+                },
+                "deployment.inspect": {
+                  "inputSchema": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "deploymentId"
+                    ],
+                    "properties": {
+                      "deploymentId": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  },
+                  "resultSchema": {
+                    "$ref": "#/components/schemas/RuntimeDeploymentReview"
+                  },
+                  "capability": "deployment.inspect"
+                },
+                "deployment.receipt": {
+                  "inputSchema": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "deploymentId"
+                    ],
+                    "properties": {
+                      "deploymentId": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  },
+                  "resultSchema": {
+                    "$ref": "#/components/schemas/RuntimeDeploymentReceipt"
+                  },
+                  "capability": "deployment.receipt"
+                }
+              },
+              "boundary": "Closed typed projection of the same native deployment lifecycle only after separate admission, explicit current AuthZEN policy grant and supported in-place provider descriptor refresh. No current connection policy changes, no new tool, no owner cookie forwarding, no decision, activation or rollback authority through the bearer. Inspect and receipt only the proposing connection own request. The existing owner HTTP security and signed activation fence remain unchanged.",
+              "binding": "Derive owner, tenant, client, resource and authorization event from verified connection, never caller fields. Recheck current grant and admission under existing Store lock before preparation commit or disclosure. Reuse same row and deployment ID algorithm; reserve conn-v1- namespace for server-derived request keys, consisting of unpadded base64url SHA-256 connection binding digest, dot, and unpadded base64url SHA-256 idempotency digest; both domain-separated length-delimited. Direct owner prepare cannot select reserved namespace. Check no incumbent reserved keys before enabling projection. Exact replay returns same row, conflicting request refuses. Existing row shape, manifest, Store writer and executor remain compatible. Other connections and ordinary owner-prepared records are inaccessible through this projection. Owner can review with existing passkey; revocation never grants bearer access.",
+              "admission": "Three exact internal capability names, separately owner-granted, never external OAuth scopes. Preparation requires admitted fixed deployment adapter; inspect and receipt require current Store and verified retained record. No grant or effect from discovery or proposal. Preserve incumbent permissions when proposing policy changes.",
+              "handoff": "Return actual verified persisted RuntimeDeploymentState plus server-derived same-issuer reviewUrl. Manifest, digest, phase, expiry and ID belong to state. Review link locates only. No synthetic deployment, GET mutation, or automated owner decision. Receipt requires independent terminal record; nonterminal state returns typed pending refusal.",
+              "acceptance": "Same bearer empty grant refuses, explicit owner policy approval, exact staged candidate prepare, replay one record, conflicting replay, foreign connection and ordinary owner request refused, owner-only decision/activation through existing routes, valid review link and correlated terminal receipt. Deny malformed, revoked, owner-only kinds and unexpected fields. Predecessor/executor compatibility and live provider descriptor acceptance separate."
             }
           }
         }
@@ -18668,7 +18804,11 @@
               "admin_policy_conflict",
               "admin_idempotency_conflict",
               "admin_request_not_found",
-              "admin_request_capacity"
+              "admin_request_capacity",
+              "deployment_not_found",
+              "deployment_conflict",
+              "deployment_receipt_pending",
+              "deployment_refused"
             ]
           },
           "message": {
@@ -18683,11 +18823,32 @@
               "refresh_skill_inventory",
               "inspect_capability_admission",
               "inspect_existing_request",
-              "wait_and_review_pending_requests"
+              "wait_and_review_pending_requests",
+              "inspect_existing_deployment",
+              "review_staged_release"
             ]
           }
         },
         "description": "Expected domain refusal for a valid FCIS connection. Code, message and nextAction are bound by the connectionMessage.refusalResult code table. Not an execution receipt, grant, or proof that no audit row was written."
+      },
+      "RuntimeDeploymentReview": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "deployment",
+          "reviewUrl"
+        ],
+        "properties": {
+          "deployment": {
+            "$ref": "#/components/schemas/RuntimeDeploymentState"
+          },
+          "reviewUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 512
+          }
+        },
+        "description": "Exact committed deployment and same-issuer owner Console locator, derived from verified issuer and deployment ID as /console/#/deployments/{deploymentId}. Locator conveys no authority."
       }
     }
   },
@@ -18963,10 +19124,38 @@
       "messageKinds": {
         "deployment.prepare": {
           "inputSchema": {
-            "$ref": "#/components/schemas/RuntimeDeploymentPrepareInput"
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode",
+              "releaseId",
+              "reason",
+              "idempotencyKey"
+            ],
+            "properties": {
+              "mode": {
+                "type": "string",
+                "const": "activate",
+                "description": "Conversational preparation selects a staged activation release only; rollback stays owner-only."
+              },
+              "releaseId": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "idempotencyKey": {
+                "type": "string",
+                "minLength": 8,
+                "maxLength": 96
+              }
+            }
           },
           "resultSchema": {
-            "$ref": "#/components/schemas/RuntimeDeploymentState"
+            "$ref": "#/components/schemas/RuntimeDeploymentReview"
           },
           "capability": "deployment.prepare"
         },
@@ -18985,12 +19174,35 @@
             }
           },
           "resultSchema": {
-            "$ref": "#/components/schemas/RuntimeDeploymentState"
+            "$ref": "#/components/schemas/RuntimeDeploymentReview"
           },
           "capability": "deployment.inspect"
+        },
+        "deployment.receipt": {
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "deploymentId"
+            ],
+            "properties": {
+              "deploymentId": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          },
+          "resultSchema": {
+            "$ref": "#/components/schemas/RuntimeDeploymentReceipt"
+          },
+          "capability": "deployment.receipt"
         }
       },
-      "boundary": "Future closed typed projection of the same owner administration lifecycle only after separate admission, explicit current AuthZEN policy grant and supported in-place provider descriptor refresh. No current connection policy changes, no new tool, no owner cookie forwarding, no decision, activation or rollback authority through the bearer. Inspect only the proposing connection own request. The current static descriptor remains unchanged until this projection is implemented and reviewed."
+      "boundary": "Closed typed projection of the same native deployment lifecycle only after separate admission, explicit current AuthZEN policy grant and supported in-place provider descriptor refresh. No current connection policy changes, no new tool, no owner cookie forwarding, no decision, activation or rollback authority through the bearer. Inspect and receipt only the proposing connection own request. The existing owner HTTP security and signed activation fence remain unchanged.",
+      "binding": "Derive owner, tenant, client, resource and authorization event from verified connection, never caller fields. Recheck current grant and admission under existing Store lock before preparation commit or disclosure. Reuse same row and deployment ID algorithm; reserve conn-v1- namespace for server-derived request keys, consisting of unpadded base64url SHA-256 connection binding digest, dot, and unpadded base64url SHA-256 idempotency digest; both domain-separated length-delimited. Direct owner prepare cannot select reserved namespace. Check no incumbent reserved keys before enabling projection. Exact replay returns same row, conflicting request refuses. Existing row shape, manifest, Store writer and executor remain compatible. Other connections and ordinary owner-prepared records are inaccessible through this projection. Owner can review with existing passkey; revocation never grants bearer access.",
+      "admission": "Three exact internal capability names, separately owner-granted, never external OAuth scopes. Preparation requires admitted fixed deployment adapter; inspect and receipt require current Store and verified retained record. No grant or effect from discovery or proposal. Preserve incumbent permissions when proposing policy changes.",
+      "handoff": "Return actual verified persisted RuntimeDeploymentState plus server-derived same-issuer reviewUrl. Manifest, digest, phase, expiry and ID belong to state. Review link locates only. No synthetic deployment, GET mutation, or automated owner decision. Receipt requires independent terminal record; nonterminal state returns typed pending refusal.",
+      "acceptance": "Same bearer empty grant refuses, explicit owner policy approval, exact staged candidate prepare, replay one record, conflicting replay, foreign connection and ordinary owner request refused, owner-only decision/activation through existing routes, valid review link and correlated terminal receipt. Deny malformed, revoked, owner-only kinds and unexpected fields. Predecessor/executor compatibility and live provider descriptor acceptance separate."
     },
     "acceptance": "Two successive immutable issuer releases with no executor edits; actual exact signature/approval, invalid signature and stale state refusal, replay and lost-response one effect, crash at each transition, bounded storage and symlink/path refusal, successful independent HTTPS and Store readback, health failure rollback without rewind, incompatible rollback fail-closed, original owner, grants, revocations and signed Skills unchanged, existing retained conversational connection and signed Skill delivery independently exercised. Source, isolated Go fixture, provider exposure and real production activation are separate evidence."
   }

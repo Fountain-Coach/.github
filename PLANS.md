@@ -1,3 +1,11 @@
+## FCIS-DEPLOYMENT-HANDOFF-01 — prepared review, not a blank form
+
+Owner acceptance: issue midi2-gpu-fabric#316, 28 November 2026. Complete the existing future single-connection projection: agent prepares a staged activation candidate, reads its own exact request and terminal receipt; owner reviews actual URL and alone decides and activates.
+**Chapters read:** 07 (bounded phase, plan first), 08 (independent evidence), 48 (typed service outcome, real remedies, declaration before calling).
+**What they forbid here:** bearer impersonating owner session, fabricated review URL, granting on preparation, conflating authorization and execution, claiming unexposed operations are callable.
+**Conflicts:** none; provider review and production remain separately gated.
+**Excluded, and why:** executor, signature protocol, Store migration, publishing and Setzerin changes. Existing owner HTTP routes and signature/activation fence unchanged.
+
 ## FCIS-DEPLOYMENT-01 — restart-independent signed runtime deployment (28 November 2026; SOURCE CANDIDATE)
 
 **Owner decision:** make production deployment of FCIS itself a first-class canonical OpenAPI contract. The existing machine renewal implementation remains a separate ready-to-activate release; this source task does not activate it.
