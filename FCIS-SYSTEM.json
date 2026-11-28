@@ -40,17 +40,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "f3565e97817b0592fcf4c694da277caf8b79fd6f",
+      "ref": "d3e2fbb704ea201c014ffe84890a2eaf037b4bc1",
       "path": "FCIS-STACK.md",
-      "blobSha": "69ea47c30e09643c4091330c387e8157bdead654",
-      "url": "https://github.com/Fountain-Coach/.github/blob/f3565e97817b0592fcf4c694da277caf8b79fd6f/FCIS-STACK.md"
+      "blobSha": "5426726bf4b139ba5a20eec3ea59e5426f5bc3c6",
+      "url": "https://github.com/Fountain-Coach/.github/blob/d3e2fbb704ea201c014ffe84890a2eaf037b4bc1/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "f3565e97817b0592fcf4c694da277caf8b79fd6f",
+      "ref": "d3e2fbb704ea201c014ffe84890a2eaf037b4bc1",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "196d406a671674dbd154e68c559e8cf0205d1c8c",
-      "url": "https://github.com/Fountain-Coach/.github/blob/f3565e97817b0592fcf4c694da277caf8b79fd6f/FCIS-OPENAPI.json"
+      "blobSha": "4a6f7d75ac36daf0daac64a5b3dda25a2887e9fc",
+      "url": "https://github.com/Fountain-Coach/.github/blob/d3e2fbb704ea201c014ffe84890a2eaf037b4bc1/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -1986,7 +1986,23 @@
       "unknownFields": "ignore",
       "denyStatus": 200,
       "decisionEvidence": "redacted correlation and current policy revision; effect receipt separate",
-      "noConformanceClaim": true
+      "noConformanceClaim": true,
+      "pepOAuth": {
+        "resource": "configured HTTPS origin + /access/v1/evaluation",
+        "scope": "authzen.evaluate",
+        "ownerConsent": true,
+        "externalBridgeScope": false,
+        "authority": "current same-owner connection policy evaluation only, never execution or disclosure"
+      },
+      "connectionEvaluationProfile": {
+        "subjectType": "fcis.oauth-connection",
+        "subjectID": "authorization event ID",
+        "resourceType": "fcis.bridge",
+        "resourceID": "exact /mcp audience",
+        "action": "admitted internal operation scope",
+        "callerProperties": "ignored for authority",
+        "tokenAuthentication": "PEP responsibility; native path checks actual bearer; no raw subject token in payload"
+      }
     }
   },
   "persistence": {
@@ -2122,9 +2138,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 349,
+      "expectedRequirementCount": 351,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 349,
+      "minimumAtomicRequirementCount": 351,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -2186,8 +2202,8 @@
     },
     "inputContractDigests": {
       "fcisOpenAPI": "0.9.10",
-      "fcisOpenAPIBlob": "196d406a671674dbd154e68c559e8cf0205d1c8c",
-      "architectureBlob": "69ea47c30e09643c4091330c387e8157bdead654",
+      "fcisOpenAPIBlob": "4a6f7d75ac36daf0daac64a5b3dda25a2887e9fc",
+      "architectureBlob": "5426726bf4b139ba5a20eec3ea59e5426f5bc3c6",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
     "requirementCatalog": [
@@ -4551,6 +4567,20 @@
         "sourcePointer": "/authorityAndIdentity/authorizationDecision/noConformanceClaim",
         "proofClass": "authorization-decision",
         "name": "authorization-decision: noConformanceClaim"
+      },
+      {
+        "id": "AUTHZEN-PEPOAUTH",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/pepOAuth",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: pepOAuth"
+      },
+      {
+        "id": "AUTHZEN-CONNECTIONEVALUATIONPROFILE",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/connectionEvaluationProfile",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: connectionEvaluationProfile"
       }
     ]
   },
@@ -4611,7 +4641,7 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 349,
+    "atomicRequirementCount": 351,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
@@ -4628,7 +4658,7 @@
       "generation": 8,
       "skill-distribution": 12,
       "owner-policy": 11,
-      "authorization-decision": 19,
+      "authorization-decision": 21,
       "bootstrap": 10,
       "learning-stage": 6,
       "learning-evidence": 5,
@@ -5380,8 +5410,8 @@
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
     "httpContractVersion": "0.9.10",
-    "apiBlobSha": "196d406a671674dbd154e68c559e8cf0205d1c8c",
-    "stackBlobSha": "69ea47c30e09643c4091330c387e8157bdead654",
+    "apiBlobSha": "4a6f7d75ac36daf0daac64a5b3dda25a2887e9fc",
+    "stackBlobSha": "5426726bf4b139ba5a20eec3ea59e5426f5bc3c6",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },
