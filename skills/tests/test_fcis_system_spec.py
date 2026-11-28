@@ -104,6 +104,36 @@ class FCISWholeSystemContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "wire drift"):
             verifier.check_authzen(doc, candidate)
 
+    def test_runtime_deployment_fail_closed(self):
+        verifier, doc, _ = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
+        verifier.check_runtime_deployment(doc, api)
+        for key, value in (
+            ("status", "deployed"),
+            ("authority", "bearer approval"),
+            ("rollback", "restore old Store"),
+            ("executor", "public generic shell"),
+        ):
+            candidate = copy.deepcopy(api)
+            candidate["x-fcis-runtime-deployment"][key] = value
+            bad = copy.deepcopy(doc)
+            bad["authorityAndIdentity"]["runtimeDeployment"] = candidate["x-fcis-runtime-deployment"]
+            with self.assertRaisesRegex(ValueError, "runtime deployment"):
+                verifier.check_runtime_deployment(bad, candidate)
+        for path, method in (
+            ("/oauth/owner/deployments", "post"),
+            ("/oauth/owner/deployments/{deploymentId}/decision", "post"),
+            ("/oauth/owner/deployments/{deploymentId}/activate", "post"),
+        ):
+            candidate = copy.deepcopy(api)
+            candidate["paths"][path][method]["security"] = []
+            with self.assertRaisesRegex(ValueError, "owner route"):
+                verifier.check_runtime_deployment(doc, candidate)
+        candidate = copy.deepcopy(api)
+        candidate["components"]["schemas"]["RuntimeDeploymentManifest"]["additionalProperties"] = True
+        with self.assertRaisesRegex(ValueError, "closed schema"):
+            verifier.check_runtime_deployment(doc, candidate)
+
     def test_machine_renewal_owner_ceiling_signed_receipt_and_refusals(self):
         verifier, doc, _ = self._atomic_fixture()
         api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
