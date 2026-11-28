@@ -40,17 +40,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "0cff63709abf0d822ec4c5326453410b34ff7ca3",
+      "ref": "f3565e97817b0592fcf4c694da277caf8b79fd6f",
       "path": "FCIS-STACK.md",
-      "blobSha": "f68137b048117dd61790abcc76ad9418631d9332",
-      "url": "https://github.com/Fountain-Coach/.github/blob/0cff63709abf0d822ec4c5326453410b34ff7ca3/FCIS-STACK.md"
+      "blobSha": "69ea47c30e09643c4091330c387e8157bdead654",
+      "url": "https://github.com/Fountain-Coach/.github/blob/f3565e97817b0592fcf4c694da277caf8b79fd6f/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "0cff63709abf0d822ec4c5326453410b34ff7ca3",
+      "ref": "f3565e97817b0592fcf4c694da277caf8b79fd6f",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "1c85a300715bdcd0cf042a3b415da3cfc0cd8769",
-      "url": "https://github.com/Fountain-Coach/.github/blob/0cff63709abf0d822ec4c5326453410b34ff7ca3/FCIS-OPENAPI.json"
+      "blobSha": "196d406a671674dbd154e68c559e8cf0205d1c8c",
+      "url": "https://github.com/Fountain-Coach/.github/blob/f3565e97817b0592fcf4c694da277caf8b79fd6f/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.9.9",
+      "version": "0.9.10",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -1453,6 +1453,28 @@
           ],
           "status": "specified",
           "sourcePointer": "/paths/~1oauth~1owner~1conversations~1{conversationId}~1voices~1admissions/post"
+        },
+        {
+          "id": "evaluateAuthZENAccess",
+          "method": "POST",
+          "path": "/access/v1/evaluation",
+          "summary": "Evaluate one access request through the AuthZEN PDP",
+          "security": [
+            {
+              "oauthBearer": []
+            }
+          ],
+          "status": "specified",
+          "sourcePointer": "/paths/~1access~1v1~1evaluation/post"
+        },
+        {
+          "id": "readAuthZENMetadata",
+          "method": "GET",
+          "path": "/.well-known/authzen-configuration",
+          "summary": "Discover the AuthZEN PDP evaluation endpoint",
+          "security": [],
+          "status": "specified",
+          "sourcePointer": "/paths/~1.well-known~1authzen-configuration/get"
         }
       ],
       "schemas": [
@@ -1550,7 +1572,13 @@
         "OwnerVoiceContribution",
         "OwnerVoiceComposition",
         "OwnerVoiceArrangementCreate",
-        "OwnerVoiceAdmissionDecision"
+        "OwnerVoiceAdmissionDecision",
+        "AuthZENSubject",
+        "AuthZENResource",
+        "AuthZENAction",
+        "AuthZENEvaluationRequest",
+        "AuthZENDecision",
+        "AuthZENMetadata"
       ],
       "securitySchemes": [
         "ownerPasskeySession",
@@ -1859,7 +1887,8 @@
         "expiry",
         "replay and counter rollback"
       ],
-      "privateAuthenticatorKeys": "never export or transfer"
+      "privateAuthenticatorKeys": "never export or transfer",
+      "normativeBaseline": "https://www.w3.org/TR/2021/REC-webauthn-2-20210408/"
     },
     "oauth": {
       "protocol": [
@@ -1867,7 +1896,10 @@
         "RFC 8414",
         "RFC 8707",
         "RFC 9728",
-        "authorization code PKCE S256"
+        "authorization code PKCE S256",
+        "RFC 6749",
+        "RFC 7636",
+        "RFC 7591"
       ],
       "preserve": [
         "clients",
@@ -1918,6 +1950,43 @@
         "refused",
         "unverified"
       ]
+    },
+    "authorizationDecision": {
+      "status": "specified-only-not-deployed",
+      "normativeSource": "https://openid.net/specs/authorization-api-1_0-final.html",
+      "edition": "1.0 Final, January 2026",
+      "sections": [
+        "5",
+        "6",
+        "9",
+        "10",
+        "11"
+      ],
+      "pep": "FCIS Bridge and native protected-operation adapters",
+      "pdp": "existing Go authorization engine backed by FountainStore",
+      "supportedTarget": [
+        "access_evaluation_endpoint",
+        "policy_decision_point_metadata"
+      ],
+      "notAdvertised": [
+        "access_evaluations_endpoint",
+        "search_subject_endpoint",
+        "search_resource_endpoint",
+        "search_action_endpoint",
+        "signed_metadata",
+        "capabilities"
+      ],
+      "ownerAdministration": "decideOwnerConnectionPolicy; FCIS-specific, not AuthZEN",
+      "payment": "existing separately admitted Payment Instrument; verified entitlement only",
+      "policyModel": "NIST SP 800-162 updated 2019-08-02",
+      "rightsModel": "W3C ODRL 2.2 Recommendations 2018-02-15; commercial evaluation separately implemented",
+      "externalConnectionScope": "fcis.connect",
+      "defaultCapabilities": [],
+      "requireCurrentPolicy": true,
+      "unknownFields": "ignore",
+      "denyStatus": 200,
+      "decisionEvidence": "redacted correlation and current policy revision; effect receipt separate",
+      "noConformanceClaim": true
     }
   },
   "persistence": {
@@ -2053,9 +2122,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 326,
+      "expectedRequirementCount": 349,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 326,
+      "minimumAtomicRequirementCount": 349,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -2072,6 +2141,7 @@
         "generation",
         "skill-distribution",
         "owner-policy",
+        "authorization-decision",
         "bootstrap",
         "learning-stage",
         "learning-evidence",
@@ -2115,9 +2185,9 @@
       }
     },
     "inputContractDigests": {
-      "fcisOpenAPI": "0.9.7",
-      "fcisOpenAPIBlob": "8bc0190f7716ccca25f34a3b736eb154f7ae8cf9",
-      "architectureBlob": "5708913cf90f46709f3f7ae1fadc9f82670da71b",
+      "fcisOpenAPI": "0.9.10",
+      "fcisOpenAPIBlob": "196d406a671674dbd154e68c559e8cf0205d1c8c",
+      "architectureBlob": "69ea47c30e09643c4091330c387e8157bdead654",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
     "requirementCatalog": [
@@ -4320,6 +4390,167 @@
         "sourcePointer": "/skillAndScenarioSystem/learningAcceptance/continuousBehavior/7",
         "proofClass": "learning-cycle",
         "name": "learning-cycle: general-acceptance"
+      },
+      {
+        "id": "HTTP-decideOwnerConnectionPolicy",
+        "name": "/oauth/owner/grants POST",
+        "mandatory": true,
+        "pointer": "/paths/~1oauth~1owner~1grants/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-evaluateAuthZENAccess",
+        "name": "/access/v1/evaluation POST",
+        "mandatory": true,
+        "pointer": "/paths/~1access~1v1~1evaluation/post",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "HTTP-readAuthZENMetadata",
+        "name": "/.well-known/authzen-configuration GET",
+        "mandatory": true,
+        "pointer": "/paths/~1.well-known~1authzen-configuration/get",
+        "source": "FCIS-OPENAPI.json"
+      },
+      {
+        "id": "OWNER-POLICY-AUTHORIZATIONSTANDARDS",
+        "mandatory": true,
+        "sourcePointer": "/ownerAndTenancy/authorizationStandards",
+        "proofClass": "owner-policy",
+        "name": "owner-policy: authorizationStandards"
+      },
+      {
+        "id": "AUTHZEN-STATUS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/status",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: status"
+      },
+      {
+        "id": "AUTHZEN-NORMATIVESOURCE",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/normativeSource",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: normativeSource"
+      },
+      {
+        "id": "AUTHZEN-EDITION",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/edition",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: edition"
+      },
+      {
+        "id": "AUTHZEN-SECTIONS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/sections",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: sections"
+      },
+      {
+        "id": "AUTHZEN-PEP",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/pep",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: pep"
+      },
+      {
+        "id": "AUTHZEN-PDP",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/pdp",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: pdp"
+      },
+      {
+        "id": "AUTHZEN-SUPPORTEDTARGET",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/supportedTarget",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: supportedTarget"
+      },
+      {
+        "id": "AUTHZEN-NOTADVERTISED",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/notAdvertised",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: notAdvertised"
+      },
+      {
+        "id": "AUTHZEN-OWNERADMINISTRATION",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/ownerAdministration",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: ownerAdministration"
+      },
+      {
+        "id": "AUTHZEN-PAYMENT",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/payment",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: payment"
+      },
+      {
+        "id": "AUTHZEN-POLICYMODEL",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/policyModel",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: policyModel"
+      },
+      {
+        "id": "AUTHZEN-RIGHTSMODEL",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/rightsModel",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: rightsModel"
+      },
+      {
+        "id": "AUTHZEN-EXTERNALCONNECTIONSCOPE",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/externalConnectionScope",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: externalConnectionScope"
+      },
+      {
+        "id": "AUTHZEN-DEFAULTCAPABILITIES",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/defaultCapabilities",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: defaultCapabilities"
+      },
+      {
+        "id": "AUTHZEN-REQUIRECURRENTPOLICY",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/requireCurrentPolicy",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: requireCurrentPolicy"
+      },
+      {
+        "id": "AUTHZEN-UNKNOWNFIELDS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/unknownFields",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: unknownFields"
+      },
+      {
+        "id": "AUTHZEN-DENYSTATUS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/denyStatus",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: denyStatus"
+      },
+      {
+        "id": "AUTHZEN-DECISIONEVIDENCE",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/decisionEvidence",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: decisionEvidence"
+      },
+      {
+        "id": "AUTHZEN-NOCONFORMANCECLAIM",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/authorizationDecision/noConformanceClaim",
+        "proofClass": "authorization-decision",
+        "name": "authorization-decision: noConformanceClaim"
       }
     ]
   },
@@ -4343,7 +4574,8 @@
       "FCIS-LEARN-01: actual scenario-evidence review and distinct supported reasoning invocation consuming exact active revised private Skill; independent two-attempt improvement and all refusal predicates per skillAndScenarioSystem.learningAcceptance.",
       "FCIS-CHAT-01: actual private owner history, restart, cross-provider continuity, exact authorized context, verified included subscription and no-extra-charge refusal before dispatch, actual response/receipt, export, deletion/tombstone and physical owner UX; unsupported native transport remains unavailable. FCIS-POLYPHONY-01 interactive subcase independently verifies discovery and addressing of first-class personified voice instruments, real admitted instrument execution and recoverable attributed discourse/evidence without mandatory native inference or separate provider threads.",
       "FCIS-CHAT-01 situated Reframe reference subcase: actual domain selection, confirmed Grounding, derived Situation, reviewed digest-bound current context, independently witnessed reasoning consumption and results, refusal for stale/foreign/unconfirmed inputs, and unaffected unscoped/deterministic operation.",
-      "FCIS-LEARN-01 continuous behavior: ordinary work closure initiates assessment without a maintenance request; independently verify general-acceptance across distinct admitted domains, actual useful and no-lesson outcomes, recovery, refusal, and subsequent consumption under existing authority."
+      "FCIS-LEARN-01 continuous behavior: ordinary work closure initiates assessment without a maintenance request; independently verify general-acceptance across distinct admitted domains, actual useful and no-lesson outcomes, recovery, refusal, and subsequent consumption under existing authority.",
+      "AuthZEN single-evaluation HTTPS and metadata interoperability; positive and negative current Store-backed decision, separate PEP authentication, deny 200 false, malformed 400, unauthorized 401/403, PDP failure 500, unknown fields, request ID echo, no unsupported metadata, same-token policy change and exact Skill/Host terminal receipt; no commercial rights conformance or live payment claim."
     ],
     "production": [
       "fresh-install may be deployed independently on any supported Linux host; optional current Hetzner migration is a distinct deployment profile",
@@ -4357,7 +4589,7 @@
   },
   "knownSpecificationLimitations": [],
   "coverageBaseline": {
-    "fcisHTTP": 68,
+    "fcisHTTP": 70,
     "fountainStoreHTTP": 24,
     "secretStoreHTTP": 4,
     "frontendFiles": 8,
@@ -4379,7 +4611,7 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 326,
+    "atomicRequirementCount": 349,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
@@ -4395,7 +4627,8 @@
       "adoption": 10,
       "generation": 8,
       "skill-distribution": 12,
-      "owner-policy": 10,
+      "owner-policy": 11,
+      "authorization-decision": 19,
       "bootstrap": 10,
       "learning-stage": 6,
       "learning-evidence": 5,
@@ -4758,7 +4991,13 @@
     "learningRights": "source Skill licensing unchanged; tenant-authored scenario evidence, extensions and new Skills belong to the author/tenant unless an explicit license transfers rights; no silent transfer of customer IP to FCIS operator",
     "portability": "versioned encrypted tenant Store snapshot and Skill/scenario provenance can be exported via owner-authenticated operation; import validates schema and rights; export never includes third-party credentials or raw keys",
     "sharing": "Tenant explicitly approves signed offers for exact admitted revisions with rights, terms and price; private source stays private, approved metadata only is listed; client delivery requires current resource consent and exact entitlement. Git and providers optional.",
-    "billing": "Optional phase-two payment instrument; customer acquisition/entitlement must reconcile exact verified terminal receipts for paid offers; startup and core usage never require Stripe."
+    "billing": "Optional phase-two payment instrument; customer acquisition/entitlement must reconcile exact verified terminal receipts for paid offers; startup and core usage never require Stripe.",
+    "authorizationStandards": {
+      "decision": "OpenID AuthZEN Authorization API 1.0 Final 2026-01-11",
+      "access": "NIST SP 800-162 update 2019-08-02",
+      "rights": "W3C ODRL 2.2 Recommendations 2018-02-15",
+      "payment": "Separate specified Payment Instrument; settlement is not authorization"
+    }
   },
   "capabilitySystem": {
     "registry": {
@@ -5140,9 +5379,9 @@
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.9.9",
-    "apiBlobSha": "1c85a300715bdcd0cf042a3b415da3cfc0cd8769",
-    "stackBlobSha": "f68137b048117dd61790abcc76ad9418631d9332",
+    "httpContractVersion": "0.9.10",
+    "apiBlobSha": "196d406a671674dbd154e68c559e8cf0205d1c8c",
+    "stackBlobSha": "69ea47c30e09643c4091330c387e8157bdead654",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },

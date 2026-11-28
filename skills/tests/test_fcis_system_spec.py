@@ -83,6 +83,27 @@ class FCISWholeSystemContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "may not start COMPLETE"):
             verifier.check_atomic_coverage(copy_b, base)
 
+    def test_authzen_authority_and_wire_refusals(self):
+        verifier, doc, _ = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))
+        verifier.check_authzen(doc, api)
+        for key, value in (("defaultCapabilities", ["host.describe"]), ("denyStatus", 403),
+                           ("status", "deployed"), ("unknownFields", "reject")):
+            candidate = copy.deepcopy(api)
+            candidate["x-fcis-authzen"][key] = value
+            bad_doc = copy.deepcopy(doc)
+            bad_doc["authorityAndIdentity"]["authorizationDecision"] = candidate["x-fcis-authzen"]
+            with self.assertRaisesRegex(ValueError, "AuthZEN authority"):
+                verifier.check_authzen(bad_doc, candidate)
+        candidate = copy.deepcopy(api)
+        candidate["paths"]["/access/v1/evaluation"]["post"]["security"] = []
+        with self.assertRaisesRegex(ValueError, "protected evaluation"):
+            verifier.check_authzen(doc, candidate)
+        candidate = copy.deepcopy(api)
+        candidate["components"]["schemas"]["AuthZENSubject"]["additionalProperties"] = False
+        with self.assertRaisesRegex(ValueError, "wire drift"):
+            verifier.check_authzen(doc, candidate)
+
     def test_learning_acceptance_contract(self):
         verifier, doc, base = self._atomic_fixture()
         api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))

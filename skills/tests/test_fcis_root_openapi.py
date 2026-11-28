@@ -207,7 +207,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
             return hashlib.sha256(json.dumps(value, sort_keys=True,
                 separators=(",", ":"), ensure_ascii=False).encode()).hexdigest()
         a = self.api
-        self.assertEqual(a["info"]["version"], "0.9.9")
+        self.assertEqual(a["info"]["version"], "0.9.10")
         page = a["components"]["schemas"]["OwnerReasoningClientPage"]
         self.assertNotIn("instrumentObservations", page["required"])
         self.assertEqual(page["properties"]["items"]["items"], {"$ref": "#/components/schemas/OwnerReasoningClient"})
@@ -289,7 +289,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
         self.assertEqual(digest(baseline), BASELINE_PATHS_SHA256)
         self.assertEqual(digest(schemas), BASELINE_SCHEMAS_SHA256)
         self.assertEqual(digest(a["components"]["securitySchemes"]), BASELINE_SECURITY_SHA256)
-        self.assertEqual(sum(len(v) for v in a["paths"].values()), 68)
+        self.assertEqual(sum(len(v) for v in a["paths"].values()), 70)
 
     def test_voice_composer_projection_remains_private_and_owner_mediated(self):
         a = self.api
@@ -339,7 +339,7 @@ class FCISRootOpenAPITests(unittest.TestCase):
         contribution = schemas["OwnerVoiceContribution"]
         self.assertNotIn("clientText", contribution["required"])
         self.assertEqual(contribution["properties"]["clientText"]["type"], "string")
-        self.assertEqual(sum(len(v) for v in self.api["paths"].values()), 68)
+        self.assertEqual(sum(len(v) for v in self.api["paths"].values()), 70)
 
     def test_dcr_public_client_metadata_profile_is_additive_not_authority(self):
         a = self.api
