@@ -40,17 +40,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "28c2385f06d4c651c1a810689f45493286493b05",
+      "ref": "177d05a524bf4ac92208bbadb3b701c36abb491f",
       "path": "FCIS-STACK.md",
-      "blobSha": "6a3fdbd06a943c97288fefb22747cc465f85cc7f",
-      "url": "https://github.com/Fountain-Coach/.github/blob/28c2385f06d4c651c1a810689f45493286493b05/FCIS-STACK.md"
+      "blobSha": "bc801662ca361a9035e50545df8635a509681382",
+      "url": "https://github.com/Fountain-Coach/.github/blob/177d05a524bf4ac92208bbadb3b701c36abb491f/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "28c2385f06d4c651c1a810689f45493286493b05",
+      "ref": "177d05a524bf4ac92208bbadb3b701c36abb491f",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "1a2a55aaf40b447f767e07257728803e23bb5c60",
-      "url": "https://github.com/Fountain-Coach/.github/blob/28c2385f06d4c651c1a810689f45493286493b05/FCIS-OPENAPI.json"
+      "blobSha": "a3268fdc2e12d1e69acee5d2679ef403c25332d5",
+      "url": "https://github.com/Fountain-Coach/.github/blob/177d05a524bf4ac92208bbadb3b701c36abb491f/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.9.16",
+      "version": "0.9.18",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -1617,7 +1617,9 @@
         "OwnerAdminConnectionSnapshot",
         "OwnerAdminRequest",
         "OwnerAdminRequestState",
-        "OwnerAdminDecisionInput"
+        "OwnerAdminDecisionInput",
+        "MachineGrantRenewalRequest",
+        "MachineGrantRenewalReceipt"
       ],
       "securitySchemes": [
         "ownerPasskeySession",
@@ -1976,7 +1978,52 @@
         "callable",
         "live-accepted"
       ],
-      "discoveryDerivedFrom": "admitted typed Host registry intersecting requesting client's scopes, not handwritten static host.describe inventory"
+      "discoveryDerivedFrom": "admitted typed Host registry intersecting requesting client's scopes, not handwritten static host.describe inventory",
+      "machineGrantRenewal": {
+        "scenarioId": "FCIS-MACHINE-RENEWAL-01",
+        "status": "specified-only-not-deployed",
+        "operationId": "renewMachineGrant",
+        "ownerCeiling": "Existing explicitly authorized provider-signed GitReleasePolicy bound to the owner, issuer, target, machine key and publisher; maximum 30 days; preserve the existing 24-hour default unless a longer period is explicitly selected through the existing owner-authorized signing procedure. Neither a machine nor a connected agent may extend this ceiling.",
+        "maximumLeaseMilliseconds": 86400000,
+        "proofFreshnessMilliseconds": 30000,
+        "requestTranscript": {
+          "encoding": "UTF-8 LF-delimited fields in this exact order, with one final LF; no CR, whitespace normalization or optional fields",
+          "fields": [
+            "fountain-host-grant-renew/1",
+            "exact configured HTTPS issuer origin",
+            "targetID",
+            "canonical standard padded base64 nonce (32 bytes)",
+            "signedAtMilliseconds as canonical decimal integer",
+            "previousAdmissionSHA256"
+          ],
+          "signature": "Ed25519 using the existing enrolled machine key; requestSHA256 is SHA-256 of these exact transcript bytes",
+          "digest": "Lowercase hexadecimal SHA-256 over RFC 8785 canonical JSON of the exact typed MachineAdmissionReceipt"
+        },
+        "authority": "Revalidate current owner and machine trust, exact signed release and policy, exact current non-revoked bilateral admissions, issuer/audience/peer/key/scope and artifact bindings under the existing Store write fence. Both the existing lease and signed owner ceiling must remain unexpired. No caller-selected scope, duration, key, artifact or new authorization.",
+        "transition": "Only advance a current bilateral lease to min(issuer now plus 24 hours, signed policy expiry); require a strictly later expiry. Preserve owner, machine, issuer, audience, peer constraints, revocation reference, exact allowed capabilities and release/authority binding; issue new admission identities. Never change the signed policy or release. Refuse no extension, expired or stale state.",
+        "receiptTranscript": {
+          "encoding": "UTF-8 LF-delimited fields in this exact order, with one final LF",
+          "fields": [
+            "fountain-host-grant-renewal-receipt/1",
+            "exact configured HTTPS issuer origin",
+            "targetID",
+            "receiptID",
+            "requestSHA256",
+            "previousAdmissionSHA256",
+            "policySHA256",
+            "releaseSHA256",
+            "admissionSHA256",
+            "expiresAtMilliseconds as canonical decimal integer"
+          ],
+          "signature": "Ed25519 using the existing pinned issuer FCIS peer key; policySHA256 and releaseSHA256 hash RFC 8785 canonical JSON of the exact signed policy and release manifest; admissionSHA256 hashes the exact successor MachineAdmissionReceipt by the same rule"
+        },
+        "atomicity": "Under the current native issuer Store writer and exact revision fences, persist the old receipt lineage, replace both current peer grants and the corresponding current machine release receipt, reserve the signed nonce and commit the immutable renewal evidence in one transaction; independently read back all committed records before responding. No new authority or parallel grants table.",
+        "replay": "A previously committed identical signed request may read back only its original receipt, with no new lease effect, while that exact successor is still current and unexpired and all authority remains valid. Reject conflicting nonce, stale predecessor, superseded receipt, expired authority and revoked state. Persist the pending signed request locally before sending so a lost response can be reconciled with exactly that request; never execute again on ambiguous delivery.",
+        "hostImport": "Use the existing machine key and issuer pin. Independently verify issuer signature, exact request digest, current predecessor, signed policy and release digests, all unchanged admission bindings and strictly later bounded expiry; commit both local grants and receipt atomically and read them back. Refuse a mismatched or superseded receipt. Exact local receipt reconciliation is idempotent and does not alter authority.",
+        "supervision": "Renew before lease expiry while current authority remains valid. Use the verified current local receipt rather than an old static systemd timestamp for startup and runtime checks. If renewal is refused or cannot be reconciled before expiry, stop effects; require the existing explicit signed successor/recovery path. No automatic extension of owner authority or re-enrollment.",
+        "independentInstruments": "A machine lease is not an instrument grant, a client scope, routability or proof of execution. Independently admitted instrument grants remain separately verified; this operation must not renew or create them implicitly.",
+        "acceptance": "Use isolated current signed authority spanning at least two leases; prove repeated pre-expiry renewal without owner interaction or executable/key/scope change, exact signed receipt and bilateral Store readback on issuer and Host, restart, loss/retry with one effect, stale/foreign/revoked/expired/ceiling refusal, and actual host.describe under the renewed lease. Production signing, deployment and real Host acceptance remain distinct."
+      }
     },
     "evidence": {
       "sourceOfTruth": "FountainStore append-only events and signed native Host receipts, not UI status or chat transcript",
@@ -2178,9 +2225,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 376,
+      "expectedRequirementCount": 392,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 376,
+      "minimumAtomicRequirementCount": 392,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -2189,6 +2236,7 @@
         "store-schema",
         "mcp-transport",
         "connection-discovery",
+        "owner-admin",
         "host-wire",
         "host-receipt",
         "store-wire",
@@ -2199,14 +2247,14 @@
         "skill-distribution",
         "owner-policy",
         "authorization-decision",
+        "machine-renewal",
         "bootstrap",
         "learning-stage",
         "learning-evidence",
         "learning-refusal",
         "learning-cycle",
         "chat-requirement",
-        "chat-refusal",
-        "owner-admin"
+        "chat-refusal"
       ],
       "generatorReceipt": {
         "artifact": "generation-coverage.json",
@@ -2243,9 +2291,9 @@
       }
     },
     "inputContractDigests": {
-      "fcisOpenAPI": "0.9.16",
-      "fcisOpenAPIBlob": "1a2a55aaf40b447f767e07257728803e23bb5c60",
-      "architectureBlob": "6a3fdbd06a943c97288fefb22747cc465f85cc7f",
+      "fcisOpenAPI": "0.9.18",
+      "fcisOpenAPIBlob": "a3268fdc2e12d1e69acee5d2679ef403c25332d5",
+      "architectureBlob": "bc801662ca361a9035e50545df8635a509681382",
       "systemBlob": "calculated from committed FCIS-SYSTEM.json after write; cannot be self-embedded"
     },
     "requirementCatalog": [
@@ -4798,6 +4846,118 @@
         "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/ownerAdmin/resultsByKind",
         "proofClass": "owner-admin",
         "name": "owner-admin: resultsByKind"
+      },
+      {
+        "id": "MACHINE-RENEWAL-SCENARIOID",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/scenarioId",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: scenarioId"
+      },
+      {
+        "id": "MACHINE-RENEWAL-STATUS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/status",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: status"
+      },
+      {
+        "id": "MACHINE-RENEWAL-OPERATIONID",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/operationId",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: operationId"
+      },
+      {
+        "id": "MACHINE-RENEWAL-OWNERCEILING",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/ownerCeiling",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: ownerCeiling"
+      },
+      {
+        "id": "MACHINE-RENEWAL-MAXIMUMLEASEMILLISECONDS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/maximumLeaseMilliseconds",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: maximumLeaseMilliseconds"
+      },
+      {
+        "id": "MACHINE-RENEWAL-PROOFFRESHNESSMILLISECONDS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/proofFreshnessMilliseconds",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: proofFreshnessMilliseconds"
+      },
+      {
+        "id": "MACHINE-RENEWAL-REQUESTTRANSCRIPT",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/requestTranscript",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: requestTranscript"
+      },
+      {
+        "id": "MACHINE-RENEWAL-AUTHORITY",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/authority",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: authority"
+      },
+      {
+        "id": "MACHINE-RENEWAL-TRANSITION",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/transition",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: transition"
+      },
+      {
+        "id": "MACHINE-RENEWAL-RECEIPTTRANSCRIPT",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/receiptTranscript",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: receiptTranscript"
+      },
+      {
+        "id": "MACHINE-RENEWAL-ATOMICITY",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/atomicity",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: atomicity"
+      },
+      {
+        "id": "MACHINE-RENEWAL-REPLAY",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/replay",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: replay"
+      },
+      {
+        "id": "MACHINE-RENEWAL-HOSTIMPORT",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/hostImport",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: hostImport"
+      },
+      {
+        "id": "MACHINE-RENEWAL-SUPERVISION",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/supervision",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: supervision"
+      },
+      {
+        "id": "MACHINE-RENEWAL-INDEPENDENTINSTRUMENTS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/independentInstruments",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: independentInstruments"
+      },
+      {
+        "id": "MACHINE-RENEWAL-ACCEPTANCE",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/hosts/machineGrantRenewal/acceptance",
+        "proofClass": "machine-renewal",
+        "name": "machine-renewal: acceptance"
       }
     ]
   },
@@ -4824,7 +4984,8 @@
       "FCIS-LEARN-01 continuous behavior: ordinary work closure initiates assessment without a maintenance request; independently verify general-acceptance across distinct admitted domains, actual useful and no-lesson outcomes, recovery, refusal, and subsequent consumption under existing authority.",
       "AuthZEN single-evaluation HTTPS and metadata interoperability; positive and negative current Store-backed decision, separate PEP authentication, deny 200 false, malformed 400, unauthorized 401/403, PDP failure 500, unknown fields, request ID echo, no unsupported metadata, same-token policy change and exact Skill/Host terminal receipt; no commercial rights conformance or live payment claim.",
       "Exactly one external fcis.connect definition, empty/granted/withdrawn policy invariant; typed connection acknowledgement without effect; direct old names and legacy bearers refused, unknown kinds and extra arguments refused; existing typed Host and Skill paths with current policy, receipts and same-bearer withdrawal; actual provider acceptance independent of local source and runtime tests.",
-      "Actual retained client inspect, request missing skills.owned.read without grant effect, explicit owner approval, same bearer status and signed Skill read; decline, stale revision, expired, conflicting replay, wrong connection, revoked bearer, wrong Origin/session and arbitrary operation refusal without effects. Source fixture is not live acceptance."
+      "Actual retained client inspect, request missing skills.owned.read without grant effect, explicit owner approval, same bearer status and signed Skill read; decline, stale revision, expired, conflicting replay, wrong connection, revoked bearer, wrong Origin/session and arbitrary operation refusal without effects. Source fixture is not live acceptance.",
+      "FCIS-MACHINE-RENEWAL-01: Use isolated current signed authority spanning at least two leases; prove repeated pre-expiry renewal without owner interaction or executable/key/scope change, exact signed receipt and bilateral Store readback on issuer and Host, restart, loss/retry with one effect, stale/foreign/revoked/expired/ceiling refusal, and actual host.describe under the renewed lease. Production signing, deployment and real Host acceptance remain distinct."
     ],
     "production": [
       "fresh-install may be deployed independently on any supported Linux host; optional current Hetzner migration is a distinct deployment profile",
@@ -4860,7 +5021,7 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 376,
+    "atomicRequirementCount": 392,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
@@ -4869,6 +5030,7 @@
       "store-schema": 22,
       "mcp-transport": 4,
       "connection-discovery": 6,
+      "owner-admin": 15,
       "host-wire": 13,
       "host-receipt": 10,
       "store-wire": 6,
@@ -4879,14 +5041,14 @@
       "skill-distribution": 12,
       "owner-policy": 11,
       "authorization-decision": 21,
+      "machine-renewal": 16,
       "bootstrap": 10,
       "learning-stage": 6,
       "learning-evidence": 5,
       "learning-refusal": 5,
       "learning-cycle": 8,
       "chat-requirement": 15,
-      "chat-refusal": 6,
-      "owner-admin": 15
+      "chat-refusal": 6
     }
   },
   "nonClaims": [
@@ -5828,13 +5990,18 @@
       "scope": "0.9.16 source-only collaborative owner administration; first typed operation connection.policy.update",
       "sourceRevision": "28c2385f06d4c651c1a810689f45493286493b05",
       "status": "source validation pending; no Go implementation or live acceptance claimed"
+    },
+    "currentMachineRenewal": {
+      "scope": "0.9.18 source-only existing machine lease renewal; no new operation or owner authority",
+      "sourceRevision": "177d05a524bf4ac92208bbadb3b701c36abb491f",
+      "status": "source candidate; runtime generation, tests and live acceptance separately unestablished"
     }
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.9.16",
-    "apiBlobSha": "1a2a55aaf40b447f767e07257728803e23bb5c60",
-    "stackBlobSha": "6a3fdbd06a943c97288fefb22747cc465f85cc7f",
+    "httpContractVersion": "0.9.18",
+    "apiBlobSha": "a3268fdc2e12d1e69acee5d2679ef403c25332d5",
+    "stackBlobSha": "bc801662ca361a9035e50545df8635a509681382",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },
