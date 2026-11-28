@@ -342,7 +342,12 @@ class FCISRootOpenAPITests(unittest.TestCase):
         contribution = schemas["OwnerVoiceContribution"]
         self.assertNotIn("clientText", contribution["required"])
         self.assertEqual(contribution["properties"]["clientText"]["type"], "string")
-        self.assertEqual(sum(len(v) for v in self.api["paths"].values()), 71)
+        # Preserve the preceding HTTP surface, excluding only the two reviewed Owner Admin additions.
+        admin_paths = {"/oauth/owner/admin/requests/{requestId}",
+                       "/oauth/owner/admin/requests/{requestId}/decision"}
+        self.assertTrue(admin_paths.issubset(self.api["paths"]))
+        self.assertEqual(sum(len(v) for p, v in self.api["paths"].items()
+                             if p not in admin_paths), 71)
 
     def test_dcr_public_client_metadata_profile_is_additive_not_authority(self):
         a = self.api
