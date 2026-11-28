@@ -530,7 +530,8 @@
                 "advertisedResourceScopes",
                 "authenticationChallengeScope",
                 "schemaDiscovery",
-                "legacyScopeTransition"
+                "legacyScopeTransition",
+                "connectionMessage"
               ],
               "properties": {
                 "resourceMetadataPath": {
@@ -548,6 +549,9 @@
                   "type": "object"
                 },
                 "legacyScopeTransition": {
+                  "type": "object"
+                },
+                "connectionMessage": {
                   "type": "object"
                 }
               },

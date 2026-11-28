@@ -466,16 +466,25 @@ def check_authzen(system: dict, api: dict) -> None:
 
 def check_connection_discovery(system: dict, api: dict) -> None:
     profile = api["paths"]["/mcp"]["post"]["x-fcis-connect"]
-    keys = ("resourceMetadataPath", "advertisedResourceScopes", "authenticationChallengeScope", "schemaDiscovery", "legacyScopeTransition")
+    keys = ("resourceMetadataPath", "advertisedResourceScopes", "authenticationChallengeScope", "schemaDiscovery", "legacyScopeTransition", "connectionMessage")
     if system["capabilitySystem"]["mcp"]["connectionDiscovery"] != {k: profile[k] for k in keys}:
         reject("FCIS connection discovery profile drift")
     if profile["advertisedResourceScopes"] != ["fcis.connect"] or profile["authenticationChallengeScope"] != "fcis.connect":
         reject("FCIS bridge scope negotiation drift")
     discovery = profile["schemaDiscovery"]
-    if (discovery["stableDefinitions"] != ["fountain_host_describe", "fountain_skills_inventory", "fountain_skills_read_active"]
+    if (discovery["stableDefinitions"] != ["fcis.connect"]
             or discovery["requiresValidConnection"] is not True or discovery["requiresCapabilityGrant"] is not False
             or discovery["privateBindings"] is not False or discovery["executionAuthority"] is not False):
         reject("FCIS schema discovery authority drift")
+    message = profile["connectionMessage"]
+    if (message["name"] != "fcis.connect" or message["inputSchema"]["additionalProperties"] is not False
+            or message["securitySchemes"] != [{"type": "oauth2", "scopes": ["fcis.connect"]}]
+            or message["directInstrumentCalls"] is not False or message["legacyBearerCalls"] is not False
+            or message["currentPolicyAtDispatchAndEffect"] is not True or message["acknowledgeWithoutEffect"] is not True
+            or message["inputSchema"]["required"] != ["kind"]
+            or set(message["inputSchema"]["properties"]["kind"]["enum"]) != set(message["fieldsByKind"])
+            or discovery["otherDefinitions"] != "never externally exposed on /mcp"):
+        reject("FCIS single callable connection boundary drift")
     migration = profile["legacyScopeTransition"]
     if (migration["requestedPair"] != ["host.describe", "workstation.go.verify"]
             or migration["onlyWhenNoLongerGrantable"] is not True or migration["resource"] != "/mcp"
