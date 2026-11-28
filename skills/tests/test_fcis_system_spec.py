@@ -134,6 +134,27 @@ class FCISWholeSystemContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "closed schema"):
             verifier.check_runtime_deployment(doc, candidate)
 
+    def test_deployment_handoff_is_closed_own_connection_and_owner_decision(self):
+        verifier, doc, _ = self._atomic_fixture()
+        api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text())
+        verifier.check_runtime_deployment(doc, api)
+        for mutate in (
+            lambda p, m, a: p["messageKinds"].update({"deployment.activate": p["messageKinds"]["deployment.prepare"]}),
+            lambda p, m, a: p["messageKinds"]["deployment.inspect"]["inputSchema"]["required"].append("ownerId"),
+            lambda p, m, a: m["inputSchema"]["properties"]["mode"].update(const="rollback"),
+            lambda p, m, a: p.update(binding="caller-selected deployment"),
+            lambda p, m, a: a["components"]["schemas"]["RuntimeDeploymentReview"].update(additionalProperties=True),
+        ):
+            bad = copy.deepcopy(api)
+            d = copy.deepcopy(doc)
+            p = bad["x-fcis-runtime-deployment"]["projection"]
+            m = bad["paths"]["/mcp"]["post"]["x-fcis-connect"]["connectionMessage"]
+            mutate(p, m, bad)
+            m["deploymentHandoff"] = copy.deepcopy(p)
+            d["authorityAndIdentity"]["runtimeDeployment"] = copy.deepcopy(bad["x-fcis-runtime-deployment"])
+            with self.assertRaisesRegex(ValueError, "deployment (projection|handoff)"):
+                verifier.check_runtime_deployment(d, bad)
+
     def test_machine_renewal_owner_ceiling_signed_receipt_and_refusals(self):
         verifier, doc, _ = self._atomic_fixture()
         api = json.loads((ROOT / "FCIS-OPENAPI.json").read_text(encoding="utf-8"))

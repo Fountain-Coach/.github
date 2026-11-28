@@ -40,17 +40,17 @@
   "specificationSources": {
     "org": {
       "repository": "Fountain-Coach/.github",
-      "ref": "cb1359728cbd5c0e6346ea9c6297261a538e3bff",
+      "ref": "25bf0a10259f48d42a96f324927bcc7a3159c251",
       "path": "FCIS-STACK.md",
-      "blobSha": "568370570a91c33e64dc9d0290603968034bd817",
-      "url": "https://github.com/Fountain-Coach/.github/blob/cb1359728cbd5c0e6346ea9c6297261a538e3bff/FCIS-STACK.md"
+      "blobSha": "9d3a8fe9571f0efee5c44c3878c2b3fc7d86c99f",
+      "url": "https://github.com/Fountain-Coach/.github/blob/25bf0a10259f48d42a96f324927bcc7a3159c251/FCIS-STACK.md"
     },
     "fcisHTTP": {
       "repository": "Fountain-Coach/.github",
-      "ref": "cb1359728cbd5c0e6346ea9c6297261a538e3bff",
+      "ref": "25bf0a10259f48d42a96f324927bcc7a3159c251",
       "path": "FCIS-OPENAPI.json",
-      "blobSha": "f1e429f22b18f26d2d0002cdbc39160285fffa1f",
-      "url": "https://github.com/Fountain-Coach/.github/blob/cb1359728cbd5c0e6346ea9c6297261a538e3bff/FCIS-OPENAPI.json"
+      "blobSha": "bbc31e33c4566ec44715d46dc4f4e8828dfaf1da",
+      "url": "https://github.com/Fountain-Coach/.github/blob/25bf0a10259f48d42a96f324927bcc7a3159c251/FCIS-OPENAPI.json"
     },
     "migration": {
       "repository": "Fountain-Coach/.github",
@@ -629,7 +629,7 @@
     "fcis": {
       "sourceId": "fcisHTTP",
       "openapiVersion": "3.1.0",
-      "version": "0.10.2",
+      "version": "0.10.4",
       "operations": [
         {
           "id": "readOwnerFleet",
@@ -1694,7 +1694,8 @@
         "RuntimeDeploymentState",
         "RuntimeDeploymentEvidence",
         "RuntimeDeploymentReceipt",
-        "FCISConnectionRefusal"
+        "FCISConnectionRefusal",
+        "RuntimeDeploymentReview"
       ],
       "securitySchemes": [
         "ownerPasskeySession",
@@ -2235,10 +2236,38 @@
         "messageKinds": {
           "deployment.prepare": {
             "inputSchema": {
-              "$ref": "#/components/schemas/RuntimeDeploymentPrepareInput"
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "mode",
+                "releaseId",
+                "reason",
+                "idempotencyKey"
+              ],
+              "properties": {
+                "mode": {
+                  "type": "string",
+                  "const": "activate",
+                  "description": "Conversational preparation selects a staged activation release only; rollback stays owner-only."
+                },
+                "releaseId": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                },
+                "idempotencyKey": {
+                  "type": "string",
+                  "minLength": 8,
+                  "maxLength": 96
+                }
+              }
             },
             "resultSchema": {
-              "$ref": "#/components/schemas/RuntimeDeploymentState"
+              "$ref": "#/components/schemas/RuntimeDeploymentReview"
             },
             "capability": "deployment.prepare"
           },
@@ -2257,12 +2286,35 @@
               }
             },
             "resultSchema": {
-              "$ref": "#/components/schemas/RuntimeDeploymentState"
+              "$ref": "#/components/schemas/RuntimeDeploymentReview"
             },
             "capability": "deployment.inspect"
+          },
+          "deployment.receipt": {
+            "inputSchema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "deploymentId"
+              ],
+              "properties": {
+                "deploymentId": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "resultSchema": {
+              "$ref": "#/components/schemas/RuntimeDeploymentReceipt"
+            },
+            "capability": "deployment.receipt"
           }
         },
-        "boundary": "Future closed typed projection of the same owner administration lifecycle only after separate admission, explicit current AuthZEN policy grant and supported in-place provider descriptor refresh. No current connection policy changes, no new tool, no owner cookie forwarding, no decision, activation or rollback authority through the bearer. Inspect only the proposing connection own request. The current static descriptor remains unchanged until this projection is implemented and reviewed."
+        "boundary": "Closed typed projection of the same native deployment lifecycle only after separate admission, explicit current AuthZEN policy grant and supported in-place provider descriptor refresh. No current connection policy changes, no new tool, no owner cookie forwarding, no decision, activation or rollback authority through the bearer. Inspect and receipt only the proposing connection own request. The existing owner HTTP security and signed activation fence remain unchanged.",
+        "binding": "Derive owner, tenant, client, resource and authorization event from verified connection, never caller fields. Recheck current grant and admission under existing Store lock before preparation commit or disclosure. Reuse same row and deployment ID algorithm; reserve conn-v1- namespace for server-derived request keys, consisting of unpadded base64url SHA-256 connection binding digest, dot, and unpadded base64url SHA-256 idempotency digest; both domain-separated length-delimited. Direct owner prepare cannot select reserved namespace. Check no incumbent reserved keys before enabling projection. Exact replay returns same row, conflicting request refuses. Existing row shape, manifest, Store writer and executor remain compatible. Other connections and ordinary owner-prepared records are inaccessible through this projection. Owner can review with existing passkey; revocation never grants bearer access.",
+        "admission": "Three exact internal capability names, separately owner-granted, never external OAuth scopes. Preparation requires admitted fixed deployment adapter; inspect and receipt require current Store and verified retained record. No grant or effect from discovery or proposal. Preserve incumbent permissions when proposing policy changes.",
+        "handoff": "Return actual verified persisted RuntimeDeploymentState plus server-derived same-issuer reviewUrl. Manifest, digest, phase, expiry and ID belong to state. Review link locates only. No synthetic deployment, GET mutation, or automated owner decision. Receipt requires independent terminal record; nonterminal state returns typed pending refusal.",
+        "acceptance": "Same bearer empty grant refuses, explicit owner policy approval, exact staged candidate prepare, replay one record, conflicting replay, foreign connection and ordinary owner request refused, owner-only decision/activation through existing routes, valid review link and correlated terminal receipt. Deny malformed, revoked, owner-only kinds and unexpected fields. Predecessor/executor compatibility and live provider descriptor acceptance separate."
       },
       "acceptance": "Two successive immutable issuer releases with no executor edits; actual exact signature/approval, invalid signature and stale state refusal, replay and lost-response one effect, crash at each transition, bounded storage and symlink/path refusal, successful independent HTTPS and Store readback, health failure rollback without rewind, incompatible rollback fail-closed, original owner, grants, revocations and signed Skills unchanged, existing retained conversational connection and signed Skill delivery independently exercised. Source, isolated Go fixture, provider exposure and real production activation are separate evidence."
     }
@@ -2402,9 +2454,9 @@
       "unmapped": "INCOMPLETE",
       "testsAllowedOnlyAfterGeneration": true,
       "independentReceipt": "SHA-256 of canonical source inputs, implementation map and artifact outputs",
-      "expectedRequirementCount": 429,
+      "expectedRequirementCount": 445,
       "sourceRefPolicy": "Every specificationSources ref must be a full 40-character Git commit SHA, its exact blobSha must match; no moving branch and no unreviewed downloaded source may be used.",
-      "minimumAtomicRequirementCount": 429,
+      "minimumAtomicRequirementCount": 445,
       "atomicCoverageClasses": [
         "state-machine",
         "custody-operation",
@@ -2428,6 +2480,8 @@
         "authorization-decision",
         "machine-renewal",
         "runtime-deployment",
+        "deployment-handoff",
+        "deployment-message",
         "bootstrap",
         "learning-stage",
         "learning-evidence",
@@ -5397,6 +5451,118 @@
         "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes/admin_request_capacity",
         "proofClass": "connection-refusal",
         "name": "connection-refusal: admin_request_capacity"
+      },
+      {
+        "id": "CONNECTION-REFUSAL-DEPLOYMENT-NOT-FOUND",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes/deployment_not_found",
+        "proofClass": "connection-refusal",
+        "name": "connection-refusal: deployment_not_found"
+      },
+      {
+        "id": "CONNECTION-REFUSAL-DEPLOYMENT-CONFLICT",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes/deployment_conflict",
+        "proofClass": "connection-refusal",
+        "name": "connection-refusal: deployment_conflict"
+      },
+      {
+        "id": "CONNECTION-REFUSAL-DEPLOYMENT-RECEIPT-PENDING",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes/deployment_receipt_pending",
+        "proofClass": "connection-refusal",
+        "name": "connection-refusal: deployment_receipt_pending"
+      },
+      {
+        "id": "CONNECTION-REFUSAL-DEPLOYMENT-REFUSED",
+        "mandatory": true,
+        "sourcePointer": "/capabilitySystem/mcp/connectionDiscovery/connectionMessage/refusalResult/codes/deployment_refused",
+        "proofClass": "connection-refusal",
+        "name": "connection-refusal: deployment_refused"
+      },
+      {
+        "id": "DEPLOYMENT-HANDOFF-EXTERNALTOOL",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/runtimeDeployment/projection/externalTool",
+        "proofClass": "deployment-handoff",
+        "name": "deployment-handoff: externalTool"
+      },
+      {
+        "id": "DEPLOYMENT-HANDOFF-EXTERNALSCOPE",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/runtimeDeployment/projection/externalScope",
+        "proofClass": "deployment-handoff",
+        "name": "deployment-handoff: externalScope"
+      },
+      {
+        "id": "DEPLOYMENT-HANDOFF-STATUS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/runtimeDeployment/projection/status",
+        "proofClass": "deployment-handoff",
+        "name": "deployment-handoff: status"
+      },
+      {
+        "id": "DEPLOYMENT-HANDOFF-MESSAGEKINDS",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/runtimeDeployment/projection/messageKinds",
+        "proofClass": "deployment-handoff",
+        "name": "deployment-handoff: messageKinds"
+      },
+      {
+        "id": "DEPLOYMENT-HANDOFF-BOUNDARY",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/runtimeDeployment/projection/boundary",
+        "proofClass": "deployment-handoff",
+        "name": "deployment-handoff: boundary"
+      },
+      {
+        "id": "DEPLOYMENT-HANDOFF-BINDING",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/runtimeDeployment/projection/binding",
+        "proofClass": "deployment-handoff",
+        "name": "deployment-handoff: binding"
+      },
+      {
+        "id": "DEPLOYMENT-HANDOFF-ADMISSION",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/runtimeDeployment/projection/admission",
+        "proofClass": "deployment-handoff",
+        "name": "deployment-handoff: admission"
+      },
+      {
+        "id": "DEPLOYMENT-HANDOFF-HANDOFF",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/runtimeDeployment/projection/handoff",
+        "proofClass": "deployment-handoff",
+        "name": "deployment-handoff: handoff"
+      },
+      {
+        "id": "DEPLOYMENT-HANDOFF-ACCEPTANCE",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/runtimeDeployment/projection/acceptance",
+        "proofClass": "deployment-handoff",
+        "name": "deployment-handoff: acceptance"
+      },
+      {
+        "id": "DEPLOYMENT-MESSAGE-DEPLOYMENT-PREPARE",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/runtimeDeployment/projection/messageKinds/deployment.prepare",
+        "proofClass": "deployment-message",
+        "name": "deployment-message: deployment.prepare"
+      },
+      {
+        "id": "DEPLOYMENT-MESSAGE-DEPLOYMENT-INSPECT",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/runtimeDeployment/projection/messageKinds/deployment.inspect",
+        "proofClass": "deployment-message",
+        "name": "deployment-message: deployment.inspect"
+      },
+      {
+        "id": "DEPLOYMENT-MESSAGE-DEPLOYMENT-RECEIPT",
+        "mandatory": true,
+        "sourcePointer": "/authorityAndIdentity/runtimeDeployment/projection/messageKinds/deployment.receipt",
+        "proofClass": "deployment-message",
+        "name": "deployment-message: deployment.receipt"
       }
     ]
   },
@@ -5461,7 +5627,7 @@
       "deployment",
       "legacyAdoption"
     ],
-    "atomicRequirementCount": 429,
+    "atomicRequirementCount": 445,
     "atomicRequirementGroups": {
       "state-machine": 15,
       "custody-operation": 7,
@@ -5472,7 +5638,7 @@
       "connection-discovery": 6,
       "owner-admin": 15,
       "connection-result": 8,
-      "connection-refusal": 8,
+      "connection-refusal": 12,
       "host-wire": 13,
       "host-receipt": 10,
       "store-wire": 6,
@@ -5485,6 +5651,8 @@
       "authorization-decision": 21,
       "machine-renewal": 16,
       "runtime-deployment": 15,
+      "deployment-handoff": 9,
+      "deployment-message": 3,
       "bootstrap": 10,
       "learning-stage": 6,
       "learning-evidence": 5,
@@ -5966,7 +6134,7 @@
         },
         "connectionMessage": {
           "name": "fcis.connect",
-          "description": "Connect to FCIS and exchange a typed message through its current owner-authorized internal flow. Connect alone has no effect. Host inspection and signed Skill delivery may record audit receipts. No arbitrary execution. Owner administration can inspect the current connection and prepare or observe a bounded policy proposal; proposals do not grant rights. Only explicit Golden Key owner approval may change policy.",
+          "description": "Connect to FCIS and exchange a typed message through its current owner-authorized internal flow. Connect alone has no effect. Host inspection and signed Skill delivery may record audit receipts. No arbitrary execution. Owner administration can inspect the current connection and prepare or observe a bounded policy proposal; proposals do not grant rights. Only explicit Golden Key owner approval may change policy. With separately approved capability grants, prepare an immutable staged runtime release for owner review, inspect that connection’s own deployment, or read its terminal receipt. No approval, activation or rollback authority.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -5979,7 +6147,10 @@
                   "skills.read-active",
                   "owner.admin.inspect",
                   "owner.admin.request",
-                  "owner.admin.status"
+                  "owner.admin.status",
+                  "deployment.prepare",
+                  "deployment.inspect",
+                  "deployment.receipt"
                 ],
                 "description": "Typed connection message kind; not an external tool or grant."
               },
@@ -6038,6 +6209,15 @@
               "requestId": {
                 "type": "string",
                 "pattern": "^[0-9a-f]{64}$"
+              },
+              "mode": {
+                "type": "string",
+                "const": "activate",
+                "description": "Conversational preparation selects a staged activation release only; rollback stays owner-only."
+              },
+              "deploymentId": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
               }
             },
             "required": [
@@ -6088,6 +6268,27 @@
             "owner.admin.status": {
               "required": [
                 "requestId"
+              ],
+              "optional": []
+            },
+            "deployment.prepare": {
+              "required": [
+                "mode",
+                "releaseId",
+                "reason",
+                "idempotencyKey"
+              ],
+              "optional": []
+            },
+            "deployment.inspect": {
+              "required": [
+                "deploymentId"
+              ],
+              "optional": []
+            },
+            "deployment.receipt": {
+              "required": [
+                "deploymentId"
               ],
               "optional": []
             }
@@ -6166,12 +6367,115 @@
               "admin_request_capacity": {
                 "message": "The connection has reached its pending or recent proposal limit.",
                 "nextAction": "wait_and_review_pending_requests"
+              },
+              "deployment_not_found": {
+                "message": "This deployment is not available to the current connection.",
+                "nextAction": "inspect_connection_policy"
+              },
+              "deployment_conflict": {
+                "message": "The deployment request conflicts with an existing intent or its preconditions. Review the exact existing request before retrying.",
+                "nextAction": "inspect_existing_deployment"
+              },
+              "deployment_receipt_pending": {
+                "message": "The deployment has no terminal receipt yet. Inspect the same deployment for its current state.",
+                "nextAction": "inspect_existing_deployment"
+              },
+              "deployment_refused": {
+                "message": "The staged release could not be prepared under the current deployment rules. Review the staged release and deployment status.",
+                "nextAction": "review_staged_release"
               }
             },
             "authority": "Only an authenticated, resource-bound current connection and well-formed admitted message vocabulary can receive a normal refusal. Existing protected-operation authorization and disclosure checks are unchanged. Recheck the base connection before projecting a capability denial. Never disclose private content, grant rights, or report a terminal execution receipt in a refusal.",
             "protocolBoundary": "Malformed requests, unknown kinds, unexpected fields, direct tool names, invalid origin, invalid or expired or revoked bearer, and transport errors retain existing error semantics. Unclassified internal or uncertain-effect failures are not converted to a known no-effect outcome; inspect durable evidence before retry.",
-            "compatibility": "Successful result shapes, native HTTP and legacy Skill OAuth handlers, external input descriptor, sole fcis.connect tool and scope remain unchanged. A refused result reports no protected output or execution success; audit evidence may exist. No mandatory reconnect or new OAuth ceremony for a valid domain refusal.",
+            "compatibility": "Existing successful result shapes, native HTTP and legacy Skill OAuth handlers, sole fcis.connect tool and external scope remain unchanged. The refusal-only correction preserved the input descriptor; the separately specified deployment handoff extends only its closed message vocabulary after provider review. A refusal reports no protected output or execution success; audit evidence may exist. No mandatory reconnect or new OAuth ceremony for a valid domain refusal.",
             "acceptance": "Reproduce valid stale selection, missing permission and bounded admin refusal with exact reason/next action; no unintended Store effect or private disclosure; same bearer subsequently completes a permitted operation; revoked bearer and malformed messages still fail closed. Live client acceptance separate from source and test evidence."
+          },
+          "deploymentHandoff": {
+            "externalTool": "fcis.connect",
+            "externalScope": "fcis.connect",
+            "status": "specified-only-not-deployed",
+            "messageKinds": {
+              "deployment.prepare": {
+                "inputSchema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "mode",
+                    "releaseId",
+                    "reason",
+                    "idempotencyKey"
+                  ],
+                  "properties": {
+                    "mode": {
+                      "type": "string",
+                      "const": "activate",
+                      "description": "Conversational preparation selects a staged activation release only; rollback stays owner-only."
+                    },
+                    "releaseId": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 512
+                    },
+                    "idempotencyKey": {
+                      "type": "string",
+                      "minLength": 8,
+                      "maxLength": 96
+                    }
+                  }
+                },
+                "resultSchema": {
+                  "$ref": "#/components/schemas/RuntimeDeploymentReview"
+                },
+                "capability": "deployment.prepare"
+              },
+              "deployment.inspect": {
+                "inputSchema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "deploymentId"
+                  ],
+                  "properties": {
+                    "deploymentId": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  }
+                },
+                "resultSchema": {
+                  "$ref": "#/components/schemas/RuntimeDeploymentReview"
+                },
+                "capability": "deployment.inspect"
+              },
+              "deployment.receipt": {
+                "inputSchema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "deploymentId"
+                  ],
+                  "properties": {
+                    "deploymentId": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  }
+                },
+                "resultSchema": {
+                  "$ref": "#/components/schemas/RuntimeDeploymentReceipt"
+                },
+                "capability": "deployment.receipt"
+              }
+            },
+            "boundary": "Closed typed projection of the same native deployment lifecycle only after separate admission, explicit current AuthZEN policy grant and supported in-place provider descriptor refresh. No current connection policy changes, no new tool, no owner cookie forwarding, no decision, activation or rollback authority through the bearer. Inspect and receipt only the proposing connection own request. The existing owner HTTP security and signed activation fence remain unchanged.",
+            "binding": "Derive owner, tenant, client, resource and authorization event from verified connection, never caller fields. Recheck current grant and admission under existing Store lock before preparation commit or disclosure. Reuse same row and deployment ID algorithm; reserve conn-v1- namespace for server-derived request keys, consisting of unpadded base64url SHA-256 connection binding digest, dot, and unpadded base64url SHA-256 idempotency digest; both domain-separated length-delimited. Direct owner prepare cannot select reserved namespace. Check no incumbent reserved keys before enabling projection. Exact replay returns same row, conflicting request refuses. Existing row shape, manifest, Store writer and executor remain compatible. Other connections and ordinary owner-prepared records are inaccessible through this projection. Owner can review with existing passkey; revocation never grants bearer access.",
+            "admission": "Three exact internal capability names, separately owner-granted, never external OAuth scopes. Preparation requires admitted fixed deployment adapter; inspect and receipt require current Store and verified retained record. No grant or effect from discovery or proposal. Preserve incumbent permissions when proposing policy changes.",
+            "handoff": "Return actual verified persisted RuntimeDeploymentState plus server-derived same-issuer reviewUrl. Manifest, digest, phase, expiry and ID belong to state. Review link locates only. No synthetic deployment, GET mutation, or automated owner decision. Receipt requires independent terminal record; nonterminal state returns typed pending refusal.",
+            "acceptance": "Same bearer empty grant refuses, explicit owner policy approval, exact staged candidate prepare, replay one record, conflicting replay, foreign connection and ordinary owner request refused, owner-only decision/activation through existing routes, valid review link and correlated terminal receipt. Deny malformed, revoked, owner-only kinds and unexpected fields. Predecessor/executor compatibility and live provider descriptor acceptance separate."
           }
         }
       }
@@ -6483,16 +6787,16 @@
       "status": "source candidate; runtime generation, tests and live acceptance separately unestablished"
     },
     "currentRuntimeDeployment": {
-      "scope": "0.10.0 source-only signed immutable runtime deployment; no new live authority",
-      "sourceRevision": "152641f776506178c908675a8c2488e963ae3693",
+      "scope": "0.10.4 source-only prepared deployment handoff; no new live authority",
+      "sourceRevision": "25bf0a10259f48d42a96f324927bcc7a3159c251",
       "status": "source candidate; native generation and live acceptance separately unestablished"
     }
   },
   "sourcePinPolicy": {
     "immutable": "Source checkout MUST verify exact Git blob SHA for every document before code generation; source revision may differ from composition commit; no branch ref or main may be substituted for required SHA",
-    "httpContractVersion": "0.10.2",
-    "apiBlobSha": "f1e429f22b18f26d2d0002cdbc39160285fffa1f",
-    "stackBlobSha": "568370570a91c33e64dc9d0290603968034bd817",
+    "httpContractVersion": "0.10.4",
+    "apiBlobSha": "bbc31e33c4566ec44715d46dc4f4e8828dfaf1da",
+    "stackBlobSha": "9d3a8fe9571f0efee5c44c3878c2b3fc7d86c99f",
     "frontendPolicy": "Preserve the existing pinned Press frontend as the baseline; owner-selected React Console target uses generated canonical OpenAPI bindings and static assets in the same Go executable. No live replacement until accepted.",
     "derivedProtocolSchemas": "The built-in native Go Store and vault formats are defined in this file and are not historical Swift-compatible by default"
   },

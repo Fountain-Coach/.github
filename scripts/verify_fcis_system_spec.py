@@ -213,6 +213,8 @@ def expected_atomic(system: dict) -> dict[str, dict[str, str]]:
     fields("AUTHZEN-", "/authorityAndIdentity/authorizationDecision", "authorization-decision")
     fields("MACHINE-RENEWAL-", "/authorityAndIdentity/hosts/machineGrantRenewal", "machine-renewal")
     fields("RUNTIME-DEPLOYMENT-", "/authorityAndIdentity/runtimeDeployment", "runtime-deployment")
+    fields("DEPLOYMENT-HANDOFF-", "/authorityAndIdentity/runtimeDeployment/projection", "deployment-handoff")
+    fields("DEPLOYMENT-MESSAGE-", "/authorityAndIdentity/runtimeDeployment/projection/messageKinds", "deployment-message")
     fields("BOOTSTRAP-", "/initialization/setupTicket", "bootstrap")
     for field, stem, cls in (
         ("stages", "LEARN-STAGE-", "learning-stage"),
@@ -495,7 +497,8 @@ def check_connection_discovery(system: dict, api: dict) -> None:
     codes = refusal["codes"]
     expected = {"capability_refused", "skill_revision_conflict", "skill_unavailable",
                 "capability_not_admitted", "admin_policy_conflict", "admin_idempotency_conflict",
-                "admin_request_not_found", "admin_request_capacity"}
+                "admin_request_not_found", "admin_request_capacity", "deployment_not_found",
+                "deployment_conflict", "deployment_receipt_pending", "deployment_refused"}
     if (refusal["scenarioId"] != "FCIS-CONNECTION-RESULT-01"
             or refusal["schema"] != "#/components/schemas/FCISConnectionRefusal"
             or set(codes) != expected or schema["additionalProperties"] is not False
@@ -528,7 +531,8 @@ def check_owner_admin(system: dict, api: dict) -> None:
     if profile != system["capabilitySystem"]["mcp"]["connectionDiscovery"]["connectionMessage"]["ownerAdmin"]:
         reject("owner-admin source projection drift")
     kinds = {"connect", "host.describe", "skills.inventory", "skills.read-active",
-             "owner.admin.inspect", "owner.admin.request", "owner.admin.status"}
+             "owner.admin.inspect", "owner.admin.request", "owner.admin.status",
+             "deployment.prepare", "deployment.inspect", "deployment.receipt"}
     fields = message["fieldsByKind"]
     props = message["inputSchema"]["properties"]
     if set(fields) != kinds or set(props["kind"]["enum"]) != kinds:
@@ -541,7 +545,7 @@ def check_owner_admin(system: dict, api: dict) -> None:
             or props["adminOperation"].get("const") != "connection.policy.update"
             or set(props) != {"kind", "correlationID", "idempotencyKey", "limit", "cursor",
                               "skillName", "releaseId", "adminOperation", "expectedPolicyRevision",
-                              "capabilityScopes", "reason", "requestId"}):
+                              "capabilityScopes", "reason", "requestId", "mode", "deploymentId"}):
         reject("owner-admin request must not carry caller authority or arbitrary operation")
     if (profile["status"] != "specified-only-not-deployed"
             or profile["scenarioId"] != "FCIS-OWNER-ADMIN-01"
@@ -722,9 +726,36 @@ def check_runtime_deployment(system: dict, api: dict) -> None:
     projection = p["projection"]
     if (projection["externalTool"] != "fcis.connect" or projection["externalScope"] != "fcis.connect"
             or projection["status"] != "specified-only-not-deployed"
-            or set(projection["messageKinds"]) != {"deployment.prepare", "deployment.inspect"}
+            or set(projection["messageKinds"]) != {"deployment.prepare", "deployment.inspect", "deployment.receipt"}
             or "No current connection policy changes" not in projection["boundary"]):
         reject("runtime deployment projection authority drift")
+    message = api["paths"]["/mcp"]["post"]["x-fcis-connect"]["connectionMessage"]
+    if message["deploymentHandoff"] != projection:
+        reject("deployment handoff projection mismatch")
+    expected_fields = {"deployment.prepare": {"mode", "releaseId", "reason", "idempotencyKey"},
+                       "deployment.inspect": {"deploymentId"}, "deployment.receipt": {"deploymentId"}}
+    for kind, fields in expected_fields.items():
+        entry = projection["messageKinds"][kind]
+        target = "RuntimeDeploymentReceipt" if kind == "deployment.receipt" else "RuntimeDeploymentReview"
+        if (entry["capability"] != kind
+                or entry["resultSchema"] != {"$ref": "#/components/schemas/" + target}
+                or set(entry["inputSchema"]["required"]) != fields
+                or set(entry["inputSchema"]["properties"]) != fields
+                or entry["inputSchema"]["additionalProperties"] is not False
+                or set(message["fieldsByKind"][kind]["required"]) != fields
+                or message["fieldsByKind"][kind]["optional"]
+                or any(entry["inputSchema"]["properties"][f] != message["inputSchema"]["properties"][f] for f in fields)):
+            reject("deployment handoff closed message drift")
+    review = schemas["RuntimeDeploymentReview"]
+    if (message["inputSchema"]["properties"]["mode"].get("const") != "activate"
+            or set(review["properties"]) != {"deployment", "reviewUrl"}
+            or set(review["required"]) != set(review["properties"])
+            or review["additionalProperties"] is not False
+            or review["properties"]["deployment"] != {"$ref": "#/components/schemas/RuntimeDeploymentState"}
+            or "conn-v1-" not in projection["binding"]
+            or "No synthetic deployment" not in projection["handoff"]
+            or "no decision, activation or rollback authority" not in projection["boundary"]):
+        reject("deployment handoff authority or review link drift")
     for field, required in {
         "authority": ["Golden Key", "AuthZEN", "existing release signature", "No new credential"],
         "manifest": ["RFC 8785", "fcis-go-service-release", "fountain-owner", "never a caller-supplied path"],
