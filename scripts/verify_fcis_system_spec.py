@@ -190,6 +190,7 @@ def expected_atomic(system: dict) -> dict[str, dict[str, str]]:
           lambda x, i: _slug(x), lambda x, i: f"FountainStore collection {x}", "store-schema")
     array("MCP-METHOD-", "/capabilitySystem/mcp/methods",
           lambda x, i: _slug(x), lambda x, i: f"MCP method {x}", "mcp-transport")
+    fields("MCP-PROFILE-", "/capabilitySystem/mcp/connectionDiscovery", "connection-discovery")
     array("HOST-CONTROL-", "/capabilitySystem/hostTransport/control/required",
           lambda x, i: _slug(x), lambda x, i: f"Host signed request field {x}", "host-wire")
     array("HOST-RECEIPT-", "/capabilitySystem/hostTransport/receipts/required",
@@ -463,7 +464,32 @@ def check_authzen(system: dict, api: dict) -> None:
             reject("AuthZEN unsupported feature advertised")
 
 
+def check_connection_discovery(system: dict, api: dict) -> None:
+    profile = api["paths"]["/mcp"]["post"]["x-fcis-connect"]
+    keys = ("resourceMetadataPath", "advertisedResourceScopes", "authenticationChallengeScope", "schemaDiscovery", "legacyScopeTransition")
+    if system["capabilitySystem"]["mcp"]["connectionDiscovery"] != {k: profile[k] for k in keys}:
+        reject("FCIS connection discovery profile drift")
+    if profile["advertisedResourceScopes"] != ["fcis.connect"] or profile["authenticationChallengeScope"] != "fcis.connect":
+        reject("FCIS bridge scope negotiation drift")
+    discovery = profile["schemaDiscovery"]
+    if (discovery["stableDefinitions"] != ["fountain_host_describe", "fountain_skills_inventory", "fountain_skills_read_active"]
+            or discovery["requiresValidConnection"] is not True or discovery["requiresCapabilityGrant"] is not False
+            or discovery["privateBindings"] is not False or discovery["executionAuthority"] is not False):
+        reject("FCIS schema discovery authority drift")
+    migration = profile["legacyScopeTransition"]
+    if (migration["requestedPair"] != ["host.describe", "workstation.go.verify"]
+            or migration["onlyWhenNoLongerGrantable"] is not True or migration["resource"] != "/mcp"
+            or migration["offeredScope"] != "fcis.connect" or migration["explicitOwnerConsent"] is not True
+            or migration["actualTokenScopeReturned"] is not True or migration["transferCapabilities"] is not False
+            or migration["unknownScopeFallback"] is not False):
+        reject("FCIS stale-scope transition drift")
+    op = api["paths"][profile["resourceMetadataPath"]]["get"]
+    if op["operationId"] != "discoverMCPConnectionResource" or op["security"] != []:
+        reject("FCIS resource-specific metadata drift")
+
+
 def check(system: dict, api: dict) -> None:
+    check_connection_discovery(system, api)
     check_authzen(system, api)
     check_learning_acceptance(system, api)
     check_owner_chat(system, api)
